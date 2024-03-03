@@ -1,6 +1,7 @@
 import React from "react";
 import { Logo } from "./logo";
 import { ModeToggle } from "./theme/theme-toggle";
+import AuthProfile from "./ui/AuthProfile";
 export const MainNavbar = () => {
   return <nav></nav>;
 };
@@ -20,9 +21,10 @@ const logoProps = {
 
 export const LandingNavbar = () => {
   return (
-    <nav className="px-4 h-[5rem] border-b border-b-neutral-300 dark:border-b-neutral-700 backdrop-blur-md w-screen flex items-center">
+    <nav className="fixed px-4 h-[5rem] border-b border-b-neutral-300 dark:border-b-neutral-700 backdrop-blur-lg w-screen flex items-center">
       <Logo {...logoProps} />
-      <section className="flex flex-grow justify-end">
+      <section className="flex flex-grow justify-end space-x-4">
+        <AuthProfile />
         <ModeToggle />
       </section>
     </nav>
