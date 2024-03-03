@@ -2,10 +2,10 @@ import React from "react";
 export const BackgroundGrid = () => {
   return (
     <>
-      <div className="absolute inset-0  bg-[image:radial-gradient(70%_65%_at_50%_-20%,hsl(206,81.9%,65.3%,0.5),rgba(255,255,255,0))]"></div>
+      <div className="absolute inset-0  bg-[image:radial-gradient(70%_65%_at_50%_-20%,hsl(0,0%,32%,0.35),rgba(255,255,255,0))]"></div>
 
       <svg
-        className="absolute inset-0  h-full w-full stroke-white/20 [mask-image:radial-gradient(75%_50%_at_top_center,white,transparent)]"
+        className="absolute inset-0  h-full w-full stroke-neutral-800/30 dark:stroke-neutral-200/20 [mask-image:radial-gradient(75%_60%_at_top_center,white,transparent)]"
         aria-hidden="true"
       >
         <defs>
