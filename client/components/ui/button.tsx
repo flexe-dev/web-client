@@ -10,7 +10,8 @@ const buttonVariants = cva(
     variants: {
       variant: {
         default: "bg-primary text-primary-foreground hover:bg-primary/90",
-        inverted: "bg-neutral-800 dark:bg-neutral-200 text-neutral-200 ",
+        inverted:
+          "border-2  border-transparent bg-inverted  text-inverted-foreground hover:bg-transparent hover:text-inverted hover:border-inverted",
         destructive:
           "bg-destructive text-destructive-foreground hover:bg-destructive/90",
         outline:
