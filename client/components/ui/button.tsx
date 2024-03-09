@@ -9,7 +9,7 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default: "bg-primary text-primary-foreground hover:bg-primary/90",
+        default: "bg-primary text-primary-foreground hover:opacity-90",
         inverted:
           "border-2  border-transparent bg-inverted  text-inverted-foreground hover:bg-transparent hover:text-inverted hover:border-inverted",
         destructive:

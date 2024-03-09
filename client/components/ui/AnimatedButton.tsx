@@ -12,7 +12,7 @@ export const BgTransitionButton = (props: ButtonWrapperProps) => {
     <Button
       variant={"outline"}
       className={cn(
-        "relative overflow-hidden group hover:bg-transparent hover:border-inverted ",
+        "relative overflow-hidden group border-inverted ",
         className
       )}
     >

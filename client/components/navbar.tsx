@@ -31,7 +31,7 @@ const links: LinkProps[] = [
 
 export const Navbar = () => {
   return (
-    <nav className="fixed z-30 px-4 h-[5rem] border-b border-b-neutral-300 dark:border-b-neutral-700 backdrop-blur-lg w-screen flex items-center">
+    <nav className="fixed z-30 pl-4 pr-8 h-[5rem] border-b border-b-neutral-300 dark:border-b-neutral-700 backdrop-blur-xl w-screen flex items-center">
       <Link href={"/"}>
         <Logo {...logoProps} />
       </Link>
