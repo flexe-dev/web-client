@@ -34,7 +34,8 @@ export const CreationParallaxWrapper = (props: Props) => {
 
   const { children, creations } = props;
   const firstRow = creations.slice(0, desktopDim ? 2 : 1);
-  const secondRow = creations.slice(2, desktopDim ? 5 : 3);
+  const secondRow = creations.slice(2, desktopDim ? 4 : 3);
+  const thirdRow = creations.slice(4, desktopDim ? 6 : 5);
 
   const ref = React.useRef(null);
   const { scrollYProgress } = useScroll({
@@ -71,7 +72,7 @@ export const CreationParallaxWrapper = (props: Props) => {
   return (
     <div
       ref={ref}
-      className="h-[130dvh] md:h-[180dvh] px-12 lg:px-24 overflow-hidden  antialiased relative flex flex-col self-auto [perspective:750px] [transform-style:preserve-3d]"
+      className="h-[130dvh]  md:h-[180dvh] px-12 lg:px-24 overflow-hidden  antialiased relative flex flex-col self-auto [perspective:750px] [transform-style:preserve-3d]"
     >
       {children}
       <motion.div
@@ -82,7 +83,7 @@ export const CreationParallaxWrapper = (props: Props) => {
           opacity,
         }}
       >
-        <motion.div className="flex flex-row-reverse space-x-reverse space-x-20 mb-10 ">
+        <motion.div className="flex w-full flex-row-reverse space-x-reverse space-x-10 mb-10 ">
           {firstRow.map((creation) => (
             <CreationTile
               creation={creation}
