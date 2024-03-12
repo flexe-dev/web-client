@@ -2,20 +2,16 @@
 @tailwind components;
 @tailwind utilities;
 
-/*todo: Configure correct tailwind colour scheme 
-ie. neutral-200 neutral-800 etc etc
-*/
-
 @layer base {
   :root {
-    --neutral-200: #e5e5e5;
-    --neutral-300: #d4d4d4;
-    --neutral-400: #a3a3a3;
-    --neutral-600: #525252;
-    --neutral-900: #171717;
-    --neutral-800: #262626;
-    --neutral-950: #0a0a0a;
-    --red-500: #ef4444;
+    --neutral-200: 0 0% 90%;
+    --neutral-300: 0 0% 83%;
+    --neutral-400: 0 0% 64%;
+    --neutral-600: 0 0% 32%;
+    --neutral-800: 0 0% 15%;
+    --neutral-900: 0 0% 9%;
+    --neutral-950: 0 0% 4%;
+    --red-500: 0 84% 60%;
 
     --background: var(--neutral-200);
     --foreground: var(--neutral-950);
@@ -52,14 +48,14 @@ ie. neutral-200 neutral-800 etc etc
   }
 
   .dark {
-    --neutral-200: #e5e5e5;
-    --neutral-300: #d4d4d4;
-    --neutral-400: #a3a3a3;
-    --neutral-600: #525252;
-    --neutral-800: #262626;
-    --neutral-900: #171717;
-    --neutral-950: #0a0a0a;
-    --red-900: #7f1d1d;
+    --neutral-200: 0 0% 90%;
+    --neutral-300: 0 0% 83%;
+    --neutral-400: 0 0% 64%;
+    --neutral-600: 0 0% 32%;
+    --neutral-800: 0 0% 15%;
+    --neutral-900: 0 0% 9%;
+    --neutral-950: 0 0% 4%;
+    --red-900: 0 63% 31%;
 
     --background: var(--neutral-950);
     --foreground: var(--neutral-200);
@@ -88,7 +84,7 @@ ie. neutral-200 neutral-800 etc etc
     --border: var(--neutral-800);
     --input: var(--neutral-800);
     --ring: var(--neutral-300);
-
+    --radius: 0.5rem;
     --inverted: var(--neutral-200);
     --inverted-foreground: var(--neutral-800);
   }
