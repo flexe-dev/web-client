@@ -31,17 +31,20 @@ const links: LinkProps[] = [
 
 export const Navbar = () => {
   return (
-    <nav className="fixed z-30 pl-4 pr-8 h-[5rem] border-b border-b-neutral-300 dark:border-b-neutral-700 backdrop-blur-xl w-screen flex items-center">
-      <Link href={"/"}>
-        <Logo {...logoProps} />
-      </Link>
-      <section className="flex flex-grow items-center justify-end space-x-4">
-        <DesktopLayout />
-        <AuthProfile />
-        <ModeToggle />
-        <MobileView links={links} />
-      </section>
-    </nav>
+    <>
+      <nav className="fixed z-30 pl-4 pr-8 h-[5rem] border-b border-b-neutral-300 dark:border-b-neutral-700 backdrop-blur-xl w-screen flex items-center">
+        <Link href={"/"}>
+          <Logo {...logoProps} />
+        </Link>
+        <section className="flex flex-grow items-center justify-end space-x-4">
+          <DesktopLayout />
+          <AuthProfile />
+
+          <ModeToggle classname="hidden md:flex" variant="default" />
+        </section>
+      </nav>
+      <MobileView links={links} />
+    </>
   );
 };
 
