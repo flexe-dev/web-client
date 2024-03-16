@@ -39,7 +39,6 @@ export const Navbar = () => {
         <section className="flex flex-grow items-center justify-end space-x-4">
           <DesktopLayout />
           <AuthProfile />
-
           <ModeToggle classname="hidden md:flex" variant="default" />
         </section>
       </nav>
@@ -51,7 +50,7 @@ export const Navbar = () => {
 export const DesktopLayout = () => {
   return (
     <>
-      <div className="hidden lg:flex space-x-4 lg:space-x-6 mr-6 text-sm lg:text-base ">
+      <div className="hidden md:flex space-x-4 lg:space-x-6 mr-3 lg:mr-6 text-sm lg:text-base ">
         {links.map((link) => {
           return (
             <Link
