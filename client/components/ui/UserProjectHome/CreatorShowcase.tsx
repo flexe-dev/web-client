@@ -1,17 +1,18 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import {
-  motion,
-  useScroll,
-  useTransform,
-  useSpring,
-  MotionValue,
-} from "framer-motion";
+import { motion, useScroll, useTransform, useSpring } from "framer-motion";
 import Image, { ImageProps } from "next/image";
 import Link from "next/link";
+
 import CreationTile from "./Tile";
 import { useMediaQuery } from "react-responsive";
-
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselApi,
+} from "../carousel";
+import AutoScroll from "embla-carousel-auto-scroll";
 export interface CreationProps {
   creationImage?: ImageProps;
   creatorImage?: ImageProps;
@@ -22,8 +23,19 @@ export interface CreationProps {
 
 interface Props {
   children: React.ReactNode;
-  creations: CreationProps[];
 }
+
+const creations = [
+  { title: "a" },
+  { title: "b" },
+  { title: "c" },
+  { title: "d" },
+  { title: "e" },
+  { title: "f" },
+  { title: "g" },
+  { title: "h" },
+  { title: "i" },
+];
 
 export const CreationParallaxWrapper = (props: Props) => {
   const [desktopDim, setDesktopDim] = useState(false);
@@ -32,10 +44,9 @@ export const CreationParallaxWrapper = (props: Props) => {
     setDesktopDim(desktop);
   }, [desktop]);
 
-  const { children, creations } = props;
-  const firstRow = creations.slice(0, desktopDim ? 2 : 1);
-  const secondRow = creations.slice(2, desktopDim ? 4 : 3);
-  const thirdRow = creations.slice(4, desktopDim ? 6 : 5);
+  const { children } = props;
+  const firstRow = creations.slice(0, desktopDim ? 4 : 8);
+  const secondRow = creations.slice(4, 8);
 
   const ref = React.useRef(null);
   const { scrollYProgress } = useScroll({
@@ -45,20 +56,12 @@ export const CreationParallaxWrapper = (props: Props) => {
 
   const springConfig = { stiffness: 300, damping: 30, bounce: 100 };
 
-  const translateX = useSpring(
-    useTransform(scrollYProgress, [0, 2], desktopDim ? [0, 400] : [0, 0]),
-    springConfig
-  );
-  const translateXReverse = useSpring(
-    useTransform(scrollYProgress, [0, 2], desktopDim ? [0, -400] : [0, 0]),
-    springConfig
-  );
   const rotateX = useSpring(
     useTransform(scrollYProgress, [0, 0.2], [30, 0]),
     springConfig
   );
   const opacity = useSpring(
-    useTransform(scrollYProgress, [0, 0.2], [0.2, 1]),
+    useTransform(scrollYProgress, [0, 0.5], [0.1, 1]),
     springConfig
   );
   const rotateZ = useSpring(
@@ -66,16 +69,18 @@ export const CreationParallaxWrapper = (props: Props) => {
     springConfig
   );
   const translateY = useSpring(
-    useTransform(scrollYProgress, [0, 0.2], desktopDim ? [-400, 0] : [-150, 0]),
+    useTransform(scrollYProgress, [0, 0.2], desktopDim ? [-450, 0] : [-350, 0]),
     springConfig
   );
+
   return (
     <div
       ref={ref}
-      className="h-[130dvh]  md:h-[180dvh] px-12 lg:px-24 overflow-hidden  antialiased relative flex flex-col self-auto [perspective:750px] [transform-style:preserve-3d]"
+      className=" w-[100dvw] h-[120dvh]  md:h-[190dvh]  overflow-hidden  antialiased relative flex flex-col self-auto [perspective:750px] [transform-style:preserve-3d]"
     >
       {children}
       <motion.div
+        className=" w-[110dvw]"
         style={{
           rotateX,
           rotateZ,
@@ -83,24 +88,48 @@ export const CreationParallaxWrapper = (props: Props) => {
           opacity,
         }}
       >
-        <motion.div className="flex w-full flex-row-reverse space-x-reverse space-x-10 mb-10 ">
-          {firstRow.map((creation) => (
-            <CreationTile
-              creation={creation}
-              translation={translateXReverse}
-              key={creation.title}
-            />
-          ))}
-        </motion.div>
-        <motion.div className="flex flex-row  mb-20 space-x-20 ">
-          {secondRow.map((creation) => (
-            <CreationTile
-              creation={creation}
-              translation={translateX}
-              key={creation.title}
-            />
-          ))}
-        </motion.div>
+        <Carousel
+          plugins={[
+            AutoScroll({
+              stopOnInteraction: false,
+              stopOnMouseEnter: true,
+            }),
+          ]}
+          opts={{
+            align: "end",
+            loop: true,
+          }}
+        >
+          <CarouselContent className="mb-20  mt-8 md:min-w-[1800px]">
+            {firstRow.map((creation) => (
+              <CarouselItem className=" md:basis-1/3 mx-8">
+                <CreationTile creation={creation} key={creation.title} />
+              </CarouselItem>
+            ))}
+          </CarouselContent>
+        </Carousel>
+        <Carousel
+          plugins={[
+            AutoScroll({
+              direction: "forwards",
+              stopOnInteraction: false,
+              stopOnMouseEnter: true,
+            }),
+          ]}
+          className="hidden md:block"
+          opts={{
+            align: "start",
+            loop: true,
+          }}
+        >
+          <CarouselContent className="mt-8 mb-20 min-w-[1800px] relative">
+            {secondRow.map((creation, index) => (
+              <CarouselItem className="basis-1/3 mx-8 ">
+                <CreationTile creation={creation} key={creation.title} />
+              </CarouselItem>
+            ))}
+          </CarouselContent>
+        </Carousel>
       </motion.div>
     </div>
   );
