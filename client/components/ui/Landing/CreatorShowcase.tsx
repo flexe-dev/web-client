@@ -1,10 +1,15 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { motion, useScroll, useTransform, useSpring } from "framer-motion";
+import {
+  motion,
+  useScroll,
+  useTransform,
+  useSpring,
+  MotionValue,
+} from "framer-motion";
 import Image, { ImageProps } from "next/image";
 import Link from "next/link";
 
-import CreationTile from "./Tile";
 import { useMediaQuery } from "react-responsive";
 import {
   Carousel,
@@ -23,6 +28,11 @@ export interface CreationProps {
 
 interface Props {
   children: React.ReactNode;
+}
+
+interface TileProps {
+  creation: CreationProps;
+  translation?: MotionValue<number>;
 }
 
 const creations = [
@@ -61,7 +71,7 @@ export const CreationParallaxWrapper = (props: Props) => {
     springConfig
   );
   const opacity = useSpring(
-    useTransform(scrollYProgress, [0, 0.5], [0.1, 1]),
+    useTransform(scrollYProgress, [0, 0.4], [0.1, 1]),
     springConfig
   );
   const rotateZ = useSpring(
@@ -76,7 +86,7 @@ export const CreationParallaxWrapper = (props: Props) => {
   return (
     <div
       ref={ref}
-      className=" w-[100dvw] h-[120dvh]  md:h-[190dvh]  overflow-hidden  antialiased relative flex flex-col self-auto [perspective:750px] [transform-style:preserve-3d]"
+      className=" h-[120dvh]  md:h-[190dvh]  overflow-hidden  antialiased relative flex flex-col self-auto [perspective:750px] [transform-style:preserve-3d]"
     >
       {children}
       <motion.div
@@ -132,5 +142,32 @@ export const CreationParallaxWrapper = (props: Props) => {
         </Carousel>
       </motion.div>
     </div>
+  );
+};
+
+const CreationTile = (props: TileProps) => {
+  const { creation, translation } = props;
+  return (
+    <motion.div
+      className="relative group/userdesign w-full px-[2rem] md:px-0   md:max-w-[35rem]  lg:max-w-[39rem]  aspect-[3/2] md:aspect-[16/9] flex-shrink-0"
+      style={{
+        x: translation,
+      }}
+      whileHover={{
+        y: -20,
+      }}
+      key={creation.title}
+    >
+      <div
+        id="design-image-tile"
+        className=" bg-slate-600 md:absolute z-[20] w-full  md:max-w-[33rem]  lg:max-w-[37rem] rounded-lg  aspect-[3/2] md:aspect-video  top-0 right-0 shadow-md shadow-neutral-800"
+      ></div>
+      <div
+        id="creator-image-tile"
+        className="absolute z-[30] bg-neutral-400 shadow-md shadow-neutral-800  rounded-xl w-[9rem] lg:w-[10rem] aspect-square flex-shrink-0 -bottom-4 lg:-bottom-[10%] left-1/3 md:-left-4 lg:-left-[10%]"
+      >
+        <div className=" hidden md:flex w-[3rem] aspect-square absolute left-3 bottom-3 rounded-full bg-blue-400 z-[40]"></div>
+      </div>
+    </motion.div>
   );
 };

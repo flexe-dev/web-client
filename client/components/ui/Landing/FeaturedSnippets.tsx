@@ -9,7 +9,7 @@ import {
   CarouselPrevious,
   CarouselNext,
   CarouselApi,
-} from "./carousel";
+} from "@/components/ui/carousel";
 import Link from "next/link";
 
 function FeaturedSnippets() {
@@ -48,7 +48,7 @@ function FeaturedSnippets() {
           opts={{
             align: "start",
           }}
-          className="w-full py-4 md:p-16"
+          className="w-full py-8 md:p-16"
         >
           <CarouselContent className="space-x-4">
             {Array.from({ length: 5 }).map((_, index) => (
@@ -94,7 +94,7 @@ export const StyledWordLink = (props: StyledLinkProps) => {
         href={href}
         className="text-primary font-semibold animate-pulse group"
       >
-        <i>forumns</i>
+        <i>{children}</i>
       </Link>{" "}
     </>
   );
