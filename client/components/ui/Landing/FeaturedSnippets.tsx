@@ -10,7 +10,7 @@ import {
   CarouselNext,
   CarouselApi,
 } from "@/components/ui/carousel";
-import Link from "next/link";
+import { StyledWordLink } from "../StyledWorkLink";
 
 function FeaturedSnippets() {
   const [api, setAPI] = useState<CarouselApi>();
@@ -80,22 +80,3 @@ function FeaturedSnippets() {
 }
 
 export default FeaturedSnippets;
-
-interface StyledLinkProps {
-  children: React.ReactNode;
-  href: string;
-}
-export const StyledWordLink = (props: StyledLinkProps) => {
-  const { href, children } = props;
-  return (
-    <>
-      {" "}
-      <Link
-        href={href}
-        className="text-primary font-semibold animate-pulse group"
-      >
-        <i>{children}</i>
-      </Link>{" "}
-    </>
-  );
-};
