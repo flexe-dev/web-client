@@ -1,7 +1,8 @@
 import { Navbar } from "@/components/navbar";
-import FeaturedSnippets from "@/components/ui/FeaturedSnippets";
+import FeaturedSnippets from "@/components/ui//Landing/FeaturedSnippets";
 import { BackgroundGrid } from "@/components/ui/GridBackground";
-import { CreationParallaxWrapper } from "@/components/ui/UserProjectHome/CreatorShowcase";
+import { CreationParallaxWrapper } from "@/components/ui/Landing/CreatorShowcase";
+import NewsletterPrompt from "@/components/ui/Landing/NewsletterPrompt";
 import { Button } from "@/components/ui/button";
 export default function Home() {
   return (
@@ -21,6 +22,7 @@ export default function Home() {
         </div>
       </CreationParallaxWrapper>
       <FeaturedSnippets />
+      <NewsletterPrompt />
     </>
   );
 }
