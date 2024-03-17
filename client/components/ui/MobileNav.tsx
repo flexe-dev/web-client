@@ -152,6 +152,15 @@ const LinkSection = (props: DropdownProps) => {
               </div>
             );
           })}
+          {
+            <div className="overflow-hidden">
+              <MobileNavLink
+                key={`mobile-link-register`}
+                label={"Create an Account"}
+                href={"/register"}
+              />
+            </div>
+          }
         </motion.div>
       </motion.aside>
     </motion.div>
