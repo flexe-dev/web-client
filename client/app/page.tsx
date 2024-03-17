@@ -3,7 +3,6 @@ import FeaturedSnippets from "@/components/ui//Landing/FeaturedSnippets";
 import { BackgroundGrid } from "@/components/ui/GridBackground";
 import { CreationParallaxWrapper } from "@/components/ui/Landing/CreatorShowcase";
 import NewsletterPrompt from "@/components/ui/Landing/NewsletterPrompt";
-import { Button } from "@/components/ui/button";
 export default function Home() {
   return (
     <>
@@ -15,8 +14,8 @@ export default function Home() {
             Developing projects <br /> doesn't need to be difficult
           </h1>
           <h2 className="text-lg md:text-xl lg:text-2xl md:ml-2 mt-6 md:mt-12 max-w-screen-sm text-secondary-header">
-            Find design inspiration easy and fast through our gallery of curated
-            projects and portfolios sourced from developers and designers from
+            Find design and code inspiration easy and fast through our gallery of curated
+            projects and portfolios. Sourced from some of the brighest developers and designers from
             around the world.
           </h2>
         </div>
