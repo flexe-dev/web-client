@@ -31,6 +31,7 @@ const config = {
         secondary: {
           DEFAULT: "hsl(var(--secondary))",
           foreground: "hsl(var(--secondary-foreground))",
+          header: "hsl(var(--secondary-header))",
         },
         destructive: {
           DEFAULT: "hsl(var(--destructive))",
@@ -51,6 +52,10 @@ const config = {
         card: {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
+        },
+        inverted: {
+          DEFAULT: "hsl(var(--inverted))",
+          foreground: "hsl(var(--inverted-foreground))",
         },
       },
       borderRadius: {
