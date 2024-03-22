@@ -1,9 +1,9 @@
 import React from "react";
 import { Button } from "./button";
 import { cn } from "@/lib/utils";
-interface ButtonWrapperProps {
+import { ClassNameProp } from "@/lib/interface";
+interface ButtonWrapperProps extends ClassNameProp {
   children: React.ReactNode;
-  className?: string;
 }
 
 export const BgTransitionButton = (props: ButtonWrapperProps) => {
@@ -12,7 +12,7 @@ export const BgTransitionButton = (props: ButtonWrapperProps) => {
     <Button
       variant={"outline"}
       className={cn(
-        "relative overflow-hidden group border-inverted ",
+        "relative overflow-hidden group border-inverted hover:bg-transparent",
         className
       )}
     >

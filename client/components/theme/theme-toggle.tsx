@@ -12,6 +12,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
+import { ClassNameProp } from "@/lib/interface";
 
 type ModeToggleVariants = "default" | "lg";
 
@@ -20,17 +21,16 @@ const modeToggleVariants: Record<ModeToggleVariants, string> = {
   lg: "h-[2rem] w-[2rem]",
 };
 
-interface Props {
-  classname?: string;
+interface Props extends ClassNameProp {
   buttonClassName?: string;
   variant: ModeToggleVariants;
 }
 
 export function ModeToggle(props: Props) {
   const { setTheme } = useTheme();
-  const { classname, variant, buttonClassName } = props;
+  const { className, variant, buttonClassName } = props;
   return (
-    <div className={cn(classname)}>
+    <div className={cn(className)}>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button

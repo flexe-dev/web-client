@@ -111,8 +111,11 @@ export const CreationParallaxWrapper = (props: Props) => {
           }}
         >
           <CarouselContent className="mb-20  mt-8 md:min-w-[1800px]">
-            {firstRow.map((creation) => (
-              <CarouselItem className=" md:basis-1/3 mx-8">
+            {firstRow.map((creation, index) => (
+              <CarouselItem
+                key={`carousel-item-row-1-${index}`}
+                className=" md:basis-1/3 mx-8"
+              >
                 <CreationTile creation={creation} key={creation.title} />
               </CarouselItem>
             ))}
@@ -134,7 +137,10 @@ export const CreationParallaxWrapper = (props: Props) => {
         >
           <CarouselContent className="mt-8 mb-20 min-w-[1800px] relative">
             {secondRow.map((creation, index) => (
-              <CarouselItem className="basis-1/3 mx-8 ">
+              <CarouselItem
+                key={`carousel-item-row-2-${index}`}
+                className="basis-1/3 mx-8 "
+              >
                 <CreationTile creation={creation} key={creation.title} />
               </CarouselItem>
             ))}

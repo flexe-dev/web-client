@@ -50,8 +50,8 @@ export const GlowingStarsTitle = ({
 };
 
 export const Illustration = () => {
-  const stars = 108;
-  const columns = 18;
+  const stars = 204;
+  const columns = 34;
 
   const [glowingStars, setGlowingStars] = useState<number[]>([]);
 
@@ -59,7 +59,7 @@ export const Illustration = () => {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      highlightedStars.current = Array.from({ length: 5 }, () =>
+      highlightedStars.current = Array.from({ length: 24 }, () =>
         Math.floor(Math.random() * stars)
       );
       setGlowingStars([...highlightedStars.current]);
