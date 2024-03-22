@@ -1,6 +1,9 @@
 import LoginForm from "@/components/auth/LoginForm";
+import { getCsrfToken } from "next-auth/react";
 import React from "react";
 
-export default function Login() {
+export default async function Login() {
+ 
   return <LoginForm />;
 }
+

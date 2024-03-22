@@ -32,10 +32,13 @@ function PasswordValidation(props: Props) {
     },
   ];
   return (
-    <div className="group-focus-within:scale-100 scale-0 origin-top transition-transform  bg-background border rounded-lg my-4 absolute w-fit p-4 space-y-2">
+    <div className="group-focus-within:scale-y-100 scale-y-0 origin-top-left scale-x-50 group-focus-within:scale-x-100 z-[99] transition-transform ease-out bg-background border rounded-lg my-4 absolute w-fit p-4 space-y-2">
       {passwordCheck.map((check, index) => {
         return (
-          <div className="flex items-center space-x-2">
+          <div
+            key={`validation-${index}`}
+            className="flex items-center space-x-2 group-focus-within:opacity-100 opacity-0 duration-150 "
+          >
             {check.valid ? (
               <CheckCircleIcon className="h-5 w-5 text-green-500" />
             ) : (

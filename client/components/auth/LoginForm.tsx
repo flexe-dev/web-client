@@ -8,14 +8,17 @@ import ThirdParty from "./ThirdPartyAuth";
 import { useRouter } from "next/navigation";
 import { Toaster, toast } from "sonner";
 import Link from "next/link";
+import { signIn } from "next-auth/react";
+
+
 
 function LoginForm() {
-  const router = useRouter();
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const email = e.currentTarget.email.value;
     const password = e.currentTarget.password.value;
     //todo: Handle Email Password Login
+    signIn("credentials", {email,password})
   };
 
   return (

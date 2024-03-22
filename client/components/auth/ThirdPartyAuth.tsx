@@ -1,7 +1,11 @@
-import React from "react";
+"use client";
 
+import React from "react";
 import { Button } from "../ui/button";
-import { FaGithub, FaGitlab } from "react-icons/fa";
+import { FaGithub, FaGoogle } from "react-icons/fa";
+
+import { signIn } from "next-auth/react";
+
 function ThirdParty() {
   return (
     <>
@@ -11,13 +15,21 @@ function ThirdParty() {
         <div className="h-[2px] flex flex-grow bg-foreground rounded-lg"></div>
       </div>
       <section className="mt-8 space-y-2">
-        <Button variant={"outline"} className="w-full font-semibold">
+        <Button
+          onClick={() => signIn("github", { callbackUrl: "/" })}
+          variant={"outline"}
+          className="w-full font-semibold"
+        >
           <FaGithub className="text-base" />
           <span className="ml-2">GitHub</span>
         </Button>
-        <Button variant={"outline"} className="w-full font-semibold">
-          <FaGitlab className="text-base" />
-          <span className="ml-2">GitLab</span>
+        <Button
+          onClick={() => signIn("google", { callbackUrl: "/" })}
+          variant={"outline"}
+          className="w-full font-semibold"
+        >
+          <FaGoogle className="text-base" />
+          <span className="ml-2">Google</span>
         </Button>
       </section>
     </>
