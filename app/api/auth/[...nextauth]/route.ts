@@ -1,21 +1,50 @@
-import NextAuth, { NextAuthOptions } from "next-auth";
-import GitHubProvider from "next-auth/providers/github";
-import GoogleProvider from "next-auth/providers/google";
+import NextAuth, { NextAuthOptions, Session } from "next-auth";
+import GitHubProvider, { GithubProfile } from "next-auth/providers/github";
+import GoogleProvider, { GoogleProfile } from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
 import clientPromise from "@/lib/mongodb";
 import { MongoDBAdapter } from "@auth/mongodb-adapter";
-import { Adapter } from "next-auth/adapters";
+import { Adapter, AdapterUser } from "next-auth/adapters";
+import { UUID } from "mongodb";
 
+interface SessionUser {
+  session: Session;
+  user: AdapterUser;
+}
 export const authOptions: NextAuthOptions = {
   adapter: MongoDBAdapter(clientPromise) as Adapter,
   providers: [
     GitHubProvider({
       clientId: process.env.GITHUB_ID ?? "",
       clientSecret: process.env.GITHUB_SECRET ?? "",
+      profile(profile: GithubProfile) {
+        return {
+          id: profile.id.toString(),
+          name: profile.name,
+          username: new UUID().toString(),
+          email: profile.email,
+          image: profile.avatar_url,
+          password: undefined,
+          emailVerified: null,
+          onboarded: false,
+        };
+      },
     }),
     GoogleProvider({
       clientId: process.env.GOOGLE_ID ?? "",
       clientSecret: process.env.GOOGLE_SECRET ?? "",
+      profile(profile: GoogleProfile) {
+        return {
+          id: profile.sub,
+          name: profile.name,
+          username: new UUID().toString(),
+          email: profile.email,
+          image: profile.picture,
+          password: undefined,
+          emailVerified: profile.email_verified,
+          onboarded: false,
+        };
+      },
     }),
     // CredentialsProvider({
     //   credentials: {
@@ -41,6 +70,12 @@ export const authOptions: NextAuthOptions = {
     async signIn({ user, account, profile }) {
       //todo: Check if User is in the database
       return true;
+    },
+    async session(sessionUser: SessionUser) {
+      const { session, user } = sessionUser;
+      session.user.username = user.username;
+      session.user.onboarded = user.onboarded;
+      return session;
     },
   },
 };
