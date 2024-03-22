@@ -1,10 +1,8 @@
 import React from "react";
 import { cn } from "@/lib/utils";
-interface Props {
-  className?: string;
-}
+import { ClassNameProp } from "@/lib/interface";
 
-function XMarkIcon(props: Props) {
+function XMarkIcon(props: ClassNameProp) {
   return (
     <svg
       fill="none"

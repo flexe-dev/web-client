@@ -1,13 +1,13 @@
 import React from "react";
 import { cn } from "@/lib/utils";
+import { ClassNameProp } from "@/lib/interface";
 
 export interface SecondaryProps {
   fill?: string;
   stroke?: string;
 }
 
-export interface LogoProps {
-  className?: string;
+export interface LogoProps extends ClassNameProp {
   foreground: string;
   secondary?: SecondaryProps;
 }
