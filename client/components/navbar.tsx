@@ -3,7 +3,7 @@ import { Logo } from "./logo";
 import { ModeToggle } from "./theme/theme-toggle";
 import Link from "next/link";
 import AuthProfile from "./ui/AuthProfile";
-import { LinkProps } from "@/navigation";
+import { LinkProps } from "@/lib/interface";
 import MobileView from "./ui/MobileNav";
 import { link } from "fs";
 export const MainNavbar = () => {
@@ -32,14 +32,14 @@ const links: LinkProps[] = [
 export const Navbar = () => {
   return (
     <>
-      <nav className="fixed z-30 pl-4 pr-8 h-[5rem] border-b border-b-neutral-300 dark:border-b-neutral-700 backdrop-blur-xl w-screen flex items-center">
+      <nav className="fixed z-30 pl-4 pr-8 h-[5rem] border-b-2 backdrop-blur-xl w-screen flex items-center">
         <Link href={"/"}>
           <Logo {...logoProps} />
         </Link>
         <section className="flex flex-grow items-center justify-end space-x-4">
           <DesktopLayout />
           <AuthProfile />
-          <ModeToggle classname="hidden md:flex" variant="default" />
+          <ModeToggle className="hidden md:flex" variant="default" />
         </section>
       </nav>
       <MobileView links={links} />
