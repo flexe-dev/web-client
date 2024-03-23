@@ -60,7 +60,8 @@ export const authOptions: NextAuthOptions = {
     //   },
     //   async authorize(credentials, req) {
     //     if (credentials?.email && credentials.password) {
-    //       const user = await FindUserByEmail(credentials.email);
+    //       const user = FindUserByEmail(credentials.email);
+    //       return user
 
     //     }
 
