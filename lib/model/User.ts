@@ -34,6 +34,7 @@ const userSchema = new Schema({
   emailVerified: {
     type: Boolean,
     nullable: true,
+    default: false,
   },
 });
 
@@ -41,3 +42,6 @@ const userContentPreferencesSchema = new Schema({
   _id: ObjectId,
   userId: ObjectId,
 });
+
+const User = mongoose.models.User || model("User", userSchema);
+export default User;
