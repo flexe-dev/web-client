@@ -4,8 +4,9 @@ import { decodeAction } from "next/dist/server/app-render/entry-base";
 declare module "next-auth" {
   interface User extends DefaultUser {
     password?: String;
-    username?: String;
+    username: String;
     onboarded: Boolean;
+    emailVerified?: Boolean;
   }
 
   interface Session extends DefaultSession {
