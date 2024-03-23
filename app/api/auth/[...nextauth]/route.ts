@@ -6,13 +6,14 @@ import clientPromise from "@/lib/mongodb";
 import { MongoDBAdapter } from "@auth/mongodb-adapter";
 import { Adapter, AdapterUser } from "next-auth/adapters";
 import { UUID } from "mongodb";
-
+import { FindUserByEmail, CreateEmailUser } from "@/controllers/AuthController";
 interface SessionUser {
   session: Session;
   user: AdapterUser;
 }
 export const authOptions: NextAuthOptions = {
   adapter: MongoDBAdapter(clientPromise) as Adapter,
+  secret: process.env.NEXTAUTH_SECRET,
   providers: [
     GitHubProvider({
       clientId: process.env.GITHUB_ID ?? "",
@@ -58,6 +59,10 @@ export const authOptions: NextAuthOptions = {
     //     },
     //   },
     //   async authorize(credentials, req) {
+    //     if (credentials?.email && credentials.password) {
+    //       const user = await FindUserByEmail(credentials.email);
+
+    //     }
 
     //   },
     // }),
