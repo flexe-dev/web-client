@@ -1,5 +1,5 @@
 import { MongoClient, ServerApiVersion } from "mongodb";
-
+import mongoose from "mongoose";
 if (!process.env.MONGODB_URI) {
   throw new Error("MONGO_URL is not set");
 }
@@ -15,7 +15,7 @@ const options = {
 
 let client: MongoClient;
 let clientPromise: Promise<MongoClient>;
-
+mongoose.connect(uri);
 if (process.env.NODE_ENV === "development") {
   let globalMongo = global as typeof globalThis & {
     _mongoClientPromise: Promise<MongoClient>;
