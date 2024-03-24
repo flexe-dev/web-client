@@ -13,7 +13,7 @@ declare global {
       GOOGLE_SECRET: string;
       MONGODB_URI: string;
       MONGODB_DB_NAME: string;
-      NEXT_API_URL: string;
+      NEXT_PUBLIC_API_URL: string;
     }
   }
 }
