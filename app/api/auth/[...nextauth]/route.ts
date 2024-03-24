@@ -1,18 +1,30 @@
-import NextAuth, { NextAuthOptions, Session } from "next-auth";
-import GitHubProvider, { GithubProfile } from "next-auth/providers/github";
-import GoogleProvider, { GoogleProfile } from "next-auth/providers/google";
-import CredentialsProvider from "next-auth/providers/credentials";
 import clientPromise from "@/lib/mongodb";
 import { MongoDBAdapter } from "@auth/mongodb-adapter";
 import { Adapter, AdapterUser } from "next-auth/adapters";
-import { UUID } from "mongodb";
-import { FindUserByEmail, CreateEmailUser } from "@/controllers/AuthController";
+import { ObjectId, UUID } from "mongodb";
+import { FindUserByEmail } from "@/controllers/AuthController";
+import NextAuth, { AuthOptions, User } from "next-auth";
+import { decode, encode } from "next-auth/jwt";
+import { cookies } from "next/headers";
+import { randomUUID } from "node:crypto";
+import bcrypt from "bcryptjs";
+import { NextRequest } from "next/server";
+import GoogleProvider, { GoogleProfile } from "next-auth/providers/google";
+import GitHubProvider, { GithubProfile } from "next-auth/providers/github";
+import CredentialsProvider from "next-auth/providers/credentials";
+import { Session } from "next-auth";
+
+interface Context {
+  params: { nextauth: string[] };
+}
+
 interface SessionUser {
   session: Session;
   user: AdapterUser;
 }
-export const authOptions: NextAuthOptions = {
-  adapter: MongoDBAdapter(clientPromise) as Adapter,
+const adapter = MongoDBAdapter(clientPromise) as Adapter;
+export const baseAuthOptions: AuthOptions = {
+  adapter: adapter,
   secret: process.env.NEXTAUTH_SECRET,
   providers: [
     GitHubProvider({
@@ -26,7 +38,7 @@ export const authOptions: NextAuthOptions = {
           email: profile.email,
           image: profile.avatar_url,
           password: undefined,
-          emailVerified: null,
+          emailVerified: false,
           onboarded: false,
         };
       },
@@ -47,43 +59,116 @@ export const authOptions: NextAuthOptions = {
         };
       },
     }),
-    // CredentialsProvider({
-    //   credentials: {
-    //     email: {
-    //       label: "Email",
-    //       type: "email",
-    //     },
-    //     password: {
-    //       label: "Password",
-    //       type: "password",
-    //     },
-    //   },
-    //   async authorize(credentials, req) {
-    //     if (credentials?.email && credentials.password) {
-    //       const user = FindUserByEmail(credentials.email);
-    //       return user
+    CredentialsProvider({
+      credentials: {
+        email: {
+          label: "Email",
+          type: "email",
+        },
+        password: {
+          label: "Password",
+          type: "password",
+        },
+      },
+      async authorize(credentials, req) {
+        if (credentials) {
+          const user = await FindUserByEmail(credentials.email);
 
-    //     }
-
-    //   },
-    // }),
+          if (!user) {
+            return null;
+          }
+          if (
+            user.password &&
+            (await bcrypt.compare(credentials.password, user.password))
+          ) {
+            return user;
+          }
+        }
+        return null;
+      },
+    }),
   ],
-  pages: {
-    signIn: "/auth/login",
-    newUser: "/auth/onboard",
-  },
   callbacks: {
-    async signIn({ user, account, profile }) {
-      //todo: Check if User is in the database
-      return true;
-    },
     async session(sessionUser: SessionUser) {
       const { session, user } = sessionUser;
       session.user.username = user.username;
       session.user.onboarded = user.onboarded;
       return session;
     },
+    async redirect({ baseUrl }) {
+      return baseUrl;
+    },
   },
 };
-const handler = NextAuth(authOptions);
+// Configuration wrapper for NextAuth
+const authOptionsWrapper = (request: NextRequest, context: Context) => {
+  const { params } = context;
+
+  // Determine if the current request is related to credentials callback
+  const isCredentialsCallback =
+    params?.nextauth?.includes("callback") &&
+    params.nextauth.includes("credentials") &&
+    request.method === "POST";
+
+  // Common JWT options shared between encode and decode
+  const commonJwtOptions: AuthOptions["jwt"] = {
+    maxAge: 60 * 60 * 24 * 30,
+    encode: async (arg) => {
+      if (isCredentialsCallback) {
+        // Retrieve and return session token from the cookie
+        const cookie = cookies().get("__Secure-next-auth.session-token");
+        return cookie?.value || "";
+      }
+      return encode(arg);
+    },
+    decode: async (arg) => {
+      if (isCredentialsCallback) {
+        // Prevent decoding during credentials callback
+        return null;
+      }
+      return decode(arg);
+    },
+  };
+  const authOptions: AuthOptions = {
+    ...baseAuthOptions,
+    callbacks: {
+      // Handle sign-in events
+      ...baseAuthOptions.callbacks,
+      async signIn({ user }) {
+        if (isCredentialsCallback && user) {
+          // Generate session token and set cookie
+          const sessionToken = randomUUID();
+          const sessionExpiry = new Date(Date.now() + 60 * 60 * 24 * 30 * 1000);
+          if (adapter.createSession) {
+            await adapter.createSession({
+              sessionToken: sessionToken,
+              //todo: Look into Mongoose or Typing to fix _id vs id issue
+              userId: user._id as string,
+              expires: sessionExpiry,
+            });
+          }
+          cookies().set("__Secure-next-auth.session-token", sessionToken, {
+            expires: sessionExpiry,
+          });
+        }
+        return true;
+      },
+    },
+    jwt: commonJwtOptions,
+    debug: process.env.NODE_ENV === "development",
+    pages: {
+      signIn: "/auth/login",
+      newUser: "/auth/onboard",
+    },
+  };
+
+  return [request, context, authOptions] as const;
+};
+
+// Authentication handler using NextAuth
+function handler(request: NextRequest, context: Context) {
+  return NextAuth(...authOptionsWrapper(request, context));
+}
+
+// Export handler for GET and POST requests
 export { handler as GET, handler as POST };
