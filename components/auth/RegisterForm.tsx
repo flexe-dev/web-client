@@ -8,6 +8,8 @@ import { toast } from "sonner";
 import ThirdParty from "./ThirdPartyAuth";
 import Link from "next/link";
 import PasswordValidation from "./PasswordValidation";
+import { signIn } from "next-auth/react";
+import { CreateEmailUser, FindUserByEmail } from "@/controllers/AuthController";
 function RegisterForm() {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
@@ -33,6 +35,21 @@ function RegisterForm() {
     if (!password || !valid.valid) {
       return toast.error("Please enter a valid password", {});
     }
+
+    const user = await FindUserByEmail(email);
+    if (user) {
+      return toast.error("A User with this email already exists", {});
+    }
+    const response = await CreateEmailUser({ email, password });
+    if (!response) {
+      return toast.error("An error occurred, please try again", {});
+    }
+
+    const request = await signIn("credentials", {
+      email,
+      password,
+      redirect: false,
+    });
   };
 
   return (
