@@ -1,7 +1,6 @@
-import clientPromise from "@/lib/mongodb";
-import { MongoDBAdapter } from "@auth/mongodb-adapter";
+
 import { Adapter, AdapterUser } from "next-auth/adapters";
-import { ObjectId, UUID } from "mongodb";
+import {UUID } from "mongodb";
 import { FindUserByEmail } from "@/controllers/AuthController";
 import NextAuth, { AuthOptions, User } from "next-auth";
 import { decode, encode } from "next-auth/jwt";
@@ -13,7 +12,8 @@ import GoogleProvider, { GoogleProfile } from "next-auth/providers/google";
 import GitHubProvider, { GithubProfile } from "next-auth/providers/github";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { Session } from "next-auth";
-
+import { PrismaAdapter } from "@auth/prisma-adapter";
+import { PrismaClient } from "@prisma/client";
 interface Context {
   params: { nextauth: string[] };
 }
@@ -22,7 +22,9 @@ interface SessionUser {
   session: Session;
   user: AdapterUser;
 }
-const adapter = MongoDBAdapter(clientPromise) as Adapter;
+// const adapter = MongoDBAdapter(clientPromise) as Adapter;
+const prisma = new PrismaClient();
+const adapter = PrismaAdapter(prisma) as Adapter;
 export const baseAuthOptions: AuthOptions = {
   adapter: adapter,
   secret: process.env.NEXTAUTH_SECRET,
@@ -73,7 +75,6 @@ export const baseAuthOptions: AuthOptions = {
       async authorize(credentials, req) {
         if (credentials) {
           const user = await FindUserByEmail(credentials.email);
-
           if (!user) {
             return null;
           }
@@ -143,7 +144,7 @@ const authOptionsWrapper = (request: NextRequest, context: Context) => {
             await adapter.createSession({
               sessionToken: sessionToken,
               //todo: Look into Mongoose or Typing to fix _id vs id issue
-              userId: user._id as string,
+              userId: user.id,
               expires: sessionExpiry,
             });
           }

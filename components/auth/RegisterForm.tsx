@@ -45,10 +45,10 @@ function RegisterForm() {
       return toast.error("An error occurred, please try again", {});
     }
 
-    const request = await signIn("credentials", {
+    await signIn("credentials", {
       email,
       password,
-      redirect: false,
+      callbackUrl: "/onboard",
     });
   };
 
