@@ -1,6 +1,5 @@
-
 import { Adapter, AdapterUser } from "next-auth/adapters";
-import {UUID } from "mongodb";
+import { UUID } from "mongodb";
 import { FindUserByEmail } from "@/controllers/AuthController";
 import NextAuth, { AuthOptions, User } from "next-auth";
 import { decode, encode } from "next-auth/jwt";
@@ -13,7 +12,7 @@ import GitHubProvider, { GithubProfile } from "next-auth/providers/github";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { Session } from "next-auth";
 import { PrismaAdapter } from "@auth/prisma-adapter";
-import { PrismaClient } from "@prisma/client";
+import prisma from "@/lib/prismadb";
 interface Context {
   params: { nextauth: string[] };
 }
@@ -22,8 +21,6 @@ interface SessionUser {
   session: Session;
   user: AdapterUser;
 }
-// const adapter = MongoDBAdapter(clientPromise) as Adapter;
-const prisma = new PrismaClient();
 const adapter = PrismaAdapter(prisma) as Adapter;
 export const baseAuthOptions: AuthOptions = {
   adapter: adapter,
@@ -143,7 +140,6 @@ const authOptionsWrapper = (request: NextRequest, context: Context) => {
           if (adapter.createSession) {
             await adapter.createSession({
               sessionToken: sessionToken,
-              //todo: Look into Mongoose or Typing to fix _id vs id issue
               userId: user.id,
               expires: sessionExpiry,
             });
