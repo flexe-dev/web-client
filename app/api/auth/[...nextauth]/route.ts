@@ -155,7 +155,7 @@ const authOptionsWrapper = (request: NextRequest, context: Context) => {
     debug: process.env.NODE_ENV === "development",
     pages: {
       signIn: "/auth/login",
-      newUser: "/auth/onboard",
+      signOut: "/",
     },
   };
 
