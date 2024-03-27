@@ -1,6 +1,6 @@
 "use client";
-
-import React, { useState } from "react";
+import { z } from "zod";
+import React, { useEffect, useState } from "react";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
@@ -8,11 +8,13 @@ import { toast } from "sonner";
 import ThirdParty from "./ThirdPartyAuth";
 import Link from "next/link";
 import PasswordValidation from "./PasswordValidation";
+import { useSearchParams } from "next/navigation";
 import { signIn } from "next-auth/react";
 import { CreateEmailUser, FindUserByEmail } from "@/controllers/AuthController";
 function RegisterForm() {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+
 
   const handlePasswordValidation = () => {
     const length = password.length > 6;
@@ -30,15 +32,19 @@ function RegisterForm() {
     e.preventDefault();
 
     if (!email) {
-      return toast.error("Please enter your email", {});
+      return toast.error("Please enter your email", { position: "top-right" });
     }
     if (!password || !valid.valid) {
-      return toast.error("Please enter a valid password", {});
+      return toast.error("Please enter a valid password", {
+        position: "top-right",
+      });
     }
 
     const user = await FindUserByEmail(email);
     if (user) {
-      return toast.error("A User with this email already exists", {});
+      return toast.error("A User with this email already exists", {
+        position: "top-right",
+      });
     }
     const response = await CreateEmailUser({ email, password });
     if (!response) {

@@ -14,8 +14,8 @@ function AuthProfile() {
     return <UserAvatar />;
   }
   return (
-    <Link href={"/auth/register"}>
-      <BgTransitionButton className="px-10">Sign Up</BgTransitionButton>
+    <Link href={"/auth/login"}>
+      <BgTransitionButton className="px-10">Join Now</BgTransitionButton>
     </Link>
   );
 }

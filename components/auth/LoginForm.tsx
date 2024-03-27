@@ -1,23 +1,57 @@
 "use client";
-
-import React, { useState } from "react";
+import { z } from "zod";
+import React, { useEffect, useState } from "react";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import ThirdParty from "./ThirdPartyAuth";
-import { useRouter } from "next/navigation";
-import { Toaster, toast } from "sonner";
 import Link from "next/link";
 import { signIn } from "next-auth/react";
-
+import { useSearchParams } from "next/navigation";
+import { toast } from "sonner";
 function LoginForm() {
+  const searchParams = useSearchParams();
+  const error = searchParams.get("error");
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const email = e.currentTarget.email.value;
     const password = e.currentTarget.password.value;
-    //todo: Handle Email Password Login
     signIn("credentials", { email, password, callbackUrl: "/" });
   };
+
+  useEffect(() => {
+    if (!error) return;
+    console.log(error);
+    switch (error) {
+      case "CredentialsSignin":
+        console.log("hai");
+        setTimeout(
+          () =>
+            toast.error("Invalid email or password", { position: "top-right" }),
+          10
+        );
+        break;
+      case "OAuthAccountNotLinked":
+        setTimeout(
+          () =>
+            toast.error("This email is already being used by another account", {
+              position: "top-right",
+            }),
+          10
+        );
+        break;
+      default:
+        setTimeout(
+          () =>
+            toast.error("An error occurred, please try again", {
+              position: "top-right",
+            }),
+          10
+        );
+        break;
+    }
+  }, [error]);
 
   return (
     <div className="w-full md:w-fit p-8 px-12 z-[10]">
