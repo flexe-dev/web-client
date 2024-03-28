@@ -75,7 +75,7 @@
     --secondary-header: var(--neutral-400);
 
     --muted: var(--neutral-800);
-    --muted-foreground: var(--neutral-300);
+    --muted-foreground: var(--neutral-400);
 
     --accent: var(--neutral-800);
     --accent-foreground: var(--neutral-200);
