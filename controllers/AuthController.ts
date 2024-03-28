@@ -36,4 +36,19 @@ const FindUserByEmail = async (email: string): Promise<User | null> => {
   return user;
 };
 
-export { CreateEmailUser, FindUserByEmail };
+const UniqueUsernameCheck = async (username: string): Promise<boolean> => {
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}auth/uniqueUsername/${username}`,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+  const user: User | null = await response.json();
+  return !!user;
+};
+
+// const CompleteOnboarding = async(): Promise<boolean> => {}
+export { CreateEmailUser, FindUserByEmail, UniqueUsernameCheck };
