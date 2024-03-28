@@ -1,4 +1,4 @@
-import { ObjectId, UUID } from "mongodb";
+import { UUID } from "mongodb";
 import { HashPassword } from "@/lib/utils";
 import prisma from "@/lib/prismadb";
 export async function POST(request: Request) {
