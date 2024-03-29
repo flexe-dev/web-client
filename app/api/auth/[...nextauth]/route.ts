@@ -1,11 +1,11 @@
 import { Adapter, AdapterUser } from "next-auth/adapters";
 import { UUID } from "mongodb";
 import { FindUserByEmail } from "@/controllers/AuthController";
-import NextAuth, { AuthOptions, User } from "next-auth";
+import NextAuth, { AuthOptions } from "next-auth";
 import { decode, encode } from "next-auth/jwt";
 import { cookies } from "next/headers";
 import { randomUUID } from "node:crypto";
-import bcrypt from "bcryptjs";
+import { CheckUserPassword } from "@/controllers/AuthController";
 import { NextRequest } from "next/server";
 import GoogleProvider, { GoogleProfile } from "next-auth/providers/google";
 import GitHubProvider, { GithubProfile } from "next-auth/providers/github";
@@ -75,10 +75,7 @@ export const baseAuthOptions: AuthOptions = {
           if (!user) {
             return null;
           }
-          if (
-            user.password &&
-            (await bcrypt.compare(credentials.password, user.password))
-          ) {
+          if (await CheckUserPassword(user.id, credentials.password)) {
             return user;
           }
         }
@@ -89,11 +86,16 @@ export const baseAuthOptions: AuthOptions = {
   callbacks: {
     async session(sessionUser: SessionUser) {
       const { session, user } = sessionUser;
+      session.user.id = user.id;
       session.user.username = user.username;
       session.user.onboarded = user.onboarded;
       return session;
     },
-    async redirect({ baseUrl }) {
+    async redirect({ url, baseUrl }) {
+      // Allows relative callback URLs
+      if (url.startsWith("/")) return `${baseUrl}${url}`;
+      // Allows callback URLs on the same origin
+      else if (new URL(url).origin === baseUrl) return url;
       return baseUrl;
     },
   },

@@ -36,6 +36,20 @@ const FindUserByEmail = async (email: string): Promise<User | null> => {
   return user;
 };
 
+const CheckUserPassword = async (userID: string, password: string) => {
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}auth/signin`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ userID, password }),
+    }
+  );
+  return response.ok;
+};
+
 const UniqueUsernameCheck = async (username: string): Promise<boolean> => {
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_API_URL}auth/findUserByUsername/${username}`,
@@ -50,5 +64,29 @@ const UniqueUsernameCheck = async (username: string): Promise<boolean> => {
   return !!user;
 };
 
-// const CompleteOnboarding = async(): Promise<boolean> => {}
-export { CreateEmailUser, FindUserByEmail, UniqueUsernameCheck };
+//todo: handling image upload
+const CompleteUserOnboard = async (
+  userID: string,
+  username: string,
+  name: string
+): Promise<boolean> => {
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}auth/onboardUser`,
+    {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ userID, username, name }),
+    }
+  );
+  return response.ok;
+};
+
+export {
+  CreateEmailUser,
+  FindUserByEmail,
+  UniqueUsernameCheck,
+  CompleteUserOnboard,
+  CheckUserPassword,
+};
