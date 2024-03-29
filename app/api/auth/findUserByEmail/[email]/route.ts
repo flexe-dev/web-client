@@ -1,4 +1,5 @@
 import prisma from "@/lib/prismadb";
+import { prismaExclude } from "@/lib/prisma/utils";
 export async function GET(
   request: Request,
   { params }: { params: { email: string } }
@@ -9,6 +10,7 @@ export async function GET(
       where: {
         email: email,
       },
+      select: prismaExclude("User", ["password"]),
     });
     return Response.json(user);
   } catch (e) {
