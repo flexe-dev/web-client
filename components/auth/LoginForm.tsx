@@ -25,7 +25,6 @@ function LoginForm() {
     console.log(error);
     switch (error) {
       case "CredentialsSignin":
-        console.log("hai");
         setTimeout(
           () =>
             toast.error("Invalid email or password", { position: "top-right" }),

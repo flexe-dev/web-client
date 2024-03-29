@@ -38,7 +38,7 @@ const FindUserByEmail = async (email: string): Promise<User | null> => {
 
 const UniqueUsernameCheck = async (username: string): Promise<boolean> => {
   const response = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}auth/uniqueUsername/${username}`,
+    `${process.env.NEXT_PUBLIC_API_URL}auth/findUserByUsername/${username}`,
     {
       method: "GET",
       headers: {
