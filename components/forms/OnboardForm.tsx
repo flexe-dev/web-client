@@ -6,7 +6,10 @@ import React, { FormEvent, useCallback, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Button } from "../ui/button";
-import { UniqueUsernameCheck } from "@/controllers/AuthController";
+import {
+  UniqueUsernameCheck,
+  CompleteUserOnboard,
+} from "@/controllers/AuthController";
 import { debounce } from "lodash";
 import {
   Form,
@@ -41,11 +44,17 @@ export const OnboardForm = (props: Props) => {
   const session = useSession();
   const user = session.data?.user;
   if (!user) return null;
-
   const [usernameValid, setUsernameValid] =
     useState<UsernameStatus>("checking");
-  const onSubmit = (values: z.infer<typeof formSchema>) => {
-    // Handle form submission
+
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    if (usernameValid !== "available") return;
+    const response = await CompleteUserOnboard(
+      user.id,
+      values.username,
+      values.name
+    );
+    if (response) props.onSuccess(true);
     // Update User Account Details
   };
 

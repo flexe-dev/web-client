@@ -8,7 +8,7 @@ import { Button } from "../ui/button";
 import { OnboardForm } from "../forms/OnboardForm";
 export const OnboardModal = () => {
   const user = useSession().data?.user;
-  if (!user) return null;
+
   //Only performing state operations due to Hydration Issues
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   useEffect(() => {
@@ -18,6 +18,7 @@ export const OnboardModal = () => {
   const handleFinishOnboard = () => {
     setModalOpen(false);
   };
+  if (!user) return null;
   return (
     <Dialog open={modalOpen}>
       <DialogContent
