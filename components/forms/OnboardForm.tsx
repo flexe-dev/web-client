@@ -2,11 +2,12 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useSession } from "next-auth/react";
-import React, { FormEvent, useState } from "react";
+import React, { FormEvent, useCallback, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Button } from "../ui/button";
 import { UniqueUsernameCheck } from "@/controllers/AuthController";
+import { debounce } from "lodash";
 import {
   Form,
   FormControl,
@@ -18,10 +19,13 @@ import {
 } from "../ui/form";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
+import { cn } from "@/lib/utils";
 
 interface Props {
   onSuccess: React.Dispatch<React.SetStateAction<boolean>>;
 }
+
+type UsernameStatus = "checking" | "available" | "taken";
 
 const formSchema = z.object({
   username: z.string().min(2, {
@@ -37,12 +41,21 @@ export const OnboardForm = (props: Props) => {
   const session = useSession();
   const user = session.data?.user;
   if (!user) return null;
-  const [userUsername, setUserUsername] = useState<string>(user.username);
-  const [uniqueUsername, setUniqueUsername] = useState<boolean>(true);
+
+  const [usernameValid, setUsernameValid] =
+    useState<UsernameStatus>("checking");
   const onSubmit = (values: z.infer<typeof formSchema>) => {
     // Handle form submission
     // Update User Account Details
   };
+
+  const checkUsername = async (username: string) => {
+    if (username.length < 2) return;
+    const isTaken = await UniqueUsernameCheck(username);
+    setUsernameValid(isTaken ? "taken" : "available");
+  };
+  const debounceFn = useCallback(debounce(checkUsername, 500), []);
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -77,7 +90,7 @@ export const OnboardForm = (props: Props) => {
             </label>
           </div>
         </div>
-        <div className="w-full flex flex-col space-y-6 mt-10">
+        <div className="w-full flex flex-col mt-10">
           <FormField
             control={form.control}
             name="username"
@@ -85,12 +98,34 @@ export const OnboardForm = (props: Props) => {
               <FormItem>
                 <FormLabel>Username</FormLabel>
                 <FormControl>
-                  <Input placeholder="@dawaad" className="w-5/6" {...field} />
+                  <Input
+                    placeholder="@dawaad"
+                    className={cn(
+                      `w-5/6 transition-colors`,
+                      usernameValid === "taken" &&
+                        "border-red-500 focus-visible:ring-red-500 focus-visible:ring-offset-red-500",
+                      usernameValid === "available" &&
+                        "border-emerald-500 focus-visible:ring-emerald-500 focus-visible:ring-offset-emerald-500"
+                    )}
+                    {...field}
+                    onChange={(e) => {
+                      field.onChange(e);
+                      setUsernameValid("checking");
+                      debounceFn(e.target.value);
+                    }}
+                  />
                 </FormControl>
                 <FormDescription>
                   This will be your unique identifier on the platform.
                 </FormDescription>
                 <FormMessage>
+                  <p
+                    className={`transition-opacity ${
+                      usernameValid === "taken" ? "opacity-100" : "opacity-0"
+                    }`}
+                  >
+                    Username is already taken
+                  </p>
                   {form.formState.errors.username?.message}
                 </FormMessage>
               </FormItem>
@@ -100,7 +135,7 @@ export const OnboardForm = (props: Props) => {
             control={form.control}
             name="name"
             render={({ field }) => (
-              <FormItem>
+              <FormItem className="mt-2">
                 <FormLabel>Name</FormLabel>
                 <FormControl>
                   <Input
@@ -114,7 +149,7 @@ export const OnboardForm = (props: Props) => {
             )}
           />
 
-          <Button type="submit" className="w-fit ">
+          <Button type="submit" className="w-fit mt-8">
             Submit
           </Button>
         </div>
