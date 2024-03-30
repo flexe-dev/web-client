@@ -10,20 +10,21 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "./dropdown-menu";
-import { signOut, useSession } from "next-auth/react";
+import { signOut } from "next-auth/react";
 import { LogoutIcon } from "../icons/LogoutIcon";
+import { useAccount } from "../context/AccountProvider";
 
 function UserAvatar() {
-  const { data: session } = useSession();
+  const { user } = useAccount();
 
-  if (session) {
+  if (user) {
     return (
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Avatar className="border cursor-pointer hover:brightness-75 transition-all">
-            <AvatarImage src={session.user?.image ?? ""} />
+            <AvatarImage className="object-cover" src={user.image ?? ""} />
             <AvatarFallback>
-              {session.user?.name
+              {user?.name
                 ?.split(" ")
                 .map((n) => n[0])
                 .join("")}
@@ -32,14 +33,14 @@ function UserAvatar() {
         </DropdownMenuTrigger>
         <DropdownMenuContent className="">
           <DropdownMenuLabel className="text-secondary-header px-4">
-            {session.user.name}
+            {user.name}
           </DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuItem
             className="flex space-x-4"
             onClick={() => signOut()}
           >
-            <LogoutIcon className="stroke-secondary-header"/>
+            <LogoutIcon className="stroke-secondary-header" />
             <span>Logout</span>
           </DropdownMenuItem>
         </DropdownMenuContent>
