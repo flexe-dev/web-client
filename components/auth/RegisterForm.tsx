@@ -15,7 +15,6 @@ function RegisterForm() {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
 
-
   const handlePasswordValidation = () => {
     const length = password.length > 6;
     const number = /\d/.test(password);
@@ -54,7 +53,7 @@ function RegisterForm() {
     await signIn("credentials", {
       email,
       password,
-      callbackUrl: "/onboard",
+      callbackUrl: "/",
     });
   };
 
