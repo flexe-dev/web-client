@@ -1,4 +1,4 @@
-import prisma from "@/lib/prismadb";
+import {prisma} from "@/lib/prismadb";
 import bcrypt from "bcryptjs";
 export async function POST(request: Request) {
   const { userID, password } = await request.json();
