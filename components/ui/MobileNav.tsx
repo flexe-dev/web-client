@@ -3,7 +3,7 @@ import Link from "next/link";
 import React, { useState, Dispatch, SetStateAction } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
-import { LinkProps } from "@/navigation";
+import { LinkProps } from "@/lib/interface";
 import { SidebarBurger } from "@/components/icons/SidebarBurger";
 import { ModeToggle } from "../theme/theme-toggle";
 import { Button } from "./button";

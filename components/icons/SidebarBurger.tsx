@@ -1,6 +1,6 @@
 import React from "react";
 import { cn } from "@/lib/utils";
-import { SidebarButtonProps } from "@/navigation";
+import { SidebarButtonProps } from "@/lib/interface";
 import { Button } from "@/components/ui/button";
 export const SidebarBurger = (props: SidebarButtonProps) => {
   const { className, callback } = props;

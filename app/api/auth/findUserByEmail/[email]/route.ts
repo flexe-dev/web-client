@@ -1,4 +1,4 @@
-import prisma from "@/lib/prismadb";
+import { prisma } from "@/lib/prismadb";
 import { prismaExclude } from "@/lib/prisma/utils";
 export async function GET(
   request: Request,

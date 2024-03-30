@@ -38,7 +38,7 @@ const FindUserByEmail = async (email: string): Promise<User | null> => {
 
 const CheckUserPassword = async (userID: string, password: string) => {
   const response = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}auth/signin`,
+    `${process.env.NEXT_PUBLIC_API_URL}auth/checkPassword`,
     {
       method: "POST",
       headers: {

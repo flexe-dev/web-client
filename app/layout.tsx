@@ -7,7 +7,7 @@ const jetBrainsMono = JetBrains_Mono({ subsets: ["latin"] });
 import { Toaster } from "@/components/ui/sonner";
 import SessionProvider from "@/components/context/SessionProvider";
 import { getServerSession } from "next-auth";
-import { baseAuthOptions } from "./api/auth/[...nextauth]/route";
+import { baseAuthOptions } from "@/lib/authOptions";
 import { OnboardModal } from "@/components/auth/OnboardModal";
 export const metadata: Metadata = {
   title: "Create Next App",

@@ -1,6 +1,6 @@
 import { UUID } from "mongodb";
 import { HashPassword } from "@/lib/utils";
-import prisma from "@/lib/prismadb";
+import {prisma} from "@/lib/prismadb";
 export async function POST(request: Request) {
   const { email, password } = await request.json();
   try {

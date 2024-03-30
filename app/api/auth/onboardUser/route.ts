@@ -1,4 +1,4 @@
-import prisma from "@/lib/prismadb";
+import { prisma } from "@/lib/prismadb";
 export async function PUT(request: Request) {
   //todo: handle image upload
   const { userID, username, name } = await request.json();
