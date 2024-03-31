@@ -9,6 +9,7 @@ import {
   InboxIcon,
   UserGroupIcon,
   CodeBracketIcon,
+  BriefcaseIcon,
 } from "@heroicons/react/24/outline";
 import { link } from "fs";
 export const MainNavbar = () => {
@@ -34,6 +35,11 @@ const links: LinkProps[] = [
     href: "/network",
     label: "My Network",
     icon: <UserGroupIcon className="h-6 w-6" />,
+  },
+  {
+    href: "/portfolio",
+    label: "My Portfolio",
+    icon: <BriefcaseIcon className="h-6 w-6" />,
   },
   {
     href: "/gallery",
@@ -63,7 +69,7 @@ export const Navbar = () => {
 export const DesktopLayout = () => {
   return (
     <>
-      <div className="hidden md:flex space-x-4 lg:space-x-6 mr-6 text-sm lg:text-base ">
+      <div className="hidden md:flex space-x-4 lg:space-x-8 mr-6 text-sm lg:text-base ">
         {links.map((link) => {
           return (
             <Link
