@@ -32,11 +32,11 @@ const links: LinkProps[] = [
 export const Navbar = () => {
   return (
     <>
-      <nav className="fixed z-30 pl-4 pr-8 h-[5rem] border-b-2 backdrop-blur-xl w-screen flex items-center">
+      <nav className="sticky z-30 pl-4 pr-8 h-[5rem] border-b-2 backdrop-blur-xl w-screen flex items-center">
         <Link href={"/"}>
           <Logo {...logoProps} />
         </Link>
-        <section className="flex flex-grow items-center justify-end space-x-4">
+        <section className="flex flex-grow items-center justify-end space-x-3">
           <DesktopLayout />
           <AuthProfile />
           <ModeToggle className="hidden md:flex" variant="default" />
@@ -50,7 +50,7 @@ export const Navbar = () => {
 export const DesktopLayout = () => {
   return (
     <>
-      <div className="hidden md:flex space-x-4 lg:space-x-6 mr-3 lg:mr-6 text-sm lg:text-base ">
+      <div className="hidden md:flex space-x-4 lg:space-x-6 mr-3 text-sm lg:text-base ">
         {links.map((link) => {
           return (
             <Link
