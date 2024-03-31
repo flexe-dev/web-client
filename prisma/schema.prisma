@@ -54,44 +54,6 @@ model User {
   FeaturedSnippet FeaturedSnippet[]
 }
 
-model GalleryDeveloper {
-  id               String             @id @default(auto()) @map("_id") @db.ObjectId
-  name             String
-  image            String
-  website          String?
-  github           String?
-  twitter          String?
-  linkedin         String?
-  GalleryProject   GalleryProject[]
-  GalleryPortfolio GalleryPortfolio[]
-}
-
-model GalleryProject {
-  id           String           @id @default(auto()) @map("_id") @db.ObjectId
-  developerId  String           @db.ObjectId
-  title        String
-  description  String
-  thumbnail    String
-  images       String[]
-  technologies String[]
-  tags         String[]
-  createdAt    DateTime         @default(now())
-  updatedAt    DateTime         @updatedAt
-  developer    GalleryDeveloper @relation(fields: [developerId], references: [id])
-}
-
-model GalleryPortfolio {
-  id           String           @id @default(auto()) @map("_id") @db.ObjectId
-  developerId  String           @db.ObjectId
-  thumbnail    String
-  images       String[]
-  technologies String[]
-  tags         String[]
-  createdAt    DateTime         @default(now())
-  updatedAt    DateTime         @updatedAt
-  developer    GalleryDeveloper @relation(fields: [developerId], references: [id])
-}
-
 model FeaturedSnippet {
   id           String   @id @default(auto()) @map("_id") @db.ObjectId
   userId       String   @db.ObjectId
