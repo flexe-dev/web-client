@@ -29,6 +29,8 @@
     --secondary-foreground: var(--neutral-900);
     --secondary-header: var(--neutral-600);
 
+    --tertiary: var(--neutral-400);
+
     --muted: var(--neutral-300);
     --muted-foreground: var(--neutral-600);
 
@@ -73,6 +75,8 @@
     --secondary: var(--neutral-800);
     --secondary-foreground: var(--neutral-200);
     --secondary-header: var(--neutral-400);
+
+    --tertiary: var(--neutral-600);
 
     --muted: var(--neutral-800);
     --muted-foreground: var(--neutral-400);
