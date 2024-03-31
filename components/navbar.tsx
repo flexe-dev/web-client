@@ -1,5 +1,5 @@
 import React from "react";
-import { Logo } from "./logo";
+import { AppLogo } from "./logo";
 import { ModeToggle } from "./theme/theme-toggle";
 import Link from "next/link";
 import AuthProfile from "./ui/AuthProfile";
@@ -30,21 +30,21 @@ const logoProps = {
 };
 
 const links: LinkProps[] = [
-  { href: "/feed", label: "Feed", icon: <InboxIcon className="h-6 w-6" /> },
+  { href: "/feed", label: "Feed", icon: <InboxIcon /> },
   {
     href: "/network",
     label: "My Network",
-    icon: <UserGroupIcon className="h-6 w-6" />,
+    icon: <UserGroupIcon />,
   },
   {
     href: "/portfolio",
     label: "My Portfolio",
-    icon: <BriefcaseIcon className="h-6 w-6" />,
+    icon: <BriefcaseIcon />,
   },
   {
     href: "/gallery",
     label: "Inspiration",
-    icon: <CodeBracketIcon className="h-6 w-6" />,
+    icon: <CodeBracketIcon />,
   },
 ];
 
@@ -53,7 +53,7 @@ export const Navbar = () => {
     <>
       <nav className="sticky z-30 pl-4 pr-8 h-[5rem] border-b-2 backdrop-blur-xl w-screen flex items-center">
         <Link href={"/"}>
-          <Logo {...logoProps} />
+          <AppLogo {...logoProps} />
         </Link>
         <section className="flex flex-grow items-center justify-end space-x-3">
           <DesktopLayout />
@@ -69,7 +69,7 @@ export const Navbar = () => {
 export const DesktopLayout = () => {
   return (
     <>
-      <div className="hidden md:flex space-x-4 lg:space-x-8 mr-6 text-sm lg:text-base ">
+      <div className="hidden md:flex space-x-4 lg:space-x-6  mr:3 lg:mr-6 text-sm  ">
         {links.map((link) => {
           return (
             <Link
@@ -78,7 +78,7 @@ export const DesktopLayout = () => {
               className="group "
             >
               <div className="flex flex-col items-center space-y-1 ">
-                {link.icon}
+                <div className="w-6 h-6">{link.icon}</div>
                 <span>{link.label}</span>
               </div>
               <div className="h-[1px] w-full bg-inverted scale-x-0 group-hover:scale-x-100  group-hover:origin-left origin-center transform transition-transform  "></div>
