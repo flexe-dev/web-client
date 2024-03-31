@@ -6,10 +6,14 @@ export default function Layout({
   children: React.ReactNode;
 }>) {
   return (
-    <main className="h-screen flex ">
+    <div className="flex flex-col h-screen">
       <Navbar />
-      <section className="w-0 md:w-[35%] lg:w-[55%] transition-all h-full md:border-r-2 flex-shrink"></section>
-      <section className="flex flex-grow justify-center items-center">{children}</section>
-    </main>
+      <div className="flex h-full">
+        <section className="w-0 md:w-[35%] lg:w-[55%] transition-all  md:border-r-2 flex flex-col h-full flex-shrink"></section>
+        <section className="h-full flex flex-grow justify-center items-center">
+          {children}
+        </section>
+      </div>
+    </div>
   );
 }
