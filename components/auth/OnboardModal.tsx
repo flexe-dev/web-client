@@ -1,12 +1,11 @@
 "use client";
 import { useEffect, useState } from "react";
 import React from "react";
-import { useSession } from "next-auth/react";
 import { Dialog, DialogContent, DialogHeader } from "../ui/dialog";
 import { DialogDescription } from "@radix-ui/react-dialog";
-import { Button } from "../ui/button";
 import { OnboardForm } from "../forms/OnboardForm";
 import { useAccount } from "../context/AccountProvider";
+
 export const OnboardModal = () => {
   const { user } = useAccount();
 

@@ -1,7 +1,6 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useSession } from "next-auth/react";
 import React, { FormEvent, useCallback, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -27,6 +26,7 @@ import { useAccount } from "../context/AccountProvider";
 import Image from "next/image";
 import { supabase } from "@/lib/supabase";
 import { toast } from "sonner";
+import { Skeleton } from "../ui/skeleton";
 
 interface Props {
   onSuccess: React.Dispatch<React.SetStateAction<boolean>>;
@@ -51,9 +51,14 @@ export const OnboardForm = (props: Props) => {
 
   const [usernameValid, setUsernameValid] =
     useState<UsernameStatus>("checking");
-  const [previousAvatar, setPreviousAvatar] = useState<string>(user.image);
+  const [uploadedAvatars, setUploadedAvatars] = useState<string[]>([
+    user.image,
+  ]);
   const [avatarURL, setAvatarURL] = useState<string>(user.image);
   const [uploading, setUploading] = useState<boolean>(false);
+  const getFilenameFromURL = (url: string) => {
+    return url.split("/").pop();
+  };
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     if (usernameValid !== "available") return;
@@ -71,6 +76,14 @@ export const OnboardForm = (props: Props) => {
       name: values.name,
       image: avatarURL,
     });
+    //Remove Previous Avatars from Storage
+    await supabase.storage
+      .from("user-profile")
+      .remove(
+        uploadedAvatars
+          .filter((url) => url !== avatarURL)
+          .map((url) => getFilenameFromURL(url) ?? "")
+      );
 
     if (response) props.onSuccess(true);
   };
@@ -102,7 +115,6 @@ export const OnboardForm = (props: Props) => {
       const file = event.target.files[0];
       const fileExt = file.name.split(".").pop();
       const filePath = `${user.id}-${Math.random()}.${fileExt}`;
-      //idk why upsert isnt working lol
       let { data, error: uploadError } = await supabase.storage
         .from("user-profile")
         .upload(filePath, file);
@@ -119,6 +131,7 @@ export const OnboardForm = (props: Props) => {
       }
 
       setAvatarURL(URLData.publicUrl);
+      setUploadedAvatars((prev) => [...prev, URLData.publicUrl]);
       toast.success("Avatar uploaded successfully!");
       form.setValue("image", URLData.publicUrl);
     } catch (error) {
@@ -139,15 +152,20 @@ export const OnboardForm = (props: Props) => {
             Profile Picture
           </Label>
           <div className="mt-6 relative group/picture">
-            <div className="w-48 h-48 relative">
-              <Image
-                alt="User Profile Picture"
-                className=" rounded-full border-2"
-                src={avatarURL}
-                layout="fill"
-                objectFit="cover"
-              />
-            </div>
+            {uploading ? (
+              <Skeleton className="w-48 h-48 rounded-full" />
+            ) : (
+              <div className="w-48 h-48 relative">
+                <Image
+                  alt="User Profile Picture"
+                  className=" rounded-full"
+                  src={avatarURL}
+                  layout="fill"
+                  objectFit="cover"
+                />
+              </div>
+            )}
+
             <Input
               onChange={uploadProfilePicture}
               id="picture"
@@ -157,7 +175,7 @@ export const OnboardForm = (props: Props) => {
             />
             <label
               htmlFor="picture"
-              className="absolute top-0 w-full h-full bg-background/90 opacity-0 group-hover/picture:opacity-100 cursor-pointer transition-opacity flex items-center justify-center left-0"
+              className="absolute top-0 w-full  h-full  rounded-full bg-neutral-900/50 dark:bg-neutral-950/70 opacity-0 group-hover/picture:opacity-100 cursor-pointer transition-opacity flex items-center justify-center left-0"
             >
               Upload Picture
             </label>
