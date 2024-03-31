@@ -48,11 +48,11 @@ function FeaturedSnippets() {
           opts={{
             align: "start",
           }}
-          className="w-full py-8 md:p-16"
+          className="w-full p-12 lg:p-16 "
         >
-          <CarouselContent className="space-x-4">
+          <CarouselContent className="space-x-4 flex  ">
             {Array.from({ length: 5 }).map((_, index) => (
-              <CarouselItem key={index} className="md:basis-2/3">
+              <CarouselItem key={index} className="md:basis-5/6 lg:basis-2/3">
                 <div className="w-full aspect-[3/2] md:aspect-video  rounded-xl  transition-all bg-slate-400"></div>
               </CarouselItem>
             ))}
@@ -67,8 +67,8 @@ function FeaturedSnippets() {
                 key={`progress-${index}`}
                 className={`rounded-full w-[1rem] aspect-square  ${
                   index === current - 1
-                    ? "bg-inverted"
-                    : "bg-secondary-header/50"
+                    ? "bg-inverted/80"
+                    : "bg-secondary-header/40"
                 } transition-all`}
               ></div>
             );

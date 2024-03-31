@@ -11,12 +11,7 @@ import Image, { ImageProps } from "next/image";
 import Link from "next/link";
 
 import { useMediaQuery } from "react-responsive";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselApi,
-} from "../carousel";
+import { Carousel, CarouselContent, CarouselItem } from "../carousel";
 import AutoScroll from "embla-carousel-auto-scroll";
 export interface CreationProps {
   creationImage?: ImageProps;
@@ -86,7 +81,7 @@ export const CreationParallaxWrapper = (props: Props) => {
   return (
     <div
       ref={ref}
-      className=" h-[120dvh]  md:h-[190dvh]  overflow-hidden  antialiased relative flex flex-col self-auto [perspective:750px] [transform-style:preserve-3d]"
+      className=" h-[120dvh]  md:h-[170dvh]  overflow-hidden  antialiased relative flex flex-col self-auto [perspective:750px] [transform-style:preserve-3d]"
     >
       {children}
       <motion.div
@@ -155,7 +150,7 @@ const CreationTile = (props: TileProps) => {
   const { creation, translation } = props;
   return (
     <motion.div
-      className="relative group/userdesign w-full px-[2rem] md:px-0   md:max-w-[35rem]  lg:max-w-[39rem]  aspect-[3/2] md:aspect-[16/9] flex-shrink-0"
+      className="relative group/userdesign w-5/6 px-[2rem] md:px-0 md:max-w-[35rem] lg:max-w-[39rem] aspect-[3/2] md:aspect-[16/9] flex-shrink-0"
       style={{
         x: translation,
       }}
@@ -166,11 +161,11 @@ const CreationTile = (props: TileProps) => {
     >
       <div
         id="design-image-tile"
-        className=" bg-slate-600 md:absolute z-[20] w-full  md:max-w-[33rem]  lg:max-w-[37rem] rounded-lg  aspect-[3/2] md:aspect-video  top-0 right-0 shadow-md shadow-neutral-800"
+        className="bg-slate-600 md:absolute z-[20] w-full  md:max-w-[33rem]  lg:max-w-[37rem] rounded-lg  aspect-[3/2] md:aspect-video  top-0 right-0 shadow-md shadow-neutral-800 dark:shadow-transparent border-2 border-secondary-foreground"
       ></div>
       <div
         id="creator-image-tile"
-        className="absolute z-[30] bg-neutral-400 shadow-md shadow-neutral-800  rounded-xl w-[9rem] lg:w-[10rem] aspect-square flex-shrink-0 -bottom-4 lg:-bottom-[10%] left-1/3 md:-left-4 lg:-left-[10%]"
+        className="absolute z-[30] border-2 border-secondary-foreground bg-neutral-400 shadow-md shadow-neutral-800  rounded-xl w-[11rem] md:w-[9rem] lg:w-[10rem] aspect-square flex-shrink-0 -bottom-4 lg:-bottom-[10%] left-[37%] md:-left-4 lg:-left-[10%]"
       >
         <div className=" hidden md:flex w-[3rem] aspect-square absolute left-3 bottom-3 rounded-full bg-blue-400 z-[40]"></div>
       </div>
