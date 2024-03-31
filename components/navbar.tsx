@@ -5,6 +5,11 @@ import Link from "next/link";
 import AuthProfile from "./ui/AuthProfile";
 import { LinkProps } from "@/lib/interface";
 import MobileView from "./ui/MobileNav";
+import {
+  InboxIcon,
+  UserGroupIcon,
+  CodeBracketIcon,
+} from "@heroicons/react/24/outline";
 import { link } from "fs";
 export const MainNavbar = () => {
   return <nav></nav>;
@@ -24,9 +29,17 @@ const logoProps = {
 };
 
 const links: LinkProps[] = [
-  { href: "/portfolios", label: "Portfolios" },
-  { href: "/projects", label: "Projects" },
-  { href: "/forumn", label: "Discussions" },
+  { href: "/feed", label: "Feed", icon: <InboxIcon className="h-6 w-6" /> },
+  {
+    href: "/network",
+    label: "My Network",
+    icon: <UserGroupIcon className="h-6 w-6" />,
+  },
+  {
+    href: "/gallery",
+    label: "Inspiration",
+    icon: <CodeBracketIcon className="h-6 w-6" />,
+  },
 ];
 
 export const Navbar = () => {
@@ -50,15 +63,18 @@ export const Navbar = () => {
 export const DesktopLayout = () => {
   return (
     <>
-      <div className="hidden md:flex space-x-4 lg:space-x-6 mr-3 text-sm lg:text-base ">
+      <div className="hidden md:flex space-x-4 lg:space-x-6 mr-6 text-sm lg:text-base ">
         {links.map((link) => {
           return (
             <Link
               key={`navbar-link-${link.label}`}
               href={link.href}
-              className="group"
+              className="group "
             >
-              <span>{link.label}</span>
+              <div className="flex flex-col items-center space-y-1 ">
+                {link.icon}
+                <span>{link.label}</span>
+              </div>
               <div className="h-[1px] w-full bg-inverted scale-x-0 group-hover:scale-x-100  group-hover:origin-left origin-center transform transition-transform  "></div>
             </Link>
           );
