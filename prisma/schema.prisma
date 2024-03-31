@@ -41,14 +41,66 @@ model Session {
 }
 
 model User {
-  id            String    @id @default(auto()) @map("_id") @db.ObjectId
-  name          String
-  email         String    @unique
-  emailVerified DateTime?
-  image         String    @default("https://kkyhjzebnjjkhuncbfgo.supabase.co/storage/v1/object/public/user-profile/defaultpicture.jpg?t=2024-03-30T08%3A31%3A58.211Z") @db.String
-  password      String?
-  username      String    @unique @default(uuid())
-  onboarded     Boolean   @default(false)
-  accounts      Account[]
-  sessions      Session[]
+  id              String            @id @default(auto()) @map("_id") @db.ObjectId
+  name            String
+  email           String            @unique
+  emailVerified   DateTime?
+  image           String            @default("https://kkyhjzebnjjkhuncbfgo.supabase.co/storage/v1/object/public/user-profile/defaultpicture.jpg?t=2024-03-30T08%3A31%3A58.211Z") @db.String
+  password        String?
+  username        String            @unique @default(uuid())
+  onboarded       Boolean           @default(false)
+  accounts        Account[]
+  sessions        Session[]
+  FeaturedSnippet FeaturedSnippet[]
+}
+
+model GalleryDeveloper {
+  id               String             @id @default(auto()) @map("_id") @db.ObjectId
+  name             String
+  image            String
+  website          String?
+  github           String?
+  twitter          String?
+  linkedin         String?
+  GalleryProject   GalleryProject[]
+  GalleryPortfolio GalleryPortfolio[]
+}
+
+model GalleryProject {
+  id           String           @id @default(auto()) @map("_id") @db.ObjectId
+  developerId  String           @db.ObjectId
+  title        String
+  description  String
+  thumbnail    String
+  images       String[]
+  technologies String[]
+  tags         String[]
+  createdAt    DateTime         @default(now())
+  updatedAt    DateTime         @updatedAt
+  developer    GalleryDeveloper @relation(fields: [developerId], references: [id])
+}
+
+model GalleryPortfolio {
+  id           String           @id @default(auto()) @map("_id") @db.ObjectId
+  developerId  String           @db.ObjectId
+  thumbnail    String
+  images       String[]
+  technologies String[]
+  tags         String[]
+  createdAt    DateTime         @default(now())
+  updatedAt    DateTime         @updatedAt
+  developer    GalleryDeveloper @relation(fields: [developerId], references: [id])
+}
+
+model FeaturedSnippet {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId       String   @db.ObjectId
+  thumbnail    String
+  title        String
+  description  String
+  tags         String[]
+  technologies String[]
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  user         User     @relation(fields: [userId], references: [id])
 }
