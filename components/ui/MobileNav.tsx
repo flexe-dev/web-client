@@ -19,7 +19,7 @@ function MobileView(props: Props) {
 
   return (
     <>
-      <footer className="flex justify-between z-[90] md:hidden fixed bottom-8 border-2 border-inverted h-fit w-1/2 backdrop-blur-xl bg-inverted/10 px-3 py-2 rounded-xl mx-auto right-0 left-0">
+      <footer className="flex justify-between z-[50] md:hidden fixed bottom-12 border-2 border-inverted h-fit w-1/2 backdrop-blur-xl bg-inverted/10 px-3 py-2 rounded-xl mx-auto right-0 left-0">
         <ModeToggle variant="lg" buttonClassName="border-transparent" />
         <SidebarBurger
           callback={setToggleSidebar}

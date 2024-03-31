@@ -1,7 +1,6 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useSession } from "next-auth/react";
 import React, { FormEvent, useCallback, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -23,6 +22,11 @@ import {
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { cn } from "@/lib/utils";
+import { useAccount } from "../context/AccountProvider";
+import Image from "next/image";
+import { supabase } from "@/lib/supabase";
+import { toast } from "sonner";
+import { Skeleton } from "../ui/skeleton";
 
 interface Props {
   onSuccess: React.Dispatch<React.SetStateAction<boolean>>;
@@ -37,26 +41,61 @@ const formSchema = z.object({
   name: z.string().min(2, {
     message: "Name must be at least 2 characters.",
   }),
-  image: z.instanceof(File).optional(),
+  image: z.string().url(),
 });
 
 export const OnboardForm = (props: Props) => {
-  const session = useSession();
-  const user = session.data?.user;
+  const { user, setUser } = useAccount();
+
   if (!user) return null;
+
   const [usernameValid, setUsernameValid] =
     useState<UsernameStatus>("checking");
+  const [uploadedAvatars, setUploadedAvatars] = useState<string[]>([
+    user.image,
+  ]);
+  const [avatarURL, setAvatarURL] = useState<string>(user.image);
+  const [uploading, setUploading] = useState<boolean>(false);
+  const getFilenameFromURL = (url: string) => {
+    return url.split("/").pop();
+  };
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     if (usernameValid !== "available") return;
     const response = await CompleteUserOnboard(
       user.id,
       values.username,
-      values.name
+      values.name,
+      avatarURL
     );
-    if (response) props.onSuccess(true);
     // Update User Account Details
+    setUser({
+      ...user,
+      onboarded: true,
+      username: values.username,
+      name: values.name,
+      image: avatarURL,
+    });
+    //Remove Previous Avatars from Storage
+    await supabase.storage
+      .from("user-profile")
+      .remove(
+        uploadedAvatars
+          .filter((url) => url !== avatarURL)
+          .map((url) => getFilenameFromURL(url) ?? "")
+      );
+
+    if (response) props.onSuccess(true);
   };
+
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      username: "",
+      name: user.name,
+      image: user.image,
+    },
+  });
 
   const checkUsername = async (username: string) => {
     if (username.length < 2) return;
@@ -65,13 +104,42 @@ export const OnboardForm = (props: Props) => {
   };
   const debounceFn = useCallback(debounce(checkUsername, 500), []);
 
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      username: "",
-      name: user.name ?? "",
-    },
-  });
+  const uploadProfilePicture: React.ChangeEventHandler<
+    HTMLInputElement
+  > = async (event) => {
+    try {
+      setUploading(true);
+      if (!event.target.files || event.target.files.length === 0) {
+        throw new Error("You must select an image to upload.");
+      }
+      const file = event.target.files[0];
+      const fileExt = file.name.split(".").pop();
+      const filePath = `${user.id}-${Math.random()}.${fileExt}`;
+      let { data, error: uploadError } = await supabase.storage
+        .from("user-profile")
+        .upload(filePath, file);
+
+      if (uploadError || !data) {
+        throw uploadError;
+      }
+
+      let { data: URLData } = supabase.storage
+        .from("user-profile")
+        .getPublicUrl(filePath);
+      if (!URLData) {
+        throw new Error("Error getting URL");
+      }
+
+      setAvatarURL(URLData.publicUrl);
+      setUploadedAvatars((prev) => [...prev, URLData.publicUrl]);
+      toast.success("Avatar uploaded successfully!");
+      form.setValue("image", URLData.publicUrl);
+    } catch (error) {
+      alert("Error uploading avatar!");
+    } finally {
+      setUploading(false);
+    }
+  };
 
   return (
     <Form {...form}>
@@ -83,17 +151,31 @@ export const OnboardForm = (props: Props) => {
           <Label htmlFor="image" className="text-sm mt-2 text-secondary-header">
             Profile Picture
           </Label>
-          {/* //todo: replace with Image Component */}
           <div className="mt-6 relative group/picture">
-            <div className="w-48 h-48  rounded-full bg-white"></div>
+            {uploading ? (
+              <Skeleton className="w-48 h-48 rounded-full" />
+            ) : (
+              <div className="w-48 h-48 relative">
+                <Image
+                  alt="User Profile Picture"
+                  className=" rounded-full"
+                  src={avatarURL}
+                  layout="fill"
+                  objectFit="cover"
+                />
+              </div>
+            )}
+
             <Input
+              onChange={uploadProfilePicture}
               id="picture"
-              className="w-full mt-6 h-0 hidden"
+              className="w-full mt-6 absolute hidden"
+              accept="image/*"
               type="file"
             />
             <label
               htmlFor="picture"
-              className="absolute top-0 w-full h-full bg-background/90 opacity-0 group-hover/picture:opacity-100 cursor-pointer transition-opacity flex items-center justify-center left-0"
+              className="absolute top-0 w-full  h-full  rounded-full bg-neutral-900/50 dark:bg-neutral-950/70 opacity-0 group-hover/picture:opacity-100 cursor-pointer transition-opacity flex items-center justify-center left-0"
             >
               Upload Picture
             </label>
@@ -110,7 +192,7 @@ export const OnboardForm = (props: Props) => {
                   <Input
                     placeholder="@dawaad"
                     className={cn(
-                      `w-5/6 transition-colors`,
+                      `md:w-5/6 transition-colors`,
                       usernameValid === "taken" &&
                         "border-red-500 focus-visible:ring-red-500 focus-visible:ring-offset-red-500",
                       usernameValid === "available" &&
@@ -124,17 +206,17 @@ export const OnboardForm = (props: Props) => {
                     }}
                   />
                 </FormControl>
-                <FormDescription>
+                <FormDescription className="w-full md:w-5/6 lg:w-full">
                   This will be your unique identifier on the platform.
                 </FormDescription>
                 <FormMessage>
-                  <p
+                  <span
                     className={`transition-opacity ${
                       usernameValid === "taken" ? "opacity-100" : "opacity-0"
                     }`}
                   >
                     Username is already taken
-                  </p>
+                  </span>
                   {form.formState.errors.username?.message}
                 </FormMessage>
               </FormItem>
@@ -149,7 +231,7 @@ export const OnboardForm = (props: Props) => {
                 <FormControl>
                   <Input
                     placeholder="John Stevens"
-                    className="w-5/6"
+                    className="md:w-5/6"
                     {...field}
                   />
                 </FormControl>
@@ -158,7 +240,7 @@ export const OnboardForm = (props: Props) => {
             )}
           />
 
-          <Button type="submit" className="w-fit mt-8">
+          <Button type="submit" className=" md:w-fit mt-8">
             Submit
           </Button>
         </div>

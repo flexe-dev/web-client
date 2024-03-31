@@ -1,6 +1,6 @@
 import { UUID } from "mongodb";
 import { HashPassword } from "@/lib/utils";
-import {prisma} from "@/lib/prismadb";
+import { prisma } from "@/lib/prismadb";
 export async function POST(request: Request) {
   const { email, password } = await request.json();
   try {
@@ -8,6 +8,8 @@ export async function POST(request: Request) {
       data: {
         email: email,
         name: "",
+        image:
+          "https://kkyhjzebnjjkhuncbfgo.supabase.co/storage/v1/object/public/user-profile/defaultpicture.jpg?t=2024-03-30T08%3A31%3A58.211Z",
         password: await HashPassword(password),
         username: new UUID().toString(),
         onboarded: false,
