@@ -6,13 +6,14 @@ import { Input } from "../input";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import { SearchResults } from "./SearchResults";
+import { AnimatePresence } from "framer-motion";
 export const NavSearch = () => {
   const [inFocus, setInFocus] = useState(false);
   const [search, setSearch] = useState("");
   return (
     <>
       <div className="hidden ml-4 xl:ml-8 transition-all lg:flex flex-grow items-end pb-2 relative group text-sm">
-        <NavLinkIcon inFocus={inFocus} />
+        <NavLinkIcon inFocus={inFocus} searchQuery={search} />
         <div
           className="relative"
           onFocus={() => setInFocus(true)}
@@ -28,7 +29,9 @@ export const NavSearch = () => {
                 : "w-0 group-hover:w-60 xl:group-hover:w-80 opacity-0 group-hover:opacity-100"
             } `}
           />
-          <SearchResults inFocus={inFocus} searchQuery={search} />
+          <AnimatePresence>
+            {inFocus && <SearchResults searchQuery={search} />}
+          </AnimatePresence>
         </div>
       </div>
       {inFocus && (
@@ -40,11 +43,12 @@ export const NavSearch = () => {
 
 interface Props {
   inFocus: boolean;
+  searchQuery?: string;
 }
-const NavLinkIcon = ({ inFocus }: Props) => {
+const NavLinkIcon = ({ inFocus, searchQuery }: Props) => {
   return (
     <Link
-      href="/search"
+      href={`/search/${searchQuery}`}
       className="absolute flex flex-col items-center space-y-1 left-0 "
     >
       <MagnifyingGlassIcon
