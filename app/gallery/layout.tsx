@@ -1,5 +1,6 @@
 import React from "react";
 import Head from "next/head";
+import GallerySidebar from "@/components/ui/GallerySidebar";
 
 type LayoutProps = {
   children: React.ReactNode;
@@ -8,10 +9,8 @@ type LayoutProps = {
 const Layout: React.FC<LayoutProps> = ({ children }) => {
   return (
     <main className="flex h-screen">
-      <aside className="h-full border-r w-[30rem]">
-        
-      </aside>
-      <section>{children}</section>
+      <GallerySidebar />
+      <section className="flex flex-grow px-24 py-8">{children}</section>
     </main>
   );
 };
