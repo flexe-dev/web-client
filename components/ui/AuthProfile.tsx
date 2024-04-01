@@ -8,7 +8,6 @@ import { useSession } from "next-auth/react";
 import UserAvatar from "./User/UserAvatar";
 function AuthProfile() {
   const { data: session } = useSession();
-  //todo: Implement User Avatar once Authentication has been implemented
   if (session) {
     return <UserAvatar />;
   }
