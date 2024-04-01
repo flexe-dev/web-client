@@ -2,13 +2,12 @@
 import Link from "next/link";
 import React, { useState, Dispatch, SetStateAction } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { cn } from "@/lib/utils";
 import { LinkProps } from "@/lib/interface";
 import { SidebarBurger } from "@/components/icons/SidebarBurger";
 import { ModeToggle } from "../theme/theme-toggle";
 import { Button } from "./button";
 import XMarkIcon from "../icons/xMarkIcon";
-import { UserPlusIcon } from "@heroicons/react/24/outline";
+import { MagnifyingGlassIcon, UserPlusIcon } from "@heroicons/react/24/outline";
 
 interface Props {
   links: LinkProps[];
@@ -146,6 +145,12 @@ const LinkSection = (props: DropdownProps) => {
           exit="initial"
           className="flex flex-col h-full px-12 gap-4 group "
         >
+          <MobileNavLink
+            key={`mobile-link-search`}
+            label={"Search"}
+            href={"/search"}
+            icon={<MagnifyingGlassIcon className="w-8 h-8" />}
+          />
           {links.map((link, index) => {
             return (
               <MobileNavLink
@@ -175,7 +180,7 @@ const MobileNavLink = (props: LinkProps) => {
   return (
     <motion.div
       variants={mobileLinkVars}
-      className="text-3xl font-semibold uppercase text-secondary-header group-hover:text-tertiary hover:group-hover:text-secondary-foreground"
+      className="text-2xl font-semibold uppercase text-secondary-header group-hover:text-tertiary hover:group-hover:text-secondary-foreground"
     >
       <Link href={href}>
         <div className="flex space-x-3 w-fit items-center transition-colors">
