@@ -1,5 +1,5 @@
 import React from "react";
-import { Logo } from "./logo";
+import { AppLogo } from "./logo";
 import { ModeToggle } from "./theme/theme-toggle";
 import Link from "next/link";
 import AuthProfile from "./ui/AuthProfile";
@@ -10,11 +10,10 @@ import {
   UserGroupIcon,
   CodeBracketIcon,
   BriefcaseIcon,
+  MagnifyingGlassIcon,
 } from "@heroicons/react/24/outline";
 import { link } from "fs";
-export const MainNavbar = () => {
-  return <nav></nav>;
-};
+import { NavSearch } from "./ui/Search/NavSearch";
 
 //Styling for the Navbar main logo
 const logoProps = {
@@ -30,35 +29,38 @@ const logoProps = {
 };
 
 const links: LinkProps[] = [
-  { href: "/feed", label: "Feed", icon: <InboxIcon className="h-6 w-6" /> },
+  { href: "/feed", label: "Feed", icon: <InboxIcon /> },
   {
     href: "/network",
     label: "My Network",
-    icon: <UserGroupIcon className="h-6 w-6" />,
+    icon: <UserGroupIcon />,
   },
   {
     href: "/portfolio",
     label: "My Portfolio",
-    icon: <BriefcaseIcon className="h-6 w-6" />,
+    icon: <BriefcaseIcon />,
   },
   {
     href: "/gallery",
     label: "Inspiration",
-    icon: <CodeBracketIcon className="h-6 w-6" />,
+    icon: <CodeBracketIcon />,
   },
 ];
 
 export const Navbar = () => {
   return (
     <>
-      <nav className="sticky z-30 pl-4 pr-8 h-[5rem] border-b-2 backdrop-blur-xl w-screen flex items-center">
-        <Link href={"/"}>
-          <Logo {...logoProps} />
+      <nav className="sticky top-0 z-[90] lg:pl-4 pr-8 h-[5rem] border-b-2 backdrop-blur-xl w-screen flex">
+        <Link href={"/"} className="w-32 lg:w-fit">
+          <AppLogo {...logoProps} />
         </Link>
-        <section className="flex flex-grow items-center justify-end space-x-3">
-          <DesktopLayout />
-          <AuthProfile />
-          <ModeToggle className="hidden md:flex" variant="default" />
+        <section className="flex flex-grow items-end h-full justify-end md:justify-end ">
+          <NavSearch />
+          <div className="flex items-center  space-x-3 h-full">
+            <DesktopLayout />
+            <AuthProfile />
+            <ModeToggle className="hidden md:flex" variant="default" />
+          </div>
         </section>
       </nav>
       <MobileView links={links} />
@@ -69,16 +71,29 @@ export const Navbar = () => {
 export const DesktopLayout = () => {
   return (
     <>
-      <div className="hidden md:flex space-x-4 lg:space-x-8 mr-6 text-sm lg:text-base ">
+      <div className="hidden md:flex md:space-x-6 lg:space-x-4  xl:space-x-6  mr:3 lg:mr-4 text-sm h-full items-end pb-2">
+        <Link
+          key={`navbar-link-search`}
+          href={"/search"}
+          className="group lg:hidden"
+        >
+          <div className="flex flex-col items-center space-y-1 ">
+            <div className="w-6 h-6">
+              <MagnifyingGlassIcon />
+            </div>
+            <span>Search</span>
+          </div>
+          <div className="h-[1px] w-full bg-inverted scale-x-0 group-hover:scale-x-100  group-hover:origin-left origin-center transform transition-transform  "></div>
+        </Link>
         {links.map((link) => {
           return (
             <Link
               key={`navbar-link-${link.label}`}
               href={link.href}
-              className="group "
+              className="group"
             >
               <div className="flex flex-col items-center space-y-1 ">
-                {link.icon}
+                <div className="w-6 h-6">{link.icon}</div>
                 <span>{link.label}</span>
               </div>
               <div className="h-[1px] w-full bg-inverted scale-x-0 group-hover:scale-x-100  group-hover:origin-left origin-center transform transition-transform  "></div>
