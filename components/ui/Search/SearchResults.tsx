@@ -32,11 +32,16 @@ export const SearchResults = ({ searchQuery }: SearchResultsProps) => {
             See All
           </Link>
         </div>
-        <div className="flex space-x-2 my-3 items-end">
-          {Array.from({ length: 6 }, (i) => (
-            <Avatar>
-              <AvatarFallback>DD</AvatarFallback>
-            </Avatar>
+        <div className="flex space-x-3 my-3 items-end justify-center">
+          {Array.from({ length: 5 }, (i, v) => (
+            <div className={`flex flex-col space-y-1 hover:brightness-75`}>
+              <Avatar className={`cursor-pointer w-12 h-12`}>
+                <AvatarFallback>DD</AvatarFallback>
+              </Avatar>
+              <div className={`w-12 flex-wrap line-clamp-2 transition-colors`}>
+                Jared Neil Tucker
+              </div>
+            </div>
           ))}
         </div>
       </section>
