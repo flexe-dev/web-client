@@ -14,9 +14,15 @@ export interface LogoProps extends ClassNameProp {
 
 export const AppLogo = (props: LogoProps): React.ReactNode => {
   return (
-    <div className="pt-6 lg:pt-0">
-      <Logo {...props} className={cn(props.className, "hidden lg:block")} />
-      <MinimisedLogo {...props} className={cn(props.className, "lg:hidden")} />
+    <div className="pt-4 lg:pt-[0.375rem]">
+      <Logo
+        {...props}
+        className={cn(props.className, "hidden w-0 lg:w-fit lg:flex")}
+      />
+      <MinimisedLogo
+        {...props}
+        className={cn(props.className, "lg:hidden lg:w-0")}
+      />
     </div>
   );
 };
