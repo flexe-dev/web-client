@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import { AppLogo } from "./logo";
 import { ModeToggle } from "./theme/theme-toggle";
@@ -14,6 +16,7 @@ import {
 } from "@heroicons/react/24/outline";
 import { link } from "fs";
 import { NavSearch } from "./ui/Search/NavSearch";
+import { useAccount } from "./context/AccountProvider";
 
 //Styling for the Navbar main logo
 const logoProps = {
@@ -29,15 +32,17 @@ const logoProps = {
 };
 
 const links: LinkProps[] = [
-  { href: "/feed", label: "Feed", icon: <InboxIcon /> },
+  { href: "/feed", label: "Feed", icon: <InboxIcon />, restrict: true },
   {
     href: "/network",
     label: "My Network",
+    restrict: true,
     icon: <UserGroupIcon />,
   },
   {
-    href: "/portfolio",
+    href: "/profile/portfolio",
     label: "My Portfolio",
+    restrict: true,
     icon: <BriefcaseIcon />,
   },
   {
@@ -69,6 +74,7 @@ export const Navbar = () => {
 };
 
 export const DesktopLayout = () => {
+  const { user } = useAccount();
   return (
     <>
       <div className="hidden md:flex md:space-x-6 lg:space-x-4  xl:space-x-6  mr:3 lg:mr-4 text-sm h-full items-end pb-2">
@@ -87,17 +93,19 @@ export const DesktopLayout = () => {
         </Link>
         {links.map((link) => {
           return (
-            <Link
-              key={`navbar-link-${link.label}`}
-              href={link.href}
-              className="group"
-            >
-              <div className="flex flex-col items-center space-y-1 ">
-                <div className="w-6 h-6">{link.icon}</div>
-                <span>{link.label}</span>
-              </div>
-              <div className="h-[1px] w-full bg-inverted scale-x-0 group-hover:scale-x-100  group-hover:origin-left origin-center transform transition-transform  "></div>
-            </Link>
+            (!link.restrict || user) && (
+              <Link
+                key={`navbar-link-${link.label}`}
+                href={link.href}
+                className="group"
+              >
+                <div className="flex flex-col items-center space-y-1 ">
+                  <div className="w-6 h-6">{link.icon}</div>
+                  <span>{link.label}</span>
+                </div>
+                <div className="h-[1px] w-full bg-inverted scale-x-0 group-hover:scale-x-100  group-hover:origin-left origin-center transform transition-transform  "></div>
+              </Link>
+            )
           );
         })}
       </div>
