@@ -48,7 +48,7 @@ function FeaturedSnippets() {
           opts={{
             align: "start",
           }}
-          className="w-full p-12 lg:p-16 "
+          className="w-full py-12 md:p-12 lg:p-16 "
         >
           <CarouselContent className="space-x-4 flex  ">
             {Array.from({ length: 5 }).map((_, index) => (
