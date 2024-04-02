@@ -7,7 +7,6 @@ import NewsletterPrompt from "@/components/ui/Landing/NewsletterPrompt";
 export default function Home() {
   return (
     <>
-      <Navbar />
       <BackgroundGrid />
       <CreationParallaxWrapper>
         <div className=" px-12 lg:px-24 max-w-screen-lg h-full flex flex-col justify-center  z-[30]">
@@ -27,7 +26,6 @@ export default function Home() {
       </CreationParallaxWrapper>
       <FeaturedSnippets />
       <NewsletterPrompt />
-      <Footer />
     </>
   );
 }

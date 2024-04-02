@@ -35,7 +35,7 @@ export const UserDropdown = ({ children, user }: UserDropdownProps) => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>{children}</DropdownMenuTrigger>
-      <DropdownMenuContent>
+      <DropdownMenuContent className="z-[90] mt-2">
         <DropdownMenuLabel className="flex flex-col items-center text-secondary-header px-4">
           <span>{user.name}</span>
           <span className="text-xs text-tertiary truncate w-fit max-w-32">

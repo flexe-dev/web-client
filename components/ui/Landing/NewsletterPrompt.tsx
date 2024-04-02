@@ -22,7 +22,7 @@ const NewsletterPrompt = () => {
     toast("Thank you! You have been successfully added to our mailing list");
   };
   return (
-    <section className="w-screen  flex justify-center mb-8">
+    <section className="w-screen flex justify-center mb-2 md:mb-8">
       <div className="w-10/12 lg:w-7/12 border-t border-secondary px-4 py-12 flex flex-col items-center">
         <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold">
           Subscribe To Our Newsletter

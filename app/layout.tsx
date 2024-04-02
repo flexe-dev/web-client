@@ -9,10 +9,13 @@ import SessionProvider from "@/components/context/SessionProvider";
 import { getServerSession } from "next-auth";
 import { baseAuthOptions } from "@/lib/authOptions";
 import { OnboardModal } from "@/components/auth/OnboardModal";
+import { Navbar } from "@/components/navbar";
 import { AccountProvider } from "@/components/context/AccountProvider";
+import { Footer } from "@/components/ui/Footer";
 export const metadata: Metadata = {
   title: "designs.dev",
-  description: "Find design and code inspiration easy and fast through our gallery of curated projects and portfolios",
+  description:
+    "Find design and code inspiration easy and fast through our gallery of curated projects and portfolios",
 };
 
 export default async function RootLayout({
@@ -37,9 +40,11 @@ export default async function RootLayout({
               enableSystem
               disableTransitionOnChange
             >
+              <Navbar />
               <main>{children}</main>
               <Toaster />
               <OnboardModal />
+              <Footer />
             </ThemeProvider>
           </AccountProvider>
         </SessionProvider>
