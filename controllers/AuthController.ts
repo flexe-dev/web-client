@@ -112,7 +112,6 @@ const UpdateUserDetails = async (
       }),
     }
   );
-  console.log(response);
   return response.ok;
 };
 

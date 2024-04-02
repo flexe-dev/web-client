@@ -32,8 +32,6 @@ interface Props {
   onSuccess: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-type UsernameStatus = "checking" | "available" | "taken";
-
 const formSchema = z.object({
   username: z.string().min(2, {
     message: "Username must be at least 2 characters.",
@@ -50,7 +48,6 @@ const formSchema = z.object({
 
 export const ProfileDetailsForm = (props: Props) => {
   const { user, setUser } = useAccount();
-
   if (!user) return null;
 
   const [uploadedAvatars, setUploadedAvatars] = useState<string[]>([
@@ -63,8 +60,6 @@ export const ProfileDetailsForm = (props: Props) => {
   };
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    console.log("attempt submit");
-    console.log("passed available username");
     const response = await UpdateUserDetails(
       user.id,
       values.username,
@@ -75,7 +70,6 @@ export const ProfileDetailsForm = (props: Props) => {
       values.pronouns,
       values.location
     );
-    console.log(response);
 
     // Update User Account Details
     setUser({
@@ -89,6 +83,7 @@ export const ProfileDetailsForm = (props: Props) => {
       pronouns: values.pronouns,
       location: values.location,
     });
+
     //Remove Previous Avatars from Storage
     await supabase.storage
       .from("user-profile")

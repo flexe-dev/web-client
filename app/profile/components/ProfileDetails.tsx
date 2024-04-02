@@ -49,14 +49,19 @@ const ProfileDetails = ({
   return (
     <div className="flex flex-col mt-1">
       <Separator />
-      <p className="text-xs text-gray-200 text-wrap">{bio}</p>
+      <p className="text-xs text-gray-200 text-wrap text-secondary-foreground">
+        {bio}
+      </p>
       <Separator />
       {profileDetails.map((item) => {
         if (item.detail) {
           return (
             <div className="flex flex-row align-center items-center my-1">
               {item.icon}
-              <p className="ml-2 text-xs text-gray-200"> {item.detail}</p>
+              <p className="ml-2 text-xs text-secondary-foreground">
+                {" "}
+                {item.detail}
+              </p>
             </div>
           );
         }

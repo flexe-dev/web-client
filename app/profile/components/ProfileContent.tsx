@@ -58,31 +58,31 @@ const ProfileContent: React.FC = () => {
     <div className="flex-auto">
       <div className="flex flex-row items-center justify-center w-full">
         <button
-          className={`w-1/2 py-2 ${
+          className={`w-1/3 py-2 ${
             activeTab === "readme"
-              ? "border-b border-white text-white"
-              : "border-b border-white-50 text-gray-700"
-          } rounded-r`}
+              ? "border-b-2 border-secondary-foreground text-secondary-foreground"
+              : "border-b border-secondary-header text-secondary-header"
+          } `}
           onClick={() => handleTabClick("readme")}
         >
           Read.me
         </button>
         <button
-          className={`w-1/2 py-2 ${
+          className={`w-1/3 py-2 ${
             activeTab === "portfolio"
-              ? "border-b border-white text-white"
-              : "border-b border-white-50 text-gray-700"
-          } rounded-l`}
+              ? "border-b-2 border-secondary-foreground text-secondary-foreground"
+              : "border-b border-secondary-header text-secondary-header"
+          } `}
           onClick={() => handleTabClick("portfolio")}
         >
           Portfolio
         </button>
         <button
-          className={`w-1/2 py-2 ${
+          className={`w-1/3 py-2 ${
             activeTab === "activity"
-              ? "border-b border-white text-white"
-              : "border-b border-white-50 text-gray-700"
-          } rounded-r`}
+              ? "border-b-2 border-secondary-foreground text-secondary-foreground"
+              : "border-b border-secondary-header text-secondary-header"
+          } `}
           onClick={() => handleTabClick("activity")}
         >
           Activity

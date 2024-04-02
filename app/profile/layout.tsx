@@ -9,7 +9,6 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   return (
     <div>
       <header>{/* Add your header content here */}</header>
-      <Navbar />
       <main>{children}</main>
     </div>
   );

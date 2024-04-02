@@ -33,8 +33,10 @@ function ProfileHeader() {
           </div>
         </div>
         <div className="text-center justify-center relative z-10 mt-4">
-          <h1 className="text-2xl font-semibold text-white">{user?.name}</h1>
-          <p className="text-gray-200 my-2">{user?.username}</p>
+          <h1 className="text-2xl font-semibold text-secondary-foreground">
+            {user?.name}
+          </h1>
+          <p className="text-secondary-foreground my-2">{user?.username}</p>
           <ProfileFollowers
             followers={mockprofile.profile.followers}
             following={mockprofile.profile.following}

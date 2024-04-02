@@ -10,9 +10,13 @@ interface ProfileFollowersProps {
 const ProfileFollowers = ({ followers, following }: ProfileFollowersProps) => {
   return (
     <div className="flex flex-row mt-1 justify-center text-center items-center">
-      <p className="text-xs text-gray-200 mx-1">{followers} followers</p>
+      <p className="text-xs text-secondary-foreground mx-1">
+        {followers} followers
+      </p>
       {"•"}
-      <p className="text-xs text-gray-200 mx-1">{following} following</p>
+      <p className="text-xs text-secondary-foreground mx-1">
+        {following} following
+      </p>
     </div>
   );
 };
