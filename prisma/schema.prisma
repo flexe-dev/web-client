@@ -46,6 +46,10 @@ model User {
   email           String            @unique
   emailVerified   DateTime?
   image           String            @default("https://kkyhjzebnjjkhuncbfgo.supabase.co/storage/v1/object/public/user-profile/defaultpicture.jpg?t=2024-03-30T08%3A31%3A58.211Z") @db.String
+  job             String?
+  company         String?
+  pronouns        String?
+  location        String?
   password        String?
   username        String            @unique @default(uuid())
   onboarded       Boolean           @default(false)

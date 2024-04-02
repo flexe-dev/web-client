@@ -64,7 +64,6 @@ const UniqueUsernameCheck = async (username: string): Promise<boolean> => {
   return !!user;
 };
 
-
 const CompleteUserOnboard = async (
   userID: string,
   username: string,
@@ -84,10 +83,44 @@ const CompleteUserOnboard = async (
   return response.ok;
 };
 
+const UpdateUserDetails = async (
+  userID: string,
+  username: string,
+  name: string,
+  imageURL: string,
+  job: string,
+  company: string,
+  pronouns: string,
+  location: string
+): Promise<boolean> => {
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}auth/updateUserDetails`,
+    {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        userID,
+        username,
+        name,
+        imageURL,
+        job,
+        company,
+        pronouns,
+        location,
+      }),
+    }
+  );
+  console.log(response);
+  return response.ok;
+};
+
 export {
   CreateEmailUser,
   FindUserByEmail,
   UniqueUsernameCheck,
   CompleteUserOnboard,
   CheckUserPassword,
+  UpdateUserDetails,
 };
