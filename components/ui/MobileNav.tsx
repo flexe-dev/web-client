@@ -123,7 +123,7 @@ const LinkSection = (props: DropdownProps) => {
         onClick={(e) => {
           e.stopPropagation();
         }}
-        className={`fixed lg:hidden origin-bottom bottom-0 left-0 w-full h-[25rem] bg-primary-foreground transition-colors z-[99] `}
+        className={`fixed lg:hidden origin-bottom bottom-0 left-0 w-full h-[25rem] bg-background border-t-2 transition-colors z-[99] `}
         variants={menuVars}
         initial="initial"
         animate="animate"
