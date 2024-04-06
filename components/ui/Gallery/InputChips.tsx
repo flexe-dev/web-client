@@ -66,7 +66,7 @@ export const InputChips = (props: InputChipsProps) => {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             id="chips"
-            className="flex flex-wrap mb-4 mt-2 py-2 w-full origin-top max-h-[9rem] border-y overflow-y-auto"
+            className={`flex flex-wrap mb-4 mt-2 py-2 w-full origin-top max-h-[9rem] border-y overflow-y-auto scrollbar-thin scrollbar-track-transparent scrollbar-thumb-muted`}
           >
             {content.map((chip, index) => (
               <Chip

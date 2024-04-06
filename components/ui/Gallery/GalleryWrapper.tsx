@@ -15,6 +15,7 @@ import {
   containerVars,
 } from "@/app/gallery/animationValues";
 import { BgTransitionButton } from "../AnimatedButton";
+import { ScrollArea } from "../scroll-area";
 interface AnimatedContainerProps {
   children: React.ReactNode;
   className?: string;
@@ -56,7 +57,7 @@ const GallerySidebarWrapper = ({ children }: GallerySideBarWrapperProps) => {
           "fixed mt-4 z-[80] transition-all backdrop-blur-lg",
           sidebarOpen
             ? "left-[15rem] ease-in duration-300"
-            : "left-[1rem] delay-500 duration-300"
+            : "left-[1rem] delay-200 duration-300 ease-in"
         )}
       >
         <Bars3CenterLeftIcon className="w-8 h-8" />
@@ -108,7 +109,18 @@ const GallerySidebarWrapper = ({ children }: GallerySideBarWrapperProps) => {
             </>
           </AnimatedSidebar>
         )}
-        <section className="flex grow px-24 py-8">{children}</section>
+        {children}
+        {sidebarOpen && (
+          <motion.div
+            layout
+            key={"sidebar-overlay"}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-neutral-950/90 z-[50] lg:hidden "
+            onClick={() => setSidebarOpen(false)}
+          />
+        )}
       </AnimatePresence>
     </motion.main>
   );
@@ -125,11 +137,13 @@ export const AnimatedSidebar = ({ children }: AnimatedContainerProps) => {
       initial="initial"
       animate="animate"
       exit="exit"
-      className="origin-left z-[40] lg:z-0 fixed lg:sticky h-screen bg-background top-[5rem] min-w-[20rem] w-[20rem] border-r "
+      className="origin-left z-[60] lg:z-0 fixed lg:sticky h-screen bg-background top-[5rem] min-w-[20rem] w-[20rem] border-r "
     >
-      <motion.div className="flex flex-col max-h-[90dvh] overflow-y-auto overscroll-contain scrollbar-thin scrollbar-track-background sticky top-[6rem] pt-12 ">
-        {children}
-      </motion.div>
+      <ScrollArea className="h-[95dvh]">
+        <motion.div className="flex flex-col sticky top-[6rem] pt-12 ">
+          {children}
+        </motion.div>
+      </ScrollArea>
     </motion.aside>
   );
 };
