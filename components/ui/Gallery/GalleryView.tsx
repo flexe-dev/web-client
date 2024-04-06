@@ -15,7 +15,7 @@ const GalleryView = () => {
   if (!user) return null;
   return (
     <motion.section
-      layout
+      layout={"position"}
       className="py-12 px-4 flex relative flex-col w-full min-h-screen items-center"
     >
       <motion.h1 layout key={"gallery-header"} className="text-4xl font-bold">
@@ -24,7 +24,7 @@ const GalleryView = () => {
       <motion.h2
         layout
         key={"gallery-sub-title"}
-        className="text-center my-2 h-24 max-w-screen-md text-lg text-secondary-header"
+        className="text-center my-2  max-w-screen-md text-lg text-secondary-header"
       >
         A handpicked curated collection of special Portfolios, Projects,
         Animations and overall cool designs that you may find inspiration from.
