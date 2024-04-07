@@ -86,9 +86,7 @@ const UniqueUsernameCheck = async (username: string): Promise<boolean> => {
 
 const CompleteUserOnboard = async (
   userID: string,
-  username: string,
-  name: string,
-  imageURL: string
+  username: string
 ): Promise<boolean> => {
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_API_URL}auth/onboardUser`,
@@ -97,7 +95,25 @@ const CompleteUserOnboard = async (
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ userID, username, name, imageURL }),
+      body: JSON.stringify({ userID, username }),
+    }
+  );
+  return response.ok;
+};
+
+const CompleteProfileOnboard = async (
+  userId: string,
+  avatarURL: string,
+  name: string
+): Promise<boolean> => {
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}auth/onboardProfile`,
+    {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ userId, avatarURL, name }),
     }
   );
   return response.ok;
@@ -105,7 +121,6 @@ const CompleteUserOnboard = async (
 
 const UpdateUserDetails = async (
   userID: string,
-  username: string,
   name: string,
   imageURL: string,
   job: string,
@@ -122,7 +137,6 @@ const UpdateUserDetails = async (
       },
       body: JSON.stringify({
         userID,
-        username,
         name,
         imageURL,
         job,
@@ -143,4 +157,5 @@ export {
   CompleteUserOnboard,
   CheckUserPassword,
   UpdateUserDetails,
+  CompleteProfileOnboard,
 };

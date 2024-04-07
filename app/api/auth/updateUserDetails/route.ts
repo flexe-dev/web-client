@@ -1,11 +1,11 @@
 import { prisma } from "@/lib/prismadb";
 export async function PUT(request: Request) {
-  const { userID, username, name, imageURL, job, company, pronouns, location } =
+  const { userID, name, imageURL, job, company, pronouns, location } =
     await request.json();
   try {
     await prisma.userProfile.update({
       where: {
-        id: userID,
+        userId: userID,
       },
       data: {
         name: name,

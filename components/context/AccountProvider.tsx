@@ -27,7 +27,9 @@ interface Props {
 
 export const AccountProvider = ({ children }: Props) => {
   const session = useSession();
-  const [user, setUser] = React.useState<User | undefined>(undefined);
+  const [user, setUser] = React.useState<User | undefined>(
+    session.data?.user as User
+  );
   const [profile, setProfile] = React.useState<UserProfile | undefined>(
     undefined
   );
@@ -47,15 +49,8 @@ export const AccountProvider = ({ children }: Props) => {
   };
 
   useEffect(() => {
-    console.log("hello");
     fetchProfile();
   }, [session.data?.user]);
-
-  useEffect(() => {
-    if (session.data) {
-      setUser(session.data.user as User);
-    }
-  }, [session.data]);
 
   return (
     <AccountContext.Provider

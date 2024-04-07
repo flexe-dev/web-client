@@ -8,6 +8,7 @@ import { Button } from "../ui/button";
 import {
   UniqueUsernameCheck,
   CompleteUserOnboard,
+  CompleteProfileOnboard,
 } from "@/controllers/AuthController";
 import { debounce } from "lodash";
 import {
@@ -62,12 +63,13 @@ export const OnboardForm = (props: Props) => {
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     if (usernameValid !== "available") return;
-    const response = await CompleteUserOnboard(
+    const userResponse = await CompleteUserOnboard(user.id, values.username);
+    const profileResponse = await CompleteProfileOnboard(
       user.id,
-      values.username,
-      values.name,
-      avatarURL
+      avatarURL,
+      values.name
     );
+
     // Update User Account Details
     setUser({
       ...user,
@@ -90,7 +92,7 @@ export const OnboardForm = (props: Props) => {
           .map((url) => getFilenameFromURL(url) ?? "")
       );
 
-    if (response) props.onSuccess(true);
+    if (userResponse && profileResponse) props.onSuccess(true);
   };
 
   const form = useForm<z.infer<typeof formSchema>>({

@@ -9,7 +9,7 @@ import ProfileDetails from "./ProfileDetails";
 import { EditProfileModal } from "./EditProfileModal";
 
 function ProfileHeader() {
-  const { user } = useAccount();
+  const { user, profile } = useAccount();
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
   const toggleEditModal = () => {
@@ -26,7 +26,7 @@ function ProfileHeader() {
         <div className="relative">
           <div className="relative z-10 flex justify-center">
             <img
-              src={user?.image}
+              src={profile?.image}
               alt="Profile"
               className="w-32 h-32 rounded-full border-2 border-white"
             />
@@ -34,7 +34,7 @@ function ProfileHeader() {
         </div>
         <div className="text-center justify-center relative z-10 mt-4">
           <h1 className="text-2xl font-semibold text-secondary-foreground">
-            {user?.name}
+            {profile?.name}
           </h1>
           <p className="text-secondary-foreground my-2">{user?.username}</p>
           <ProfileFollowers
@@ -51,10 +51,10 @@ function ProfileHeader() {
         </div>
         <ProfileDetails
           bio={mockprofile.profile.bio}
-          currentJob={user?.job}
-          company={user?.company}
-          pronouns={user?.pronouns}
-          location={user?.location}
+          currentJob={profile?.job}
+          company={profile?.company}
+          pronouns={profile?.pronouns}
+          location={profile?.location}
         />
       </div>
       {isEditModalOpen && <EditProfileModal onClose={closeModal} />}

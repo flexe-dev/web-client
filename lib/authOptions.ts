@@ -80,20 +80,10 @@ export const baseAuthOptions: AuthOptions = {
   callbacks: {
     async session(sessionUser: SessionUser) {
       const { session, user } = sessionUser;
-      const userProfile = await prisma.userProfile.findUnique({
-        where: { userId: user.id },
-      });
       session.user.id = user.id;
       session.user.username = user.username;
       session.user.onboarded = user.onboarded;
       return session;
-      return {
-        ...session,
-        user: {
-          ...session.user,
-          profile: userProfile,
-        },
-      };
     },
     async redirect({ url, baseUrl }) {
       // Allows relative callback URLs

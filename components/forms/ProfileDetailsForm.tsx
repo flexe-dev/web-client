@@ -47,13 +47,13 @@ const formSchema = z.object({
 });
 
 export const ProfileDetailsForm = (props: Props) => {
-  const { user, setUser } = useAccount();
-  if (!user) return null;
+  const { user, setUser, profile, setProfile } = useAccount();
+  if (!user || !profile) return null;
 
   const [uploadedAvatars, setUploadedAvatars] = useState<string[]>([
-    user.image,
+    profile.image,
   ]);
-  const [avatarURL, setAvatarURL] = useState<string>(user.image);
+  const [avatarURL, setAvatarURL] = useState<string>(profile.image);
   const [uploading, setUploading] = useState<boolean>(false);
   const getFilenameFromURL = (url: string) => {
     return url.split("/").pop();
@@ -62,7 +62,6 @@ export const ProfileDetailsForm = (props: Props) => {
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     const response = await UpdateUserDetails(
       user.id,
-      values.username,
       values.name,
       avatarURL,
       values.job,
@@ -76,6 +75,10 @@ export const ProfileDetailsForm = (props: Props) => {
       ...user,
       onboarded: true,
       username: values.username,
+    });
+
+    setProfile({
+      ...profile,
       name: values.name,
       image: avatarURL,
       job: values.job,
@@ -100,12 +103,12 @@ export const ProfileDetailsForm = (props: Props) => {
     resolver: zodResolver(formSchema),
     defaultValues: {
       username: user.username,
-      name: user.name,
-      image: user.image,
-      job: user.job ? user.job : "",
-      company: user.company ? user.company : "",
-      pronouns: user.pronouns ? user.pronouns : "",
-      location: user.location ? user.location : "",
+      name: profile.name,
+      image: profile.image,
+      job: profile.job ?? "",
+      company: profile.company ?? "",
+      pronouns: profile.pronouns ?? "",
+      location: profile.location ?? "",
     },
   });
 

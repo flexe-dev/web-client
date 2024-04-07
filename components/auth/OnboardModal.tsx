@@ -15,14 +15,16 @@ export const OnboardModal = () => {
 
   //Only performing state operations due to Hydration Issues
   const [modalOpen, setModalOpen] = useState<boolean>(false);
+
   useEffect(() => {
     setModalOpen(!user?.onboarded);
   }, []);
 
+  if (!user && !profile) return null;
+
   const handleFinishOnboard = () => {
     setModalOpen(false);
   };
-  if (!user || !profile) return null;
   return (
     <AlertDialog open={modalOpen}>
       <AlertDialogContent className="w-full md:min-w-[45rem] lg:min-w-[50rem]">
