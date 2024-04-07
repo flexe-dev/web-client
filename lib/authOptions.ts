@@ -6,6 +6,7 @@ import { UUID } from "mongodb";
 import { FindUserByEmail } from "@/controllers/AuthController";
 import { Session } from "next-auth";
 import { PrismaAdapter } from "@auth/prisma-adapter";
+import { prisma } from "@/lib/prismadb";
 import { adapter } from "@/lib/prismadb";
 import { Adapter, AdapterUser } from "next-auth/adapters";
 import { AuthOptions } from "next-auth";
@@ -14,8 +15,6 @@ interface SessionUser {
   session: Session;
   user: AdapterUser;
 }
-
-
 
 export const baseAuthOptions: AuthOptions = {
   adapter: adapter,
@@ -81,10 +80,20 @@ export const baseAuthOptions: AuthOptions = {
   callbacks: {
     async session(sessionUser: SessionUser) {
       const { session, user } = sessionUser;
+      const userProfile = await prisma.userProfile.findUnique({
+        where: { userId: user.id },
+      });
       session.user.id = user.id;
       session.user.username = user.username;
       session.user.onboarded = user.onboarded;
       return session;
+      return {
+        ...session,
+        user: {
+          ...session.user,
+          profile: userProfile,
+        },
+      };
     },
     async redirect({ url, baseUrl }) {
       // Allows relative callback URLs

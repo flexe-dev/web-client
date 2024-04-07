@@ -1,3 +1,4 @@
+import { UserProfile } from "@prisma/client";
 import { User } from "next-auth";
 
 interface EmailUser {
@@ -34,6 +35,25 @@ const FindUserByEmail = async (email: string): Promise<User | null> => {
   }
   const user: User = await response.json();
   return user;
+};
+
+const FindProfileByUserId = async (
+  userId: string
+): Promise<UserProfile | null> => {
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}auth/findProfileByUserId/${userId}`,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+  if (response.status === 404) {
+    return null;
+  }
+  const userProfile: UserProfile = await response.json();
+  return userProfile;
 };
 
 const CheckUserPassword = async (userID: string, password: string) => {
@@ -118,6 +138,7 @@ const UpdateUserDetails = async (
 export {
   CreateEmailUser,
   FindUserByEmail,
+  FindProfileByUserId,
   UniqueUsernameCheck,
   CompleteUserOnboard,
   CheckUserPassword,

@@ -3,14 +3,12 @@ export async function PUT(request: Request) {
   const { userID, username, name, imageURL, job, company, pronouns, location } =
     await request.json();
   try {
-    await prisma.user.update({
+    await prisma.userProfile.update({
       where: {
         id: userID,
       },
       data: {
-        username: username,
         name: name,
-        onboarded: true,
         image: imageURL,
         job: job,
         company: company,

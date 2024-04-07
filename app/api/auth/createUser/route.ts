@@ -7,9 +7,6 @@ export async function POST(request: Request) {
     const user = await prisma.user.create({
       data: {
         email: email,
-        name: "",
-        image:
-          "https://kkyhjzebnjjkhuncbfgo.supabase.co/storage/v1/object/public/user-profile/defaultpicture.jpg?t=2024-03-30T08%3A31%3A58.211Z",
         password: await HashPassword(password),
         username: new UUID().toString(),
         onboarded: false,
@@ -23,6 +20,17 @@ export async function POST(request: Request) {
         type: "credentials",
         provider: "credentials",
         providerAccountId: user.id.toString(),
+      },
+    });
+
+    await prisma.userProfile.create({
+      data: {
+        userId: user.id,
+        name: "",
+        job: "",
+        company: "",
+        pronouns: "",
+        location: "",
       },
     });
     return Response.json({

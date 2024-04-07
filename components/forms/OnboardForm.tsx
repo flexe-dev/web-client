@@ -45,16 +45,16 @@ const formSchema = z.object({
 });
 
 export const OnboardForm = (props: Props) => {
-  const { user, setUser } = useAccount();
+  const { user, setUser, profile, setProfile } = useAccount();
 
-  if (!user) return null;
+  if (!user || !profile) return null;
 
   const [usernameValid, setUsernameValid] =
     useState<UsernameStatus>("checking");
   const [uploadedAvatars, setUploadedAvatars] = useState<string[]>([
-    user.image,
+    "https://kkyhjzebnjjkhuncbfgo.supabase.co/storage/v1/object/public/user-profile/defaultpicture.jpg?t=2024-03-30T08%3A31%3A58.211Z",
   ]);
-  const [avatarURL, setAvatarURL] = useState<string>(user.image);
+  const [avatarURL, setAvatarURL] = useState<string>(profile.image);
   const [uploading, setUploading] = useState<boolean>(false);
   const getFilenameFromURL = (url: string) => {
     return url.split("/").pop();
@@ -73,9 +73,14 @@ export const OnboardForm = (props: Props) => {
       ...user,
       onboarded: true,
       username: values.username,
-      name: values.name,
-      image: avatarURL,
     });
+
+    setProfile({
+      ...profile,
+      image: avatarURL,
+      name: values.name,
+    });
+
     //Remove Previous Avatars from Storage
     await supabase.storage
       .from("user-profile")
@@ -92,8 +97,8 @@ export const OnboardForm = (props: Props) => {
     resolver: zodResolver(formSchema),
     defaultValues: {
       username: "",
-      name: user.name,
-      image: user.image,
+      name: profile.name,
+      image: profile.image,
     },
   });
 
@@ -190,7 +195,7 @@ export const OnboardForm = (props: Props) => {
                 <FormLabel>Username</FormLabel>
                 <FormControl>
                   <Input
-                    placeholder="@dawaad"
+                    placeholder="@your_username"
                     className={cn(
                       `md:w-5/6 transition-colors`,
                       usernameValid === "taken" &&
@@ -230,7 +235,7 @@ export const OnboardForm = (props: Props) => {
                 <FormLabel>Name</FormLabel>
                 <FormControl>
                   <Input
-                    placeholder="John Stevens"
+                    placeholder="Your full name"
                     className="md:w-5/6"
                     {...field}
                   />
