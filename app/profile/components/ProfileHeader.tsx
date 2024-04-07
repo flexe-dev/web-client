@@ -26,7 +26,7 @@ function ProfileHeader() {
         <div className="relative">
           <div className="relative z-10 flex justify-center">
             <img
-              src={profile?.image}
+              src={user?.image}
               alt="Profile"
               className="w-32 h-32 rounded-full border-2 border-white"
             />
@@ -34,7 +34,7 @@ function ProfileHeader() {
         </div>
         <div className="text-center justify-center relative z-10 mt-4">
           <h1 className="text-2xl font-semibold text-secondary-foreground">
-            {profile?.name}
+            {user?.name}
           </h1>
           <p className="text-secondary-foreground my-2">{user?.username}</p>
           <ProfileFollowers
@@ -51,10 +51,10 @@ function ProfileHeader() {
         </div>
         <ProfileDetails
           bio={mockprofile.profile.bio}
-          currentJob={profile?.job}
-          company={profile?.company}
-          pronouns={profile?.pronouns}
-          location={profile?.location}
+          currentJob={profile?.job ?? undefined}
+          company={profile?.company ?? undefined}
+          pronouns={profile?.pronouns ?? undefined}
+          location={profile?.location ?? undefined}
         />
       </div>
       {isEditModalOpen && <EditProfileModal onClose={closeModal} />}

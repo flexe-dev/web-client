@@ -66,7 +66,9 @@ const UniqueUsernameCheck = async (username: string): Promise<boolean> => {
 
 const CompleteUserOnboard = async (
   userID: string,
-  username: string
+  username: string,
+  name: string,
+  image: string
 ): Promise<boolean> => {
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_API_URL}auth/onboardUser`,
@@ -75,7 +77,7 @@ const CompleteUserOnboard = async (
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ userID, username }),
+      body: JSON.stringify({ userID, username, name, image }),
     }
   );
   return response.ok;

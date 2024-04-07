@@ -1,4 +1,4 @@
-import { UserProfile } from "@prisma/client";
+import { User, UserProfile } from "@prisma/client";
 
 const CreateUserProfile = async (userId: string) => {
   const response = await fetch(
@@ -8,10 +8,13 @@ const CreateUserProfile = async (userId: string) => {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(userId),
+      body: JSON.stringify({ userId }),
     }
   );
-  return response.ok;
+  const res = await response.json();
+  const profile: UserProfile = res.profile;
+
+  return profile;
 };
 
 const FindProfileByUserId = async (
@@ -33,28 +36,10 @@ const FindProfileByUserId = async (
   return userProfile;
 };
 
-const CompleteProfileOnboard = async (
-  userId: string,
-  avatarURL: string,
-  name: string
-): Promise<boolean> => {
-  const response = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}auth/onboardProfile`,
-    {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ userId, avatarURL, name }),
-    }
-  );
-  return response.ok;
-};
-
 const UpdateUserDetails = async (
   userID: string,
+  image: string,
   name: string,
-  imageURL: string,
   job: string,
   company: string,
   pronouns: string,
@@ -69,8 +54,8 @@ const UpdateUserDetails = async (
       },
       body: JSON.stringify({
         userID,
+        image,
         name,
-        imageURL,
         job,
         company,
         pronouns,
@@ -81,9 +66,4 @@ const UpdateUserDetails = async (
   return response.ok;
 };
 
-export {
-  FindProfileByUserId,
-  UpdateUserDetails,
-  CompleteProfileOnboard,
-  CreateUserProfile,
-};
+export { FindProfileByUserId, UpdateUserDetails, CreateUserProfile };

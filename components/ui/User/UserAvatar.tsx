@@ -8,15 +8,15 @@ import { UserDropdown } from "./UserDropdown";
 function UserAvatar() {
   const { user, profile } = useAccount();
 
-  if (profile) {
+  if (user) {
     return (
       <div className="flex items-center">
-        <h2 className="mr-4 mt-2 md:hidden">{profile.name}</h2>
+        <h2 className="mr-4 mt-2 md:hidden">{user.name}</h2>
         <UserDropdown user={user}>
           <Avatar className="border h-11 w-11 cursor-pointer hover:brightness-75 transition-all  mr-2">
-            <AvatarImage className="object-cover" src={profile.image} />
+            <AvatarImage className="object-cover" src={user.image} />
             <AvatarFallback>
-              {profile?.name
+              {user?.name
                 ?.split(" ")
                 .map((n) => n[0])
                 .join("")}

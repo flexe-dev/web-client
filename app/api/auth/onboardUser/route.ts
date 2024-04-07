@@ -1,6 +1,6 @@
 import { prisma } from "@/lib/prismadb";
 export async function PUT(request: Request) {
-  const { userID, username } = await request.json();
+  const { userID, username, name, image } = await request.json();
   try {
     await prisma.user.update({
       where: {
@@ -9,6 +9,8 @@ export async function PUT(request: Request) {
       data: {
         username: username,
         onboarded: true,
+        name: name,
+        image: image,
       },
     });
     return Response.json(

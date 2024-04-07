@@ -8,8 +8,10 @@ import { Button } from "../ui/button";
 import {
   UniqueUsernameCheck,
   CompleteUserOnboard,
-  CompleteProfileOnboard,
 } from "@/controllers/AuthController";
+
+import { CreateUserProfile } from "@/controllers/ProfileController";
+
 import { debounce } from "lodash";
 import {
   Form,
@@ -28,6 +30,7 @@ import Image from "next/image";
 import { supabase } from "@/lib/supabase";
 import { toast } from "sonner";
 import { Skeleton } from "../ui/skeleton";
+import { UserProfile } from "@prisma/client";
 
 interface Props {
   onSuccess: React.Dispatch<React.SetStateAction<boolean>>;
@@ -48,14 +51,14 @@ const formSchema = z.object({
 export const OnboardForm = (props: Props) => {
   const { user, setUser, profile, setProfile } = useAccount();
 
-  if (!user || !profile) return null;
+  if (!user) return null;
 
   const [usernameValid, setUsernameValid] =
     useState<UsernameStatus>("checking");
   const [uploadedAvatars, setUploadedAvatars] = useState<string[]>([
     "https://kkyhjzebnjjkhuncbfgo.supabase.co/storage/v1/object/public/user-profile/defaultpicture.jpg?t=2024-03-30T08%3A31%3A58.211Z",
   ]);
-  const [avatarURL, setAvatarURL] = useState<string>(profile.image);
+  const [avatarURL, setAvatarURL] = useState<string>(user.image);
   const [uploading, setUploading] = useState<boolean>(false);
   const getFilenameFromURL = (url: string) => {
     return url.split("/").pop();
@@ -63,25 +66,24 @@ export const OnboardForm = (props: Props) => {
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     if (usernameValid !== "available") return;
-    const userResponse = await CompleteUserOnboard(user.id, values.username);
-    const profileResponse = await CompleteProfileOnboard(
+    const userResponse = await CompleteUserOnboard(
       user.id,
-      avatarURL,
-      values.name
+      values.username,
+      values.name,
+      avatarURL
     );
+    const profileResponse: UserProfile = await CreateUserProfile(user.id);
 
     // Update User Account Details
     setUser({
       ...user,
       onboarded: true,
       username: values.username,
+      name: values.name,
+      image: avatarURL,
     });
 
-    setProfile({
-      ...profile,
-      image: avatarURL,
-      name: values.name,
-    });
+    setProfile(profileResponse);
 
     //Remove Previous Avatars from Storage
     await supabase.storage
@@ -99,8 +101,8 @@ export const OnboardForm = (props: Props) => {
     resolver: zodResolver(formSchema),
     defaultValues: {
       username: "",
-      name: profile.name,
-      image: profile.image,
+      name: user.name,
+      image: user.image,
     },
   });
 

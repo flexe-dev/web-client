@@ -1,6 +1,6 @@
 "use client";
 
-import { FindProfileByUserId } from "@/controllers/AuthController";
+import { FindProfileByUserId } from "@/controllers/ProfileController";
 import { User, UserProfile } from "@prisma/client";
 import { useSession } from "next-auth/react";
 import React, { createContext, useEffect, useMemo } from "react";

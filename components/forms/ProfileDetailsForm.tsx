@@ -5,10 +5,8 @@ import React, { FormEvent, useCallback, useState } from "react";
 import { useForm } from "react-hook-form";
 import { undefined, z } from "zod";
 import { Button } from "../ui/button";
-import {
-  UniqueUsernameCheck,
-  UpdateUserDetails,
-} from "@/controllers/AuthController";
+import { UpdateUserDetails } from "@/controllers/ProfileController";
+
 import { debounce } from "lodash";
 import {
   Form,
@@ -51,9 +49,9 @@ export const ProfileDetailsForm = (props: Props) => {
   if (!user || !profile) return null;
 
   const [uploadedAvatars, setUploadedAvatars] = useState<string[]>([
-    profile.image,
+    user.image,
   ]);
-  const [avatarURL, setAvatarURL] = useState<string>(profile.image);
+  const [avatarURL, setAvatarURL] = useState<string>(user.image);
   const [uploading, setUploading] = useState<boolean>(false);
   const getFilenameFromURL = (url: string) => {
     return url.split("/").pop();
@@ -62,8 +60,8 @@ export const ProfileDetailsForm = (props: Props) => {
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     const response = await UpdateUserDetails(
       user.id,
-      values.name,
       avatarURL,
+      values.name,
       values.job,
       values.company,
       values.pronouns,
@@ -75,12 +73,12 @@ export const ProfileDetailsForm = (props: Props) => {
       ...user,
       onboarded: true,
       username: values.username,
+      name: values.name,
+      image: avatarURL,
     });
 
     setProfile({
       ...profile,
-      name: values.name,
-      image: avatarURL,
       job: values.job,
       company: values.company,
       pronouns: values.pronouns,
@@ -103,8 +101,8 @@ export const ProfileDetailsForm = (props: Props) => {
     resolver: zodResolver(formSchema),
     defaultValues: {
       username: user.username,
-      name: profile.name,
-      image: profile.image,
+      name: user.name,
+      image: user.image,
       job: profile.job ?? "",
       company: profile.company ?? "",
       pronouns: profile.pronouns ?? "",
