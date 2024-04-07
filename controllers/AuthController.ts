@@ -20,6 +20,20 @@ const CreateEmailUser = async (credentials: EmailUser) => {
   return response.ok;
 };
 
+const CreateUserProfile = async (userId: string) => {
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}auth/createProfile`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(userId),
+    }
+  );
+  return response.ok;
+};
+
 const FindUserByEmail = async (email: string): Promise<User | null> => {
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_API_URL}auth/findUserByEmail/${email}`,

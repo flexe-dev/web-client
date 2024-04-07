@@ -23,16 +23,6 @@ export async function POST(request: Request) {
       },
     });
 
-    await prisma.userProfile.create({
-      data: {
-        userId: user.id,
-        name: "",
-        job: "",
-        company: "",
-        pronouns: "",
-        location: "",
-      },
-    });
     return Response.json({
       message: "User and User Account has been successfully created",
     });
