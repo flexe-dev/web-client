@@ -1,7 +1,8 @@
+import GalleryView from "@/components/ui/Gallery/GalleryView";
 import React from "react";
 
 const Page = () => {
-  return <div>Page</div>;
+  return <GalleryView />;
 };
 
 export default Page;
