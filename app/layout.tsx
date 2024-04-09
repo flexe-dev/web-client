@@ -12,6 +12,7 @@ import { OnboardModal } from "@/components/auth/OnboardModal";
 import { Navbar } from "@/components/navbar";
 import { AccountProvider } from "@/components/context/AccountProvider";
 import { Footer } from "@/components/ui/Footer";
+import { FindProfileByUserId } from "@/controllers/ProfileController";
 export const metadata: Metadata = {
   title: "designs.dev",
   description:

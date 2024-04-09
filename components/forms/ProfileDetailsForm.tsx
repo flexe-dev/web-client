@@ -3,14 +3,9 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import React, { FormEvent, useCallback, useState } from "react";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
+import { undefined, z } from "zod";
 import { Button } from "../ui/button";
-import {
-  UniqueUsernameCheck,
-  CompleteUserOnboard,
-} from "@/controllers/AuthController";
-
-import { CreateUserProfile } from "@/controllers/ProfileController";
+import { UpdateUserDetails } from "@/controllers/ProfileController";
 
 import { debounce } from "lodash";
 import {
@@ -30,13 +25,10 @@ import Image from "next/image";
 import { supabase } from "@/lib/supabase";
 import { toast } from "sonner";
 import { Skeleton } from "../ui/skeleton";
-import { UserProfile } from "@prisma/client";
 
 interface Props {
   onSuccess: React.Dispatch<React.SetStateAction<boolean>>;
 }
-
-type UsernameStatus = "checking" | "available" | "taken";
 
 const formSchema = z.object({
   username: z.string().min(2, {
@@ -46,17 +38,18 @@ const formSchema = z.object({
     message: "Name must be at least 2 characters.",
   }),
   image: z.string().url(),
+  job: z.string(),
+  company: z.string(),
+  pronouns: z.string(),
+  location: z.string(),
 });
 
-export const OnboardForm = (props: Props) => {
+export const ProfileDetailsForm = (props: Props) => {
   const { user, setUser, profile, setProfile } = useAccount();
+  if (!user || !profile) return null;
 
-  if (!user) return null;
-
-  const [usernameValid, setUsernameValid] =
-    useState<UsernameStatus>("checking");
   const [uploadedAvatars, setUploadedAvatars] = useState<string[]>([
-    "https://kkyhjzebnjjkhuncbfgo.supabase.co/storage/v1/object/public/user-profile/defaultpicture.jpg?t=2024-03-30T08%3A31%3A58.211Z",
+    user.image,
   ]);
   const [avatarURL, setAvatarURL] = useState<string>(user.image);
   const [uploading, setUploading] = useState<boolean>(false);
@@ -65,14 +58,15 @@ export const OnboardForm = (props: Props) => {
   };
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    if (usernameValid !== "available") return;
-    const userResponse = await CompleteUserOnboard(
+    const response = await UpdateUserDetails(
       user.id,
-      values.username,
+      avatarURL,
       values.name,
-      avatarURL
+      values.job,
+      values.company,
+      values.pronouns,
+      values.location
     );
-    const profileResponse: UserProfile = await CreateUserProfile(user.id);
 
     // Update User Account Details
     setUser({
@@ -83,7 +77,13 @@ export const OnboardForm = (props: Props) => {
       image: avatarURL,
     });
 
-    setProfile(profileResponse);
+    setProfile({
+      ...profile,
+      job: values.job,
+      company: values.company,
+      pronouns: values.pronouns,
+      location: values.location,
+    });
 
     //Remove Previous Avatars from Storage
     await supabase.storage
@@ -94,24 +94,21 @@ export const OnboardForm = (props: Props) => {
           .map((url) => getFilenameFromURL(url) ?? "")
       );
 
-    if (userResponse && profileResponse) props.onSuccess(true);
+    if (response) props.onSuccess(true);
   };
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      username: "",
+      username: user.username,
       name: user.name,
       image: user.image,
+      job: profile.job ?? "",
+      company: profile.company ?? "",
+      pronouns: profile.pronouns ?? "",
+      location: profile.location ?? "",
     },
   });
-
-  const checkUsername = async (username: string) => {
-    if (username.length < 2) return;
-    const isTaken = await UniqueUsernameCheck(username);
-    setUsernameValid(isTaken ? "taken" : "available");
-  };
-  const debounceFn = useCallback(debounce(checkUsername, 500), []);
 
   const uploadProfilePicture: React.ChangeEventHandler<
     HTMLInputElement
@@ -200,34 +197,13 @@ export const OnboardForm = (props: Props) => {
                 <FormControl>
                   <Input
                     placeholder="@your_username"
-                    className={cn(
-                      `md:w-5/6 transition-colors`,
-                      usernameValid === "taken" &&
-                        "border-red-500 focus-visible:ring-red-500 focus-visible:ring-offset-red-500",
-                      usernameValid === "available" &&
-                        "border-emerald-500 focus-visible:ring-emerald-500 focus-visible:ring-offset-emerald-500"
-                    )}
+                    disabled={true}
                     {...field}
-                    onChange={(e) => {
-                      field.onChange(e);
-                      setUsernameValid("checking");
-                      debounceFn(e.target.value);
-                    }}
                   />
                 </FormControl>
                 <FormDescription className="w-full md:w-5/6 lg:w-full">
                   This will be your unique identifier on the platform.
                 </FormDescription>
-                <FormMessage>
-                  <span
-                    className={`transition-opacity ${
-                      usernameValid === "taken" ? "opacity-100" : "opacity-0"
-                    }`}
-                  >
-                    Username is already taken
-                  </span>
-                  {form.formState.errors.username?.message}
-                </FormMessage>
               </FormItem>
             )}
           />
@@ -239,12 +215,76 @@ export const OnboardForm = (props: Props) => {
                 <FormLabel>Name</FormLabel>
                 <FormControl>
                   <Input
-                    placeholder="Your full name"
+                    placeholder="Your name"
                     className="md:w-5/6"
                     {...field}
                   />
                 </FormControl>
                 <FormMessage>{form.formState.errors.name?.message}</FormMessage>
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="job"
+            render={({ field }) => (
+              <FormItem className="mt-2">
+                <FormLabel>Job</FormLabel>
+                <FormControl>
+                  <Input
+                    placeholder="Your job title"
+                    className="md:w-5/6"
+                    {...field}
+                  />
+                </FormControl>
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="company"
+            render={({ field }) => (
+              <FormItem className="mt-2">
+                <FormLabel>Company</FormLabel>
+                <FormControl>
+                  <Input
+                    placeholder="Where you work"
+                    className="md:w-5/6"
+                    {...field}
+                  />
+                </FormControl>
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="pronouns"
+            render={({ field }) => (
+              <FormItem className="mt-2">
+                <FormLabel>Pronouns</FormLabel>
+                <FormControl>
+                  <Input
+                    placeholder="Your preferred pronouns"
+                    className="md:w-5/6"
+                    {...field}
+                  />
+                </FormControl>
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="location"
+            render={({ field }) => (
+              <FormItem className="mt-2">
+                <FormLabel>Location</FormLabel>
+                <FormControl>
+                  <Input
+                    placeholder="where you live"
+                    className="md:w-5/6"
+                    {...field}
+                  />
+                </FormControl>
               </FormItem>
             )}
           />

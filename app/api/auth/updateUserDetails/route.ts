@@ -1,18 +1,30 @@
 import { prisma } from "@/lib/prismadb";
 export async function PUT(request: Request) {
-  const { userID, username, name, image } = await request.json();
+  const { userID, image, name, job, company, pronouns, location } =
+    await request.json();
   try {
+    await prisma.userProfile.update({
+      where: {
+        userId: userID,
+      },
+      data: {
+        job: job,
+        company: company,
+        pronouns: pronouns,
+        location: location,
+      },
+    });
+
     await prisma.user.update({
       where: {
         id: userID,
       },
       data: {
-        username: username,
-        onboarded: true,
-        name: name,
         image: image,
+        name: name,
       },
     });
+
     return Response.json(
       { message: "User Successfully Updated" },
       { status: 200 }

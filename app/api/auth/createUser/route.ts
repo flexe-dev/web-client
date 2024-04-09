@@ -25,7 +25,9 @@ export async function POST(request: Request) {
         providerAccountId: user.id.toString(),
       },
     });
+
     return Response.json({
+      userId: user.id,
       message: "User and User Account has been successfully created",
     });
   } catch (e) {

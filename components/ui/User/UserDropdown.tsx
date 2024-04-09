@@ -1,4 +1,5 @@
 import React from "react";
+import Link from "next/link";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -11,11 +12,24 @@ import { User } from "@prisma/client";
 import { CogIcon, UserCircleIcon } from "@heroicons/react/24/outline";
 import { LogoutIcon } from "../../icons/LogoutIcon";
 import { signOut } from "next-auth/react";
-import Link from "next/link";
+import { LinkProps } from "@/lib/interface";
 interface UserDropdownProps {
   children: React.ReactNode;
   user: User;
 }
+
+const links: LinkProps[] = [
+  {
+    href: "/profile",
+    label: "Profile",
+    icon: <UserCircleIcon className="stroke-secondary-header w-6 h-6" />,
+  },
+  {
+    href: "/",
+    label: "Settings",
+    icon: <CogIcon className="stroke-secondary-header w-6 h-6" />,
+  },
+];
 
 export const UserDropdown = ({ children, user }: UserDropdownProps) => {
   return (
@@ -29,18 +43,20 @@ export const UserDropdown = ({ children, user }: UserDropdownProps) => {
           </span>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <Link href={"/profile"}>
-          <DropdownMenuItem className="flex space-x-3">
-            <UserCircleIcon className="stroke-secondary-header w-6 h-6" />
-            <span>Account</span>
-          </DropdownMenuItem>
-        </Link>
-        <Link href={"/settings"}>
-          <DropdownMenuItem className="flex space-x-3">
-            <CogIcon className="stroke-secondary-header w-6 h-6" />
-            <span>Settings</span>
-          </DropdownMenuItem>
-        </Link>
+        {links.map((link) => {
+          return (
+            <DropdownMenuItem className="flex space-x-3">
+              {link.icon}
+              <Link
+                key={`dropdown-link${link.label}`}
+                href={link.href}
+                className="group "
+              >
+                <span>{link.label}</span>
+              </Link>
+            </DropdownMenuItem>
+          );
+        })}
         <DropdownMenuSeparator />
         <DropdownMenuItem className="flex space-x-3" onClick={() => signOut()}>
           <LogoutIcon className="stroke-secondary-header" />

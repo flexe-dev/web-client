@@ -6,7 +6,7 @@ import { useAccount } from "../../context/AccountProvider";
 import { UserDropdown } from "./UserDropdown";
 
 function UserAvatar() {
-  const { user } = useAccount();
+  const { user, profile } = useAccount();
 
   if (user) {
     return (

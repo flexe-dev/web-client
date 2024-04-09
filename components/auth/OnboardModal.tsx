@@ -11,18 +11,20 @@ import { OnboardForm } from "../forms/OnboardForm";
 import { useAccount } from "../context/AccountProvider";
 
 export const OnboardModal = () => {
-  const { user } = useAccount();
+  const { user, profile } = useAccount();
 
   //Only performing state operations due to Hydration Issues
   const [modalOpen, setModalOpen] = useState<boolean>(false);
+
   useEffect(() => {
     setModalOpen(!user?.onboarded);
   }, []);
 
+  if (!user && !profile) return null;
+
   const handleFinishOnboard = () => {
     setModalOpen(false);
   };
-  if (!user) return null;
   return (
     <AlertDialog open={modalOpen}>
       <AlertDialogContent className="w-full md:min-w-[45rem] lg:min-w-[50rem]">
