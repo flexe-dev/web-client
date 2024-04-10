@@ -1,5 +1,6 @@
 "use client";
 
+import { useSearchParams } from "next/navigation";
 import React, { useState } from "react";
 interface Feed {
   id: number;
@@ -7,11 +8,17 @@ interface Feed {
   content: string;
 }
 
+const profileTabs = ["portfolio", "activity", "readme"] as const;
+type Tabs = (typeof profileTabs)[number];
+
 const ProfileContent: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<string>("portfolio");
+  const params = useSearchParams();
+  const [activeTab, setActiveTab] = useState<Tabs>(
+    (params.get("tab") as Tabs) || "readme"
+  );
   const [feeds, setFeeds] = useState<Feed[]>([]);
 
-  const fetchFeeds = (category: string) => {
+  const fetchFeeds = (category: Tabs) => {
     // Simulated API call to fetch feeds based on category
     if (category === "portfolio") {
       setFeeds([
@@ -49,7 +56,7 @@ const ProfileContent: React.FC = () => {
     }
   };
 
-  const handleTabClick = (tab: string) => {
+  const handleTabClick = (tab: Tabs) => {
     setActiveTab(tab);
     fetchFeeds(tab);
   };

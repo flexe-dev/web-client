@@ -3,7 +3,6 @@
 import React, { useState } from "react";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import { Input } from "../input";
-import { useRouter } from "next/router";
 import Link from "next/link";
 import { SearchResults } from "./SearchResults";
 import { AnimatePresence } from "framer-motion";

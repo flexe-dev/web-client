@@ -40,7 +40,7 @@ const links: LinkProps[] = [
     icon: <UserGroupIcon />,
   },
   {
-    href: "/profile/portfolio",
+    href: "/profile?tab=portfolio",
     label: "My Portfolio",
     restrict: true,
     icon: <BriefcaseIcon />,
