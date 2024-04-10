@@ -12,26 +12,28 @@ export const NavSearch = () => {
   const [search, setSearch] = useState("");
   return (
     <>
-      <div className="hidden ml-4 xl:ml-8 transition-all lg:flex flex-grow items-end pb-2 relative group text-sm">
-        <NavLinkIcon inFocus={inFocus} searchQuery={search} />
-        <div
-          className="relative"
-          onFocus={() => setInFocus(true)}
-          onBlur={() => setInFocus(false)}
-        >
-          <Input
-            placeholder="Search for anything"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className={`z-[80] ml-3 pl-12 h-12 transition-all origin-left  ${
-              inFocus
-                ? "w-60 xl:w-80"
-                : "w-0 group-hover:w-60 xl:group-hover:w-80 opacity-0 group-hover:opacity-100"
-            } `}
-          />
-          <AnimatePresence>
-            {inFocus && <SearchResults searchQuery={search} />}
-          </AnimatePresence>
+      <div className="hidden ml-4 xl:ml-8 transition-all lg:flex flex-grow items-end pb-2 relative  text-sm">
+        <div className="group">
+          <NavLinkIcon inFocus={inFocus} searchQuery={search} />
+          <div
+            className="relative"
+            onFocus={() => setInFocus(true)}
+            onBlur={() => setInFocus(false)}
+          >
+            <Input
+              placeholder="Search for anything"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className={`z-[80] ml-3 pl-12 h-12 transition-all origin-left  ${
+                inFocus
+                  ? "w-60 xl:w-80"
+                  : "w-0 group-hover:w-60 xl:group-hover:w-80 opacity-0 group-hover:opacity-100"
+              } `}
+            />
+            <AnimatePresence>
+              {inFocus && <SearchResults searchQuery={search} />}
+            </AnimatePresence>
+          </div>
         </div>
       </div>
       {inFocus && (

@@ -7,7 +7,8 @@ import { mockprofile } from "../mock/profile";
 import ProfileFollowers from "./ProfileFollowers";
 import ProfileDetails from "./ProfileDetails";
 import { EditProfileModal } from "./EditProfileModal";
-
+import Image from "next/image";
+import { defaultPicture } from "@/lib/utils";
 function ProfileHeader() {
   const { user, profile } = useAccount();
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -25,18 +26,22 @@ function ProfileHeader() {
       <div className="rounded-lg p-6 mb-8 relative mx-auto max-w-2xl lg:max-w-xs">
         <div className="relative">
           <div className="relative z-10 flex justify-center">
-            <img
-              src={user?.image}
-              alt="Profile"
-              className="w-32 h-32 rounded-full border-2 border-white"
-            />
+            <div className="w-48 h-48 relative">
+              <Image
+                alt="User Profile Picture"
+                className=" rounded-full"
+                src={user?.image ?? defaultPicture}
+                layout="fill"
+                objectFit="cover"
+              />
+            </div>
           </div>
         </div>
         <div className="text-center justify-center relative z-10 mt-4">
           <h1 className="text-2xl font-semibold text-secondary-foreground">
             {user?.name}
           </h1>
-          <p className="text-secondary-foreground my-2">{user?.username}</p>
+          <p className="text-secondary-header my-2">@{user?.username}</p>
           <ProfileFollowers
             followers={mockprofile.profile.followers}
             following={mockprofile.profile.following}

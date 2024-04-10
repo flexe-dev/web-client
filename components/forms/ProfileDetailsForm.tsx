@@ -190,25 +190,6 @@ export const ProfileDetailsForm = (props: Props) => {
         <div className="w-full flex flex-col mt-10">
           <FormField
             control={form.control}
-            name="username"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Username</FormLabel>
-                <FormControl>
-                  <Input
-                    placeholder="@your_username"
-                    disabled={true}
-                    {...field}
-                  />
-                </FormControl>
-                <FormDescription className="w-full md:w-5/6 lg:w-full">
-                  This will be your unique identifier on the platform.
-                </FormDescription>
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
             name="name"
             render={({ field }) => (
               <FormItem className="mt-2">
