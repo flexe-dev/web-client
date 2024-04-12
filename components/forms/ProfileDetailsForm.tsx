@@ -94,7 +94,12 @@ export const ProfileDetailsForm = (props: Props) => {
           .map((url) => getFilenameFromURL(url) ?? "")
       );
 
-    if (response) props.onSuccess(true);
+    if (response) {
+      toast.success("Profile Details Successfully Updated", {
+        position: "top-right",
+      });
+      props.onSuccess(false);
+    }
   };
 
   const form = useForm<z.infer<typeof formSchema>>({

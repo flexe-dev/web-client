@@ -17,13 +17,9 @@ function ProfileHeader() {
     setIsEditModalOpen(!isEditModalOpen);
   };
 
-  const closeModal = () => {
-    setIsEditModalOpen(false);
-  };
-
   return (
     <>
-      <div className="rounded-lg p-6 mb-8 relative mx-auto max-w-2xl lg:max-w-xs">
+      <div className="rounded-lg lg:sticky p-6 mb-8 top-[6rem]  mx-auto max-w-2xl lg:max-w-xs h-fit">
         <div className="relative">
           <div className="relative z-10 flex justify-center">
             <div className="w-48 h-48 relative">
@@ -62,7 +58,7 @@ function ProfileHeader() {
           location={profile?.location ?? undefined}
         />
       </div>
-      {isEditModalOpen && <EditProfileModal onClose={closeModal} />}
+      <EditProfileModal open={isEditModalOpen} dispatch={setIsEditModalOpen} />
     </>
   );
 }

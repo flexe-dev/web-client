@@ -1,8 +1,8 @@
 import { User, UserProfile } from "@prisma/client";
-
+import { getServerSession } from "next-auth";
 const CreateUserProfile = async (userId: string) => {
   const response = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}auth/createProfile`,
+    `${process.env.NEXT_PUBLIC_API_URL}profile/createProfile`,
     {
       method: "POST",
       headers: {
@@ -21,7 +21,7 @@ const FindProfileByUserId = async (
   userId: string
 ): Promise<UserProfile | null> => {
   const response = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}auth/findProfileByUserId/${userId}`,
+    `${process.env.NEXT_PUBLIC_API_URL}profile/findProfileByUserId/${userId}`,
     {
       method: "GET",
       headers: {
@@ -36,6 +36,24 @@ const FindProfileByUserId = async (
   return userProfile;
 };
 
+const UploadProfileReadMe = async (buffer: Buffer): Promise<boolean> => {
+  const session = await getServerSession();
+  const user = session?.user;
+  if (!user) return false;
+
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}profile/uploadReadMeBuffer`,
+    {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ buffer, userId: user.id }),
+    }
+  );
+  return response.ok;
+};
+
 const UpdateUserDetails = async (
   userID: string,
   image: string,
@@ -46,7 +64,7 @@ const UpdateUserDetails = async (
   location: string
 ): Promise<boolean> => {
   const response = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}auth/updateUserDetails`,
+    `${process.env.NEXT_PUBLIC_API_URL}profile/updateUserDetails`,
     {
       method: "PUT",
       headers: {
@@ -66,4 +84,9 @@ const UpdateUserDetails = async (
   return response.ok;
 };
 
-export { FindProfileByUserId, UpdateUserDetails, CreateUserProfile };
+export {
+  FindProfileByUserId,
+  UpdateUserDetails,
+  CreateUserProfile,
+  UploadProfileReadMe,
+};
