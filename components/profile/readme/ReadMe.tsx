@@ -1,19 +1,18 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useAccount } from "../../context/AccountProvider";
 import { FileUploader } from "@/components/FileUploader";
 import { Button } from "@/components/ui/button";
 import { PlusCircleIcon } from "@heroicons/react/24/outline";
 import { toast } from "sonner";
 import { UploadProfileReadMe } from "@/controllers/ProfileController";
+import ReactMarkdown from "react-markdown";
+import rehypeRaw from "rehype-raw";
+import { buffer } from "stream/consumers";
 
 const ReadMe = () => {
-  const { profile } = useAccount();
-
+  const { user, profile, setProfile } = useAccount();
   const readMe = profile?.readMe;
-
-  useEffect(() => {
-    if (!readMe) return;
-  }, [readMe]);
+  if (!user || !profile) return null;
 
   const uploadReadMe = (file: File) => {
     //Ensure File Upload is of type .md
@@ -27,7 +26,11 @@ const ReadMe = () => {
     reader.onload = (e) => {
       const content = Buffer.from(reader.result as ArrayBuffer);
       if (!content) return;
+
       //Upload Buffer to Database
+      UploadProfileReadMe(content, user.id);
+      //Update Locally
+      setProfile({ ...profile, readMe: content });
     };
     reader.readAsArrayBuffer(file);
   };
@@ -57,7 +60,11 @@ const ReadMe = () => {
       </section>
     );
 
-  return <></>;
+  return (
+    <ReactMarkdown className={"m-4 "} rehypePlugins={[rehypeRaw]}>
+      {Buffer.from(readMe).toString("utf-8")}
+    </ReactMarkdown>
+  );
 };
 
 export default ReadMe;

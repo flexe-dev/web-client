@@ -1,5 +1,5 @@
+import { prisma } from "@/lib/prismadb";
 import { User, UserProfile } from "@prisma/client";
-import { getServerSession } from "next-auth";
 const CreateUserProfile = async (userId: string) => {
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_API_URL}profile/createProfile`,
@@ -36,11 +36,10 @@ const FindProfileByUserId = async (
   return userProfile;
 };
 
-const UploadProfileReadMe = async (buffer: Buffer): Promise<boolean> => {
-  const session = await getServerSession();
-  const user = session?.user;
-  if (!user) return false;
-
+const UploadProfileReadMe = async (
+  buffer: Buffer,
+  userID: string
+): Promise<boolean> => {
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_API_URL}profile/uploadReadMeBuffer`,
     {
@@ -48,7 +47,7 @@ const UploadProfileReadMe = async (buffer: Buffer): Promise<boolean> => {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ buffer, userId: user.id }),
+      body: JSON.stringify({ buffer, userID }),
     }
   );
   return response.ok;

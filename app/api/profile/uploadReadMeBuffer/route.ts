@@ -1,5 +1,4 @@
 import { prisma } from "@/lib/prismadb";
-
 export async function PUT(request: Request) {
   const { buffer, userID } = await request.json();
   try {
@@ -8,7 +7,7 @@ export async function PUT(request: Request) {
         userId: userID,
       },
       data: {
-        readMe: buffer,
+        readMe: Buffer.from(buffer.data),
       },
     });
     return Response.json({
