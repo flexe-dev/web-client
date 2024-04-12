@@ -169,8 +169,10 @@ export const OnboardForm = (props: Props) => {
                   alt="User Profile Picture"
                   className=" rounded-full"
                   src={avatarURL}
-                  layout="fill"
-                  objectFit="cover"
+                  fill
+                  style={{
+                    objectFit: "cover",
+                  }}
                 />
               </div>
             )}

@@ -32,6 +32,7 @@ const ProfileContent: React.FC = () => {
       <div className="flex flex-row items-center justify-center w-full sticky top-[5rem] bg-background">
         {profileTabs.map((tab) => (
           <Button
+            key={`profile-tab-${tab}`}
             variant={"link"}
             className={`w-1/3 py-2 rounded-none hover:no-underline ${
               activeTab === tab

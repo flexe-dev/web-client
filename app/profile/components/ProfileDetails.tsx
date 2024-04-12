@@ -53,10 +53,13 @@ const ProfileDetails = ({
         {bio}
       </p>
       <Separator />
-      {profileDetails.map((item) => {
+      {profileDetails.map((item, index) => {
         if (item.detail) {
           return (
-            <div className="flex flex-row align-center items-center my-1">
+            <div
+              key={`profile-item-${index}`}
+              className="flex flex-row align-center items-center my-1"
+            >
               {item.icon}
               <p className="ml-2 text-xs text-secondary-foreground">
                 {" "}

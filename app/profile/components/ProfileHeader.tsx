@@ -26,9 +26,12 @@ function ProfileHeader() {
               <Image
                 alt="User Profile Picture"
                 className=" rounded-full"
+                priority
                 src={user?.image ?? defaultPicture}
-                layout="fill"
-                objectFit="cover"
+                fill
+                style={{
+                  objectFit: "cover",
+                }}
               />
             </div>
           </div>
