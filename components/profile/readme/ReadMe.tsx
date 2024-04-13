@@ -1,20 +1,21 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { useAccount } from "../../context/AccountProvider";
 import { FileUploader } from "@/components/FileUploader";
 import { Button } from "@/components/ui/button";
-import { PlusCircleIcon } from "@heroicons/react/24/outline";
+import { PencilSquareIcon, PlusCircleIcon } from "@heroicons/react/24/outline";
 import { toast } from "sonner";
 import { UploadProfileReadMe } from "@/controllers/ProfileController";
 import ReactMarkdown from "react-markdown";
 import rehypeRaw from "rehype-raw";
-import { buffer } from "stream/consumers";
-
+import rehypeSanitize from "rehype-sanitize";
+import MarkdownEditor from "./mdEditor";
+import remarkGFM from "remark-gfm";
+import DOMPurify from "dompurify";
 const ReadMe = () => {
   const { user, profile, setProfile } = useAccount();
   const readMe = profile?.readMe;
   if (!user || !profile) return null;
-
-  const uploadReadMe = (file: File) => {
+  const uploadReadMe = async (file: File) => {
     //Ensure File Upload is of type .md
     if (file.type !== "text/markdown") {
       toast.error("Invalid File Type. Please upload a markdown file.", {
@@ -23,14 +24,19 @@ const ReadMe = () => {
       return;
     }
     const reader = new FileReader();
-    reader.onload = (e) => {
+    reader.onload = async (e) => {
       const content = Buffer.from(reader.result as ArrayBuffer);
       if (!content) return;
 
       //Upload Buffer to Database
-      UploadProfileReadMe(content, user.id);
-      //Update Locally
-      setProfile({ ...profile, readMe: content });
+      const response = await UploadProfileReadMe(content, user.id);
+      if (response) {
+        toast.success("ReadMe File Uploaded Successfully", {
+          position: "top-right",
+        });
+        //Update Locally
+        setProfile({ ...profile, readMe: content });
+      }
     };
     reader.readAsArrayBuffer(file);
   };
@@ -61,9 +67,20 @@ const ReadMe = () => {
     );
 
   return (
-    <ReactMarkdown className={"m-4 "} rehypePlugins={[rehypeRaw]}>
-      {Buffer.from(readMe).toString("utf-8")}
-    </ReactMarkdown>
+    <div className="w-full h-full relative">
+      <ReactMarkdown
+        className={"m-4 "}
+        rehypePlugins={[rehypeRaw]}
+        remarkPlugins={[remarkGFM]}
+      >
+        {DOMPurify.sanitize(Buffer.from(readMe).toString("utf-8"))}
+      </ReactMarkdown>
+      <MarkdownEditor content={readMe}>
+        <Button variant={"ghost"} className="px-2 absolute top-0 right-0">
+          <PencilSquareIcon className="w-8 h-8" />
+        </Button>
+      </MarkdownEditor>
+    </div>
   );
 };
 
