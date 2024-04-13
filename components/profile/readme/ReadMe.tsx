@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { PencilSquareIcon, PlusCircleIcon } from "@heroicons/react/24/outline";
 import { toast } from "sonner";
 import { UploadProfileReadMe } from "@/controllers/ProfileController";
-import ReactMarkdown from "@uiw/react-markdown-preview";
+import ReactMarkdown from "react-markdown";
 import rehypeRaw from "rehype-raw";
 import MarkdownEditor from "./mdEditor";
 import remarkGFM from "remark-gfm";
@@ -88,18 +88,13 @@ const ReadMe = () => {
       <ReactMarkdown
         rehypePlugins={[rehypeRaw]}
         remarkPlugins={[remarkGFM]}
-        source={Buffer.from(readMe).toString("utf-8")}
-        wrapperElement={{
-          "data-color-mode": theme === "dark" ? "dark" : "light",
-        }}
-        className="p-4 rounded-lg border-2"
-      />
+        className="p-4"
+      >
+        {Buffer.from(readMe).toString("utf-8")}
+      </ReactMarkdown>
 
       <MarkdownEditor content={readMe}>
-        <Button
-          variant={"ghost"}
-          className="px-2 rounded-tl-none rounded-br-none absolute top-0 right-0"
-        >
+        <Button variant={"ghost"} className="px-2 absolute top-0 right-0">
           <PencilSquareIcon className="w-8 h-8" />
         </Button>
       </MarkdownEditor>

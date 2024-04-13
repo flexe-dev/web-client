@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import MDEditor from "@uiw/react-md-editor";
+import MDEditor from "@uiw/react-markdown-editor";
 import {
   AlertDialog,
   AlertDialogTrigger,
@@ -12,6 +12,7 @@ import { useTheme } from "next-themes";
 import { UploadProfileReadMe } from "@/controllers/ProfileController";
 import { useAccount } from "@/components/context/AccountProvider";
 import { toast } from "sonner";
+import DOMPurify from "dompurify";
 
 interface EditorProps {
   children: React.ReactNode;
@@ -31,7 +32,7 @@ const MarkdownEditor = (props: EditorProps) => {
   const handleUpdate = () => {
     //Update ReadMe File
     if (!readMeValue) return;
-    const updatedContent = Buffer.from(readMeValue);
+    const updatedContent = Buffer.from(DOMPurify.sanitize(readMeValue));
     UploadProfileReadMe(updatedContent, user.id).then((response) => {
       if (response) {
         setProfile({ ...profile, readMe: updatedContent });
@@ -48,6 +49,7 @@ const MarkdownEditor = (props: EditorProps) => {
       <AlertDialogContent className="w-full min-w-[80dvw] min-h-[80dvh] flex flex-col justify-center">
         <MDEditor
           value={readMeValue}
+          enablePreview={false}
           data-color-mode={theme === "dark" ? "dark" : "light"}
           className="min-w-[75dvw] min-h-[75dvh]"
           onChange={(value) => {
