@@ -8,7 +8,6 @@ import { UploadProfileReadMe } from "@/controllers/ProfileController";
 import ReactMarkdown from "react-markdown";
 import rehypeRaw from "rehype-raw";
 import MarkdownEditor from "./mdEditor";
-import remarkGFM from "remark-gfm";
 import { useTheme } from "next-themes";
 
 const ReadMe = () => {
@@ -17,8 +16,8 @@ const ReadMe = () => {
   const { theme } = useTheme();
   if (!user || !profile) return null;
   const uploadReadMe = async (file: File) => {
-    //Ensure File Upload is of type .md
-    if (file.type !== "text/markdown") {
+    //Ensure File Upload is of type .html
+    if (file.type !== "text/html") {
       toast.error("Invalid File Type. Please upload a markdown file.", {
         position: "top-right",
       });
@@ -44,7 +43,7 @@ const ReadMe = () => {
 
   const newReadme = () => {
     //Create a new ReadMe File
-    const content = Buffer.from("# Welcome to my Profile!");
+    const content = Buffer.from("This is a brand new HTML Document");
     UploadProfileReadMe(content, user.id).then((response) => {
       if (response) {
         toast.success("ReadMe File Created Successfully", {
@@ -63,7 +62,7 @@ const ReadMe = () => {
           No ReadMe File Found for this Account
         </h2>
         <h3 className="text-secondary-header mt-2 max-w-md">
-          Drag an existing markdown file in or click the Plus button to create a
+          Drag an existing html file in or click the Plus button to create a
           brand new one!
         </h3>
         <div className="w-full h-full relative">
@@ -85,11 +84,7 @@ const ReadMe = () => {
 
   return (
     <div className="relative my-4">
-      <ReactMarkdown
-        rehypePlugins={[rehypeRaw]}
-        remarkPlugins={[remarkGFM]}
-        className="p-4"
-      >
+      <ReactMarkdown rehypePlugins={[rehypeRaw]} className="p-4">
         {Buffer.from(readMe).toString("utf-8")}
       </ReactMarkdown>
 

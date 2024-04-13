@@ -32,7 +32,7 @@ const MarkdownEditor = (props: EditorProps) => {
   const handleUpdate = () => {
     //Update ReadMe File
     if (!readMeValue) return;
-    const updatedContent = Buffer.from(DOMPurify.sanitize(readMeValue));
+    const updatedContent = Buffer.from(readMeValue);
     UploadProfileReadMe(updatedContent, user.id).then((response) => {
       if (response) {
         setProfile({ ...profile, readMe: updatedContent });
@@ -49,8 +49,9 @@ const MarkdownEditor = (props: EditorProps) => {
       <AlertDialogContent className="w-full min-w-[80dvw] min-h-[80dvh] flex flex-col justify-center">
         <MDEditor
           value={readMeValue}
-          enablePreview={false}
           data-color-mode={theme === "dark" ? "dark" : "light"}
+          enablePreview={true}
+          previewWidth="50%"
           className="min-w-[75dvw] min-h-[75dvh]"
           onChange={(value) => {
             if (value) {

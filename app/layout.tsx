@@ -26,7 +26,11 @@ export default async function RootLayout({
 }>) {
   const session = await getServerSession(baseAuthOptions);
   return (
-    <html lang="en" className="overflow-x-hidden">
+    <html
+      lang="en"
+      suppressHydrationWarning={true}
+      className="overflow-x-hidden"
+    >
       <body
         className={cn(
           "min-h-screen bg-background antialiased",
