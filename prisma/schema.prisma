@@ -62,8 +62,8 @@ model UserProfile {
   job             String?
   company         String?
   pronouns        String?
-  location        String?
-
+  location        String?     
+  readMe          Bytes? 
 }
 
 model FeaturedSnippet {

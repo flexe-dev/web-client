@@ -94,7 +94,12 @@ export const ProfileDetailsForm = (props: Props) => {
           .map((url) => getFilenameFromURL(url) ?? "")
       );
 
-    if (response) props.onSuccess(true);
+    if (response) {
+      toast.success("Profile Details Successfully Updated", {
+        position: "top-right",
+      });
+      props.onSuccess(false);
+    }
   };
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -166,8 +171,8 @@ export const ProfileDetailsForm = (props: Props) => {
                   alt="User Profile Picture"
                   className=" rounded-full"
                   src={avatarURL}
-                  layout="fill"
-                  objectFit="cover"
+                  fill
+                  style={{ objectFit: "cover" }}
                 />
               </div>
             )}

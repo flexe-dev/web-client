@@ -45,12 +45,8 @@ export const UserDropdown = ({ children, user }: UserDropdownProps) => {
         <DropdownMenuSeparator />
         {links.map((link) => {
           return (
-            <DropdownMenuItem>
-              <Link
-                key={`dropdown-link${link.label}`}
-                href={link.href}
-                className="group flex space-x-3"
-              >
+            <DropdownMenuItem key={`dropdown-link-${link.label}`}>
+              <Link href={link.href} className="group flex space-x-3">
                 {link.icon}
                 <span>{link.label}</span>
               </Link>

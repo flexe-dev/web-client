@@ -1,12 +1,11 @@
-import React, { use } from "react";
+import React from "react";
 import Image from "next/image";
 import { ImageProps } from "next/image";
 import { User } from "@prisma/client";
-import { Card, CardFooter, CardContent } from "../card";
+import { Card, CardFooter } from "../card";
 import { EyeIcon, HandThumbUpIcon } from "@heroicons/react/24/outline";
 import { Avatar, AvatarImage } from "../avatar";
-import { motion } from "framer-motion";
-import { nanoid } from "nanoid";
+
 interface GalleryPostProps {
   title: string;
   link: string;

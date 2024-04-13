@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { SetStateAction, useEffect, useState } from "react";
 import React from "react";
 import { Dialog, DialogContent, DialogHeader } from "@/components/ui/dialog";
 import { DialogDescription } from "@radix-ui/react-dialog";
@@ -7,23 +7,17 @@ import { ProfileDetailsForm } from "@/components/forms/ProfileDetailsForm";
 import { useAccount } from "@/components/context/AccountProvider";
 
 interface EditProfileModalProps {
-  onClose: () => void;
+  open: boolean;
+  dispatch: React.Dispatch<SetStateAction<boolean>>;
 }
 
 export const EditProfileModal: React.FC<EditProfileModalProps> = ({
-  onClose,
+  open,
+  dispatch,
 }) => {
-  const handleFinishOnboard = () => {
-    onClose();
-  };
-
   return (
-    <Dialog open={true} onOpenChange={onClose}>
-      <DialogContent
-        className="w-full md:min-w-[45rem] lg:min-w-[50rem] "
-        hasCloseButton={true}
-        onInteractOutside={(e) => e.preventDefault()}
-      >
+    <Dialog open={open} onOpenChange={dispatch}>
+      <DialogContent className="w-full md:min-w-[45rem] lg:min-w-[50rem] ">
         <>
           <DialogDescription className="text-secondary-foreground flex flex-col">
             <span>Let's update your details!</span>
@@ -31,7 +25,7 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
               Your information can be changed in the settings page at any time
             </span>
           </DialogDescription>
-          <ProfileDetailsForm onSuccess={handleFinishOnboard} />
+          <ProfileDetailsForm onSuccess={dispatch} />
         </>
       </DialogContent>
     </Dialog>

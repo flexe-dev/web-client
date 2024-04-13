@@ -6,12 +6,7 @@ type LayoutProps = {
 };
 
 const Layout: React.FC<LayoutProps> = ({ children }) => {
-  return (
-    <div>
-      <header>{/* Add your header content here */}</header>
-      <main>{children}</main>
-    </div>
-  );
+  return <main>{children}</main>;
 };
 
 export default Layout;
