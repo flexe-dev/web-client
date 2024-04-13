@@ -41,6 +41,20 @@ const ReadMe = () => {
     reader.readAsArrayBuffer(file);
   };
 
+  const newReadme = () => {
+    //Create a new ReadMe File
+    const content = Buffer.from("# Welcome to my Profile!");
+    UploadProfileReadMe(content, user.id).then((response) => {
+      if (response) {
+        toast.success("ReadMe File Created Successfully", {
+          position: "top-right",
+        });
+        //Update Locally
+        setProfile({ ...profile, readMe: content });
+      }
+    });
+  };
+
   if (!readMe)
     return (
       <section className="flex flex-col items-center py-12 px-8">
@@ -56,7 +70,9 @@ const ReadMe = () => {
             className="my-8 h-[30rem]"
             onFileUpload={uploadReadMe}
           />
+
           <Button
+            onClick={newReadme}
             className="absolute -right-6 top-2 rounded-full h-14 w-14 px-0 hover:bg-transparent"
             variant={"ghost"}
           >
