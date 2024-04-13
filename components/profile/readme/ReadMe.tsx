@@ -5,15 +5,16 @@ import { Button } from "@/components/ui/button";
 import { PencilSquareIcon, PlusCircleIcon } from "@heroicons/react/24/outline";
 import { toast } from "sonner";
 import { UploadProfileReadMe } from "@/controllers/ProfileController";
-import ReactMarkdown from "react-markdown";
+import ReactMarkdown from "@uiw/react-markdown-preview";
 import rehypeRaw from "rehype-raw";
-import rehypeSanitize from "rehype-sanitize";
 import MarkdownEditor from "./mdEditor";
 import remarkGFM from "remark-gfm";
-import DOMPurify from "dompurify";
+import { useTheme } from "next-themes";
+
 const ReadMe = () => {
   const { user, profile, setProfile } = useAccount();
   const readMe = profile?.readMe;
+  const { theme } = useTheme();
   if (!user || !profile) return null;
   const uploadReadMe = async (file: File) => {
     //Ensure File Upload is of type .md
@@ -83,16 +84,22 @@ const ReadMe = () => {
     );
 
   return (
-    <div className="w-full h-full relative">
+    <div className="relative my-4">
       <ReactMarkdown
-        className={"m-4 "}
         rehypePlugins={[rehypeRaw]}
         remarkPlugins={[remarkGFM]}
-      >
-        {DOMPurify.sanitize(Buffer.from(readMe).toString("utf-8"))}
-      </ReactMarkdown>
+        source={Buffer.from(readMe).toString("utf-8")}
+        wrapperElement={{
+          "data-color-mode": theme === "dark" ? "dark" : "light",
+        }}
+        className="p-4 rounded-lg border-2"
+      />
+
       <MarkdownEditor content={readMe}>
-        <Button variant={"ghost"} className="px-2 absolute top-0 right-0">
+        <Button
+          variant={"ghost"}
+          className="px-2 rounded-tl-none rounded-br-none absolute top-0 right-0"
+        >
           <PencilSquareIcon className="w-8 h-8" />
         </Button>
       </MarkdownEditor>

@@ -29,15 +29,15 @@ const ProfileContent: React.FC = () => {
 
   return (
     <div className="flex-auto relative">
-      <div className="flex flex-row items-center justify-center w-full sticky top-[5rem] bg-background">
+      <div className="flex flex-row h-fit items-center justify-center w-full sticky top-[5rem] bg-background">
         {profileTabs.map((tab) => (
           <Button
             key={`profile-tab-${tab}`}
             variant={"link"}
-            className={`w-1/3 py-2 rounded-none hover:no-underline ${
+            className={`w-1/3 py-2 rounded-none border-b-4 hover:no-underline ${
               activeTab === tab
-                ? "border-b-4 border-secondary-foreground text-secondary-foreground"
-                : "border-b-4 border-muted text-secondary-header"
+                ? "border-secondary-foreground text-secondary-foreground"
+                : "border-muted text-secondary-header"
             } `}
             onClick={() => {
               setActiveTab(tab);

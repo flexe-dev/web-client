@@ -12,10 +12,6 @@ import { useTheme } from "next-themes";
 import { UploadProfileReadMe } from "@/controllers/ProfileController";
 import { useAccount } from "@/components/context/AccountProvider";
 import { toast } from "sonner";
-import rehypeSanitize from "rehype-sanitize";
-import DOMPurify from "dompurify";
-import ReactMarkdown from "react-markdown";
-import rehypeRaw from "rehype-raw";
 
 interface EditorProps {
   children: React.ReactNode;
@@ -59,16 +55,7 @@ const MarkdownEditor = (props: EditorProps) => {
               setReadMeValue(value);
             }
           }}
-          components={{
-            preview: (source, state, dispatch) => {
-              return (
-                <ReactMarkdown rehypePlugins={[rehypeRaw, rehypeSanitize]}>
-                  {DOMPurify.sanitize(source)}
-                </ReactMarkdown>
-              );
-            },
-          }}
-        ></MDEditor>
+        />
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
           <AlertDialogAction onClick={handleUpdate}>Save</AlertDialogAction>

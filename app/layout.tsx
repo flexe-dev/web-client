@@ -12,7 +12,7 @@ import { OnboardModal } from "@/components/auth/OnboardModal";
 import { Navbar } from "@/components/navbar";
 import { AccountProvider } from "@/components/context/AccountProvider";
 import { Footer } from "@/components/ui/Footer";
-import { FindProfileByUserId } from "@/controllers/ProfileController";
+
 export const metadata: Metadata = {
   title: "designs.dev",
   description:
@@ -26,10 +26,10 @@ export default async function RootLayout({
 }>) {
   const session = await getServerSession(baseAuthOptions);
   return (
-    <html lang="en" suppressHydrationWarning={true}>
+    <html lang="en" className="overflow-x-hidden">
       <body
         className={cn(
-          "min-h-screen bg-background antialiased overflow-x-hidden ",
+          "min-h-screen bg-background antialiased",
           jetBrainsMono.className
         )}
       >
@@ -42,7 +42,7 @@ export default async function RootLayout({
               disableTransitionOnChange
             >
               <Navbar />
-              <main>{children}</main>
+              <main className="w-[100dvw]">{children}</main>
               <Toaster />
               <OnboardModal />
               <Footer />

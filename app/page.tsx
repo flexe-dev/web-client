@@ -9,7 +9,7 @@ export default function Home() {
     <>
       <BackgroundGrid />
       <CreationParallaxWrapper>
-        <div className=" px-12 lg:px-24 max-w-screen-lg h-full flex flex-col justify-center  z-[30]">
+        <div className="px-12 lg:px-24 max-w-screen-lg h-full flex flex-col justify-center  z-[30]">
           <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold text-neutral-800 dark:text-neutral-200 ">
             Being a Developer doesn't need to be so difficult all the time
           </h1>
