@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import { useAccount } from "../../context/AccountProvider";
 import { FileUploader } from "@/components/FileUploader";
@@ -9,12 +11,14 @@ import ReactMarkdown from "react-markdown";
 import rehypeRaw from "rehype-raw";
 import MarkdownEditor from "./mdEditor";
 import { useTheme } from "next-themes";
+import { userProfileViewer } from "@/components/context/UserProfileProvider";
 
 const ReadMe = () => {
-  const { user, profile, setProfile } = useAccount();
-  const readMe = profile?.readMe;
+  const { fetchedProfile, fetchedUser, setFetchedProfile, isUserProfile } =
+    userProfileViewer();
+  const readMe = fetchedProfile?.readMe;
   const { theme } = useTheme();
-  if (!user || !profile) return null;
+  if (!fetchedUser || !fetchedProfile) return null;
   const uploadReadMe = async (file: File) => {
     //Ensure File Upload is of type .html
     if (file.type !== "text/html") {
@@ -29,13 +33,13 @@ const ReadMe = () => {
       if (!content) return;
 
       //Upload Buffer to Database
-      const response = await UploadProfileReadMe(content, user.id);
+      const response = await UploadProfileReadMe(content, fetchedUser.id);
       if (response) {
         toast.success("ReadMe File Uploaded Successfully", {
           position: "top-right",
         });
         //Update Locally
-        setProfile({ ...profile, readMe: content });
+        setFetchedProfile({ ...fetchedProfile, readMe: content });
       }
     };
     reader.readAsArrayBuffer(file);
@@ -44,43 +48,47 @@ const ReadMe = () => {
   const newReadme = () => {
     //Create a new ReadMe File
     const content = Buffer.from("This is a brand new HTML Document");
-    UploadProfileReadMe(content, user.id).then((response) => {
+    UploadProfileReadMe(content, fetchedUser.id).then((response) => {
       if (response) {
         toast.success("ReadMe File Created Successfully", {
           position: "top-right",
         });
         //Update Locally
-        setProfile({ ...profile, readMe: content });
+        setFetchedProfile({ ...fetchedProfile, readMe: content });
       }
     });
   };
 
-  if (!readMe)
-    return (
-      <section className="flex flex-col items-center py-12 px-8">
-        <h2 className="text-2xl font-bold">
-          No ReadMe File Found for this Account
-        </h2>
-        <h3 className="text-secondary-header mt-2 max-w-md">
-          Drag an existing html file in or click the Plus button to create a
-          brand new one!
-        </h3>
-        <div className="w-full h-full relative">
-          <FileUploader
-            className="my-8 h-[30rem]"
-            onFileUpload={uploadReadMe}
-          />
+  if (!readMe) {
+    if (isUserProfile) {
+      return (
+        <section className="flex flex-col items-center py-12 px-8">
+          <h2 className="text-2xl font-bold">
+            No ReadMe File Found for this Account
+          </h2>
+          <h3 className="text-secondary-header mt-2 max-w-md">
+            Drag an existing html file in or click the Plus button to create a
+            brand new one!
+          </h3>
+          <div className="w-full h-full relative">
+            <FileUploader
+              className="my-8 h-[30rem]"
+              onFileUpload={uploadReadMe}
+            />
 
-          <Button
-            onClick={newReadme}
-            className="absolute -right-6 top-2 rounded-full h-14 w-14 px-0 hover:bg-transparent"
-            variant={"ghost"}
-          >
-            <PlusCircleIcon className="w-14 h-14 stroke-secondary-header rounded-full backdrop-blur-lg hover:stroke-primary transition-colors" />
-          </Button>
-        </div>
-      </section>
-    );
+            <Button
+              onClick={newReadme}
+              className="absolute -right-6 top-2 rounded-full h-14 w-14 px-0 hover:bg-transparent"
+              variant={"ghost"}
+            >
+              <PlusCircleIcon className="w-14 h-14 stroke-secondary-header rounded-full backdrop-blur-lg hover:stroke-primary transition-colors" />
+            </Button>
+          </div>
+        </section>
+      );
+    }
+    return <div>This User has not created a Readme Document Yet</div>;
+  }
 
   return (
     <div className="relative my-4">
@@ -89,9 +97,11 @@ const ReadMe = () => {
       </ReactMarkdown>
 
       <MarkdownEditor content={readMe}>
-        <Button variant={"ghost"} className="px-2 absolute top-0 right-0">
-          <PencilSquareIcon className="w-8 h-8" />
-        </Button>
+        {isUserProfile && (
+          <Button variant={"ghost"} className="px-2 absolute top-0 right-0">
+            <PencilSquareIcon className="w-8 h-8" />
+          </Button>
+        )}
       </MarkdownEditor>
     </div>
   );
