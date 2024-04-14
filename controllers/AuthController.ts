@@ -1,4 +1,5 @@
 import { User } from "next-auth";
+import { User as PrismaUser } from "@prisma/client";
 
 interface EmailUser {
   email: string;
@@ -50,7 +51,7 @@ const CheckUserPassword = async (userID: string, password: string) => {
   return response.ok;
 };
 
-const UniqueUsernameCheck = async (username: string): Promise<boolean> => {
+const FindUserByUsername = async (username: string): Promise<User | null> => {
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_API_URL}auth/findUserByUsername/${username}`,
     {
@@ -61,7 +62,7 @@ const UniqueUsernameCheck = async (username: string): Promise<boolean> => {
     }
   );
   const user: User | null = await response.json();
-  return !!user;
+  return user;
 };
 
 const CompleteUserOnboard = async (
@@ -86,7 +87,7 @@ const CompleteUserOnboard = async (
 export {
   CreateEmailUser,
   FindUserByEmail,
-  UniqueUsernameCheck,
+  FindUserByUsername,
   CompleteUserOnboard,
   CheckUserPassword,
 };
