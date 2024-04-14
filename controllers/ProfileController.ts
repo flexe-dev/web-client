@@ -60,7 +60,8 @@ const UpdateUserDetails = async (
   job: string,
   company: string,
   pronouns: string,
-  location: string
+  location: string,
+  bio: string
 ): Promise<boolean> => {
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_API_URL}profile/updateUserDetails`,

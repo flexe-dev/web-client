@@ -67,8 +67,8 @@ function ProfileHeader() {
                 @{fetchedUser?.username}
               </p>
               <ProfileFollowers
-                followers={mockprofile.profile.followers}
-                following={mockprofile.profile.following}
+                followers={fetchedProfile?.followers ?? 0}
+                following={fetchedProfile?.following ?? 0}
               />
               {isUserProfile && (
                 <Button
@@ -82,7 +82,7 @@ function ProfileHeader() {
             </>
           )}
         </div>
-        <ProfileDetails/>
+        <ProfileDetails />
       </div>
       <EditProfileModal open={isEditModalOpen} dispatch={setIsEditModalOpen} />
     </>

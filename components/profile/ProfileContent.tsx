@@ -35,7 +35,7 @@ const ProfileContent: React.FC<ContentProps> = ({ children }) => {
 
   return (
     <div className="flex-auto relative">
-      <div className="flex flex-row z-[90] h-fit items-center justify-center w-full sticky top-[5rem] bg-background">
+      <div className="flex flex-row z-[40] h-fit items-center justify-center w-full sticky top-[5rem] bg-background">
         {profileTabs.map((tab) => (
           <Button
             asChild

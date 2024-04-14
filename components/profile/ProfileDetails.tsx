@@ -39,7 +39,7 @@ const ProfileDetails = () => {
         <div className="flex flex-col items-center">
           <Separator className="mt-4" />
           <p className="text-xs py-2 text-gray-200 text-wrap text-secondary-foreground">
-            Bio bio bio bio bio bio bio bio bio bio bio bio bio bio
+            {fetchedProfile?.bio ?? "No Bio Yet"}
           </p>
           <Separator className="mb-4" />
         </div>

@@ -1,17 +1,14 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import React, { FormEvent, useCallback, useState } from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
-import { undefined, z } from "zod";
+import { z } from "zod";
 import { Button } from "../ui/button";
 import { UpdateUserDetails } from "@/controllers/ProfileController";
-
-import { debounce } from "lodash";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -25,6 +22,7 @@ import Image from "next/image";
 import { supabase } from "@/lib/supabase";
 import { toast } from "sonner";
 import { Skeleton } from "../ui/skeleton";
+import { Textarea } from "../ui/textarea";
 
 interface Props {
   onSuccess: React.Dispatch<React.SetStateAction<boolean>>;
@@ -42,6 +40,7 @@ const formSchema = z.object({
   company: z.string(),
   pronouns: z.string(),
   location: z.string(),
+  bio: z.string(),
 });
 
 export const ProfileDetailsForm = (props: Props) => {
@@ -65,7 +64,8 @@ export const ProfileDetailsForm = (props: Props) => {
       values.job,
       values.company,
       values.pronouns,
-      values.location
+      values.location,
+      values.bio
     );
 
     // Update User Account Details
@@ -83,6 +83,7 @@ export const ProfileDetailsForm = (props: Props) => {
       company: values.company,
       pronouns: values.pronouns,
       location: values.location,
+      bio: values.bio,
     });
 
     //Remove Previous Avatars from Storage
@@ -112,6 +113,7 @@ export const ProfileDetailsForm = (props: Props) => {
       company: profile.company ?? "",
       pronouns: profile.pronouns ?? "",
       location: profile.location ?? "",
+      bio: profile.bio ?? "",
     },
   });
 
@@ -158,15 +160,15 @@ export const ProfileDetailsForm = (props: Props) => {
         onSubmit={form.handleSubmit(onSubmit)}
         className="flex flex-col md:flex-row-reverse w-full "
       >
-        <div className="flex pr-8 flex-col  items-center">
+        <div className="flex px-8 flex-col  items-center">
           <Label htmlFor="image" className="text-sm mt-2 text-secondary-header">
             Profile Picture
           </Label>
           <div className="mt-6 relative group/picture">
             {uploading ? (
-              <Skeleton className="w-48 h-48 rounded-full" />
+              <Skeleton className="w-32 md:w-48 aspect-square rounded-full" />
             ) : (
-              <div className="w-48 h-48 relative">
+              <div className="w-32 md:w-48 aspect-square relative">
                 <Image
                   alt="User Profile Picture"
                   className=" rounded-full"
@@ -192,7 +194,7 @@ export const ProfileDetailsForm = (props: Props) => {
             </label>
           </div>
         </div>
-        <div className="w-full flex flex-col mt-10">
+        <div className="w-full flex flex-col">
           <FormField
             control={form.control}
             name="name"
@@ -200,11 +202,7 @@ export const ProfileDetailsForm = (props: Props) => {
               <FormItem className="mt-2">
                 <FormLabel>Name</FormLabel>
                 <FormControl>
-                  <Input
-                    placeholder="Your name"
-                    className="md:w-5/6"
-                    {...field}
-                  />
+                  <Input placeholder="Your name" {...field} />
                 </FormControl>
                 <FormMessage>{form.formState.errors.name?.message}</FormMessage>
               </FormItem>
@@ -217,11 +215,7 @@ export const ProfileDetailsForm = (props: Props) => {
               <FormItem className="mt-2">
                 <FormLabel>Job</FormLabel>
                 <FormControl>
-                  <Input
-                    placeholder="Your job title"
-                    className="md:w-5/6"
-                    {...field}
-                  />
+                  <Input placeholder="Your job title" {...field} />
                 </FormControl>
               </FormItem>
             )}
@@ -233,43 +227,45 @@ export const ProfileDetailsForm = (props: Props) => {
               <FormItem className="mt-2">
                 <FormLabel>Company</FormLabel>
                 <FormControl>
-                  <Input
-                    placeholder="Where you work"
-                    className="md:w-5/6"
-                    {...field}
-                  />
+                  <Input placeholder="Where you work" {...field} />
                 </FormControl>
               </FormItem>
             )}
           />
+          <div className="flex space-x-4  md:flex-row">
+            <FormField
+              control={form.control}
+              name="pronouns"
+              render={({ field }) => (
+                <FormItem className="mt-2 w-1/2">
+                  <FormLabel>Pronouns</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Your preferred pronouns" {...field} />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="location"
+              render={({ field }) => (
+                <FormItem className="mt-2 w-1/2">
+                  <FormLabel>Location</FormLabel>
+                  <FormControl>
+                    <Input placeholder="where you live" {...field} />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+          </div>
           <FormField
             control={form.control}
-            name="pronouns"
+            name="bio"
             render={({ field }) => (
               <FormItem className="mt-2">
-                <FormLabel>Pronouns</FormLabel>
+                <FormLabel>Bio</FormLabel>
                 <FormControl>
-                  <Input
-                    placeholder="Your preferred pronouns"
-                    className="md:w-5/6"
-                    {...field}
-                  />
-                </FormControl>
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="location"
-            render={({ field }) => (
-              <FormItem className="mt-2">
-                <FormLabel>Location</FormLabel>
-                <FormControl>
-                  <Input
-                    placeholder="where you live"
-                    className="md:w-5/6"
-                    {...field}
-                  />
+                  <Textarea className="max-h-[8rem] md:max-h-[12rem]" placeholder="How Do I Centre a Div" {...field} />
                 </FormControl>
               </FormItem>
             )}
