@@ -41,7 +41,7 @@ export const AccountProvider = ({ children }: Props) => {
       const userData = session.data?.user;
       if (userData) {
         const userProfile = await FindProfileByUserId(userData.id);
-        setProfile(userProfile ? userProfile : undefined);
+        setProfile(userProfile ?? undefined);
       }
     } catch (error) {
       console.error("Error fetching user profile:", error);
