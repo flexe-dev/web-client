@@ -3,8 +3,6 @@
 /*This context will be used to display the details of the searched user's profile*/
 
 import React, { useEffect, useState, createContext, use } from "react";
-import ProfileHeader from "../../components/profile/ProfileHeader";
-import ProfileContent from "@/components/profile/ProfileContent";
 import { useParams } from "next/navigation";
 import { UserProfile } from "@prisma/client";
 import { User } from "next-auth";
@@ -12,7 +10,6 @@ import ErrorPage from "../Error";
 import { useAccount } from "@/components/context/AccountProvider";
 import { FindUserByUsername } from "@/controllers/AuthController";
 import { FindProfileByUserId } from "@/controllers/ProfileController";
-import { set } from "lodash";
 
 interface ProfileViewerProviderState {
   fetchedUser: User | undefined;
@@ -43,7 +40,8 @@ interface Props {
 
 export const ProviderViewerProvider = ({ children }: Props) => {
   const { user, profile } = useAccount();
-  const params = useParams<{ username: string }>();
+  const params = useParams<{ username: string, tag:string }>();
+
   const [loading, setLoading] = useState(true);
   const [fetchedUser, setFetchedUser] = useState<User | undefined>();
   const [fetchedProfile, setFetchedProfile] = useState<
@@ -74,7 +72,7 @@ export const ProviderViewerProvider = ({ children }: Props) => {
     } else {
       fetchProfileDetails(username);
     }
-  }, [user]);
+  }, [user, profile]);
 
   return (
     <ProfileViewerContext.Provider
