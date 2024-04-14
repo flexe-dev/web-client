@@ -82,13 +82,7 @@ function ProfileHeader() {
             </>
           )}
         </div>
-        <ProfileDetails
-          bio={mockprofile.profile.bio}
-          currentJob={fetchedProfile?.job ?? undefined}
-          company={fetchedProfile?.company ?? undefined}
-          pronouns={fetchedProfile?.pronouns ?? undefined}
-          location={fetchedProfile?.location ?? undefined}
-        />
+        <ProfileDetails/>
       </div>
       <EditProfileModal open={isEditModalOpen} dispatch={setIsEditModalOpen} />
     </>

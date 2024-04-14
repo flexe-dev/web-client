@@ -1,29 +1,41 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { userProfileViewer } from "../context/UserProfileProvider";
-
-const profileTabs = ["portfolio", "activity", "readme"] as const;
-type Tabs = (typeof profileTabs)[number];
+import { useParams } from "next/navigation";
+import ErrorPage from "../Error";
+export const profileTabs = ["portfolio", "activity", "readme"] as const;
+export type Tabs = (typeof profileTabs)[number];
 
 interface ContentProps {
   children: React.ReactNode;
 }
 
 const ProfileContent: React.FC<ContentProps> = ({ children }) => {
-  const { fetchedUser, fetchedProfile } = userProfileViewer();
-  const [activeTab, setActiveTab] = useState<Tabs>("readme");
+  const { fetchedUser } = userProfileViewer();
+  const params = useParams<{ username: string; tag: string }>();
+  const [activeTab, setActiveTab] = useState<Tabs>(
+    (params.tag as Tabs) || "readme"
+  );
+
   const tabLink: Record<Tabs, string> = {
     portfolio: `/${fetchedUser?.username}/portfolio`,
     activity: `/${fetchedUser?.username}/activity`,
     readme: `/${fetchedUser?.username}/`,
   };
 
+  useEffect(() => {
+    setActiveTab((params.tag as Tabs) || "readme");
+  }, [params]);
+
+  if (params.tag && !profileTabs.includes(params.tag as Tabs))
+    return <ErrorPage />;
+
   return (
     <div className="flex-auto relative">
-      <div className="flex flex-row h-fit items-center justify-center w-full sticky top-[5rem] bg-background">
+      <div className="flex flex-row z-[90] h-fit items-center justify-center w-full sticky top-[5rem] bg-background">
         {profileTabs.map((tab) => (
           <Button
             asChild
