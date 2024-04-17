@@ -1,7 +1,6 @@
 "use client";
 
 import React from "react";
-import { useAccount } from "../../context/AccountProvider";
 import { FileUploader } from "@/components/FileUploader";
 import { Button } from "@/components/ui/button";
 import { PencilSquareIcon, PlusCircleIcon } from "@heroicons/react/24/outline";
@@ -10,14 +9,12 @@ import { UploadProfileReadMe } from "@/controllers/ProfileController";
 import ReactMarkdown from "react-markdown";
 import rehypeRaw from "rehype-raw";
 import MarkdownEditor from "./mdEditor";
-import { useTheme } from "next-themes";
 import { userProfileViewer } from "@/components/context/UserProfileProvider";
-
+import readMeTemplate from "@/lib/baseReadme";
 const ReadMe = () => {
   const { fetchedProfile, fetchedUser, setFetchedProfile, isUserProfile } =
     userProfileViewer();
   const readMe = fetchedProfile?.readMe;
-  const { theme } = useTheme();
   if (!fetchedUser || !fetchedProfile) return null;
   const uploadReadMe = async (file: File) => {
     //Ensure File Upload is of type .html
@@ -47,7 +44,7 @@ const ReadMe = () => {
 
   const newReadme = () => {
     //Create a new ReadMe File
-    const content = Buffer.from("This is a brand new HTML Document");
+    const content = Buffer.from(readMeTemplate);
     UploadProfileReadMe(content, fetchedUser.id).then((response) => {
       if (response) {
         toast.success("ReadMe File Created Successfully", {
