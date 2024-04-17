@@ -6,6 +6,7 @@ import Link from "next/link";
 import { userProfileViewer } from "../context/UserProfileProvider";
 import { useParams } from "next/navigation";
 import ErrorPage from "../Error";
+import { ChildNodeProps } from "@/lib/interface";
 export const profileTabs = [
   "readme",
   "portfolio",
@@ -14,11 +15,7 @@ export const profileTabs = [
 ] as const;
 export type Tabs = (typeof profileTabs)[number];
 
-interface ContentProps {
-  children: React.ReactNode;
-}
-
-const ProfileContent: React.FC<ContentProps> = ({ children }) => {
+const ProfileContent: React.FC<ChildNodeProps> = ({ children }) => {
   const { fetchedUser } = userProfileViewer();
   const params = useParams<{ username: string; tag: string }>();
   const [activeTab, setActiveTab] = useState<Tabs>(
@@ -26,10 +23,10 @@ const ProfileContent: React.FC<ContentProps> = ({ children }) => {
   );
 
   const tabLink: Record<Tabs, string> = {
-    portfolio: `/${fetchedUser?.username}/portfolio`,
-    activity: `/${fetchedUser?.username}/activity`,
-    posts: `/${fetchedUser?.username}/posts`,
-    readme: `/${fetchedUser?.username}/`,
+    portfolio: `/${fetchedUser.user?.username}/portfolio`,
+    activity: `/${fetchedUser.user?.username}/activity`,
+    posts: `/${fetchedUser.user?.username}/posts`,
+    readme: `/${fetchedUser.user?.username}/`,
   };
 
   useEffect(() => {
@@ -56,7 +53,9 @@ const ProfileContent: React.FC<ContentProps> = ({ children }) => {
                   }
                   `}
           >
-            <Link href={tabLink[tab]}>{tab}</Link>
+            <Link href={tabLink[tab]} className="capitalize">
+              {tab}
+            </Link>
           </Button>
         ))}
       </div>

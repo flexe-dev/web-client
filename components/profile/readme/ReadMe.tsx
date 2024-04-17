@@ -14,10 +14,14 @@ import readMeTemplate from "@/lib/baseReadme";
 import rehypeSanitize from "rehype-sanitize";
 import remarkGfm from "remark-gfm";
 const ReadMe = () => {
-  const { fetchedProfile, fetchedUser, setFetchedProfile, isUserProfile } =
+  const { fetchedProfile, fetchedUser, setFetchedProfile, isOwnProfile } =
     userProfileViewer();
-  const readMe = fetchedProfile?.readMe;
-  if (!fetchedUser || !fetchedProfile) return null;
+
+  const readMe = fetchedProfile.profile?.readMe;
+  const { user, loading: userLoading } = fetchedUser;
+  const { profile, loading: profileLoading } = fetchedProfile;
+
+  if (!user || !profile) return null;
   const uploadReadMe = async (file: File) => {
     //Ensure File Upload is of type .html
     if (file.type !== "text/html") {
@@ -32,13 +36,15 @@ const ReadMe = () => {
       if (!content) return;
 
       //Upload Buffer to Database
-      const response = await UploadProfileReadMe(content, fetchedUser.id);
+      const response = await UploadProfileReadMe(content, user.id);
       if (response) {
         toast.success("ReadMe File Uploaded Successfully", {
           position: "top-right",
         });
         //Update Locally
-        setFetchedProfile({ ...fetchedProfile, readMe: content });
+        setFetchedProfile((prev) => {
+          return { ...prev, readMe: content };
+        });
       }
     };
     reader.readAsArrayBuffer(file);
@@ -47,19 +53,21 @@ const ReadMe = () => {
   const newReadme = () => {
     //Create a new ReadMe File
     const content = Buffer.from(readMeTemplate);
-    UploadProfileReadMe(content, fetchedUser.id).then((response) => {
+    UploadProfileReadMe(content, user.id).then((response) => {
       if (response) {
         toast.success("ReadMe File Created Successfully", {
           position: "top-right",
         });
         //Update Locally
-        setFetchedProfile({ ...fetchedProfile, readMe: content });
+        setFetchedProfile((prev) => {
+          return { ...prev, readMe: content };
+        });
       }
     });
   };
 
   if (!readMe) {
-    if (isUserProfile) {
+    if (isOwnProfile) {
       return (
         <section className="flex flex-col items-center py-12 px-8">
           <h2 className="text-2xl font-bold">
@@ -99,7 +107,7 @@ const ReadMe = () => {
       />
 
       <MarkdownEditor content={readMe}>
-        {isUserProfile && (
+        {isOwnProfile && (
           <Button variant={"ghost"} className="px-2 absolute top-0 right-0">
             <PencilSquareIcon className="w-8 h-8" />
           </Button>

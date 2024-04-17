@@ -15,8 +15,10 @@ import { userProfileViewer } from "../context/UserProfileProvider";
 import { Skeleton } from "../ui/skeleton";
 
 function ProfileHeader() {
-  const { fetchedProfile, fetchedUser, loading, isUserProfile } =
-    userProfileViewer();
+  const { fetchedProfile, fetchedUser, isOwnProfile } = userProfileViewer();
+
+  const { loading: loadingUser, user } = fetchedUser;
+  const { loading: loadingProfile, profile } = fetchedProfile;
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   //Find Profile and User object based on username string
 
@@ -30,14 +32,14 @@ function ProfileHeader() {
         <div className="relative">
           <div className="relative z-10 flex justify-center">
             <div className="w-48 h-48 relative">
-              {loading ? (
+              {loadingUser ? (
                 <Skeleton className="rounded-full w-48 h-48" />
               ) : (
                 <Image
                   alt="User Profile Picture"
                   className=" rounded-full"
                   priority
-                  src={fetchedUser?.image ?? defaultPicture}
+                  src={user?.image ?? defaultPicture}
                   fill
                   style={{
                     objectFit: "cover",
@@ -48,7 +50,7 @@ function ProfileHeader() {
           </div>
         </div>
         <div className="flex flex-col items-center relative z-10 mt-4">
-          {loading ? (
+          {loadingProfile ? (
             <>
               <Skeleton className="w-32 h-8 mt-2 rounded-lg" />
               <Skeleton className="w-24 h-4 rounded-lg mt-4" />
@@ -60,17 +62,15 @@ function ProfileHeader() {
           ) : (
             <>
               <h1 className="text-2xl font-semibold text-secondary-foreground">
-                {fetchedUser?.name}
+                {user?.name}
               </h1>
 
-              <p className="text-secondary-header my-2">
-                @{fetchedUser?.username}
-              </p>
+              <p className="text-secondary-header my-2">@{user?.username}</p>
               <ProfileFollowers
-                followers={fetchedProfile?.followers ?? 0}
-                following={fetchedProfile?.following ?? 0}
+                followers={profile?.followers ?? 0}
+                following={profile?.following ?? 0}
               />
-              {isUserProfile && (
+              {isOwnProfile && (
                 <Button
                   className="mt-6"
                   variant={"outline"}
