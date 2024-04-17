@@ -15,8 +15,8 @@ import { toast } from "sonner";
 import rehypeSanitize from "rehype-sanitize";
 import rehypeRaw from "rehype-raw";
 import remarkGfm from "remark-gfm";
-interface EditorProps {
-  children: React.ReactNode;
+import { ChildNodeProps } from "@/lib/interface";
+interface EditorProps extends ChildNodeProps {
   content: Buffer;
 }
 const MarkdownEditor = (props: EditorProps) => {

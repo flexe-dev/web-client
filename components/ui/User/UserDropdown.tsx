@@ -12,9 +12,8 @@ import { User } from "@prisma/client";
 import { CogIcon, UserCircleIcon } from "@heroicons/react/24/outline";
 import { LogoutIcon } from "../../icons/LogoutIcon";
 import { signOut } from "next-auth/react";
-import { LinkProps } from "@/lib/interface";
-interface UserDropdownProps {
-  children: React.ReactNode;
+import { ChildNodeProps, LinkProps } from "@/lib/interface";
+interface UserDropdownProps extends ChildNodeProps {
   user: User;
 }
 

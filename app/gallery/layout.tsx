@@ -1,11 +1,8 @@
 import React from "react";
 import GallerySidebarWrapper from "@/components/ui/Gallery/GalleryWrapper";
+import { ChildNodeProps } from "@/lib/interface";
 
-type LayoutProps = {
-  children: React.ReactNode;
-};
-
-const Layout: React.FC<LayoutProps> = ({ children }) => {
+const Layout: React.FC<ChildNodeProps> = ({ children }) => {
   return <GallerySidebarWrapper>{children}</GallerySidebarWrapper>;
 };
 

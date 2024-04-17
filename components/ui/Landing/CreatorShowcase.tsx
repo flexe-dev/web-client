@@ -13,16 +13,13 @@ import Link from "next/link";
 import { useMediaQuery } from "react-responsive";
 import { Carousel, CarouselContent, CarouselItem } from "../carousel";
 import AutoScroll from "embla-carousel-auto-scroll";
+import { ChildNodeProps } from "@/lib/interface";
 export interface CreationProps {
   creationImage?: ImageProps;
   creatorImage?: ImageProps;
   companyIcon?: JSX.Element;
   title: string;
   link?: string;
-}
-
-interface Props {
-  children: React.ReactNode;
 }
 
 interface TileProps {
@@ -42,7 +39,7 @@ const creations = [
   { title: "i" },
 ];
 
-export const CreationParallaxWrapper = (props: Props) => {
+export const CreationParallaxWrapper = (props: ChildNodeProps) => {
   const [desktopDim, setDesktopDim] = useState(false);
   const desktop = useMediaQuery({ query: "(min-width: 768px)" });
   useEffect(() => {

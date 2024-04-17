@@ -16,10 +16,8 @@ import {
 } from "@/app/gallery/animationValues";
 import { BgTransitionButton } from "../AnimatedButton";
 import { ScrollArea } from "../scroll-area";
-interface AnimatedContainerProps {
-  children: React.ReactNode;
-  className?: string;
-}
+import { ChildNodeProps, ClassNameProp } from "@/lib/interface";
+interface AnimatedContainerProps extends ChildNodeProps, ClassNameProp {}
 
 const contentPreference = [
   "Web Components",
@@ -31,10 +29,7 @@ const contentPreference = [
   "Linux Homescreens",
 ];
 
-interface GallerySideBarWrapperProps {
-  children: React.ReactNode;
-}
-const GallerySidebarWrapper = ({ children }: GallerySideBarWrapperProps) => {
+const GallerySidebarWrapper = ({ children }: ChildNodeProps) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [contentSearchTags, setContentSearchTags] = useState<Chip[]>([]);
   const [techStackTags, setTechStackTags] = useState<Chip[]>([]);

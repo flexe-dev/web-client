@@ -4,12 +4,9 @@ import React from "react";
 import ProfileHeader from "../../components/profile/ProfileHeader";
 import ProfileContent from "@/components/profile/ProfileContent";
 import { ProviderViewerProvider } from "@/components/context/UserProfileProvider";
+import { ChildNodeProps } from "@/lib/interface";
 
-type LayoutProps = {
-  children: React.ReactNode;
-};
-
-const Layout: React.FC<LayoutProps> = ({ children }) => {
+const Layout: React.FC<ChildNodeProps> = ({ children }) => {
   return (
     <main className="min-h-screen">
       <ProviderViewerProvider>
