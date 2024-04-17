@@ -5,10 +5,8 @@ import { CheckUserPassword } from "@/controllers/AuthController";
 import { UUID } from "mongodb";
 import { FindUserByEmail } from "@/controllers/AuthController";
 import { Session } from "next-auth";
-import { PrismaAdapter } from "@auth/prisma-adapter";
-import { prisma } from "@/lib/prismadb";
 import { adapter } from "@/lib/prismadb";
-import { Adapter, AdapterUser } from "next-auth/adapters";
+import {AdapterUser } from "next-auth/adapters";
 import { AuthOptions } from "next-auth";
 
 interface SessionUser {
