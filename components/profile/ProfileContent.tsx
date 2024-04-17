@@ -6,7 +6,12 @@ import Link from "next/link";
 import { userProfileViewer } from "../context/UserProfileProvider";
 import { useParams } from "next/navigation";
 import ErrorPage from "../Error";
-export const profileTabs = ["portfolio", "activity", "readme"] as const;
+export const profileTabs = [
+  "readme",
+  "portfolio",
+  "posts",
+  "activity",
+] as const;
 export type Tabs = (typeof profileTabs)[number];
 
 interface ContentProps {
@@ -23,6 +28,7 @@ const ProfileContent: React.FC<ContentProps> = ({ children }) => {
   const tabLink: Record<Tabs, string> = {
     portfolio: `/${fetchedUser?.username}/portfolio`,
     activity: `/${fetchedUser?.username}/activity`,
+    posts: `/${fetchedUser?.username}/posts`,
     readme: `/${fetchedUser?.username}/`,
   };
 

@@ -13,7 +13,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   return (
     <main className="min-h-screen">
       <ProviderViewerProvider>
-        <div className="max-w-6xl mx-auto px-4 py-8 flex flex-col lg:flex-row gap-8 relative">
+        <div className="mx-[8rem] px-4 py-8 flex flex-col lg:flex-row gap-8 relative">
           <ProfileHeader />
           <ProfileContent>{children}</ProfileContent>
         </div>
