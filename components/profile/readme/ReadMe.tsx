@@ -6,11 +6,13 @@ import { Button } from "@/components/ui/button";
 import { PencilSquareIcon, PlusCircleIcon } from "@heroicons/react/24/outline";
 import { toast } from "sonner";
 import { UploadProfileReadMe } from "@/controllers/ProfileController";
-import ReactMarkdown from "react-markdown";
 import rehypeRaw from "rehype-raw";
+import MarkdownPrevew from "@uiw/react-markdown-preview";
 import MarkdownEditor from "./mdEditor";
 import { userProfileViewer } from "@/components/context/UserProfileProvider";
 import readMeTemplate from "@/lib/baseReadme";
+import rehypeSanitize from "rehype-sanitize";
+import remarkGfm from "remark-gfm";
 const ReadMe = () => {
   const { fetchedProfile, fetchedUser, setFetchedProfile, isUserProfile } =
     userProfileViewer();
@@ -88,10 +90,13 @@ const ReadMe = () => {
   }
 
   return (
-    <div className="relative my-4">
-      <ReactMarkdown rehypePlugins={[rehypeRaw]} className="p-4">
-        {Buffer.from(readMe).toString("utf-8")}
-      </ReactMarkdown>
+    <div className="relative mx-8 my-12">
+      <MarkdownPrevew
+        source={Buffer.from(readMe).toString("utf-8")}
+        rehypePlugins={[rehypeRaw, rehypeSanitize]}
+        remarkPlugins={[remarkGfm]}
+        style={{ backgroundColor: "transparent", color: "var(--foreground)" }}
+      />
 
       <MarkdownEditor content={readMe}>
         {isUserProfile && (
