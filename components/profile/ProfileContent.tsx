@@ -45,7 +45,7 @@ const ProfileContent: React.FC<ChildNodeProps> = ({ children }) => {
             key={`profile-tab-${tab}`}
             variant={"link"}
             onClick={() => setActiveTab(tab)}
-            className={`w-1/3 py-2 rounded-none border-b-4 hover:no-underline 
+            className={`w-1/3 py-2 rounded-none border-b-2 hover:no-underline 
                   ${
                     activeTab === tab
                       ? "border-primary"

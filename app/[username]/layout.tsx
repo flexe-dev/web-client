@@ -10,7 +10,7 @@ const Layout: React.FC<ChildNodeProps> = ({ children }) => {
   return (
     <main className="min-h-screen">
       <ProviderViewerProvider>
-        <div className="max-w-7xl mx-auto px-4 py-8 flex flex-col lg:flex-row gap-8 relative">
+        <div className="max-w-[80dvw] mx-auto px-4 py-8 flex flex-col lg:flex-row gap-8 relative">
           <ProfileHeader />
           <ProfileContent>{children}</ProfileContent>
         </div>
