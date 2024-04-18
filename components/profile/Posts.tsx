@@ -70,7 +70,9 @@ const EmptyPostTemplate = () => {
         <PostTile
           key={`empty-post-${index}`}
           className={cn(`border-transparent`, opacityTransition[index])}
-        />
+        >
+          <></>
+        </PostTile>
       ))}
     </div>
   );
