@@ -53,10 +53,10 @@ model User {
   sessions        Session[]
   FeaturedSnippet FeaturedSnippet[]
   userProfile     UserProfile[]
-  UserPost        UserPost[]
-  PostComments    PostComments[]
   UserLikedPosts  UserLikedPosts[]
   UserSavedPosts  UserSavedPosts[]
+  UserPost        UserPost[]
+  PostComments    PostComments[]
 }
 
 model UserProfile {
@@ -94,7 +94,8 @@ model UserPost {
   userId         String           @db.ObjectId
   title          String
   description    String
-  photoLocations String[]
+  photos         String[]
+  thumbnail      String
   tags           String[]
   technologies   String[]
   createdAt      DateTime         @default(now())
