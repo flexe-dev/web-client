@@ -65,20 +65,26 @@ export const ProviderViewerProvider = ({ children }: ChildNodeProps) => {
 
   const fetchProfileDetails = async (username: string) => {
     await FindUserByUsername(username).then((user) => {
-      if (user) {
+      if (!user) {
         setFetchedUser({
-          user,
+          user: undefined,
           loading: false,
         });
-        FindProfileByUserId(user.id).then((profile) => {
-          if (profile) {
-            setFetchedProfile({
-              profile,
-              loading: false,
-            });
-          }
-        });
+        return;
       }
+
+      setFetchedUser({
+        user,
+        loading: false,
+      });
+      FindProfileByUserId(user.id).then((profile) => {
+        if (profile) {
+          setFetchedProfile({
+            profile,
+            loading: false,
+          });
+        }
+      });
     });
   };
 
