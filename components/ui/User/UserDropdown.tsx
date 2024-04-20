@@ -44,8 +44,11 @@ export const UserDropdown = ({ children, user }: UserDropdownProps) => {
         <DropdownMenuSeparator />
         {links.map((link) => {
           return (
-            <DropdownMenuItem key={`dropdown-link-${link.label}`}>
-              <Link href={link.href} className="group flex space-x-3">
+            <DropdownMenuItem asChild key={`dropdown-link-${link.label}`}>
+              <Link
+                href={link.href}
+                className="group cursor-pointer w-full h-full flex space-x-3"
+              >
                 {link.icon}
                 <span>{link.label}</span>
               </Link>
@@ -53,7 +56,10 @@ export const UserDropdown = ({ children, user }: UserDropdownProps) => {
           );
         })}
         <DropdownMenuSeparator />
-        <DropdownMenuItem className="flex space-x-3" onClick={() => signOut()}>
+        <DropdownMenuItem
+          className="cursor-pointer flex space-x-3"
+          onClick={() => signOut()}
+        >
           <LogoutIcon className="stroke-secondary-header" />
           <span>Logout</span>
         </DropdownMenuItem>
