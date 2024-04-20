@@ -109,6 +109,13 @@ model UserPost {
   UserSavedPosts UserSavedPosts[]
 }
 
+model PostContent{
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  postId String @db.ObjectId
+  location String
+  format String 
+}
+
 model PostComments {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
   postId    String   @db.ObjectId

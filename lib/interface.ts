@@ -16,8 +16,8 @@ export interface SidebarButtonProps extends ClassNameProp {
   callback: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export interface ChildNodeProps{
-  children: React.ReactNode;
+export interface ChildNodeProps {
+  children?: React.ReactNode;
 }
 
 //Profile Interfaces
