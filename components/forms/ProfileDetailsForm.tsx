@@ -47,19 +47,16 @@ export const ProfileDetailsForm = (props: Props) => {
   const { user, setUser, profile, setProfile } = useAccount();
   if (!user || !profile) return null;
 
-  const [uploadedAvatars, setUploadedAvatars] = useState<string[]>([
-    user.image,
-  ]);
+  const [avatarFile, setAvatarFile] = useState<File>();
   const [avatarURL, setAvatarURL] = useState<string>(user.image);
   const [uploading, setUploading] = useState<boolean>(false);
-  const getFilenameFromURL = (url: string) => {
-    return url.split("/").pop();
-  };
-
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    const imageURL = await uploadPicture();
+    if (!imageURL) return;
+
     const response = await UpdateUserDetails(
       user.id,
-      avatarURL,
+      imageURL,
       values.name,
       values.job,
       values.company,
@@ -74,7 +71,7 @@ export const ProfileDetailsForm = (props: Props) => {
       onboarded: true,
       username: values.username,
       name: values.name,
-      image: avatarURL,
+      image: imageURL,
     });
 
     setProfile({
@@ -85,15 +82,6 @@ export const ProfileDetailsForm = (props: Props) => {
       location: values.location,
       bio: values.bio,
     });
-
-    //Remove Previous Avatars from Storage
-    await supabase.storage
-      .from("user-profile")
-      .remove(
-        uploadedAvatars
-          .filter((url) => url !== avatarURL)
-          .map((url) => getFilenameFromURL(url) ?? "")
-      );
 
     if (response) {
       toast.success("Profile Details Successfully Updated", {
@@ -117,41 +105,58 @@ export const ProfileDetailsForm = (props: Props) => {
     },
   });
 
-  const uploadProfilePicture: React.ChangeEventHandler<
-    HTMLInputElement
-  > = async (event) => {
+  const uploadPicture = async (): Promise<string | undefined> => {
+    if (!avatarFile) return;
+    const fileExt = avatarFile.name.split(".").pop();
+    const filePath = `${user.id}-${Math.random()}.${fileExt}`;
     try {
-      setUploading(true);
-      if (!event.target.files || event.target.files.length === 0) {
-        throw new Error("You must select an image to upload.");
-      }
-      const file = event.target.files[0];
-      const fileExt = file.name.split(".").pop();
-      const filePath = `${user.id}-${Math.random()}.${fileExt}`;
       let { data, error: uploadError } = await supabase.storage
         .from("user-profile")
-        .upload(filePath, file);
+        .upload(filePath, avatarFile, {
+          upsert: true,
+        });
 
       if (uploadError || !data) {
         throw uploadError;
       }
 
+      //Delete Old Image
+      if (user.image) {
+        const oldImage = user.image.split("/").pop();
+        await supabase.storage.from("user-profile").remove([oldImage!]);
+      }
+
       let { data: URLData } = supabase.storage
         .from("user-profile")
         .getPublicUrl(filePath);
+
       if (!URLData) {
         throw new Error("Error getting URL");
       }
 
-      setAvatarURL(URLData.publicUrl);
-      setUploadedAvatars((prev) => [...prev, URLData.publicUrl]);
-      toast.success("Avatar uploaded successfully!");
       form.setValue("image", URLData.publicUrl);
+      return URLData.publicUrl;
     } catch (error) {
-      alert("Error uploading avatar!");
-    } finally {
-      setUploading(false);
+      toast.error("Error uploading avatar. Please try again.");
     }
+  };
+
+  const changeProfilePicture: React.ChangeEventHandler<
+    HTMLInputElement
+  > = async (event) => {
+    if (!event.target.files || event.target.files.length === 0) {
+      throw new Error("You must select an image to upload.");
+    }
+
+    const file = event.target.files[0];
+    setAvatarFile(file);
+    const reader = new FileReader();
+
+    reader.onload = () => {
+      setAvatarURL(reader.result as string);
+    };
+
+    reader.readAsDataURL(file);
   };
 
   return (
@@ -180,7 +185,7 @@ export const ProfileDetailsForm = (props: Props) => {
             )}
 
             <Input
-              onChange={uploadProfilePicture}
+              onChange={changeProfilePicture}
               id="picture"
               className="w-full mt-6 absolute hidden"
               accept="image/*"
@@ -265,7 +270,11 @@ export const ProfileDetailsForm = (props: Props) => {
               <FormItem className="mt-2">
                 <FormLabel>Bio</FormLabel>
                 <FormControl>
-                  <Textarea className="max-h-[8rem] md:max-h-[12rem]" placeholder="How Do I Centre a Div" {...field} />
+                  <Textarea
+                    className="max-h-[8rem] md:max-h-[12rem]"
+                    placeholder="How Do I Centre a Div"
+                    {...field}
+                  />
                 </FormControl>
               </FormItem>
             )}
