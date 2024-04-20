@@ -6,7 +6,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Button } from "../ui/button";
 import {
-  UniqueUsernameCheck,
+  FindUserByUsername,
   CompleteUserOnboard,
 } from "@/controllers/AuthController";
 
@@ -108,7 +108,8 @@ export const OnboardForm = (props: Props) => {
 
   const checkUsername = async (username: string) => {
     if (username.length < 2) return;
-    const isTaken = await UniqueUsernameCheck(username);
+    const isTaken = await FindUserByUsername(username);
+    // If a user object returns, this indicates that the username is taken
     setUsernameValid(isTaken ? "taken" : "available");
   };
   const debounceFn = useCallback(debounce(checkUsername, 500), []);

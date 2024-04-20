@@ -4,7 +4,6 @@ import React from "react";
 import { Dialog, DialogContent, DialogHeader } from "@/components/ui/dialog";
 import { DialogDescription } from "@radix-ui/react-dialog";
 import { ProfileDetailsForm } from "@/components/forms/ProfileDetailsForm";
-import { useAccount } from "@/components/context/AccountProvider";
 
 interface EditProfileModalProps {
   open: boolean;
@@ -17,7 +16,7 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
 }) => {
   return (
     <Dialog open={open} onOpenChange={dispatch}>
-      <DialogContent className="w-full md:min-w-[45rem] lg:min-w-[50rem] ">
+      <DialogContent className="mt-8 md:mt-0 w-full md:min-w-[45rem] lg:min-w-[50rem] ">
         <>
           <DialogDescription className="text-secondary-foreground flex flex-col">
             <span>Let's update your details!</span>

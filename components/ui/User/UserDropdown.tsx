@@ -18,20 +18,20 @@ interface UserDropdownProps {
   user: User;
 }
 
-const links: LinkProps[] = [
-  {
-    href: "/profile",
-    label: "Profile",
-    icon: <UserCircleIcon className="stroke-secondary-header w-6 h-6" />,
-  },
-  {
-    href: "/",
-    label: "Settings",
-    icon: <CogIcon className="stroke-secondary-header w-6 h-6" />,
-  },
-];
-
 export const UserDropdown = ({ children, user }: UserDropdownProps) => {
+  const links: LinkProps[] = [
+    {
+      href: `/${user.username}`,
+      label: "Profile",
+      icon: <UserCircleIcon className="stroke-secondary-header w-6 h-6" />,
+    },
+    {
+      href: "/",
+      label: "Settings",
+      icon: <CogIcon className="stroke-secondary-header w-6 h-6" />,
+    },
+  ];
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>{children}</DropdownMenuTrigger>

@@ -17,6 +17,7 @@ import {
 import { link } from "fs";
 import { NavSearch } from "./ui/Search/NavSearch";
 import { useAccount } from "./context/AccountProvider";
+import { User } from "@prisma/client";
 
 //Styling for the Navbar main logo
 const logoProps = {
@@ -31,28 +32,29 @@ const logoProps = {
   },
 };
 
-const links: LinkProps[] = [
-  { href: "/feed", label: "Feed", icon: <InboxIcon />, restrict: true },
-  {
-    href: "/network",
-    label: "My Network",
-    restrict: true,
-    icon: <UserGroupIcon />,
-  },
-  {
-    href: "/profile?tab=portfolio",
-    label: "My Portfolio",
-    restrict: true,
-    icon: <BriefcaseIcon />,
-  },
-  {
-    href: "/gallery",
-    label: "Inspiration",
-    icon: <CodeBracketIcon />,
-  },
-];
-
 export const Navbar = () => {
+  const { user } = useAccount();
+  const links: LinkProps[] = [
+    { href: "/feed", label: "Feed", icon: <InboxIcon />, restrict: true },
+    {
+      href: "/network",
+      label: "My Network",
+      restrict: true,
+      icon: <UserGroupIcon />,
+    },
+    {
+      href: `/${user?.username}/portfolio`,
+      label: "My Portfolio",
+      restrict: true,
+      icon: <BriefcaseIcon />,
+    },
+    {
+      href: "/gallery",
+      label: "Inspiration",
+      icon: <CodeBracketIcon />,
+    },
+  ];
+
   return (
     <>
       <nav className="sticky top-0 z-[90] lg:pl-4 pr-8 h-[5rem] border-b-2 backdrop-blur-xl w-[100dvw] flex ">
@@ -62,7 +64,7 @@ export const Navbar = () => {
         <section className="flex flex-grow items-end h-full justify-end md:justify-end ">
           <NavSearch />
           <div className="flex items-center  space-x-3 h-full">
-            <DesktopLayout />
+            <DesktopLayout links={links} user={user} />
             <AuthProfile />
             <ModeToggle className="hidden md:flex" variant="default" />
           </div>
@@ -73,8 +75,12 @@ export const Navbar = () => {
   );
 };
 
-export const DesktopLayout = () => {
-  const { user } = useAccount();
+interface DesktopLayoutProps {
+  links: LinkProps[];
+  user?: User;
+}
+
+export const DesktopLayout = ({ links, user }: DesktopLayoutProps) => {
   return (
     <>
       <div className="hidden md:flex md:space-x-6 lg:space-x-4  xl:space-x-6  mr:3 lg:mr-4 text-sm h-full items-end pb-2">
