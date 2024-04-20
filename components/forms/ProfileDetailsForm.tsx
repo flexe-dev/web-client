@@ -16,7 +16,7 @@ import {
 } from "../ui/form";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
-import { cn } from "@/lib/utils";
+
 import { useAccount } from "../context/AccountProvider";
 import Image from "next/image";
 import { supabase } from "@/lib/supabase";
@@ -49,46 +49,54 @@ export const ProfileDetailsForm = (props: Props) => {
 
   const [avatarFile, setAvatarFile] = useState<File>();
   const [avatarURL, setAvatarURL] = useState<string>(user.image);
-  const [uploading, setUploading] = useState<boolean>(false);
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    const imageURL = await uploadPicture();
-    if (!imageURL) return;
+    const saveData = async (
+      values: z.infer<typeof formSchema>
+    ): Promise<boolean> => {
+      const imageURL = await uploadPicture();
+      if (!imageURL) return false;
 
-    const response = await UpdateUserDetails(
-      user.id,
-      imageURL,
-      values.name,
-      values.job,
-      values.company,
-      values.pronouns,
-      values.location,
-      values.bio
-    );
+      const response = await UpdateUserDetails(
+        user.id,
+        imageURL,
+        values.name,
+        values.job,
+        values.company,
+        values.pronouns,
+        values.location,
+        values.bio
+      );
 
-    // Update User Account Details
-    setUser({
-      ...user,
-      onboarded: true,
-      username: values.username,
-      name: values.name,
-      image: imageURL,
-    });
-
-    setProfile({
-      ...profile,
-      job: values.job,
-      company: values.company,
-      pronouns: values.pronouns,
-      location: values.location,
-      bio: values.bio,
-    });
-
-    if (response) {
-      toast.success("Profile Details Successfully Updated", {
-        position: "top-right",
+      // Update User Account Details
+      setUser({
+        ...user,
+        onboarded: true,
+        username: values.username,
+        name: values.name,
+        image: imageURL,
       });
-      props.onSuccess(false);
-    }
+
+      setProfile({
+        ...profile,
+        job: values.job,
+        company: values.company,
+        pronouns: values.pronouns,
+        location: values.location,
+        bio: values.bio,
+      });
+
+      if (response) {
+        props.onSuccess(false);
+        return true;
+      }
+      return false;
+    };
+
+    toast.promise(saveData(values), {
+      loading: "Saving changes...",
+      success: "Changes saved successfully",
+      error: "Error saving changes",
+    });
   };
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -170,19 +178,15 @@ export const ProfileDetailsForm = (props: Props) => {
             Profile Picture
           </Label>
           <div className="mt-6 relative group/picture">
-            {uploading ? (
-              <Skeleton className="w-32 md:w-48 aspect-square rounded-full" />
-            ) : (
-              <div className="w-32 md:w-48 aspect-square relative">
-                <Image
-                  alt="User Profile Picture"
-                  className=" rounded-full"
-                  src={avatarURL}
-                  fill
-                  style={{ objectFit: "cover" }}
-                />
-              </div>
-            )}
+            <div className="w-32 md:w-48 aspect-square relative">
+              <Image
+                alt="User Profile Picture"
+                className=" rounded-full"
+                src={avatarURL}
+                fill
+                style={{ objectFit: "cover" }}
+              />
+            </div>
 
             <Input
               onChange={changeProfilePicture}

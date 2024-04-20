@@ -59,30 +59,43 @@ export const OnboardForm = (props: Props) => {
   const [avatarURL, setAvatarURL] = useState<string>(user.image);
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    const imageURL = await uploadPicture();
+    const saveData = async (
+      values: z.infer<typeof formSchema>
+    ): Promise<boolean> => {
+      const imageURL = await uploadPicture();
 
-    if (usernameValid !== "available" || !imageURL) return;
+      if (usernameValid !== "available" || !imageURL) return false;
 
-    const userResponse = await CompleteUserOnboard(
-      user.id,
-      values.username,
-      values.name,
-      imageURL
-    );
-    const profileResponse: UserProfile = await CreateUserProfile(user.id);
+      const userResponse = await CompleteUserOnboard(
+        user.id,
+        values.username,
+        values.name,
+        imageURL
+      );
+      const profileResponse: UserProfile = await CreateUserProfile(user.id);
 
-    // Update User Account Details
-    setUser({
-      ...user,
-      onboarded: true,
-      username: values.username,
-      name: values.name,
-      image: imageURL,
+      // Update User Account Details
+      setUser({
+        ...user,
+        onboarded: true,
+        username: values.username,
+        name: values.name,
+        image: imageURL,
+      });
+
+      setProfile(profileResponse);
+      if (userResponse && profileResponse) {
+        props.onSuccess(true);
+        return true;
+      }
+      return false;
+    };
+
+    toast.promise(saveData(values), {
+      loading: "Saving your profile...",
+      success: "Profile saved successfully",
+      error: "Error saving profile",
     });
-
-    setProfile(profileResponse);
-
-    if (userResponse && profileResponse) props.onSuccess(true);
   };
 
   const form = useForm<z.infer<typeof formSchema>>({
