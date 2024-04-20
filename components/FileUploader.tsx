@@ -1,15 +1,35 @@
 import { cn } from "@/lib/utils";
 import React, { useState } from "react";
 import { Input } from "./ui/input";
-
+import { toast } from "sonner";
 interface Props {
-  onFileUpload: (file: File) => void;
+  fileSizeLimit?: number;
+  fileQuantityLimit?: number;
+  onFileUpload: (file: File[]) => void;
   className?: string;
 }
 
 export const FileUploader = (props: Props) => {
-  const { onFileUpload, className } = props;
+  const { onFileUpload, className, fileQuantityLimit, fileSizeLimit } = props;
+
   const [isDragging, setIsDragging] = useState(false);
+
+  const handleFileValidation = (files: File[]): boolean => {
+    if (fileQuantityLimit && files.length > fileQuantityLimit) {
+      toast.error(`You can only upload ${fileQuantityLimit} files at a time`);
+      return false;
+    }
+    files.forEach((file) => {
+      if (fileSizeLimit && file.size > fileSizeLimit) {
+        toast.error(
+          `File ${file.name} is too large. Maximum file size is ${fileSizeLimit} bytes`
+        );
+        return false;
+      }
+    });
+
+    return true;
+  };
 
   const handleDragEnter = (e: React.DragEvent<HTMLElement>) => {
     e.preventDefault();
@@ -28,12 +48,12 @@ export const FileUploader = (props: Props) => {
     e.preventDefault();
     setIsDragging(false);
     const files = e.dataTransfer.files;
-    onFileUpload(files[0]);
+    onFileUpload(Object.values(files));
   };
 
   const handleUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
-    if (files) onFileUpload(files[0]);
+    if (files) onFileUpload(Object.values(files));
   };
 
   return (
@@ -49,7 +69,9 @@ export const FileUploader = (props: Props) => {
           className,
           isDragging && "border-primary"
         )}
-      >Add Files Here</label>
+      >
+        Add Files Here
+      </label>
       <Input type="file" className="hidden" onChange={handleUpload} id="file" />
     </>
   );
