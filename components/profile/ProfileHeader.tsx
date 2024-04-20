@@ -1,22 +1,17 @@
 "use client";
 
 import React, { useState } from "react";
-import { useAccount } from "@/components/context/AccountProvider";
 import { Button } from "@/components/ui/button";
-import { mockprofile } from "@/app/[username]/mock/profile";
 import ProfileFollowers from "./ProfileFollowers";
 import ProfileDetails from "./ProfileDetails";
 import { EditProfileModal } from "./EditProfileModal";
 import Image from "next/image";
 import { defaultPicture } from "@/lib/utils";
-import { UserProfile } from "@prisma/client";
-import { User } from "next-auth";
 import { userProfileViewer } from "../context/UserProfileProvider";
 import { Skeleton } from "../ui/skeleton";
 
 function ProfileHeader() {
   const { fetchedProfile, fetchedUser, isOwnProfile } = userProfileViewer();
-
   const { loading: loadingUser, user } = fetchedUser;
   const { loading: loadingProfile, profile } = fetchedProfile;
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -28,25 +23,23 @@ function ProfileHeader() {
 
   return (
     <>
-      <div className="rounded-lg lg:sticky p-6 mb-8 top-[6rem]  mx-auto max-w-2xl lg:max-w-xs h-fit">
-        <div className="relative">
-          <div className="relative z-10 flex justify-center">
-            <div className="w-48 h-48 relative">
-              {loadingUser ? (
-                <Skeleton className="rounded-full w-48 h-48" />
-              ) : (
-                <Image
-                  alt="User Profile Picture"
-                  className=" rounded-full"
-                  priority
-                  src={user?.image ?? defaultPicture}
-                  fill
-                  style={{
-                    objectFit: "cover",
-                  }}
-                />
-              )}
-            </div>
+      <div className="rounded-lg lg:sticky p-6 mb-8 top-[7rem] flex flex-col items-center h-fit">
+        <div className="relative z-10 flex justify-center">
+          <div className="w-48 h-48 relative">
+            {loadingUser ? (
+              <Skeleton className="rounded-full w-48 h-48" />
+            ) : (
+              <Image
+                alt="User Profile Picture"
+                className=" rounded-full"
+                priority
+                src={user?.image ?? defaultPicture}
+                fill
+                style={{
+                  objectFit: "cover",
+                }}
+              />
+            )}
           </div>
         </div>
         <div className="flex flex-col items-center relative z-10 mt-4">

@@ -37,7 +37,7 @@ const ProfileContent: React.FC<ChildNodeProps> = ({ children }) => {
     return <ErrorPage />;
 
   return (
-    <div className="flex-auto relative">
+    <div className="flex-auto relative max-w-screen-xl">
       <div className="flex flex-row z-[40] h-fit items-center justify-center w-full sticky top-[5rem] bg-background">
         {profileTabs.map((tab) => (
           <Button
