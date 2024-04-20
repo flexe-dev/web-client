@@ -22,9 +22,9 @@ const ReadMe = () => {
   const { profile, loading: profileLoading } = fetchedProfile;
 
   if (!user || !profile) return null;
-  const uploadReadMe = async (file: File) => {
+  const uploadReadMe = async (file: File[]) => {
     //Ensure File Upload is of type .html
-    if (file.type !== "text/html") {
+    if (file[0].type !== "text/html") {
       toast.error("Invalid File Type. Please upload a markdown file.", {
         position: "top-right",
       });
@@ -47,7 +47,7 @@ const ReadMe = () => {
         });
       }
     };
-    reader.readAsArrayBuffer(file);
+    reader.readAsArrayBuffer(file[0]);
   };
 
   const newReadme = () => {
