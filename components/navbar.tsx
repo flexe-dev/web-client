@@ -57,7 +57,7 @@ export const Navbar = () => {
 
   return (
     <>
-      <nav className="sticky top-0 z-[90] lg:pl-4 pr-8 h-[5rem] border-b-2 backdrop-blur-xl w-[100dvw] flex ">
+      <nav className="sticky top-0 lg:pl-4 pr-8 z-[50] h-[5rem] border-b-2 backdrop-blur-xl w-[100dvw] flex ">
         <Link href={"/"} className="w-32 lg:w-fit">
           <AppLogo {...logoProps} />
         </Link>

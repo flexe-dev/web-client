@@ -1,10 +1,6 @@
-import { Navbar } from "@/components/navbar";
+import { ChildNodeProps } from "@/lib/interface";
 
-export default function Layout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+export default function Layout({ children }: Readonly<ChildNodeProps>) {
   return (
     <div className="flex flex-col h-screen">
       <div className="flex h-full">

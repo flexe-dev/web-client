@@ -1,14 +1,23 @@
 import { cn } from "@/lib/utils";
 import React, { useState } from "react";
 import { Input } from "./ui/input";
+import { toast } from "sonner";
+import { ChildNodeProps } from "@/lib/interface";
 
-interface Props {
-  onFileUpload: (file: File) => void;
+interface Props extends ChildNodeProps {
+  fileSizeLimit?: number;
+  fileQuantityLimit?: number;
+  onFileUpload: (file: File[]) => void;
   className?: string;
 }
 
 export const FileUploader = (props: Props) => {
-  const { onFileUpload, className } = props;
+  const {
+    onFileUpload,
+    className,
+    children,
+  } = props;
+
   const [isDragging, setIsDragging] = useState(false);
 
   const handleDragEnter = (e: React.DragEvent<HTMLElement>) => {
@@ -28,12 +37,12 @@ export const FileUploader = (props: Props) => {
     e.preventDefault();
     setIsDragging(false);
     const files = e.dataTransfer.files;
-    onFileUpload(files[0]);
+    if (files) onFileUpload(Object.values(files));
   };
 
   const handleUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
-    if (files) onFileUpload(files[0]);
+    if (files) onFileUpload(Object.values(files));
   };
 
   return (
@@ -49,7 +58,9 @@ export const FileUploader = (props: Props) => {
           className,
           isDragging && "border-primary"
         )}
-      >Add Files Here</label>
+      >
+        {children ?? <p>Add Files Here</p>}
+      </label>
       <Input type="file" className="hidden" onChange={handleUpload} id="file" />
     </>
   );

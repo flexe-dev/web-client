@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import MDEditor from "@uiw/react-markdown-editor";
+import MDEditor from "@uiw/react-md-editor";
 import {
   AlertDialog,
   AlertDialogTrigger,
@@ -12,10 +12,11 @@ import { useTheme } from "next-themes";
 import { UploadProfileReadMe } from "@/controllers/ProfileController";
 import { useAccount } from "@/components/context/AccountProvider";
 import { toast } from "sonner";
-import DOMPurify from "dompurify";
-
-interface EditorProps {
-  children: React.ReactNode;
+import rehypeSanitize from "rehype-sanitize";
+import rehypeRaw from "rehype-raw";
+import remarkGfm from "remark-gfm";
+import { ChildNodeProps } from "@/lib/interface";
+interface EditorProps extends ChildNodeProps {
   content: Buffer;
 }
 const MarkdownEditor = (props: EditorProps) => {
@@ -46,19 +47,26 @@ const MarkdownEditor = (props: EditorProps) => {
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>{children}</AlertDialogTrigger>
-      <AlertDialogContent className="w-full min-w-[80dvw] min-h-[80dvh] flex flex-col justify-center">
+      <AlertDialogContent className="w-full min-w-[80dvw] min-h-[80dvh] max-h-[90dvh] flex flex-col justify-center">
         <MDEditor
           value={readMeValue}
           data-color-mode={theme === "dark" ? "dark" : "light"}
-          enablePreview={true}
-          previewWidth="50%"
           className="min-w-[75dvw] min-h-[75dvh]"
+          previewOptions={{
+            rehypePlugins: [[rehypeSanitize, rehypeRaw]],
+            remarkPlugins: [remarkGfm],
+          }}
           onChange={(value) => {
             if (value) {
               setReadMeValue(value);
             }
           }}
-        />
+        >
+          <MDEditor.Markdown
+            source={readMeValue}
+            style={{ whiteSpace: "pre-wrap" }}
+          />
+        </MDEditor>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
           <AlertDialogAction onClick={handleUpdate}>Save</AlertDialogAction>

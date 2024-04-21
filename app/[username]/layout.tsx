@@ -4,16 +4,13 @@ import React from "react";
 import ProfileHeader from "../../components/profile/ProfileHeader";
 import ProfileContent from "@/components/profile/ProfileContent";
 import { ProviderViewerProvider } from "@/components/context/UserProfileProvider";
+import { ChildNodeProps } from "@/lib/interface";
 
-type LayoutProps = {
-  children: React.ReactNode;
-};
-
-const Layout: React.FC<LayoutProps> = ({ children }) => {
+const Layout: React.FC<ChildNodeProps> = ({ children }) => {
   return (
-    <main className="min-h-screen">
+    <main className="min-h-screen relative">
       <ProviderViewerProvider>
-        <div className="max-w-6xl mx-auto px-4 py-8 flex flex-col lg:flex-row gap-8 relative">
+        <div className="relative w-full justify-center px-4 py-8 flex flex-col lg:flex-row gap-8">
           <ProfileHeader />
           <ProfileContent>{children}</ProfileContent>
         </div>

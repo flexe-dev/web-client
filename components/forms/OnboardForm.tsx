@@ -1,7 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import React, { FormEvent, useCallback, useState } from "react";
+import React, { useCallback, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Button } from "../ui/button";
@@ -29,7 +29,6 @@ import { useAccount } from "../context/AccountProvider";
 import Image from "next/image";
 import { supabase } from "@/lib/supabase";
 import { toast } from "sonner";
-import { Skeleton } from "../ui/skeleton";
 import { UserProfile } from "@prisma/client";
 
 interface Props {
@@ -55,46 +54,48 @@ export const OnboardForm = (props: Props) => {
 
   const [usernameValid, setUsernameValid] =
     useState<UsernameStatus>("checking");
-  const [uploadedAvatars, setUploadedAvatars] = useState<string[]>([
-    "https://kkyhjzebnjjkhuncbfgo.supabase.co/storage/v1/object/public/user-profile/defaultpicture.jpg?t=2024-03-30T08%3A31%3A58.211Z",
-  ]);
+
+  const [avatarFile, setAvatarFile] = useState<File>();
   const [avatarURL, setAvatarURL] = useState<string>(user.image);
-  const [uploading, setUploading] = useState<boolean>(false);
-  const getFilenameFromURL = (url: string) => {
-    return url.split("/").pop();
-  };
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    if (usernameValid !== "available") return;
-    const userResponse = await CompleteUserOnboard(
-      user.id,
-      values.username,
-      values.name,
-      avatarURL
-    );
-    const profileResponse: UserProfile = await CreateUserProfile(user.id);
+    const saveData = async (
+      values: z.infer<typeof formSchema>
+    ): Promise<boolean> => {
+      const imageURL = await uploadPicture();
 
-    // Update User Account Details
-    setUser({
-      ...user,
-      onboarded: true,
-      username: values.username,
-      name: values.name,
-      image: avatarURL,
-    });
+      if (usernameValid !== "available" || !imageURL) return false;
 
-    setProfile(profileResponse);
-
-    //Remove Previous Avatars from Storage
-    await supabase.storage
-      .from("user-profile")
-      .remove(
-        uploadedAvatars
-          .filter((url) => url !== avatarURL)
-          .map((url) => getFilenameFromURL(url) ?? "")
+      const userResponse = await CompleteUserOnboard(
+        user.id,
+        values.username,
+        values.name,
+        imageURL
       );
+      const profileResponse: UserProfile = await CreateUserProfile(user.id);
 
-    if (userResponse && profileResponse) props.onSuccess(true);
+      // Update User Account Details
+      setUser({
+        ...user,
+        onboarded: true,
+        username: values.username,
+        name: values.name,
+        image: imageURL,
+      });
+
+      setProfile(profileResponse);
+      if (userResponse && profileResponse) {
+        props.onSuccess(true);
+        return true;
+      }
+      return false;
+    };
+
+    toast.promise(saveData(values), {
+      loading: "Saving your profile...",
+      success: "Profile saved successfully",
+      error: "Error saving profile",
+    });
   };
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -106,6 +107,43 @@ export const OnboardForm = (props: Props) => {
     },
   });
 
+  const uploadPicture = async (): Promise<string | undefined> => {
+    if (!avatarFile) return;
+    const fileExt = avatarFile.name.split(".").pop();
+    const filePath = `${user.id}-${Math.random()}.${fileExt}`;
+
+    try {
+      let { data, error: uploadError } = await supabase.storage
+        .from("user-profile")
+        .upload(filePath, avatarFile, {
+          upsert: true,
+        });
+
+      if (uploadError || !data) {
+        throw uploadError;
+      }
+
+      //Delete Old Image
+      if (user.image) {
+        const oldImage = user.image.split("/").pop();
+        await supabase.storage.from("user-profile").remove([oldImage!]);
+      }
+
+      let { data: URLData } = supabase.storage
+        .from("user-profile")
+        .getPublicUrl(filePath);
+
+      if (!URLData) {
+        throw new Error("Error getting URL");
+      }
+
+      form.setValue("image", URLData.publicUrl);
+      return URLData.publicUrl;
+    } catch (error) {
+      toast.error("Error uploading avatar. Please try again.");
+    }
+  };
+
   const checkUsername = async (username: string) => {
     if (username.length < 2) return;
     const isTaken = await FindUserByUsername(username);
@@ -114,41 +152,22 @@ export const OnboardForm = (props: Props) => {
   };
   const debounceFn = useCallback(debounce(checkUsername, 500), []);
 
-  const uploadProfilePicture: React.ChangeEventHandler<
+  const changeProfilePicture: React.ChangeEventHandler<
     HTMLInputElement
   > = async (event) => {
-    try {
-      setUploading(true);
-      if (!event.target.files || event.target.files.length === 0) {
-        throw new Error("You must select an image to upload.");
-      }
-      const file = event.target.files[0];
-      const fileExt = file.name.split(".").pop();
-      const filePath = `${user.id}-${Math.random()}.${fileExt}`;
-      let { data, error: uploadError } = await supabase.storage
-        .from("user-profile")
-        .upload(filePath, file);
-
-      if (uploadError || !data) {
-        throw uploadError;
-      }
-
-      let { data: URLData } = supabase.storage
-        .from("user-profile")
-        .getPublicUrl(filePath);
-      if (!URLData) {
-        throw new Error("Error getting URL");
-      }
-
-      setAvatarURL(URLData.publicUrl);
-      setUploadedAvatars((prev) => [...prev, URLData.publicUrl]);
-      toast.success("Avatar uploaded successfully!");
-      form.setValue("image", URLData.publicUrl);
-    } catch (error) {
-      alert("Error uploading avatar!");
-    } finally {
-      setUploading(false);
+    if (!event.target.files || event.target.files.length === 0) {
+      throw new Error("You must select an image to upload.");
     }
+
+    const file = event.target.files[0];
+    setAvatarFile(file);
+    const reader = new FileReader();
+
+    reader.onload = () => {
+      setAvatarURL(reader.result as string);
+    };
+
+    reader.readAsDataURL(file);
   };
 
   return (
@@ -162,24 +181,20 @@ export const OnboardForm = (props: Props) => {
             Profile Picture
           </Label>
           <div className="mt-6 relative group/picture">
-            {uploading ? (
-              <Skeleton className="w-48 h-48 rounded-full" />
-            ) : (
-              <div className="w-48 h-48 relative">
-                <Image
-                  alt="User Profile Picture"
-                  className=" rounded-full"
-                  src={avatarURL}
-                  fill
-                  style={{
-                    objectFit: "cover",
-                  }}
-                />
-              </div>
-            )}
+            <div className="w-48 h-48 relative">
+              <Image
+                alt="User Profile Picture"
+                className=" rounded-full"
+                src={avatarURL}
+                fill
+                style={{
+                  objectFit: "cover",
+                }}
+              />
+            </div>
 
             <Input
-              onChange={uploadProfilePicture}
+              onChange={changeProfilePicture}
               id="picture"
               className="w-full mt-6 absolute hidden"
               accept="image/*"

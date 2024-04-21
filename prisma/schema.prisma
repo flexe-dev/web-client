@@ -53,6 +53,10 @@ model User {
   sessions        Session[]
   FeaturedSnippet FeaturedSnippet[]
   userProfile     UserProfile[]
+  UserLikedPosts  UserLikedPosts[]
+  UserSavedPosts  UserSavedPosts[]
+  UserPost        UserPost[]
+  PostComments    PostComments[]
 }
 
 model UserProfile {
@@ -67,6 +71,71 @@ model UserProfile {
   location  String?
   bio       String?
   readMe    Bytes?
+}
+
+model UserLikedPosts {
+  id     String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId String   @db.ObjectId
+  postId String   @db.ObjectId
+  user   User     @relation(fields: [userId], references: [id])
+  post   UserPost @relation(fields: [postId], references: [id])
+}
+
+model UserSavedPosts {
+  id     String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId String   @db.ObjectId
+  postId String   @db.ObjectId
+  user   User     @relation(fields: [userId], references: [id])
+  post   UserPost @relation(fields: [postId], references: [id])
+}
+
+model UserPost {
+  id             String           @id @default(auto()) @map("_id") @db.ObjectId
+  userId         String           @db.ObjectId
+  title          String
+  description    String
+  photos         PostContent[]
+  tags           String[]
+  technologies   String[]
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+  likeCount      Int              @default(0)
+  commentCount   Int              @default(0)
+  viewCount      Int              @default(0)
+  user           User             @relation(fields: [userId], references: [id])
+  PostComments   PostComments[]
+  UserLikedPosts UserLikedPosts[]
+  UserSavedPosts UserSavedPosts[]
+  isDraft        Boolean          @default(false)
+  postContentId  String           @db.ObjectId
+}
+
+enum PostContentType {
+  IMAGE
+  VIDEO
+  GIF
+}
+
+model PostContent {
+  id         String          @id @default(auto()) @map("_id") @db.ObjectId
+  userPostId String?         @db.ObjectId
+  location   String
+  format     PostContentType
+  width      Int
+  height     Int
+  UserPost   UserPost?       @relation(fields: [userPostId], references: [id])
+}
+
+model PostComments {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  postId    String   @db.ObjectId
+  parentID  String?  @db.ObjectId
+  userId    String   @db.ObjectId
+  comment   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user      User     @relation(fields: [userId], references: [id])
+  post      UserPost @relation(fields: [postId], references: [id])
 }
 
 model FeaturedSnippet {

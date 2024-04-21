@@ -12,6 +12,7 @@ import { OnboardModal } from "@/components/auth/OnboardModal";
 import { Navbar } from "@/components/navbar";
 import { AccountProvider } from "@/components/context/AccountProvider";
 import { Footer } from "@/components/ui/Footer";
+import { ChildNodeProps } from "@/lib/interface";
 
 export const metadata: Metadata = {
   title: "designs.dev",
@@ -21,9 +22,7 @@ export const metadata: Metadata = {
 
 export default async function RootLayout({
   children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+}: Readonly<ChildNodeProps>) {
   const session = await getServerSession(baseAuthOptions);
   return (
     <html

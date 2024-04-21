@@ -1,7 +1,7 @@
+import { ChildNodeProps } from "@/lib/interface";
 import Link from "next/link";
 
-interface StyledLinkProps {
-  children: React.ReactNode;
+interface StyledLinkProps extends ChildNodeProps {
   href: string;
   newTab?: boolean;
 }

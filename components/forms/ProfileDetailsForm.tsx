@@ -16,7 +16,7 @@ import {
 } from "../ui/form";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
-import { cn } from "@/lib/utils";
+
 import { useAccount } from "../context/AccountProvider";
 import Image from "next/image";
 import { supabase } from "@/lib/supabase";
@@ -47,60 +47,56 @@ export const ProfileDetailsForm = (props: Props) => {
   const { user, setUser, profile, setProfile } = useAccount();
   if (!user || !profile) return null;
 
-  const [uploadedAvatars, setUploadedAvatars] = useState<string[]>([
-    user.image,
-  ]);
+  const [avatarFile, setAvatarFile] = useState<File>();
   const [avatarURL, setAvatarURL] = useState<string>(user.image);
-  const [uploading, setUploading] = useState<boolean>(false);
-  const getFilenameFromURL = (url: string) => {
-    return url.split("/").pop();
-  };
-
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    const response = await UpdateUserDetails(
-      user.id,
-      avatarURL,
-      values.name,
-      values.job,
-      values.company,
-      values.pronouns,
-      values.location,
-      values.bio
-    );
+    const saveData = async (
+      values: z.infer<typeof formSchema>
+    ): Promise<boolean> => {
+      const imageURL = await uploadPicture();
+      if (!imageURL) return false;
 
-    // Update User Account Details
-    setUser({
-      ...user,
-      onboarded: true,
-      username: values.username,
-      name: values.name,
-      image: avatarURL,
-    });
-
-    setProfile({
-      ...profile,
-      job: values.job,
-      company: values.company,
-      pronouns: values.pronouns,
-      location: values.location,
-      bio: values.bio,
-    });
-
-    //Remove Previous Avatars from Storage
-    await supabase.storage
-      .from("user-profile")
-      .remove(
-        uploadedAvatars
-          .filter((url) => url !== avatarURL)
-          .map((url) => getFilenameFromURL(url) ?? "")
+      const response = await UpdateUserDetails(
+        user.id,
+        imageURL,
+        values.name,
+        values.job,
+        values.company,
+        values.pronouns,
+        values.location,
+        values.bio
       );
 
-    if (response) {
-      toast.success("Profile Details Successfully Updated", {
-        position: "top-right",
+      // Update User Account Details
+      setUser({
+        ...user,
+        onboarded: true,
+        username: values.username,
+        name: values.name,
+        image: imageURL,
       });
-      props.onSuccess(false);
-    }
+
+      setProfile({
+        ...profile,
+        job: values.job,
+        company: values.company,
+        pronouns: values.pronouns,
+        location: values.location,
+        bio: values.bio,
+      });
+
+      if (response) {
+        props.onSuccess(false);
+        return true;
+      }
+      return false;
+    };
+
+    toast.promise(saveData(values), {
+      loading: "Saving changes...",
+      success: "Changes saved successfully",
+      error: "Error saving changes",
+    });
   };
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -117,41 +113,58 @@ export const ProfileDetailsForm = (props: Props) => {
     },
   });
 
-  const uploadProfilePicture: React.ChangeEventHandler<
-    HTMLInputElement
-  > = async (event) => {
+  const uploadPicture = async (): Promise<string | undefined> => {
+    if (!avatarFile) return;
+    const fileExt = avatarFile.name.split(".").pop();
+    const filePath = `${user.id}-${Math.random()}.${fileExt}`;
     try {
-      setUploading(true);
-      if (!event.target.files || event.target.files.length === 0) {
-        throw new Error("You must select an image to upload.");
-      }
-      const file = event.target.files[0];
-      const fileExt = file.name.split(".").pop();
-      const filePath = `${user.id}-${Math.random()}.${fileExt}`;
       let { data, error: uploadError } = await supabase.storage
         .from("user-profile")
-        .upload(filePath, file);
+        .upload(filePath, avatarFile, {
+          upsert: true,
+        });
 
       if (uploadError || !data) {
         throw uploadError;
       }
 
+      //Delete Old Image
+      if (user.image) {
+        const oldImage = user.image.split("/").pop();
+        await supabase.storage.from("user-profile").remove([oldImage!]);
+      }
+
       let { data: URLData } = supabase.storage
         .from("user-profile")
         .getPublicUrl(filePath);
+
       if (!URLData) {
         throw new Error("Error getting URL");
       }
 
-      setAvatarURL(URLData.publicUrl);
-      setUploadedAvatars((prev) => [...prev, URLData.publicUrl]);
-      toast.success("Avatar uploaded successfully!");
       form.setValue("image", URLData.publicUrl);
+      return URLData.publicUrl;
     } catch (error) {
-      alert("Error uploading avatar!");
-    } finally {
-      setUploading(false);
+      toast.error("Error uploading avatar. Please try again.");
     }
+  };
+
+  const changeProfilePicture: React.ChangeEventHandler<
+    HTMLInputElement
+  > = async (event) => {
+    if (!event.target.files || event.target.files.length === 0) {
+      throw new Error("You must select an image to upload.");
+    }
+
+    const file = event.target.files[0];
+    setAvatarFile(file);
+    const reader = new FileReader();
+
+    reader.onload = () => {
+      setAvatarURL(reader.result as string);
+    };
+
+    reader.readAsDataURL(file);
   };
 
   return (
@@ -165,22 +178,18 @@ export const ProfileDetailsForm = (props: Props) => {
             Profile Picture
           </Label>
           <div className="mt-6 relative group/picture">
-            {uploading ? (
-              <Skeleton className="w-32 md:w-48 aspect-square rounded-full" />
-            ) : (
-              <div className="w-32 md:w-48 aspect-square relative">
-                <Image
-                  alt="User Profile Picture"
-                  className=" rounded-full"
-                  src={avatarURL}
-                  fill
-                  style={{ objectFit: "cover" }}
-                />
-              </div>
-            )}
+            <div className="w-32 md:w-48 aspect-square relative">
+              <Image
+                alt="User Profile Picture"
+                className=" rounded-full"
+                src={avatarURL}
+                fill
+                style={{ objectFit: "cover" }}
+              />
+            </div>
 
             <Input
-              onChange={uploadProfilePicture}
+              onChange={changeProfilePicture}
               id="picture"
               className="w-full mt-6 absolute hidden"
               accept="image/*"
@@ -265,7 +274,11 @@ export const ProfileDetailsForm = (props: Props) => {
               <FormItem className="mt-2">
                 <FormLabel>Bio</FormLabel>
                 <FormControl>
-                  <Textarea className="max-h-[8rem] md:max-h-[12rem]" placeholder="How Do I Centre a Div" {...field} />
+                  <Textarea
+                    className="max-h-[8rem] md:max-h-[12rem]"
+                    placeholder="How Do I Centre a Div"
+                    {...field}
+                  />
                 </FormControl>
               </FormItem>
             )}

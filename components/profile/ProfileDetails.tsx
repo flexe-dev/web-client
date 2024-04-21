@@ -11,22 +11,26 @@ import { userProfileViewer } from "../context/UserProfileProvider";
 import { Skeleton } from "../ui/skeleton";
 
 const ProfileDetails = () => {
-  const { fetchedProfile, loading } = userProfileViewer();
+  const { fetchedProfile} = userProfileViewer();
+  const {loading, profile} = fetchedProfile
+
+  if (!profile) return null;
+
   const profileDetails = [
     {
-      detail: fetchedProfile?.job,
+      detail: profile.job,
       icon: <BriefcaseIcon className="stroke-secondary-header w-5 h-5" />,
     },
     {
-      detail: fetchedProfile?.company,
+      detail: profile.company,
       icon: <Building className="stroke-secondary-header w-5 h-5" />,
     },
     {
-      detail: fetchedProfile?.pronouns,
+      detail: profile.pronouns,
       icon: <CircleDashed className="stroke-secondary-header w-5 h-5" />,
     },
     {
-      detail: fetchedProfile?.location,
+      detail: profile.location,
       icon: <MapPinIcon className="stroke-secondary-header w-5 h-5" />,
     },
   ];
@@ -39,7 +43,7 @@ const ProfileDetails = () => {
         <div className="flex flex-col items-center">
           <Separator className="mt-4" />
           <p className="text-xs py-2 text-gray-200 text-wrap text-secondary-foreground">
-            {fetchedProfile?.bio ?? "No Bio Yet"}
+            {profile.bio ?? "No Bio Yet"}
           </p>
           <Separator className="mb-4" />
         </div>

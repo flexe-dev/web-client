@@ -1,6 +1,7 @@
 "use client";
 
 import { FindProfileByUserId } from "@/controllers/ProfileController";
+import { ChildNodeProps } from "@/lib/interface";
 import { User, UserProfile } from "@prisma/client";
 import { useSession } from "next-auth/react";
 import React, { createContext, useEffect, useMemo } from "react";
@@ -21,11 +22,9 @@ const initialState: AccountProviderState = {
 
 export const AccountContext = createContext<AccountProviderState>(initialState);
 
-interface Props {
-  children: React.ReactNode;
-}
 
-export const AccountProvider = ({ children }: Props) => {
+
+export const AccountProvider = ({ children }: ChildNodeProps) => {
   const session = useSession();
   const [user, setUser] = React.useState<User | undefined>(
     session.data?.user as User

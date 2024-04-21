@@ -6,14 +6,16 @@ import Link from "next/link";
 import { userProfileViewer } from "../context/UserProfileProvider";
 import { useParams } from "next/navigation";
 import ErrorPage from "../Error";
-export const profileTabs = ["portfolio", "activity", "readme"] as const;
+import { ChildNodeProps } from "@/lib/interface";
+export const profileTabs = [
+  "readme",
+  "portfolio",
+  "posts",
+  "activity",
+] as const;
 export type Tabs = (typeof profileTabs)[number];
 
-interface ContentProps {
-  children: React.ReactNode;
-}
-
-const ProfileContent: React.FC<ContentProps> = ({ children }) => {
+const ProfileContent: React.FC<ChildNodeProps> = ({ children }) => {
   const { fetchedUser } = userProfileViewer();
   const params = useParams<{ username: string; tag: string }>();
   const [activeTab, setActiveTab] = useState<Tabs>(
@@ -21,9 +23,10 @@ const ProfileContent: React.FC<ContentProps> = ({ children }) => {
   );
 
   const tabLink: Record<Tabs, string> = {
-    portfolio: `/${fetchedUser?.username}/portfolio`,
-    activity: `/${fetchedUser?.username}/activity`,
-    readme: `/${fetchedUser?.username}/`,
+    portfolio: `/${fetchedUser.user?.username}/portfolio`,
+    activity: `/${fetchedUser.user?.username}/activity`,
+    posts: `/${fetchedUser.user?.username}/posts`,
+    readme: `/${fetchedUser.user?.username}/`,
   };
 
   useEffect(() => {
@@ -34,7 +37,7 @@ const ProfileContent: React.FC<ContentProps> = ({ children }) => {
     return <ErrorPage />;
 
   return (
-    <div className="flex-auto relative">
+    <div className="flex-auto relative max-w-screen-xl">
       <div className="flex flex-row z-[40] h-fit items-center justify-center w-full sticky top-[5rem] bg-background">
         {profileTabs.map((tab) => (
           <Button
@@ -42,7 +45,7 @@ const ProfileContent: React.FC<ContentProps> = ({ children }) => {
             key={`profile-tab-${tab}`}
             variant={"link"}
             onClick={() => setActiveTab(tab)}
-            className={`w-1/3 py-2 rounded-none border-b-4 hover:no-underline 
+            className={`w-1/3 py-2 rounded-none border-b-2 hover:no-underline 
                   ${
                     activeTab === tab
                       ? "border-primary"
@@ -50,7 +53,9 @@ const ProfileContent: React.FC<ContentProps> = ({ children }) => {
                   }
                   `}
           >
-            <Link href={tabLink[tab]}>{tab}</Link>
+            <Link href={tabLink[tab]} className="capitalize">
+              {tab}
+            </Link>
           </Button>
         ))}
       </div>

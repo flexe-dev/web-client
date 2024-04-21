@@ -1,27 +1,30 @@
 "use client";
 
 import React from "react";
-import { useAccount } from "../../context/AccountProvider";
 import { FileUploader } from "@/components/FileUploader";
 import { Button } from "@/components/ui/button";
 import { PencilSquareIcon, PlusCircleIcon } from "@heroicons/react/24/outline";
 import { toast } from "sonner";
 import { UploadProfileReadMe } from "@/controllers/ProfileController";
-import ReactMarkdown from "react-markdown";
 import rehypeRaw from "rehype-raw";
+import MarkdownPrevew from "@uiw/react-markdown-preview";
 import MarkdownEditor from "./mdEditor";
-import { useTheme } from "next-themes";
 import { userProfileViewer } from "@/components/context/UserProfileProvider";
-
+import readMeTemplate from "@/lib/baseReadme";
+import rehypeSanitize from "rehype-sanitize";
+import remarkGfm from "remark-gfm";
 const ReadMe = () => {
-  const { fetchedProfile, fetchedUser, setFetchedProfile, isUserProfile } =
+  const { fetchedProfile, fetchedUser, setFetchedProfile, isOwnProfile } =
     userProfileViewer();
-  const readMe = fetchedProfile?.readMe;
-  const { theme } = useTheme();
-  if (!fetchedUser || !fetchedProfile) return null;
-  const uploadReadMe = async (file: File) => {
+
+  const readMe = fetchedProfile.profile?.readMe;
+  const { user, loading: userLoading } = fetchedUser;
+  const { profile, loading: profileLoading } = fetchedProfile;
+
+  if (!user || !profile) return null;
+  const uploadReadMe = async (file: File[]) => {
     //Ensure File Upload is of type .html
-    if (file.type !== "text/html") {
+    if (file[0].type !== "text/html") {
       toast.error("Invalid File Type. Please upload a markdown file.", {
         position: "top-right",
       });
@@ -33,34 +36,38 @@ const ReadMe = () => {
       if (!content) return;
 
       //Upload Buffer to Database
-      const response = await UploadProfileReadMe(content, fetchedUser.id);
+      const response = await UploadProfileReadMe(content, user.id);
       if (response) {
         toast.success("ReadMe File Uploaded Successfully", {
           position: "top-right",
         });
         //Update Locally
-        setFetchedProfile({ ...fetchedProfile, readMe: content });
+        setFetchedProfile((prev) => {
+          return { ...prev, readMe: content };
+        });
       }
     };
-    reader.readAsArrayBuffer(file);
+    reader.readAsArrayBuffer(file[0]);
   };
 
   const newReadme = () => {
     //Create a new ReadMe File
-    const content = Buffer.from("This is a brand new HTML Document");
-    UploadProfileReadMe(content, fetchedUser.id).then((response) => {
+    const content = Buffer.from(readMeTemplate);
+    UploadProfileReadMe(content, user.id).then((response) => {
       if (response) {
         toast.success("ReadMe File Created Successfully", {
           position: "top-right",
         });
         //Update Locally
-        setFetchedProfile({ ...fetchedProfile, readMe: content });
+        setFetchedProfile((prev) => {
+          return { ...prev, readMe: content };
+        });
       }
     });
   };
 
   if (!readMe) {
-    if (isUserProfile) {
+    if (isOwnProfile) {
       return (
         <section className="flex flex-col items-center py-12 px-8">
           <h2 className="text-2xl font-bold">
@@ -91,13 +98,16 @@ const ReadMe = () => {
   }
 
   return (
-    <div className="relative my-4">
-      <ReactMarkdown rehypePlugins={[rehypeRaw]} className="p-4">
-        {Buffer.from(readMe).toString("utf-8")}
-      </ReactMarkdown>
+    <div className="relative mx-8 my-12">
+      <MarkdownPrevew
+        source={Buffer.from(readMe).toString("utf-8")}
+        rehypePlugins={[rehypeRaw, rehypeSanitize]}
+        remarkPlugins={[remarkGfm]}
+        style={{ backgroundColor: "transparent", color: "var(--foreground)" }}
+      />
 
       <MarkdownEditor content={readMe}>
-        {isUserProfile && (
+        {isOwnProfile && (
           <Button variant={"ghost"} className="px-2 absolute top-0 right-0">
             <PencilSquareIcon className="w-8 h-8" />
           </Button>
