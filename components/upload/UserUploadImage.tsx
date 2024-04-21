@@ -2,23 +2,28 @@
 
 import { toast } from "sonner";
 import { FileUploader } from "../FileUploader";
-
+import { PostContent, PostContentType } from "@prisma/client";
+import { PostCreationContent } from "@/app/upload/page";
+import { CreatePost } from "@/app/upload/page";
 interface Props {
-  setUploadedImages: React.Dispatch<React.SetStateAction<File[]>>;
+  setUploadedFiles: React.Dispatch<React.SetStateAction<CreatePost[]>>;
 }
 
 const mbRatio = 1000000;
 
-const UploadUserImages = (props: Props) => {
+const UploadUserImages = ({ setUploadedFiles }: Props) => {
   const handleFileUpload = (files: File[]) => {
     //Only Accept Images of Min Resolution 1440px x 990px
+    let validFiles: CreatePost[] = [];
     files.forEach((file) => {
       if (file.type.includes("image")) {
-        handleImageValidation(file);
+        const content = handleImageValidation(file);
+        if (content) validFiles.push(content);
         return;
       }
       if (file.type.includes("video")) {
-        handleVideoValidation(file);
+        const content = handleVideoValidation(file);
+        if (content) validFiles.push(content);
         return;
       }
 
@@ -29,12 +34,13 @@ const UploadUserImages = (props: Props) => {
     });
   };
 
-  const handleImageValidation = (file: File) => {
+  const handleImageValidation = (file: File): CreatePost | undefined => {
     //Size Validation
     if (file.size > 10 * mbRatio) {
       toast.message(file.name, {
         description: "This image is too large to be uploaded",
       });
+      return;
     }
     //Resolution Validation
     const img = new Image();
@@ -43,18 +49,33 @@ const UploadUserImages = (props: Props) => {
         toast.message(file.name, {
           description: "This image is too small to be uploaded",
         });
+        return;
       }
     };
     img.src = URL.createObjectURL(file);
-    console.log(img.src);
+
+    const content: PostCreationContent = {
+      userPostId: null,
+      location: img.src,
+      width: img.width,
+      height: img.height,
+      format: file.type.includes("gif")
+        ? PostContentType.GIF
+        : PostContentType.IMAGE,
+    };
+    return {
+      content,
+      file,
+    };
   };
 
-  const handleVideoValidation = (file: File) => {
+  const handleVideoValidation = (file: File): CreatePost | undefined => {
     //Size Validation
     if (file.size > 15 * mbRatio) {
       toast.message(file.name, {
         description: "This video is too large to be uploaded",
       });
+      return;
     }
     //Resolution Validation
     const video = document.createElement("video");
@@ -63,9 +84,23 @@ const UploadUserImages = (props: Props) => {
         toast.message(file.name, {
           description: "This video is too small to be uploaded",
         });
+        return;
       }
     };
+
     video.src = URL.createObjectURL(file);
+    const content: PostCreationContent = {
+      userPostId: null,
+      location: video.src,
+      width: video.width,
+      height: video.height,
+      format: PostContentType.VIDEO,
+    };
+
+    return {
+      content,
+      file,
+    };
   };
 
   return (

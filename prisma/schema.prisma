@@ -94,8 +94,7 @@ model UserPost {
   userId         String           @db.ObjectId
   title          String
   description    String
-  photos         String[]
-  thumbnail      String
+  photos         PostContent[]
   tags           String[]
   technologies   String[]
   createdAt      DateTime         @default(now())
@@ -107,13 +106,24 @@ model UserPost {
   PostComments   PostComments[]
   UserLikedPosts UserLikedPosts[]
   UserSavedPosts UserSavedPosts[]
+  isDraft        Boolean          @default(false)
+  postContentId  String           @db.ObjectId
 }
 
-model PostContent{
-  id String @id @default(auto()) @map("_id") @db.ObjectId
-  postId String @db.ObjectId
-  location String
-  format String 
+enum PostContentType {
+  IMAGE
+  VIDEO
+  GIF
+}
+
+model PostContent {
+  id         String          @id @default(auto()) @map("_id") @db.ObjectId
+  userPostId String?         @db.ObjectId
+  location   String
+  format     PostContentType
+  width      Int
+  height     Int
+  UserPost   UserPost?       @relation(fields: [userPostId], references: [id])
 }
 
 model PostComments {

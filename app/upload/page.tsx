@@ -2,13 +2,25 @@
 
 import UploadUserImages from "@/components/upload/UserUploadImage";
 import React from "react";
+import { PostContent } from "@prisma/client";
+import PostCreator from "@/components/upload/PostCreator";
+
+export type PostCreationContent = Omit<PostContent, "id">;
+export interface CreatePost {
+  content: PostCreationContent;
+  file: File;
+}
 
 const page = () => {
-  const [uploadedImages, setUploadedImages] = React.useState<File[]>([]);
-  
+  const [uploadedFiles, setUploadedFiles] = React.useState<CreatePost[]>([]);
+
   return (
     <div className="h-[100dvh] flex flex-col items-center mx-12 lg:mx-24 my-6 lg:my-12">
-      <UploadUserImages setUploadedImages={setUploadedImages} />
+      {uploadedFiles.length > 0 ? (
+        <PostCreator postContent={uploadedFiles} />
+      ) : (
+        <UploadUserImages setUploadedFiles={setUploadedFiles} />
+      )}
     </div>
   );
 };
