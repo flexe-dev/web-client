@@ -1,6 +1,11 @@
+import { CreatePost } from "@/app/upload/page";
 import React from "react";
 
-const PostCreator = () => {
+interface Props {
+  postContent: CreatePost[];
+}
+
+const PostCreator = (props: Props) => {
   return <div></div>;
 };
 
