@@ -9,7 +9,7 @@ import {
   DropdownMenuTrigger,
 } from "../dropdown-menu";
 import { User } from "@prisma/client";
-import { CogIcon, UserCircleIcon } from "@heroicons/react/24/outline";
+import { CogIcon, UserCircleIcon, PlusIcon } from "@heroicons/react/24/outline";
 import { LogoutIcon } from "../../icons/LogoutIcon";
 import { signOut } from "next-auth/react";
 import { ChildNodeProps, LinkProps } from "@/lib/interface";
@@ -28,6 +28,11 @@ export const UserDropdown = ({ children, user }: UserDropdownProps) => {
       href: "/",
       label: "Settings",
       icon: <CogIcon className="stroke-secondary-header w-6 h-6" />,
+    },
+    {
+      href: "/upload",
+      label: "New Post",
+      icon: <PlusIcon className="stroke-secondary-header w-6 h-6" />,
     },
   ];
 
