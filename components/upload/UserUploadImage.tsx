@@ -9,21 +9,20 @@ interface Props {
   setUploadedFiles: React.Dispatch<React.SetStateAction<CreatePost[]>>;
 }
 
-const mbRatio = 1000000;
+const MBRATIO = 1000000;
 
 const UploadUserImages = ({ setUploadedFiles }: Props) => {
   const handleFileUpload = (files: File[]) => {
     //Only Accept Images of Min Resolution 1440px x 990px
-    let validFiles: CreatePost[] = [];
     files.forEach((file) => {
       if (file.type.includes("image")) {
         const content = handleImageValidation(file);
-        if (content) validFiles.push(content);
+        if (content) setUploadedFiles((prev) => [...prev, content]);
         return;
       }
       if (file.type.includes("video")) {
         const content = handleVideoValidation(file);
-        if (content) validFiles.push(content);
+        if (content) setUploadedFiles((prev) => [...prev, content]);
         return;
       }
 
@@ -36,7 +35,7 @@ const UploadUserImages = ({ setUploadedFiles }: Props) => {
 
   const handleImageValidation = (file: File): CreatePost | undefined => {
     //Size Validation
-    if (file.size > 10 * mbRatio) {
+    if (file.size > 10 * MBRATIO) {
       toast.message(file.name, {
         description: "This image is too large to be uploaded",
       });
@@ -71,7 +70,7 @@ const UploadUserImages = ({ setUploadedFiles }: Props) => {
 
   const handleVideoValidation = (file: File): CreatePost | undefined => {
     //Size Validation
-    if (file.size > 15 * mbRatio) {
+    if (file.size > 15 * MBRATIO) {
       toast.message(file.name, {
         description: "This video is too large to be uploaded",
       });
