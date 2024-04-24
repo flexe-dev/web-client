@@ -48,7 +48,6 @@ export default async function RootLayout({
               <main className="w-[100dvw]">{children}</main>
               <Toaster />
               <OnboardModal />
-              <Footer />
             </ThemeProvider>
           </AccountProvider>
         </SessionProvider>
