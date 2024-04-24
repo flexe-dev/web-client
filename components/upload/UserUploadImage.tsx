@@ -103,11 +103,11 @@ const UploadUserImages = ({ setUploadedFiles }: Props) => {
   };
 
   return (
-    <div className="flex flex-col items-center w-full">
-      <h1 className="text-2xl lg:text-4xl text-center font-bold">
+    <div className="flex flex-col items-center w-full my-12">
+      <h1 className="text-2xl lg:text-4xl font-bold text-center mx-8">
         Lets get started with your new post
       </h1>
-      <h2 className="text-secondary-header text-lg lg:text-xl lg:max-w-screen-lg text-center mt-4 font-semibold">
+      <h2 className="text-secondary-header text-lg lg:text-xl lg:max-w-screen-lg text-center mt-4 mx-12 font-semibold">
         <div>
           Drag and drop photos to help showcase your work to the fullest extent
         </div>
@@ -115,13 +115,15 @@ const UploadUserImages = ({ setUploadedFiles }: Props) => {
           {"("}more can be uploaded at any given time{")"}
         </div>
       </h2>
-      <FileUploader
-        className="max-w-screen-xl mt-8 h-96"
-        onFileUpload={handleFileUpload}
-        fileSizeLimit={1000000}
-      >
-        Hey
-      </FileUploader>
+      <div className="w-5/6 lg:w-full flex justify-center ">
+        <FileUploader
+          className="w-full max-w-screen-lg mt-8 h-96 lg:h-[35rem]"
+          onFileUpload={handleFileUpload}
+          fileSizeLimit={1000000}
+        >
+          Hey
+        </FileUploader>
+      </div>
     </div>
   );
 };
