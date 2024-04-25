@@ -31,7 +31,7 @@ function ProfileHeader() {
             ) : (
               <Image
                 alt="User Profile Picture"
-                className=" rounded-full"
+                className="rounded-full"
                 priority
                 src={user?.image ?? defaultPicture}
                 fill
