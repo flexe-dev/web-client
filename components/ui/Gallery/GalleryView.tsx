@@ -1,22 +1,18 @@
 "use client";
 
 import React from "react";
-import { LayoutGroup, motion } from "framer-motion";
+import { motion } from "framer-motion";
 import { GalleryTile } from "./GalleryTile";
 import { useAccount } from "@/components/context/AccountProvider";
-import PlaceholderImage from "@/public/original-2f558c29eac9dc162da8e1ab9efe3d53.png";
-import { ImageProps } from "next/image";
+import { images } from "@/lib/placeholder";
+
 const GalleryView = () => {
   const { user } = useAccount();
-  const image: ImageProps = {
-    src: PlaceholderImage,
-    alt: "Placeholder Image",
-  };
   if (!user) return null;
   return (
     <motion.section
       layout={"position"}
-      className="py-12 px-4 flex relative flex-col w-full min-h-screen items-center"
+      className="pt-8 flex relative flex-col w-full min-h-screen items-center"
     >
       <motion.h1 layout key={"gallery-header"} className="text-4xl font-bold">
         Gallery
@@ -31,7 +27,7 @@ const GalleryView = () => {
       </motion.h2>
       <motion.section
         layout="preserve-aspect"
-        className="relative flex flex-wrap justify-center p-4 items-center border-t group/gallery-tile"
+        className="relative flex flex-wrap justify-center pl-12 pr-16 mt-4 py-8 items-center border-t-2 group/gallery-tile"
         key={"gallery-tile-section"}
       >
         {Array.from({ length: 12 }).map((_, index) => (
@@ -41,7 +37,7 @@ const GalleryView = () => {
             creator={user}
             title="Placeholder Title"
             link="/inspiration"
-            image={image}
+            image={images[index % images.length]}
           />
         ))}
       </motion.section>
