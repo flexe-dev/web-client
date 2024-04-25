@@ -11,6 +11,9 @@ import {
   CarouselApi,
 } from "@/components/ui/carousel";
 import { StyledWordLink } from "../StyledWorkLink";
+import { images } from "@/lib/placeholder";
+import Image from "next/image";
+import Link from "next/link";
 
 function FeaturedSnippets() {
   const [api, setAPI] = useState<CarouselApi>();
@@ -50,10 +53,17 @@ function FeaturedSnippets() {
           }}
           className="w-full py-12 md:p-12 lg:p-16 "
         >
-          <CarouselContent className="space-x-4 flex  ">
+          <CarouselContent className="space-x-4 flex">
             {Array.from({ length: 5 }).map((_, index) => (
-              <CarouselItem key={index} className="md:basis-5/6 lg:basis-2/3">
-                <div className="w-full aspect-[3/2] md:aspect-video  rounded-xl  transition-all bg-slate-400"></div>
+              <CarouselItem
+                key={index}
+                className="md:basis-5/6 lg:basis-2/3 cursor-pointer"
+              >
+                <div className="w-full relative aspect-[3/2] md:aspect-video overflow-hidden rounded-xl transition-all">
+                  <Link href={"/post/19381"}>
+                    <Image {...images[index % images.length]} fill />
+                  </Link>
+                </div>
               </CarouselItem>
             ))}
           </CarouselContent>

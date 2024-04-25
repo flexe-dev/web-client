@@ -8,8 +8,7 @@ import {
   MotionValue,
 } from "framer-motion";
 import Image, { ImageProps } from "next/image";
-import Link from "next/link";
-
+import PlaceholderImage from "@/public/original-2f558c29eac9dc162da8e1ab9efe3d53.png";
 import { useMediaQuery } from "react-responsive";
 import { Carousel, CarouselContent, CarouselItem } from "../carousel";
 import AutoScroll from "embla-carousel-auto-scroll";
@@ -37,6 +36,7 @@ const creations = [
   { title: "g" },
   { title: "h" },
   { title: "i" },
+  { title: "j" },
 ];
 
 export const CreationParallaxWrapper = (props: ChildNodeProps) => {
@@ -48,10 +48,14 @@ export const CreationParallaxWrapper = (props: ChildNodeProps) => {
 
   const { children } = props;
   const firstRow = creations.slice(0, desktopDim ? 4 : 8);
-  const secondRow = creations.slice(4, 8);
+  const secondRow = creations.slice(4, 9);
 
   const ref = React.useRef(null);
   const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start start", "end start"],
+  });
+  const { scrollXProgress } = useScroll({
     target: ref,
     offset: ["start start", "end start"],
   });
@@ -67,11 +71,16 @@ export const CreationParallaxWrapper = (props: ChildNodeProps) => {
     springConfig
   );
   const rotateZ = useSpring(
-    useTransform(scrollYProgress, [0, 0.2], [10, 0]),
+    useTransform(scrollYProgress, [0, 0.2], [6, 0]),
     springConfig
   );
   const translateY = useSpring(
-    useTransform(scrollYProgress, [0, 0.2], desktopDim ? [-450, 0] : [-350, 0]),
+    useTransform(scrollYProgress, [0, 0.2], desktopDim ? [-450, -100] : [-350, 0]),
+    springConfig
+  );
+
+  const translateX = useSpring(
+    useTransform(scrollXProgress, [0, 0.2], [0, 100]),
     springConfig
   );
 
@@ -82,7 +91,7 @@ export const CreationParallaxWrapper = (props: ChildNodeProps) => {
     >
       {children}
       <motion.div
-        className=" w-[110dvw]"
+        className=" w-[100dvw]"
         style={{
           rotateX,
           rotateZ,
@@ -91,47 +100,35 @@ export const CreationParallaxWrapper = (props: ChildNodeProps) => {
         }}
       >
         <Carousel
-          plugins={[
-            AutoScroll({
-              stopOnInteraction: false,
-              stopOnMouseEnter: true,
-            }),
-          ]}
           opts={{
-            align: "end",
+            align: "start",
             loop: true,
           }}
         >
-          <CarouselContent className="mb-20  mt-8 md:min-w-[1800px]">
+          <CarouselContent className="mb-10 ml-1 mt-8 ">
             {firstRow.map((creation, index) => (
               <CarouselItem
                 key={`carousel-item-row-1-${index}`}
-                className=" md:basis-1/3 mx-8"
+                className=" md:basis-1/3 mx-2"
               >
                 <CreationTile creation={creation} key={creation.title} />
               </CarouselItem>
             ))}
           </CarouselContent>
         </Carousel>
+
         <Carousel
-          plugins={[
-            AutoScroll({
-              direction: "forwards",
-              stopOnInteraction: false,
-              stopOnMouseEnter: true,
-            }),
-          ]}
           className="hidden md:block"
           opts={{
-            align: "start",
+            align: "center",
             loop: true,
           }}
         >
-          <CarouselContent className="mt-8 mb-20 min-w-[1800px] relative">
+          <CarouselContent className="mt-8 mb-20 relative">
             {secondRow.map((creation, index) => (
               <CarouselItem
                 key={`carousel-item-row-2-${index}`}
-                className="basis-1/3 mx-8 "
+                className="basis-1/4 mx-2"
               >
                 <CreationTile creation={creation} key={creation.title} />
               </CarouselItem>
@@ -159,13 +156,7 @@ const CreationTile = (props: TileProps) => {
       <div
         id="design-image-tile"
         className="bg-slate-600 md:absolute z-[20] w-full  md:max-w-[33rem]  lg:max-w-[37rem] rounded-lg  aspect-[3/2] md:aspect-video  top-0 right-0 shadow-md shadow-neutral-800 dark:shadow-transparent border-2 border-secondary-foreground"
-      ></div>
-      <div
-        id="creator-image-tile"
-        className="absolute z-[30] border-2 border-secondary-foreground bg-neutral-400 shadow-md shadow-neutral-800  rounded-xl w-[8rem] md:w-[9rem] lg:w-[10rem] aspect-square flex-shrink-0 -bottom-4 lg:-bottom-[10%] left-[37%] md:-left-4 lg:-left-[10%]"
-      >
-        <div className=" hidden md:flex w-[3rem] aspect-square absolute left-3 bottom-3 rounded-full bg-blue-400 z-[40]"></div>
-      </div>
+      />
     </motion.div>
   );
 };
