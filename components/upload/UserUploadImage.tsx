@@ -50,7 +50,7 @@ const UploadUserImages = ({ setUploadedFiles }: Props) => {
       // Resolution Validation
       const img = new Image();
       img.onload = () => {
-        if (img.width < 1440 || img.height < 990) {
+        if (img.width < 1000 || img.height < 660) {
           toast.message(file.name, {
             description: "This image is too small to be uploaded",
           });
@@ -90,7 +90,7 @@ const UploadUserImages = ({ setUploadedFiles }: Props) => {
       // Resolution Validation
       const video = document.createElement("video");
       video.onloadedmetadata = () => {
-        if (video.videoWidth < 1440 || video.videoHeight < 990) {
+        if (video.videoWidth < 1000 || video.videoHeight < 660) {
           toast.message(file.name, {
             description: "This video is too small to be uploaded",
           });
