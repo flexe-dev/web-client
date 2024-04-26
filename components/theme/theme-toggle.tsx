@@ -31,7 +31,7 @@ export function ModeToggle(props: Props) {
   const { className, variant, buttonClassName } = props;
   return (
     <div className={cn(className)}>
-      <DropdownMenu>
+      <DropdownMenu modal={false}>
         <DropdownMenuTrigger asChild>
           <Button
             variant={"outline"}
@@ -53,7 +53,7 @@ export function ModeToggle(props: Props) {
             <span className="sr-only">Toggle theme</span>
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent className="z-[90]">
+        <DropdownMenuContent className="z-[90] mr-2 mt-1">
           <DropdownMenuItem onClick={() => setTheme("light")}>
             Light
           </DropdownMenuItem>
