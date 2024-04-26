@@ -35,7 +35,7 @@ export const UserDropdown = ({ children, user }: UserDropdownProps) => {
     },
     {
       href: "/upload",
-      label: "New Post",
+    label: "New Post",
       icon: <PlusCircleIcon className="stroke-secondary-header w-6 h-6" />,
     },
   ];
