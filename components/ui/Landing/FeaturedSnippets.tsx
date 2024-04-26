@@ -11,6 +11,9 @@ import {
   CarouselApi,
 } from "@/components/ui/carousel";
 import { StyledWordLink } from "../StyledWorkLink";
+import { images } from "@/lib/placeholder";
+import Image from "next/image";
+import Link from "next/link";
 
 function FeaturedSnippets() {
   const [api, setAPI] = useState<CarouselApi>();
@@ -26,7 +29,7 @@ function FeaturedSnippets() {
   }, [api]);
 
   return (
-    <section className=" w-screen  py-3 px-12 lg:p-24">
+    <section className=" w-screen px-12 lg:p-24 pb-8 lg:pb-6">
       <h2 className="text-3xl md:text-5xl lg:text-6xl font-bold max-w-screen-xl">
         See some of our favourite design snippets from the week
       </h2>
@@ -47,13 +50,25 @@ function FeaturedSnippets() {
           ]}
           opts={{
             align: "start",
+            loop: true,
           }}
-          className="w-full py-12 md:p-12 lg:p-16 "
+          className="w-full py-12 md:p-12 lg:p-16 lg:pb-6 "
         >
-          <CarouselContent className="space-x-4 flex  ">
+          <CarouselContent className="space-x-4 flex">
             {Array.from({ length: 5 }).map((_, index) => (
-              <CarouselItem key={index} className="md:basis-5/6 lg:basis-2/3">
-                <div className="w-full aspect-[3/2] md:aspect-video  rounded-xl  transition-all bg-slate-400"></div>
+              <CarouselItem
+                key={index}
+                className="md:basis-5/6 lg:basis-2/3 cursor-pointer"
+              >
+                <div className="w-full relative aspect-[3/2] md:aspect-video overflow-hidden rounded-xl transition-all">
+                  <Link href={"/post/19381"}>
+                    <Image
+                      className="hover:scale-105 transition-all"
+                      {...images[index % images.length]}
+                      fill
+                    />
+                  </Link>
+                </div>
               </CarouselItem>
             ))}
           </CarouselContent>
@@ -65,7 +80,7 @@ function FeaturedSnippets() {
             return (
               <div
                 key={`progress-${index}`}
-                className={`rounded-full w-[1rem] aspect-square  ${
+                className={`rounded-full w-[0.75rem] aspect-square  ${
                   index === current - 1
                     ? "bg-inverted/80"
                     : "bg-secondary-header/40"

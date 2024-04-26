@@ -49,7 +49,7 @@ const GallerySidebarWrapper = ({ children }: ChildNodeProps) => {
         onClick={() => setSidebarOpen((prev) => !prev)}
         variant={"outline"}
         className={cn(
-          "fixed mt-4 z-[80] transition-all backdrop-blur-lg",
+          "fixed mt-4 z-[30] transition-all backdrop-blur-lg",
           sidebarOpen
             ? "left-[15rem] ease-in duration-300"
             : "left-[1rem] delay-200 duration-300 ease-in"
@@ -58,7 +58,7 @@ const GallerySidebarWrapper = ({ children }: ChildNodeProps) => {
         <Bars3CenterLeftIcon className="w-8 h-8" />
       </Button>
 
-      <AnimatePresence mode="popLayout">
+      <AnimatePresence>
         {sidebarOpen && (
           <AnimatedSidebar key={"gallery-sidebar"}>
             <>
@@ -132,7 +132,7 @@ export const AnimatedSidebar = ({ children }: AnimatedContainerProps) => {
       initial="initial"
       animate="animate"
       exit="exit"
-      className="origin-left z-[60] lg:z-0 fixed lg:sticky h-screen bg-background top-[5rem] min-w-[20rem] w-[20rem] border-r "
+      className="origin-left z-[60] lg:z-0 fixed pt-4 lg:sticky h-screen bg-background top-[5rem] min-w-[20rem] w-[20rem] border-r-2 "
     >
       <ScrollArea className="h-[95dvh]">
         <motion.div className="flex flex-col sticky top-[6rem] pt-12 ">

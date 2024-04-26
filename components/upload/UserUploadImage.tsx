@@ -20,6 +20,7 @@ const UploadUserImages = ({ setUploadedFiles }: Props) => {
         if (content) setUploadedFiles((prev) => [...prev, content]);
         return;
       }
+
       if (file.type.includes("video")) {
         const content = handleVideoValidation(file);
         if (content) setUploadedFiles((prev) => [...prev, content]);
@@ -46,26 +47,37 @@ const UploadUserImages = ({ setUploadedFiles }: Props) => {
     img.onload = () => {
       if (img.width < 1440 || img.height < 990) {
         toast.message(file.name, {
-          description: "This image is too small to be uploaded",
+          description: "This image is too large to be uploaded",
         });
-        return;
+        resolve(undefined);
       }
-    };
-    img.src = URL.createObjectURL(file);
 
-    const content: PostCreationContent = {
-      userPostId: null,
-      location: img.src,
-      width: img.width,
-      height: img.height,
-      format: file.type.includes("gif")
-        ? PostContentType.GIF
-        : PostContentType.IMAGE,
-    };
-    return {
-      content,
-      file,
-    };
+      // Resolution Validation
+      const img = new Image();
+      img.onload = () => {
+        if (img.width < 1000 || img.height < 660) {
+          toast.message(file.name, {
+            description: "This image is too small to be uploaded",
+          });
+          resolve(undefined);
+        } else {
+          const content: PostCreationContent = {
+            userPostId: null,
+            location: img.src,
+            width: img.width,
+            height: img.height,
+            format: file.type.includes("gif")
+              ? PostContentType.GIF
+              : PostContentType.IMAGE,
+          };
+          resolve({
+            content,
+            file,
+          });
+        }
+      };
+      img.src = URL.createObjectURL(file);
+    });
   };
 
   const handleVideoValidation = (file: File): CreatePost | undefined => {
@@ -81,25 +93,36 @@ const UploadUserImages = ({ setUploadedFiles }: Props) => {
     video.onloadedmetadata = () => {
       if (video.videoWidth < 1440 || video.videoHeight < 990) {
         toast.message(file.name, {
-          description: "This video is too small to be uploaded",
+          description: "This video is too large to be uploaded",
         });
-        return;
+        resolve(undefined);
       }
-    };
 
-    video.src = URL.createObjectURL(file);
-    const content: PostCreationContent = {
-      userPostId: null,
-      location: video.src,
-      width: video.width,
-      height: video.height,
-      format: PostContentType.VIDEO,
-    };
+      // Resolution Validation
+      const video = document.createElement("video");
+      video.onloadedmetadata = () => {
+        if (video.videoWidth < 1000 || video.videoHeight < 660) {
+          toast.message(file.name, {
+            description: "This video is too small to be uploaded",
+          });
+          resolve(undefined);
+        } else {
+          const content: PostCreationContent = {
+            userPostId: null,
+            location: video.src,
+            width: video.videoWidth,
+            height: video.videoHeight,
+            format: PostContentType.VIDEO,
+          };
+          resolve({
+            content,
+            file,
+          });
+        }
+      };
 
-    return {
-      content,
-      file,
-    };
+      video.src = URL.createObjectURL(file);
+    });
   };
 
   return (

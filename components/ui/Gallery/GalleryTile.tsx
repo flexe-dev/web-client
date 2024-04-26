@@ -19,15 +19,15 @@ export const GalleryTile = (props: GalleryPostProps) => {
   return (
     <Card
       key={`gallery-tile-${index}`}
-      className="group cursor-pointer overflow-hidden rounded-lg border-0 relative min-w-[20rem] xl:min-w-[24rem] mx-3 my-2 aspect-[4/3] flex-shrink flex-grow basis-[20rem] xl:basis-[24rem] w-full"
+      className="group cursor-pointer border dark:border-0 overflow-hidden relative min-w-[20rem] xl:min-w-[24rem] mx-3 my-2 aspect-[4/3] flex-shrink flex-grow basis-[20rem] xl:basis-[24rem] w-full"
     >
       <Image
-        className="w-full aspect-[4/3] group-hover:scale-105 duration-200 transition-transform"
+        className="w-full aspect-[4/3] rounded-t-sm rounded-b-lg dark:pb-[0.025rem] dark:px-[0.0125rem] group-hover:scale-105 duration-200 transition-transform"
         {...image}
         objectFit="cover"
       />
-      <div className="absolute z-[10] inset-0 group-hover:bg-neutral-950/50 duration-200 transition-colors"></div>
-      <CardFooter className=" py-4 absolute z-[20] bottom-0 left-0 right-0 bg-background/70 justify-between">
+      <div className="absolute z-[10] inset-0 group-hover:bg-neutral-950/50 duration-200 transition-colors" />
+      <CardFooter className="py-3 absolute rounded-b-lg z-[20] bottom-0 left-0 right-0 bg-background/80 backdrop-blur-sm justify-between">
         <div className="flex items-center space-x-4">
           <div className="flex space-x-1 items-center">
             <span>20.4k</span>
