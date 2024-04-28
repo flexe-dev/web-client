@@ -1,30 +1,42 @@
-import React, { useEffect } from "react";
+"use client";
+
+import React, { SetStateAction, useState } from "react";
 import { userProfileViewer } from "../context/UserProfileProvider";
-import Link from "next/link";
 import { ChildNodeProps, ClassNameProp } from "@/lib/interface";
 import { cn } from "@/lib/utils";
 import { ArrowUpTrayIcon, PlusCircleIcon } from "@heroicons/react/24/outline";
 import { Button } from "../ui/button";
 import { UserPost } from "@prisma/client";
+import { Dialog, DialogTrigger } from "../ui/dialog";
+import PostCreateDialog from "../creator/PostCreateDialog";
 const Posts = () => {
   const { userPosts } = userProfileViewer();
+  const [openDialog, setOpenDialog] = useState<boolean>(false);
   const { userPosts: posts, loading } = userPosts;
   return (
-    <div className="w-full">
-      {posts.length > 0 && (
-        <div className="w-full h-[5rem] border-2 my-4 rounded-sm">
-          <Link
-            className="h-full w-full flex justify-center items-center hover:bg-accent transition-colors"
-            href={"/upload"}
-          >
-            <PlusCircleIcon className="w-7 h-7" />
-            <p className="text-xl ml-2">Upload a new post</p>
-          </Link>
-        </div>
-      )}
+    <Dialog open={openDialog} onOpenChange={setOpenDialog}>
+      <div className="w-full">
+        {posts.length > 0 && (
+          <DialogTrigger asChild>
+            <Button
+              variant={"outline"}
+              onClick={() => setOpenDialog(true)}
+              className="h-[5rem] border-2 my-4 rounded-sm w-full  flex justify-center items-center hover:bg-accent transition-colors"
+            >
+              <PlusCircleIcon className="w-7 h-7" />
+              <p className="text-xl ml-2">Upload a new post</p>
+            </Button>
+          </DialogTrigger>
+        )}
 
-      {posts.length === 0 ? <EmptyPostTemplate /> : <UserPosts posts={posts} />}
-    </div>
+        {posts.length === 0 ? (
+          <EmptyPostTemplate dispatch={setOpenDialog} />
+        ) : (
+          <UserPosts posts={posts} />
+        )}
+      </div>
+      <PostCreateDialog dispatch={setOpenDialog} />
+    </Dialog>
   );
 };
 
@@ -59,20 +71,23 @@ const UserPosts = (posts: UserPostsProps) => {
     <div className="flex flex-wrap justify-center relative my-4 w-full">
       {posts.posts.map((post, index) => (
         <PostTile key={post.id}>
-          <div className="w-full h-full flex justify-center items-center">
+          {/* <div className="w-full h-full flex justify-center items-center">
             <img
               src={post.thumbnail}
               alt={post.title}
               className="w-full h-full object-cover"
             />
-          </div>
+          </div> */}
         </PostTile>
       ))}
     </div>
   );
 };
+interface Props {
+  dispatch: React.Dispatch<SetStateAction<boolean>>;
+}
 
-const EmptyPostTemplate = () => {
+const EmptyPostTemplate = ({ dispatch }: Props) => {
   return (
     <div className="flex flex-wrap justify-center relative my-4 w-full">
       <PostTile className="border-dashed flex flex-col justify-center items-center ">
@@ -83,11 +98,16 @@ const EmptyPostTemplate = () => {
         <h3 className="text-xs lg:text-sm text-secondary-header mt-2 text-center mx-8">
           Flex your skills as a developer and be apart of a growing community
         </h3>
-        <Link href={"/upload"}>
-          <Button className="mt-6" variant={"outline"}>
+
+        <DialogTrigger asChild>
+          <Button
+            className="mt-6"
+            variant={"outline"}
+            onClick={() => dispatch(true)}
+          >
             Create a New Post
           </Button>
-        </Link>
+        </DialogTrigger>
       </PostTile>
       {Array.from({ length: 5 }).map((_, index) => (
         <PostTile
