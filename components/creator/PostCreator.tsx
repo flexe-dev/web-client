@@ -1,4 +1,4 @@
-import { CreatePost } from "@/app/upload/page";
+import { CreatePost } from "@/lib/interface";
 import React from "react";
 import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
@@ -9,7 +9,7 @@ interface Props {
 
 const PostCreator = (props: Props) => {
   return (
-    <div className="flex">
+    <div className="w-full flex">
       <ContentSidebar postContent={props.postContent} />
       <section className="w-full justify-center h-full flex">
         <section className="w-full items-center py-12 px-8 container border border-dashed rounded-md flex flex-col my-6 lg:my-12 mx-6">

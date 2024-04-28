@@ -11,9 +11,8 @@ import { baseAuthOptions } from "@/lib/authOptions";
 import { OnboardModal } from "@/components/auth/OnboardModal";
 import { Navbar } from "@/components/navbar";
 import { AccountProvider } from "@/components/context/AccountProvider";
-import { Footer } from "@/components/ui/Footer";
 import { ChildNodeProps } from "@/lib/interface";
-
+import DndContext from "@/components/context/DndProvider";
 export const metadata: Metadata = {
   title: "designs.dev",
   description:
@@ -38,17 +37,19 @@ export default async function RootLayout({
       >
         <SessionProvider session={session}>
           <AccountProvider>
-            <ThemeProvider
-              attribute="class"
-              defaultTheme="system"
-              enableSystem
-              disableTransitionOnChange
-            >
-              <Navbar />
-              <main className="w-[100dvw]">{children}</main>
-              <Toaster />
-              <OnboardModal />
-            </ThemeProvider>
+            <DndContext>
+              <ThemeProvider
+                attribute="class"
+                defaultTheme="system"
+                enableSystem
+                disableTransitionOnChange
+              >
+                <Navbar />
+                <main className="w-[100dvw]">{children}</main>
+                <Toaster />
+                <OnboardModal />
+              </ThemeProvider>
+            </DndContext>
           </AccountProvider>
         </SessionProvider>
       </body>
