@@ -5,6 +5,14 @@ import { Avatar, AvatarFallback, AvatarImage } from "../avatar";
 import { useAccount } from "../../context/AccountProvider";
 import { UserDropdown } from "./UserDropdown";
 
+export const GetNameInitials = (name?: string) => {
+  if(!name) return ""
+  return name
+    ?.split(" ")
+    .map((n) => n[0])
+    .join("");
+};
+
 function UserAvatar() {
   const { user, profile } = useAccount();
 
@@ -15,12 +23,7 @@ function UserAvatar() {
         <UserDropdown user={user}>
           <Avatar className="border h-11 w-11 cursor-pointer hover:brightness-75 transition-all  mr-2">
             <AvatarImage className="object-cover" src={user.image} />
-            <AvatarFallback>
-              {user?.name
-                ?.split(" ")
-                .map((n) => n[0])
-                .join("")}
-            </AvatarFallback>
+            <AvatarFallback>{GetNameInitials(user.name)}</AvatarFallback>
           </Avatar>
         </UserDropdown>
       </div>
