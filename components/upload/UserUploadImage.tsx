@@ -3,8 +3,8 @@
 import { toast } from "sonner";
 import { FileUploader } from "../FileUploader";
 import { PostContent, PostContentType } from "@prisma/client";
-import { PostCreationContent } from "@/app/upload/page";
-import { CreatePost } from "@/app/upload/page";
+import { PostCreationContent, CreatePost } from "@/lib/interface";
+
 interface Props {
   setUploadedFiles: React.Dispatch<React.SetStateAction<CreatePost[]>>;
 }
