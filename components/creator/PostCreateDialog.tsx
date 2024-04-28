@@ -50,7 +50,9 @@ const PostCreateDialog = ({ dispatch }: DialogProps) => {
           </div>
           <div className="flex w-full items-center mt-2">
             <div className="h-[1px] ml-1 bg-primary w-full" />
-            <span className="text-lg mx-4 w-full">Create With</span>
+            <span className="text-lg w-full mx-2 text-center">
+              Or Create With
+            </span>
             <div className="h-[1px] mr-1 bg-primary w-full" />
           </div>
           <div className="w-full flex justify-center space-x-4">
