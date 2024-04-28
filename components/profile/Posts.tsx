@@ -59,13 +59,13 @@ const UserPosts = (posts: UserPostsProps) => {
     <div className="flex flex-wrap justify-center relative my-4 w-full">
       {posts.posts.map((post, index) => (
         <PostTile key={post.id}>
-          <div className="w-full h-full flex justify-center items-center">
+          {/* <div className="w-full h-full flex justify-center items-center">
             <img
               src={post.thumbnail}
               alt={post.title}
               className="w-full h-full object-cover"
             />
-          </div>
+          </div> */}
         </PostTile>
       ))}
     </div>
