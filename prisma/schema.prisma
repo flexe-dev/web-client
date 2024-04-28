@@ -92,14 +92,11 @@ model UserSavedPosts {
 model UserPost {
   id             String           @id @default(auto()) @map("_id") @db.ObjectId
   userId         String           @db.ObjectId
-  title          String
-  description    String
+  post           Bytes[]
   photos         PostContent[]
   tags           String[]
   technologies   String[]
   createdAt      DateTime         @default(now())
-  updatedAt      DateTime         @updatedAt
-  likeCount      Int              @default(0)
   commentCount   Int              @default(0)
   viewCount      Int              @default(0)
   user           User             @relation(fields: [userId], references: [id])

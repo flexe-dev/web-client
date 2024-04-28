@@ -1,5 +1,5 @@
 import { User } from "next-auth";
-import { UserProfile, UserPost } from "@prisma/client";
+import { UserProfile, UserPost, PostContent } from "@prisma/client";
 
 export interface ClassNameProp {
   className?: string;
@@ -35,4 +35,11 @@ export interface ProfileObject extends LoadingProps {
 
 export interface PostObject extends LoadingProps {
   userPosts: UserPost[];
+}
+
+export type PostCreationContent = Omit<PostContent, "id">;
+
+export interface CreatePost {
+  content: PostCreationContent;
+  file: File;
 }
