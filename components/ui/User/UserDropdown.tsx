@@ -41,7 +41,7 @@ export const UserDropdown = ({ children, user }: UserDropdownProps) => {
   ];
 
   return (
-    <Dialog open={dialogOpen}>
+    <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
       <DropdownMenu modal={false}>
         <DropdownMenuTrigger asChild>{children}</DropdownMenuTrigger>
         <DropdownMenuContent className=" mt-2">
