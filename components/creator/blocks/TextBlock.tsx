@@ -27,9 +27,12 @@ const BlockThumbnail: Record<Text, React.ReactNode> = {
   text: <TextVisual />,
 };
 
-//todo: Implement Drag and Drop Functionality
 const TextBlock = ({ text }: BlockProps) => {
-  return <BlockWrapper>{BlockThumbnail[text]}</BlockWrapper>;
+  return (
+    <BlockWrapper id={`draggable-block-${text}`}>
+      {BlockThumbnail[text]}
+    </BlockWrapper>
+  );
 };
 
 export default TextBlock;
