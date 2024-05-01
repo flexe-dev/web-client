@@ -15,52 +15,74 @@ import Image from "next/image";
 import ImageBlock from "./blocks/ImageBlock";
 import VideoBlock from "./blocks/VideoBlock";
 import { ScrollArea } from "../ui/scroll-area";
+import { DragOverlay } from "@dnd-kit/core";
+import Blocks, { BlockID } from "./blocks/Blocks";
+import { useBlockDrag } from "../context/PostDragProvider";
+import { DropAnimation, defaultDropAnimationSideEffects } from "@dnd-kit/core";
+import { Draggable } from "../dnd/Draggable";
 interface Props {
   postContent: CreatePost[];
 }
 
 type SidebarTab = "document" | "photo";
 
+const dropAnimationConfig: DropAnimation = {
+  sideEffects: defaultDropAnimationSideEffects({
+    styles: {
+      active: {
+        opacity: "0.6",
+      },
+    },
+  }),
+};
+
 const ContentSidebar = (props: Props) => {
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(true);
   const [activeTab, setActiveTab] = useState<SidebarTab>("photo");
-
+  const { activeDragID } = useBlockDrag();
   const renderedContent: Record<SidebarTab, React.ReactNode> = {
     document: <DocumentTab />,
     photo: <ContentTab postContent={props.postContent} />,
   };
 
   return (
-    <aside
-      className={cn(
-        `h-screen sticky top-[5rem] lg:top-0 left-0  border-r-2 bg-background `,
-        sidebarOpen ? "min-w-[16rem] max-w-[16rem] fixed lg:sticky" : "w-[3rem]"
-      )}
-    >
-      <h1 className="flex border-b-2 divide-x-2">
-        <Button
-          onClick={() => setActiveTab("document")}
-          variant={"outline"}
-          className={cn(
-            "flex border-0 rounded-none justify-center hover:bg-accent/50 items-center h-[2.25rem] w-full",
-            activeTab === "document" && "bg-accent  hover:bg-accent"
-          )}
-        >
-          <DocumentIcon className="h-7 w-7 stroke-secondary-header" />
-        </Button>
-        <Button
-          onClick={() => setActiveTab("photo")}
-          variant={"outline"}
-          className={cn(
-            "border-0 rounded-none flex justify-center items-center h-[2.25rem] hover:bg-accent/50 w-full",
-            activeTab === "photo" && "bg-accent hover:bg-accent"
-          )}
-        >
-          <PhotoIcon className="h-7 w-7 stroke-secondary-header" />
-        </Button>
-      </h1>
-      {renderedContent[activeTab]}
-    </aside>
+    <>
+      <aside
+        className={cn(
+          `h-screen sticky top-[5rem] lg:top-0 left-0  border-r-2 bg-background `,
+          sidebarOpen
+            ? "min-w-[16rem] max-w-[16rem] fixed lg:sticky"
+            : "w-[3rem]"
+        )}
+      >
+        <h1 className="flex border-b-2 divide-x-2">
+          <Button
+            onClick={() => setActiveTab("document")}
+            variant={"outline"}
+            className={cn(
+              "flex border-0 rounded-none justify-center hover:bg-accent/50 items-center h-[2.25rem] w-full",
+              activeTab === "document" && "bg-accent  hover:bg-accent"
+            )}
+          >
+            <DocumentIcon className="h-7 w-7 stroke-secondary-header" />
+          </Button>
+          <Button
+            onClick={() => setActiveTab("photo")}
+            variant={"outline"}
+            className={cn(
+              "border-0 rounded-none flex justify-center items-center h-[2.25rem] hover:bg-accent/50 w-full",
+              activeTab === "photo" && "bg-accent hover:bg-accent"
+            )}
+          >
+            <PhotoIcon className="h-7 w-7 stroke-secondary-header" />
+          </Button>
+        </h1>
+        {renderedContent[activeTab]}
+      </aside>
+      <DragOverlay dropAnimation={dropAnimationConfig}>
+        {activeDragID ? <Blocks id={activeDragID as BlockID} /> : null}
+      </DragOverlay>
+    </>
   );
 };
 
@@ -85,7 +107,9 @@ const ContentTab = ({ postContent }: Props) => {
           >
             <UserMediaBlock thumbnail={postContent?.at(0)} />
           </div>
+
           <ImageBlock />
+
           <VideoBlock />
         </>
       ) : (
@@ -131,7 +155,7 @@ const DocumentTab = () => {
         Text
       </h2>
       {textTypes.map((text) => (
-        <TextBlock key={`block-${text}`} text={text} />
+        <TextBlock id={text} />
       ))}
     </section>
   );

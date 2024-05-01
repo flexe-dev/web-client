@@ -10,7 +10,7 @@ interface MediaProps {
 
 const UserMediaBlock = ({ thumbnail }: MediaProps) => {
   return (
-    <>
+    <button className="w-full h-full">
       <Image
         {...images[0]}
         fill
@@ -25,7 +25,7 @@ const UserMediaBlock = ({ thumbnail }: MediaProps) => {
           Uploaded
         </h2>
       </div>
-    </>
+    </button>
   );
 };
 

@@ -1,10 +1,10 @@
 import { CreatePost } from "@/lib/interface";
-import React from "react";
+import React, { useState } from "react";
 import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
 import ContentSidebar from "./ContentSidebar";
-import { DndContext } from "@dnd-kit/core";
 import { useDroppable } from "@dnd-kit/core";
+import { PostDragProvider } from "../context/PostDragProvider";
 interface Props {
   postContent: CreatePost[];
 }
@@ -14,15 +14,16 @@ const PostCreator = (props: Props) => {
     id: "droppable",
   });
 
-  const [document, setDocument] = React.useState<React.ReactNode[]>([
+  const [document, setDocument] = useState<React.ReactNode[]>([
     <Input placeholder="Title your post" className="text-3xl font-bold h-16" />,
     <Textarea
       placeholder="Write a quick description about your post"
       className="placeholder-muted text-secondary-header my-4 max-h-[10rem]"
     />,
   ]);
+
   return (
-    <DndContext onDragEnd={() => console.log("hai")}>
+    <PostDragProvider>
       <div className="w-full flex">
         <ContentSidebar postContent={props.postContent} />
         <section className="w-full justify-center h-full flex">
@@ -40,7 +41,7 @@ const PostCreator = (props: Props) => {
           </section>
         </section>
       </div>
-    </DndContext>
+    </PostDragProvider>
   );
 };
 

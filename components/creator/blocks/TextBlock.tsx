@@ -1,12 +1,16 @@
-import { ClassNameProp } from "@/lib/interface";
+import { Draggable } from "@/components/dnd/Draggable";
 import { BlockWrapper } from "./Wrapper";
 import React from "react";
 
-export const textTypes = ["title", "subtitle", "text"] as const;
+export const textTypes = [
+  "draggable-block-title",
+  "draggable-block-subtitle",
+  "draggable-block-text",
+] as const;
 export type Text = (typeof textTypes)[number];
 
-interface BlockProps extends ClassNameProp {
-  text: Text;
+interface BlockProps {
+  id: Text;
 }
 
 const TitleVisual = () => {
@@ -22,16 +26,18 @@ const TextVisual = () => {
 };
 
 const BlockThumbnail: Record<Text, React.ReactNode> = {
-  title: <TitleVisual />,
-  subtitle: <SubTitleVisual />,
-  text: <TextVisual />,
+  "draggable-block-title": <TitleVisual />,
+  "draggable-block-subtitle": <SubTitleVisual />,
+  "draggable-block-text": <TextVisual />,
 };
 
-const TextBlock = ({ text }: BlockProps) => {
+const TextBlock = ({ id }: BlockProps) => {
   return (
-    <BlockWrapper id={`draggable-block-${text}`}>
-      {BlockThumbnail[text]}
-    </BlockWrapper>
+    <>
+      <Draggable id={id}>
+        <BlockWrapper>{BlockThumbnail[id]}</BlockWrapper>
+      </Draggable>
+    </>
   );
 };
 
