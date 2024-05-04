@@ -26,7 +26,7 @@ interface Props {
 
 type SidebarTab = "document" | "photo";
 
-const dropAnimationConfig: DropAnimation = {
+export const dropAnimationConfig: DropAnimation = {
   sideEffects: defaultDropAnimationSideEffects({
     styles: {
       active: {
@@ -49,7 +49,7 @@ const ContentSidebar = (props: Props) => {
     <>
       <aside
         className={cn(
-          `h-screen sticky top-[5rem] lg:top-0 left-0  border-r-2 bg-background `,
+          `h-screen sticky top-[5rem] z-[80] lg:top-0 left-0  border-r-2 bg-background `,
           sidebarOpen
             ? "min-w-[16rem] max-w-[16rem] fixed lg:sticky"
             : "w-[3rem]"
@@ -79,9 +79,7 @@ const ContentSidebar = (props: Props) => {
         </h1>
         {renderedContent[activeTab]}
       </aside>
-      <DragOverlay dropAnimation={dropAnimationConfig}>
-        {activeDragID ? <Blocks id={activeDragID as BlockID} /> : null}
-      </DragOverlay>
+    
     </>
   );
 };

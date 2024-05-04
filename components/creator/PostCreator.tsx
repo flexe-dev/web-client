@@ -1,47 +1,27 @@
+import React from "react";
 import { CreatePost } from "@/lib/interface";
-import React, { useState } from "react";
-import { Input } from "../ui/input";
-import { Textarea } from "../ui/textarea";
-import ContentSidebar from "./ContentSidebar";
-import { useDroppable } from "@dnd-kit/core";
-import { PostDragProvider } from "../context/PostDragProvider";
+import ContentSidebar, { dropAnimationConfig } from "./ContentSidebar";
+import { PostDragProvider, useBlockDrag } from "../context/PostDragProvider";
+import PostContent from "./PostContent";
+import { PostCreatorProvider } from "../context/PostCreatorProvider";
+import { DragOverlay } from "@dnd-kit/core";
+import { Blocks } from "lucide-react";
+import { BlockID } from "./blocks/Blocks";
+
 interface Props {
   postContent: CreatePost[];
 }
 
 const PostCreator = (props: Props) => {
-  const { isOver, setNodeRef } = useDroppable({
-    id: "droppable",
-  });
-
-  const [document, setDocument] = useState<React.ReactNode[]>([
-    <Input placeholder="Title your post" className="text-3xl font-bold h-16" />,
-    <Textarea
-      placeholder="Write a quick description about your post"
-      className="placeholder-muted text-secondary-header my-4 max-h-[10rem]"
-    />,
-  ]);
-
   return (
-    <PostDragProvider>
+    
+    <PostCreatorProvider>
       <div className="w-full flex">
-        <ContentSidebar postContent={props.postContent} />
-        <section className="w-full justify-center h-full flex">
-          <section
-            ref={setNodeRef}
-            className="w-full items-center py-12 px-8 container border border-dashed rounded-md flex flex-col my-6 lg:my-12 mx-6"
-          >
-            {document.map((content, index) => {
-              return (
-                <React.Fragment key={`document-component-${index}`}>
-                  {content}
-                </React.Fragment>
-              );
-            })}
-          </section>
-        </section>
+        <PostDragProvider>
+          <PostContent postContent={props.postContent} />
+        </PostDragProvider>
       </div>
-    </PostDragProvider>
+    </PostCreatorProvider>
   );
 };
 

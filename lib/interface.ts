@@ -43,3 +43,15 @@ export interface CreatePost {
   content: PostCreationContent;
   file: File;
 }
+
+export interface PostContentBlock {
+  id: string;
+  content: React.ReactNode;
+}
+
+export interface ContentBlockProp {
+  id: string;
+  value: string;
+  valueCallback: (value: string) => void;
+  onDelete: (id: string) => void;
+}
