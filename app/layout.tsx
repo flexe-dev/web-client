@@ -3,7 +3,7 @@ import { JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 import { ThemeProvider } from "@/components/theme/theme-provider";
-const jetBrainsMono = JetBrains_Mono({ subsets: ["latin"] });
+const jetBrainsMono = JetBrains_Mono({ subsets: ["latin"], weight: "400" });
 import { Toaster } from "@/components/ui/sonner";
 import SessionProvider from "@/components/context/SessionProvider";
 import { getServerSession } from "next-auth";
