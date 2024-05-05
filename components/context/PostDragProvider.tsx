@@ -23,13 +23,16 @@ import { sortableKeyboardCoordinates } from "@dnd-kit/sortable";
 
 import React, { createContext, useState } from "react";
 import { usePostCreator } from "./PostCreatorProvider";
-import { PostContentBlock } from "@/lib/interface";
 import BlockPreview from "../creator/blocks/BlockPreview";
 import { BlockID } from "../creator/blocks/Blocks";
-import TextContent from "../creator/content/TextContent";
-import TitleContent from "../creator/content/TitleContent";
-import SubTitleContent from "../creator/content/SubTitleContent";
-import ImageContent from "../creator/content/ImageContent";
+
+import { nanoid } from "nanoid";
+import { images } from "@/lib/placeholder";
+import { PostContentBlock } from "@/lib/interface";
+import { TextContent } from "../creator/content/TextContent";
+import { SubTitleContent } from "../creator/content/SubTitleContent";
+import { TitleContent } from "../creator/content/TitleContent";
+import { ImageContent } from "../creator/content/ImageContent";
 
 interface PostDragProviderState {
   activeDragID: UniqueIdentifier | null;
@@ -66,37 +69,35 @@ export const PostDragProvider = ({
 
   const RenderedItem: Record<BlockID, PostContentBlock> = {
     "draggable-block-title": {
-      id: "draggable-content-title",
-      content: (
-        <TitleContent id="draggable-content-title" onDelete={onDelete} />
-      ),
+      id: `draggable-content-title-${nanoid()}`,
+      value: "Title",
+      content: TitleContent,
     },
     "draggable-block-subtitle": {
-      id: "draggable-content-subtitle",
-      content: (
-        <TitleContent id="draggable-content-subtitle" onDelete={onDelete} />
-      ),
+      id: `draggable-content-subtitle-${nanoid()}`,
+      value: "Sub-Title",
+      content: SubTitleContent,
     },
     "draggable-block-text": {
-      id: "draggable-content-text",
-      content: <TextContent id="draggable-content-text" onDelete={onDelete} />,
+      id: `draggable-content-text-${nanoid()}`,
+      value: "Text",
+      content: TextContent,
     },
     "draggable-block-image": {
-      id: "draggable-content-text",
-      content: (
-        <ImageContent id="draggable-content-video" onDelete={onDelete} />
-      ),
+      id: `draggable-content-image-${nanoid()}`,
+      value: images[0].src as string,
+      content: ImageContent,
     },
     "draggable-block-video": {
-      id: "draggable-content-video",
-      content: (
-        <ImageContent id="draggable-content-video" onDelete={onDelete} />
-      ),
+      id: `draggable-content-video-${nanoid()}`,
+      value: images[0].src as string,
+      content: ImageContent,
     },
   };
 
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
+
     if (!over || active.id === over.id) {
       setActiveDragID(null);
       setDocument(originalDocumentState!);
@@ -111,7 +112,9 @@ export const PostDragProvider = ({
       const overIndex = document.findIndex((doc) => doc.id === over.id);
       if (activeIndex === -1 || overIndex === -1) return;
       setDocument((prev) => arrayMove(prev, activeIndex, overIndex));
+      return;
     }
+
     if (
       (active.id as string).includes("draggable-block") &&
       (over.id as string).includes("draggable-content")
@@ -119,7 +122,7 @@ export const PostDragProvider = ({
       const newBlock = document.findIndex(
         (doc) => doc.id === "draggable-content-new-block"
       );
-      if (!newBlock) return;
+      if (newBlock === -1) return;
       //Insert new content block based on insertion
       setDocument((prev) => [
         ...prev.slice(0, newBlock),
@@ -140,7 +143,8 @@ export const PostDragProvider = ({
     ) {
       const newContentBlock: PostContentBlock = {
         id: "draggable-content-new-block",
-        content: <BlockPreview />,
+        value: "",
+        content: BlockPreview,
       };
       setDocument((items) => {
         const overIndex = items.findIndex((doc) => doc.id === over.id);

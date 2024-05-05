@@ -1,13 +1,14 @@
-import { DragHandle, SortableItem } from "@/components/dnd/Sortable";
-import { Input } from "@/components/ui/input";
+import { SortableItem } from "@/components/dnd/Sortable";
 import { ContentBlockProp } from "@/lib/interface";
 import React from "react";
 import { images } from "@/lib/placeholder";
 import Image from "next/image";
 import ContentWrapper from "./ContentWrapper";
 import { usePostCreator } from "@/components/context/PostCreatorProvider";
-const ImageContent = (props: ContentBlockProp) => {
-  const { previewMode } = usePostCreator();
+
+export const ImageContent = (props: ContentBlockProp) => {
+  const { previewMode, onDelete } = usePostCreator();
+
   return (
     <SortableItem id={props.id}>
       <ContentWrapper>
@@ -18,5 +19,3 @@ const ImageContent = (props: ContentBlockProp) => {
     </SortableItem>
   );
 };
-
-export default ImageContent;

@@ -24,15 +24,20 @@ const PostContent = (props: Props) => {
 
   const getRenderedDragOverlay = (id: string): React.ReactNode => {
     if (id.includes("draggable-block")) return <Blocks id={id as BlockID} />;
-    if (id.includes("draggable-content"))
-      return document.find((doc) => doc.id === id)?.content ?? <></>;
+    if (id.includes("draggable-content")) {
+      const contentBlock = document.find((block) => block.id === id);
+
+      contentBlock ? (
+        <contentBlock.content id={contentBlock.id} value={contentBlock.value} />
+      ) : null;
+    }
   };
 
   return (
     <>
       <ContentSidebar postContent={props.postContent} />
-      <section className="w-full justify-center h-full flex">
-        <section className="w-full flex flex-col space-y-4 py-12 px-8 container border border-dashed rounded-md my-6 lg:my-12 mx-6">
+      <section className="lg:ml-[16rem] w-full justify-center h-full flex">
+        <section className="w-full flex flex-col space-y-2 py-12 px-8 container border border-dashed rounded-md my-6 lg:my-12 mx-6">
           <SortableContext
             id="droppable-post-content"
             strategy={verticalListSortingStrategy}
@@ -41,7 +46,7 @@ const PostContent = (props: Props) => {
             {document.map((document, index) => {
               return (
                 <React.Fragment key={`document-component-${index}`}>
-                  {document.content}
+                  <document.content id={document.id} value={document.value} />
                 </React.Fragment>
               );
             })}

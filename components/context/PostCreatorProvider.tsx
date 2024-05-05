@@ -1,21 +1,18 @@
 "use client";
 
-import { ChildNodeProps } from "@/lib/interface";
+import { ChildNodeProps, PostContentBlock } from "@/lib/interface";
 import React, { createContext, useEffect, useState } from "react";
 import { images } from "@/lib/placeholder";
-import {
-  Content,
-  ImageBlockContent,
-  TextBlockContent,
-  TitleBlockContent,
-} from "@/lib/models/Content";
+import { nanoid } from "nanoid";
+import { TitleContent } from "../creator/content/TitleContent";
 
 interface PostCreatorProviderState {
   previewMode: boolean;
   setPreviewMode: React.Dispatch<React.SetStateAction<boolean>>;
-  document: Content[];
-  setDocument: React.Dispatch<React.SetStateAction<Content[]>>;
+  document: PostContentBlock[];
+  setDocument: React.Dispatch<React.SetStateAction<PostContentBlock[]>>;
   onDelete: (id: string) => void;
+  onValueChange: (id: string, value: string) => void;
   //todo: set up more creator tools here
 }
 
@@ -25,6 +22,7 @@ const initialState: PostCreatorProviderState = {
   previewMode: false,
   setPreviewMode: () => {},
   onDelete: () => {},
+  onValueChange: () => {},
 };
 
 export const PostCreatorContext =
@@ -32,22 +30,29 @@ export const PostCreatorContext =
 
 export const PostCreatorProvider = ({ children }: ChildNodeProps) => {
   const [previewMode, setPreviewMode] = useState<boolean>(false);
+
   const onDelete = (id: string) => {
     setDocument((prev) => prev.filter((block) => block.id));
   };
-  const [document, setDocument] = useState<Content[]>([
-    new TitleBlockContent("draggable-content-1", onDelete),
-    new TextBlockContent("draggable-content-2", onDelete),
-    new ImageBlockContent(
-      "draggable-content-3",
-      images[0].src as string,
-      onDelete
-    ),
-  ]);
 
-  useEffect(() => {
-    console.log(document);
-  }, [document]);
+  const onValueChange = (id: string, value: string) => {
+    setDocument((prev) =>
+      prev.map((block) => {
+        if (block.id === id) {
+          return { ...block, value };
+        }
+        return block;
+      })
+    );
+  };
+
+  const [document, setDocument] = useState<PostContentBlock[]>([
+    {
+      id: `draggable-content-title-${nanoid()}`,
+      value: "Title",
+      content: TitleContent,
+    },
+  ]);
 
   return (
     <PostCreatorContext.Provider
@@ -57,6 +62,7 @@ export const PostCreatorProvider = ({ children }: ChildNodeProps) => {
         previewMode,
         setPreviewMode,
         onDelete,
+        onValueChange,
       }}
     >
       {children}

@@ -15,11 +15,8 @@ import Image from "next/image";
 import ImageBlock from "./blocks/ImageBlock";
 import VideoBlock from "./blocks/VideoBlock";
 import { ScrollArea } from "../ui/scroll-area";
-import { DragOverlay } from "@dnd-kit/core";
-import Blocks, { BlockID } from "./blocks/Blocks";
 import { useBlockDrag } from "../context/PostDragProvider";
 import { DropAnimation, defaultDropAnimationSideEffects } from "@dnd-kit/core";
-import { Draggable } from "../dnd/Draggable";
 interface Props {
   postContent: CreatePost[];
 }
@@ -49,10 +46,8 @@ const ContentSidebar = (props: Props) => {
     <>
       <aside
         className={cn(
-          `h-screen sticky top-[5rem] z-[80] lg:top-0 left-0  border-r-2 bg-background `,
-          sidebarOpen
-            ? "min-w-[16rem] max-w-[16rem] fixed lg:sticky"
-            : "w-[3rem]"
+          `h-screen top-[5rem] z-[60] left-0  border-r-2 bg-background `,
+          sidebarOpen ? "min-w-[16rem] max-w-[16rem] fixed" : "w-[3rem]"
         )}
       >
         <h1 className="flex border-b-2 divide-x-2">
@@ -79,7 +74,6 @@ const ContentSidebar = (props: Props) => {
         </h1>
         {renderedContent[activeTab]}
       </aside>
-    
     </>
   );
 };

@@ -1,26 +1,20 @@
 import { ContentBlockProp } from "@/lib/interface";
-import React, { useEffect, useState } from "react";
-import { SortableItem, DragHandle } from "@/components/dnd/Sortable";
+import React from "react";
+import { SortableItem } from "@/components/dnd/Sortable";
 import { Input } from "@/components/ui/input";
 import ContentWrapper from "./ContentWrapper";
-const TitleContent = (props: ContentBlockProp) => {
-  const { value, onChange, onDelete, id } = props;
-  const [contentValue, setContentValue] = useState(value);
-  const handleOnChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    onChange(event.target.value);
-    setContentValue(event.target.value);
-  };
+import { usePostCreator } from "@/components/context/PostCreatorProvider";
 
-  useEffect(() => {
-    setContentValue(value);
-  }, [value]);
+export const TitleContent = (props: ContentBlockProp) => {
+  const { value, id } = props;
+  const { previewMode, onDelete, onValueChange } = usePostCreator();
 
   return (
-    <SortableItem id={props.id}>
+    <SortableItem id={id}>
       <ContentWrapper>
         <Input
-          value={contentValue}
-          onChange={(e) => handleOnChange(e)}
+          value={value}
+          onChange={(e) => onValueChange(id, e.target.value)}
           placeholder="Title your post"
           className="border-none text-3xl bg-transparent font-bold h-16"
         />
@@ -28,5 +22,3 @@ const TitleContent = (props: ContentBlockProp) => {
     </SortableItem>
   );
 };
-
-export default TitleContent;

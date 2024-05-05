@@ -3,26 +3,18 @@ import { ContentBlockProp } from "@/lib/interface";
 import { Textarea } from "@/components/ui/textarea";
 import React, { useEffect, useState } from "react";
 import ContentWrapper from "./ContentWrapper";
+import { usePostCreator } from "@/components/context/PostCreatorProvider";
 
-const TextContent = (props: ContentBlockProp) => {
-  const { value, onChange, onDelete, id } = props;
-  const [contentValue, setContentValue] = useState(value);
-
-  const handleOnChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-    onChange(event.target.value);
-    setContentValue(event.target.value);
-  };
-
-  useEffect(() => {
-    setContentValue(value);
-  }, [value]);
+export const TextContent = (props: ContentBlockProp) => {
+  const { previewMode, onDelete, onValueChange } = usePostCreator();
+  const { value, id } = props;
 
   return (
     <SortableItem id={props.id}>
       <ContentWrapper>
         <Textarea
-          value={contentValue}
-          onChange={(e) => handleOnChange(e)}
+          value={value}
+          onChange={(e) => onValueChange(id, e.target.value)}
           placeholder="Write a quick description about your post"
           className="border-none placeholder-muted bg-transparent text-secondary-header max-h-[10rem]"
         />
@@ -30,5 +22,3 @@ const TextContent = (props: ContentBlockProp) => {
     </SortableItem>
   );
 };
-
-export default TextContent;
