@@ -1,16 +1,20 @@
 "use client";
 
-import { ChildNodeProps, PostContentBlock } from "@/lib/interface";
-import React, { createContext, useState } from "react";
-import ImageContent from "../creator/content/ImageContent";
-import TextContent from "../creator/content/TextContent";
-import TitleContent from "../creator/content/TitleContent";
+import { ChildNodeProps } from "@/lib/interface";
+import React, { createContext, useEffect, useState } from "react";
+import { images } from "@/lib/placeholder";
+import {
+  Content,
+  ImageBlockContent,
+  TextBlockContent,
+  TitleBlockContent,
+} from "@/lib/models/Content";
 
 interface PostCreatorProviderState {
   previewMode: boolean;
   setPreviewMode: React.Dispatch<React.SetStateAction<boolean>>;
-  document: PostContentBlock[];
-  setDocument: React.Dispatch<React.SetStateAction<PostContentBlock[]>>;
+  document: Content[];
+  setDocument: React.Dispatch<React.SetStateAction<Content[]>>;
   onDelete: (id: string) => void;
   //todo: set up more creator tools here
 }
@@ -29,22 +33,22 @@ export const PostCreatorContext =
 export const PostCreatorProvider = ({ children }: ChildNodeProps) => {
   const [previewMode, setPreviewMode] = useState<boolean>(false);
   const onDelete = (id: string) => {
-    setDocument((prev) => prev.filter((block) => block.id !== id));
+    setDocument((prev) => prev.filter((block) => block.id));
   };
-  const [document, setDocument] = useState<PostContentBlock[]>([
-    {
-      id: "draggable-content-1",
-      content: <TitleContent id="draggable-content-1" onDelete={onDelete} />,
-    },
-    {
-      id: "draggable-content-2",
-      content: <TextContent id="draggable-content-2" onDelete={onDelete} />,
-    },
-    {
-      id: "draggable-content-3",
-      content: <ImageContent id="draggable-content-3" onDelete={onDelete} />,
-    },
+  const [document, setDocument] = useState<Content[]>([
+    new TitleBlockContent("draggable-content-1", onDelete),
+    new TextBlockContent("draggable-content-2", onDelete),
+    new ImageBlockContent(
+      "draggable-content-3",
+      images[0].src as string,
+      onDelete
+    ),
   ]);
+
+  useEffect(() => {
+    console.log(document);
+  }, [document]);
+
   return (
     <PostCreatorContext.Provider
       value={{
@@ -52,7 +56,7 @@ export const PostCreatorProvider = ({ children }: ChildNodeProps) => {
         setDocument,
         previewMode,
         setPreviewMode,
-        onDelete
+        onDelete,
       }}
     >
       {children}

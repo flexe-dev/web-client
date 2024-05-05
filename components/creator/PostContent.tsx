@@ -1,21 +1,11 @@
 "use client";
-import {
-  DndContext,
-  DragOverlay,
-  closestCorners,
-  useDroppable,
-} from "@dnd-kit/core";
+import { DragOverlay, useDroppable } from "@dnd-kit/core";
 import React, { useState } from "react";
 import {
   SortableContext,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
-import { CreatePost, PostContentBlock } from "@/lib/interface";
-import TitleContent from "./content/TitleContent";
-import TextContent from "./content/TextContent";
-import ImageContent from "./content/ImageContent";
-import Droppable from "../dnd/Droppable";
-import { restrictToParentElement } from "@dnd-kit/modifiers";
+import { CreatePost } from "@/lib/interface";
 import ContentSidebar, { dropAnimationConfig } from "./ContentSidebar";
 import Blocks, { BlockID } from "./blocks/Blocks";
 import { useBlockDrag } from "../context/PostDragProvider";
@@ -35,7 +25,7 @@ const PostContent = (props: Props) => {
   const getRenderedDragOverlay = (id: string): React.ReactNode => {
     if (id.includes("draggable-block")) return <Blocks id={id as BlockID} />;
     if (id.includes("draggable-content"))
-      return document.find((doc) => doc.id === id)?.content ?? <div>hi</div>;
+      return document.find((doc) => doc.id === id)?.content ?? <></>;
   };
 
   return (

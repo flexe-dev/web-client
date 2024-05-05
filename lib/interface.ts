@@ -1,5 +1,6 @@
 import { User } from "next-auth";
 import { UserProfile, UserPost, PostContent } from "@prisma/client";
+import { contentType } from "./models/Content";
 
 export interface ClassNameProp {
   className?: string;
@@ -44,14 +45,9 @@ export interface CreatePost {
   file: File;
 }
 
-export interface PostContentBlock {
-  id: string;
-  content: React.ReactNode;
-}
-
 export interface ContentBlockProp {
   id: string;
   value: string;
-  valueCallback: (value: string) => void;
+  onChange: (value: string) => void;
   onDelete: (id: string) => void;
 }
