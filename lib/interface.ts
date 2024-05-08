@@ -47,8 +47,9 @@ export interface CreatePost {
 export interface ContentBlockProp {
   id: string;
   value: string | string[];
+  style?: Record<string, string>;
 }
 
 export interface PostContentBlock extends ContentBlockProp {
-  content: (props: ContentBlockProp) => React.JSX.Element
+  content: (props: ContentBlockProp) => React.JSX.Element;
 }
