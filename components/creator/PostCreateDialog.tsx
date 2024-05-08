@@ -60,6 +60,7 @@ const PostCreateDialog = ({ dispatch }: DialogProps) => {
               <Button
                 className="flex space-x-2"
                 onClick={() => dispatch(false)}
+                variant={"outline"}
               >
                 <PhotoIcon className="w-6 h-6" />
                 <span>Media Editor</span>
@@ -68,6 +69,7 @@ const PostCreateDialog = ({ dispatch }: DialogProps) => {
 
             <Link href={"/new/text"}>
               <Button
+                variant={"outline"}
                 className="flex space-x-2"
                 onClick={() => dispatch(false)}
               >

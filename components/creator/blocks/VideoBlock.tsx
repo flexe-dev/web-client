@@ -6,7 +6,7 @@ const VideoBlock = () => {
   return (
     <Draggable id="draggable-block-video">
       <BlockWrapper>
-        <h1 className="text-2xl font-bold">{"<Video / >"}</h1>
+        <h1 className="text-2xl font-semibold">{"<Video / >"}</h1>
       </BlockWrapper>
     </Draggable>
   );

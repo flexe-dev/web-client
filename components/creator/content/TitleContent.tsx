@@ -11,12 +11,12 @@ export const TitleContent = (props: ContentBlockProp) => {
 
   return (
     <SortableItem id={id}>
-      <ContentWrapper>
+      <ContentWrapper id={id}>
         <Input
           value={value}
           onChange={(e) => onValueChange(id, e.target.value)}
           placeholder="Title your post"
-          className="border-none text-3xl bg-transparent font-bold h-16"
+          className="border-none text-3xl bg-transparent font-bold h-12"
         />
       </ContentWrapper>
     </SortableItem>

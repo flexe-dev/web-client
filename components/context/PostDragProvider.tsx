@@ -14,6 +14,7 @@ import {
   UniqueIdentifier,
   closestCenter,
   closestCorners,
+  pointerWithin,
   useSensor,
   useSensors,
 } from "@dnd-kit/core";
@@ -33,6 +34,7 @@ import { TextContent } from "../creator/content/TextContent";
 import { SubTitleContent } from "../creator/content/SubTitleContent";
 import { TitleContent } from "../creator/content/TitleContent";
 import { ImageContent } from "../creator/content/ImageContent";
+import { useMediaQuery } from "react-responsive";
 
 interface PostDragProviderState {
   activeDragID: UniqueIdentifier | null;
@@ -57,7 +59,8 @@ export const PostDragProvider = ({
   const [activeDragID, setActiveDragID] = useState<UniqueIdentifier | null>(
     null
   );
-
+  const fixedSidebar = useMediaQuery({ query: "(max-width: 1024px)" });
+  const { setSidebarOpen } = usePostCreator();
   const { document, setDocument, onDelete } = usePostCreator();
   const [originalDocumentState, setOriginalDocumentState] = useState<
     PostContentBlock[] | undefined
@@ -65,6 +68,7 @@ export const PostDragProvider = ({
   const handleDragStart = (e: DragStartEvent) => {
     setActiveDragID(e.active.id);
     setOriginalDocumentState(document);
+    fixedSidebar && setSidebarOpen(false);
   };
 
   const RenderedItem: Record<BlockID, PostContentBlock> = {
@@ -85,18 +89,22 @@ export const PostDragProvider = ({
     },
     "draggable-block-image": {
       id: `draggable-content-image-${nanoid()}`,
-      value: images[0].src as string,
+      value: "",
       content: ImageContent,
     },
     "draggable-block-video": {
       id: `draggable-content-video-${nanoid()}`,
-      value: images[0].src as string,
+      value: "",
       content: ImageContent,
     },
   };
 
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
+
+    if ((active.id as string).includes("draggable-block")) {
+      fixedSidebar && setSidebarOpen(true);
+    }
 
     if (!over || active.id === over.id) {
       setActiveDragID(null);
@@ -135,7 +143,18 @@ export const PostDragProvider = ({
 
   const handleDragOver = (event: DragOverEvent) => {
     const { active, over } = event;
-    if (!over || active.id === over.id) return;
+
+    if (!over) {
+      if (document.find((doc) => doc.id === "draggable-content-new-block")) {
+        setDocument((prev) => {
+          return prev.filter((doc) => doc.id !== "draggable-content-new-block");
+        });
+      }
+      return;
+    }
+
+    if (active.id === over.id || over.id == "draggable-content-new-block")
+      return;
     //Handle In Container Manipulation
     if (
       (active.id as string).includes("draggable-block") &&
@@ -152,7 +171,9 @@ export const PostDragProvider = ({
         const isBelowOverItem =
           over &&
           active.rect.current.translated &&
-          active.rect.current.translated.top > over.rect.top + over.rect.height;
+          active.rect.current.translated.top +
+            active.rect.current.translated.height / 2 >
+            over.rect.top + over.rect.height / 2;
         const modifier = isBelowOverItem ? 1 : 0;
         newIndex = overIndex >= 0 ? overIndex + modifier : items.length + 1;
         return [
@@ -185,7 +206,7 @@ export const PostDragProvider = ({
     >
       <DndContext
         sensors={sensors}
-        modifiers={[restrictToWindowEdges]}
+        // modifiers={[restrictToWindowEdges]}
         onDragStart={handleDragStart}
         onDragEnd={handleDragEnd}
         onDragOver={handleDragOver}

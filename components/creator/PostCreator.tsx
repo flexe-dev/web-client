@@ -14,7 +14,6 @@ interface Props {
 
 const PostCreator = (props: Props) => {
   return (
-    
     <PostCreatorProvider>
       <div className="w-full flex">
         <PostDragProvider>

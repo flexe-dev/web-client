@@ -12,12 +12,12 @@ export const SubTitleContent = (props: ContentBlockProp) => {
 
   return (
     <SortableItem id={id}>
-      <ContentWrapper>
+      <ContentWrapper id={id}>
         <Input
           value={value}
           onChange={(e) => onValueChange(id, e.target.value)}
           placeholder="Enter a subtitle"
-          className="border-none text-xl bg-transparent font-bold h-16"
+          className="border-none text-xl bg-transparent font-bold h-12"
         />
       </ContentWrapper>
     </SortableItem>

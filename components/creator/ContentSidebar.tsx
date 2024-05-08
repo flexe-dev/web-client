@@ -7,6 +7,7 @@ import {
   PhotoIcon,
   DocumentIcon,
   ArrowLeftIcon,
+  ChevronDoubleRightIcon,
 } from "@heroicons/react/24/outline";
 import { Button } from "../ui/button";
 import TextBlock, { textTypes } from "./blocks/TextBlock";
@@ -17,6 +18,10 @@ import VideoBlock from "./blocks/VideoBlock";
 import { ScrollArea } from "../ui/scroll-area";
 import { useBlockDrag } from "../context/PostDragProvider";
 import { DropAnimation, defaultDropAnimationSideEffects } from "@dnd-kit/core";
+import { AnimatePresence, motion } from "framer-motion";
+import { usePostCreator } from "../context/PostCreatorProvider";
+import Droppable from "../dnd/Droppable";
+
 interface Props {
   postContent: CreatePost[];
 }
@@ -34,7 +39,7 @@ export const dropAnimationConfig: DropAnimation = {
 };
 
 const ContentSidebar = (props: Props) => {
-  const [sidebarOpen, setSidebarOpen] = useState<boolean>(true);
+  const { sidebarOpen, setSidebarOpen } = usePostCreator();
   const [activeTab, setActiveTab] = useState<SidebarTab>("photo");
   const { activeDragID } = useBlockDrag();
   const renderedContent: Record<SidebarTab, React.ReactNode> = {
@@ -44,36 +49,71 @@ const ContentSidebar = (props: Props) => {
 
   return (
     <>
-      <aside
+      <motion.aside
+        initial={{ width: "3rem" }}
+        animate={{
+          width: sidebarOpen ? "16rem" : "3rem",
+          transition: {
+            ease: [0, 0.55, 0.45, 1],
+            duration: 0.25,
+            delay: 0.05,
+          },
+        }}
+        exit={{ width: "3rem" }}
         className={cn(
-          `h-screen top-[5rem] z-[60] left-0  border-r-2 bg-background `,
-          sidebarOpen ? "min-w-[16rem] max-w-[16rem] fixed" : "w-[3rem]"
+          `h-screen top-[5rem] z-[60] left-0 fixed lg:sticky border-r-2 bg-background`,
+          sidebarOpen ? "min-w-[16rem]" : "min-w-[3rem]"
         )}
       >
-        <h1 className="flex border-b-2 divide-x-2">
-          <Button
-            onClick={() => setActiveTab("document")}
-            variant={"outline"}
-            className={cn(
-              "flex border-0 rounded-none justify-center hover:bg-accent/50 items-center h-[2.25rem] w-full",
-              activeTab === "document" && "bg-accent  hover:bg-accent"
-            )}
-          >
-            <DocumentIcon className="h-7 w-7 stroke-secondary-header" />
-          </Button>
-          <Button
-            onClick={() => setActiveTab("photo")}
-            variant={"outline"}
-            className={cn(
-              "border-0 rounded-none flex justify-center items-center h-[2.25rem] hover:bg-accent/50 w-full",
-              activeTab === "photo" && "bg-accent hover:bg-accent"
-            )}
-          >
-            <PhotoIcon className="h-7 w-7 stroke-secondary-header" />
-          </Button>
-        </h1>
-        {renderedContent[activeTab]}
-      </aside>
+        <AnimatePresence>
+          {sidebarOpen && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1, transition: { duration: 0.05 } }}
+              exit={{ opacity: 0, transition: { duration: 0.05 } }}
+            >
+              <h1 className="flex border-b-2 divide-x-2">
+                <Button
+                  onClick={() => setActiveTab("document")}
+                  variant={"outline"}
+                  className={cn(
+                    "flex border-0 rounded-none justify-center hover:bg-accent/50 items-center h-[2.25rem] w-full",
+                    activeTab === "document" && "bg-accent  hover:bg-accent"
+                  )}
+                >
+                  <DocumentIcon className="h-7 w-7 stroke-secondary-header" />
+                </Button>
+                <Button
+                  onClick={() => setActiveTab("photo")}
+                  variant={"outline"}
+                  className={cn(
+                    "border-0 rounded-none flex justify-center items-center h-[2.25rem] hover:bg-accent/50 w-full",
+                    activeTab === "photo" && "bg-accent hover:bg-accent"
+                  )}
+                >
+                  <PhotoIcon className="h-7 w-7 stroke-secondary-header" />
+                </Button>
+              </h1>
+
+              {renderedContent[activeTab]}
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </motion.aside>
+
+      <Button
+        variant={"outline"}
+        size={"icon"}
+        onClick={() => setSidebarOpen(!sidebarOpen)}
+        className={cn(
+          "h-8 w-8 bg-background rounded-full fixed top-[9rem] z-[61] transition-all duration-200",
+          sidebarOpen ? "left-[15rem]" : "ml-[0.125rem] left-1"
+        )}
+      >
+        <ChevronDoubleRightIcon
+          className={cn(`w-5 h-5`, sidebarOpen && "rotate-180")}
+        />
+      </Button>
     </>
   );
 };
@@ -92,7 +132,7 @@ const ContentTab = ({ postContent }: Props) => {
       {renderedContent === "block" ? (
         <>
           <div
-            className="relative w-5/6 max-w-[83.33%] mx-4 my-2 h-[8rem] cursor-pointer rounded-md border-2 border-transparent hover:border-primary transition-all"
+            className="relative w-5/6 max-w-[83.33%] mx-4 my-2 h-[8rem] cursor-pointer rounded-md border-2 border-transparent hover:border-primary"
             onClick={() => {
               setRenderedContent("uploaded");
             }}

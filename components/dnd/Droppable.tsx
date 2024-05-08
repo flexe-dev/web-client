@@ -1,17 +1,18 @@
-import { ChildNodeProps } from "@/lib/interface";
+import { ChildNodeProps, ClassNameProp } from "@/lib/interface";
+import { cn } from "@/lib/utils";
 import { useDroppable } from "@dnd-kit/core";
 import React from "react";
 
-interface Props extends ChildNodeProps {
+interface Props extends ChildNodeProps, ClassNameProp {
   id: string;
 }
 
-const Droppable = ({ children, id }: Props) => {
-  const { setNodeRef, over, isOver } = useDroppable({
+const Droppable = ({ children, className, id }: Props) => {
+  const { setNodeRef } = useDroppable({
     id: id,
   });
   return (
-    <div ref={setNodeRef} className="h-full w-full flex flex-col space-y-4">
+    <div className={className} ref={setNodeRef}>
       {children}
     </div>
   );

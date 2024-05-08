@@ -7,7 +7,7 @@ const ImageBlock = () => {
     <>
       <Draggable id="draggable-block-image">
         <BlockWrapper>
-          <h1 className="text-2xl font-bold">{"<Image / >"}</h1>
+          <h1 className="text-2xl font-semibold">{"<Image / >"}</h1>
         </BlockWrapper>
       </Draggable>
     </>
