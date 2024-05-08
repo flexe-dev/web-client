@@ -10,13 +10,14 @@ interface MediaProps {
 
 const UserMediaBlock = ({ thumbnail }: MediaProps) => {
   return (
-    <button className="w-full h-full">
+    <button className="relative w-full h-full">
       <Image
         {...images[0]}
         fill
         style={{
           objectFit: "cover",
         }}
+        sizes="100%"
         className="rounded-md"
       />
       <div className="rounded-sm absolute inset-0 h-full group w-full bg-neutral-950/75 dark:bg-neutral-950/90 flex flex-col items-center justify-center">

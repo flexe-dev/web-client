@@ -2,7 +2,6 @@
 
 import { ChildNodeProps, PostContentBlock } from "@/lib/interface";
 import React, { createContext, useEffect, useState } from "react";
-import { images } from "@/lib/placeholder";
 import { nanoid } from "nanoid";
 import { TitleContent } from "../creator/content/TitleContent";
 

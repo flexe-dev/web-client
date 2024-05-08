@@ -206,7 +206,7 @@ export const PostDragProvider = ({
     >
       <DndContext
         sensors={sensors}
-        // modifiers={[restrictToWindowEdges]}
+        id="Document-Creator-Drag-Context"
         onDragStart={handleDragStart}
         onDragEnd={handleDragEnd}
         onDragOver={handleDragOver}

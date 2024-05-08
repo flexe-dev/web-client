@@ -24,7 +24,7 @@ const PostCreateDialog = ({ dispatch }: DialogProps) => {
   const { user } = useAccount();
   return (
     <DialogPortal>
-      <DialogOverlay />
+      <DialogOverlay className="bg-black/30" />
       <DialogContent className="w-full min-w-[37rem]">
         <DialogHeader className="mb-4 text-2xl font-bold">
           Create a new post

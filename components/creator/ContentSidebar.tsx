@@ -50,7 +50,7 @@ const ContentSidebar = (props: Props) => {
   return (
     <>
       <motion.aside
-        initial={{ width: "3rem" }}
+        initial={{ width: "16rem" }}
         animate={{
           width: sidebarOpen ? "16rem" : "3rem",
           transition: {
@@ -59,17 +59,18 @@ const ContentSidebar = (props: Props) => {
             delay: 0.05,
           },
         }}
-        exit={{ width: "3rem" }}
         className={cn(
-          `h-screen top-[5rem] z-[60] left-0 fixed lg:sticky border-r-2 bg-background`,
-          sidebarOpen ? "min-w-[16rem]" : "min-w-[3rem]"
+          `h-screen top-[5rem] z-[60] left-0 fixed border-t border-r-2 bg-background`
         )}
       >
         <AnimatePresence>
           {sidebarOpen && (
             <motion.div
               initial={{ opacity: 0 }}
-              animate={{ opacity: 1, transition: { duration: 0.05 } }}
+              animate={{
+                opacity: 1,
+                transition: { duration: 0.2, delay: 0.2 },
+              }}
               exit={{ opacity: 0, transition: { duration: 0.05 } }}
             >
               <h1 className="flex border-b-2 divide-x-2">
@@ -106,14 +107,27 @@ const ContentSidebar = (props: Props) => {
         size={"icon"}
         onClick={() => setSidebarOpen(!sidebarOpen)}
         className={cn(
-          "h-8 w-8 bg-background rounded-full fixed top-[9rem] z-[61] transition-all duration-200",
-          sidebarOpen ? "left-[15rem]" : "ml-[0.125rem] left-1"
+          "h-8 w-8 bg-background rounded-full fixed top-[9rem] transition-all z-[61] duration-150",
+          sidebarOpen ? "left-[15rem] delay-75" : "ml-[0.125rem] left-1"
         )}
       >
         <ChevronDoubleRightIcon
-          className={cn(`w-5 h-5`, sidebarOpen && "rotate-180")}
+          className={cn(`w-5 h-5 transition-all`, sidebarOpen && "rotate-180")}
         />
       </Button>
+      <motion.div
+        initial={{ width: "18rem" }}
+        animate={{
+          width: sidebarOpen ? "18rem" : "3rem",
+          transition: {
+            ease: [0, 0.55, 0.45, 1],
+            duration: 0.25,
+            delay: 0.05,
+          },
+        }}
+        className={`h-screen hidden lg:block
+        }`}
+      ></motion.div>
     </>
   );
 };

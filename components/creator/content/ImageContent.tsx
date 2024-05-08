@@ -14,7 +14,7 @@ export const ImageContent = (props: ContentBlockProp) => {
   return (
     <SortableItem id={props.id}>
       <ContentWrapper id={props.id}>
-        <div className="w-fit flex  max-w-4xl aspect-[4/3] p-4">
+        <div className="w-fit flex relative max-w-4xl aspect-[4/3] p-4">
           {value ? (
             <Image
               src={value as string}
