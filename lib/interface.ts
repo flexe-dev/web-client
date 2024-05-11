@@ -37,16 +37,21 @@ export interface PostObject extends LoadingProps {
   userPosts: UserPost[];
 }
 
-export type PostCreationContent = Omit<PostContent, "id">;
-
-export interface CreatePost {
-  content: PostCreationContent;
+export interface PostUserMedia {
+  content: PostContent;
   file: File;
+}
+
+export type ContentType = "title" | "subtitle" | "text" | "image" | "video";
+
+export interface ContentStyling {
+  id: string;
+  type: ContentType;
 }
 
 export interface ContentBlockProp {
   id: string;
-  value: string | string[];
+  value?: string | PostUserMedia;
   style?: Record<string, string>;
 }
 

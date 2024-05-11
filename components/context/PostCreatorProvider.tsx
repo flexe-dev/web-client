@@ -1,43 +1,69 @@
 "use client";
 
-import { ChildNodeProps, PostContentBlock } from "@/lib/interface";
-import React, { createContext, useEffect, useState } from "react";
+import {
+  ChildNodeProps,
+  ContentStyling,
+  PostContentBlock,
+  PostUserMedia,
+} from "@/lib/interface";
+import React, { createContext, useState } from "react";
 import { nanoid } from "nanoid";
 import { TitleContent } from "../creator/content/TitleContent";
 
 interface PostCreatorProviderState {
-  previewMode: boolean;
-  setPreviewMode: React.Dispatch<React.SetStateAction<boolean>>;
+  //Context States
   document: PostContentBlock[];
-  setDocument: React.Dispatch<React.SetStateAction<PostContentBlock[]>>;
-  onDelete: (id: string) => void;
-  onValueChange: (id: string, value: string) => void;
-  onStyleChange: (id: string, style: Record<string, string>) => void;
+  content: PostUserMedia[];
+  previewMode: boolean;
   showDeletionConfirmation: boolean;
-  setShowDeletionConfirmation: React.Dispatch<React.SetStateAction<boolean>>;
   sidebarOpen: boolean;
+  activeStylingTool: ContentStyling | null;
+  //Context Callbacks
+  onStyleChange: (id: string, style: Record<string, string>) => void;
+  onValueChange: (id: string, value: string) => void;
+  onDelete: (id: string) => void;
+  //Context State Dispatches
+  setPreviewMode: React.Dispatch<React.SetStateAction<boolean>>;
+  setDocument: React.Dispatch<React.SetStateAction<PostContentBlock[]>>;
+  setShowDeletionConfirmation: React.Dispatch<React.SetStateAction<boolean>>;
   setSidebarOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  //todo: set up more creator tools here
+  setActiveStylingTool: React.Dispatch<
+    React.SetStateAction<ContentStyling | null>
+  >;
+  setContent: React.Dispatch<React.SetStateAction<PostUserMedia[]>>;
 }
 
 const initialState: PostCreatorProviderState = {
   document: [],
-  setDocument: () => {},
+  content: [],
   previewMode: false,
-  setPreviewMode: () => {},
+  showDeletionConfirmation: true,
+  sidebarOpen: true,
+  activeStylingTool: null,
+
   onDelete: () => {},
   onValueChange: () => {},
   onStyleChange: () => {},
-  showDeletionConfirmation: true,
+
+  setDocument: () => {},
+  setPreviewMode: () => {},
   setShowDeletionConfirmation: () => {},
-  sidebarOpen: true,
   setSidebarOpen: () => {},
+  setActiveStylingTool: () => {},
+  setContent: () => {},
 };
 
 export const PostCreatorContext =
   createContext<PostCreatorProviderState>(initialState);
 
-export const PostCreatorProvider = ({ children }: ChildNodeProps) => {
+interface Props extends ChildNodeProps {
+  content: PostUserMedia[];
+}
+
+export const PostCreatorProvider = ({
+  children,
+  content: propsContent,
+}: Props) => {
   const [previewMode, setPreviewMode] = useState<boolean>(false);
   const [showDeletionConfirmation, setShowDeletionConfirmation] =
     useState<boolean>(true);
@@ -49,6 +75,9 @@ export const PostCreatorProvider = ({ children }: ChildNodeProps) => {
       content: TitleContent,
     },
   ]);
+  const [activeStylingTool, setActiveStylingTool] =
+    useState<ContentStyling | null>(null);
+  const [content, setContent] = useState<PostUserMedia[]>(propsContent);
 
   const onDelete = (id: string) => {
     setDocument((prev) => prev.filter((block) => block.id !== id));
@@ -65,6 +94,8 @@ export const PostCreatorProvider = ({ children }: ChildNodeProps) => {
     );
   };
 
+  console.log(document);
+
   const onStyleChange = (id: string, style: Record<string, string>) => {
     setDocument((prev) =>
       prev.map((block) => {
@@ -80,6 +111,8 @@ export const PostCreatorProvider = ({ children }: ChildNodeProps) => {
     <PostCreatorContext.Provider
       value={{
         document,
+        content,
+        setContent,
         setDocument,
         previewMode,
         setPreviewMode,
@@ -90,6 +123,8 @@ export const PostCreatorProvider = ({ children }: ChildNodeProps) => {
         sidebarOpen,
         setSidebarOpen,
         onStyleChange,
+        activeStylingTool,
+        setActiveStylingTool,
       }}
     >
       {children}

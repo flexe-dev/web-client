@@ -87,7 +87,13 @@ const ContentWrapper = ({ children, className, noDrag, id }: Props) => {
             >
               Cancel
             </Button>
-            <Button onClick={() => onDelete(id)} variant="destructive">
+            <Button
+              onClick={() => {
+                onDelete(id);
+                setShowDeleteModal(false);
+              }}
+              variant="destructive"
+            >
               Delete
             </Button>
           </AlertDialogFooter>

@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState } from "react";
-import { CreatePost } from "@/lib/interface";
 import { cn } from "@/lib/utils";
 import {
   PhotoIcon,
@@ -12,21 +11,16 @@ import {
 import { Button } from "../ui/button";
 import TextBlock, { textTypes } from "./blocks/TextBlock";
 import UserMediaBlock from "./blocks/UserMediaBlock";
-import Image from "next/image";
 import ImageBlock from "./blocks/ImageBlock";
 import VideoBlock from "./blocks/VideoBlock";
 import { ScrollArea } from "../ui/scroll-area";
-import { useBlockDrag } from "../context/PostDragProvider";
 import { DropAnimation, defaultDropAnimationSideEffects } from "@dnd-kit/core";
 import { AnimatePresence, motion } from "framer-motion";
 import { usePostCreator } from "../context/PostCreatorProvider";
-import Droppable from "../dnd/Droppable";
+import UserVideoBlock from "./blocks/UserVideoBlock";
+import UserImageBlock from "./blocks/UserImageBlock";
 
-interface Props {
-  postContent: CreatePost[];
-}
-
-type SidebarTab = "document" | "photo";
+type SidebarTab = "document" | "photo" | "content";
 
 export const dropAnimationConfig: DropAnimation = {
   sideEffects: defaultDropAnimationSideEffects({
@@ -38,13 +32,13 @@ export const dropAnimationConfig: DropAnimation = {
   }),
 };
 
-const ContentSidebar = (props: Props) => {
+const ContentSidebar = () => {
   const { sidebarOpen, setSidebarOpen } = usePostCreator();
   const [activeTab, setActiveTab] = useState<SidebarTab>("photo");
-  const { activeDragID } = useBlockDrag();
   const renderedContent: Record<SidebarTab, React.ReactNode> = {
     document: <DocumentTab />,
-    photo: <ContentTab postContent={props.postContent} />,
+    photo: <ContentTab />,
+    content: <></>,
   };
 
   return (
@@ -108,7 +102,9 @@ const ContentSidebar = (props: Props) => {
         onClick={() => setSidebarOpen(!sidebarOpen)}
         className={cn(
           "h-8 w-8 bg-background rounded-full fixed top-[9rem] transition-all z-[61] duration-150",
-          sidebarOpen ? "left-[15rem] delay-75" : "ml-[0.125rem] left-1"
+          sidebarOpen
+            ? "left-[15rem] delay-75"
+            : "duration-200 ml-[0.125rem] left-1"
         )}
       >
         <ChevronDoubleRightIcon
@@ -134,7 +130,8 @@ const ContentSidebar = (props: Props) => {
 
 export default ContentSidebar;
 
-const ContentTab = ({ postContent }: Props) => {
+const ContentTab = () => {
+  const { content: postContent } = usePostCreator();
   const content = ["block", "uploaded"] as const;
   type ContentType = (typeof content)[number];
   const [renderedContent, setRenderedContent] = useState<ContentType>("block");
@@ -153,9 +150,7 @@ const ContentTab = ({ postContent }: Props) => {
           >
             <UserMediaBlock thumbnail={postContent?.at(0)} />
           </div>
-
           <ImageBlock />
-
           <VideoBlock />
         </>
       ) : (
@@ -173,20 +168,7 @@ const ContentTab = ({ postContent }: Props) => {
             </Button>
           </div>
           <ScrollArea className="h-[73dvh] w-full">
-            {postContent.map((content, index) => (
-              <div className="relative w-5/6 mx-4 my-2 h-[8rem] cursor-pointer rounded-md  transition-all">
-                <Image
-                  key={`user-media-${index}`}
-                  src={content.content.location}
-                  alt={content.file.name}
-                  fill
-                  style={{
-                    objectFit: "cover",
-                  }}
-                  className="rounded-md"
-                />
-              </div>
-            ))}
+            <UserMediaBlocks />
           </ScrollArea>
         </>
       )}
@@ -201,8 +183,19 @@ const DocumentTab = () => {
         Text
       </h2>
       {textTypes.map((text) => (
-        <TextBlock id={text} />
+        <TextBlock key={`text-block-${text}`} id={text} />
       ))}
     </section>
   );
+};
+
+const UserMediaBlocks = () => {
+  const { content: postContent } = usePostCreator();
+
+  return postContent.map((content, index) => {
+    if (content.content.format === "VIDEO") {
+      return <UserVideoBlock key={index} content={content} />;
+    }
+    return <UserImageBlock key={index} content={content} />;
+  });
 };

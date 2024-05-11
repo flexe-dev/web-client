@@ -1,40 +1,32 @@
 "use client";
 
+import React, { createContext, useState } from "react";
 import {
-  Active,
-  CollisionDetection,
   DndContext,
   DragEndEvent,
   DragOverEvent,
   DragStartEvent,
   KeyboardSensor,
   MouseSensor,
-  Over,
   PointerSensor,
   UniqueIdentifier,
   closestCenter,
-  closestCorners,
-  pointerWithin,
   useSensor,
   useSensors,
 } from "@dnd-kit/core";
 import { arrayMove } from "@dnd-kit/sortable";
-import { restrictToWindowEdges } from "@dnd-kit/modifiers";
 import { sortableKeyboardCoordinates } from "@dnd-kit/sortable";
-
-import React, { createContext, useState } from "react";
 import { usePostCreator } from "./PostCreatorProvider";
 import BlockPreview from "../creator/blocks/BlockPreview";
 import { BlockID } from "../creator/blocks/Blocks";
-
 import { nanoid } from "nanoid";
-import { images } from "@/lib/placeholder";
 import { PostContentBlock } from "@/lib/interface";
 import { TextContent } from "../creator/content/TextContent";
 import { SubTitleContent } from "../creator/content/SubTitleContent";
 import { TitleContent } from "../creator/content/TitleContent";
 import { ImageContent } from "../creator/content/ImageContent";
 import { useMediaQuery } from "react-responsive";
+import VideoContent from "../creator/content/VideoContent";
 
 interface PostDragProviderState {
   activeDragID: UniqueIdentifier | null;
@@ -61,7 +53,7 @@ export const PostDragProvider = ({
   );
   const fixedSidebar = useMediaQuery({ query: "(max-width: 1024px)" });
   const { setSidebarOpen } = usePostCreator();
-  const { document, setDocument, onDelete } = usePostCreator();
+  const { document, setDocument, content: uploadedContent } = usePostCreator();
   const [originalDocumentState, setOriginalDocumentState] = useState<
     PostContentBlock[] | undefined
   >();
@@ -71,7 +63,7 @@ export const PostDragProvider = ({
     fixedSidebar && setSidebarOpen(false);
   };
 
-  const RenderedItem: Record<BlockID, PostContentBlock> = {
+  const RenderNewItem: Record<BlockID, PostContentBlock> = {
     "draggable-block-title": {
       id: `draggable-content-title-${nanoid()}`,
       value: "Title",
@@ -89,14 +81,29 @@ export const PostDragProvider = ({
     },
     "draggable-block-image": {
       id: `draggable-content-image-${nanoid()}`,
-      value: "",
       content: ImageContent,
     },
     "draggable-block-video": {
       id: `draggable-content-video-${nanoid()}`,
-      value: "",
       content: ImageContent,
     },
+  };
+
+  const handleInsertUploadedMedia = (blockID: string): PostContentBlock => {
+    //format: draggable-block-user-image-<id>
+    const mediaTypes = ["image", "video", "gif"];
+    const [_, type, id] = blockID.split("||");
+    const content = uploadedContent.find((media) => media.content.id === id);
+
+    if (!mediaTypes.includes(type) || !content) {
+      return RenderNewItem["draggable-block-image"];
+    }
+
+    return {
+      id: `draggable-content-${type}-${nanoid()}`,
+      value: content,
+      content: type === "video" ? VideoContent : ImageContent,
+    };
   };
 
   const handleDragEnd = (event: DragEndEvent) => {
@@ -132,9 +139,12 @@ export const PostDragProvider = ({
       );
       if (newBlock === -1) return;
       //Insert new content block based on insertion
+
       setDocument((prev) => [
         ...prev.slice(0, newBlock),
-        RenderedItem[active.id as BlockID],
+        !(active.id as string).includes("user")
+          ? RenderNewItem[active.id as BlockID]
+          : handleInsertUploadedMedia(active.id as string),
         ...prev.slice(newBlock + 1, prev.length),
       ]);
     }

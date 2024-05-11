@@ -7,13 +7,14 @@ import { usePostCreator } from "@/components/context/PostCreatorProvider";
 
 export const TitleContent = (props: ContentBlockProp) => {
   const { value, id } = props;
-  const { previewMode, onDelete, onValueChange } = usePostCreator();
+  const { onValueChange, setActiveStylingTool } = usePostCreator();
 
   return (
     <SortableItem id={id}>
       <ContentWrapper id={id}>
         <Input
-          value={value}
+          value={value as string}
+          onClick={() => setActiveStylingTool({ id: id, type: "title" })}
           onChange={(e) => onValueChange(id, e.target.value)}
           placeholder="Title your post"
           className="border-none text-3xl bg-transparent font-bold h-12"

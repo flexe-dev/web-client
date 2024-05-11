@@ -1,23 +1,19 @@
 import React from "react";
-import { CreatePost } from "@/lib/interface";
-import ContentSidebar, { dropAnimationConfig } from "./ContentSidebar";
-import { PostDragProvider, useBlockDrag } from "../context/PostDragProvider";
+import { PostUserMedia } from "@/lib/interface";
+import { PostDragProvider } from "../context/PostDragProvider";
 import PostContent from "./PostContent";
 import { PostCreatorProvider } from "../context/PostCreatorProvider";
-import { DragOverlay } from "@dnd-kit/core";
-import { Blocks } from "lucide-react";
-import { BlockID } from "./blocks/Blocks";
 
 interface Props {
-  postContent: CreatePost[];
+  postContent: PostUserMedia[];
 }
 
 const PostCreator = (props: Props) => {
   return (
-    <PostCreatorProvider>
+    <PostCreatorProvider content={props.postContent}>
       <div className="w-full flex relative">
         <PostDragProvider>
-          <PostContent postContent={props.postContent} />
+          <PostContent/>
         </PostDragProvider>
       </div>
     </PostCreatorProvider>

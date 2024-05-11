@@ -3,10 +3,11 @@
 import { toast } from "sonner";
 import { FileUploader } from "../FileUploader";
 import { PostContent, PostContentType } from "@prisma/client";
-import { PostCreationContent, CreatePost } from "@/lib/interface";
+import { nanoid } from "nanoid";
+import { PostUserMedia } from "@/lib/interface";
 
 interface Props {
-  setUploadedFiles: React.Dispatch<React.SetStateAction<CreatePost[]>>;
+  setUploadedFiles: React.Dispatch<React.SetStateAction<PostUserMedia[]>>;
 }
 
 const MBRATIO = 1000000;
@@ -14,14 +15,14 @@ const MBRATIO = 1000000;
 const UploadUserImages = ({ setUploadedFiles }: Props) => {
   const handleFileUpload = (files: File[]) => {
     //Only Accept Images of Min Resolution 1000px x 660px
-    files.forEach((file) => {
+    files.forEach(async (file) => {
       if (file.type.includes("image")) {
-        const content = handleImageValidation(file);
+        const content = await handleImageValidation(file);
         if (content) setUploadedFiles((prev) => [...prev, content]);
         return;
       }
       if (file.type.includes("video")) {
-        const content = handleVideoValidation(file);
+        const content = await handleVideoValidation(file);
         if (content) setUploadedFiles((prev) => [...prev, content]);
         return;
       }
@@ -33,7 +34,9 @@ const UploadUserImages = ({ setUploadedFiles }: Props) => {
     });
   };
 
-  const handleImageValidation = (file: File): CreatePost | undefined => {
+  const handleImageValidation = async (
+    file: File
+  ): Promise<PostUserMedia | undefined> => {
     //Size Validation
     if (file.size > 10 * MBRATIO) {
       toast.message(file.name, {
@@ -43,17 +46,17 @@ const UploadUserImages = ({ setUploadedFiles }: Props) => {
     }
     //Resolution Validation
     const img = new Image();
-    img.onload = () => {
-      if (img.width < 1000 || img.height < 660) {
-        toast.message(file.name, {
-          description: "This image is too small to be uploaded",
-        });
-        return;
-      }
-    };
     img.src = URL.createObjectURL(file);
+    await img.decode();
+    if (img.width < 1000 || img.height < 660) {
+      toast.message(file.name, {
+        description: "This image is too small to be uploaded",
+      });
+      return;
+    }
 
-    const content: PostCreationContent = {
+    const content: PostContent = {
+      id: nanoid(),
       userPostId: null,
       location: img.src,
       width: img.width,
@@ -68,7 +71,9 @@ const UploadUserImages = ({ setUploadedFiles }: Props) => {
     };
   };
 
-  const handleVideoValidation = (file: File): CreatePost | undefined => {
+  const handleVideoValidation = async (
+    file: File
+  ): Promise<PostUserMedia | undefined> => {
     //Size Validation
     if (file.size > 15 * MBRATIO) {
       toast.message(file.name, {
@@ -76,30 +81,41 @@ const UploadUserImages = ({ setUploadedFiles }: Props) => {
       });
       return;
     }
-    //Resolution Validation
-    const video = document.createElement("video");
-    video.onloadedmetadata = () => {
-      if (video.videoWidth < 1000 || video.videoHeight < 660) {
-        toast.message(file.name, {
-          description: "This video is too small to be uploaded",
-        });
-        return;
-      }
-    };
 
+    //Resolution Validation
+
+    const video = document.createElement("video");
     video.src = URL.createObjectURL(file);
-    const content: PostCreationContent = {
+    await getVideoMetadata(video);
+
+    if (video.videoWidth < 1000 || video.videoHeight < 660) {
+      toast.message(file.name, {
+        description: "This video is too small to be uploaded",
+      });
+      return;
+    }
+
+    const content: PostContent = {
+      id: nanoid(),
       userPostId: null,
       location: video.src,
-      width: video.width,
-      height: video.height,
+      width: video.videoWidth,
+      height: video.videoHeight,
       format: PostContentType.VIDEO,
     };
-
     return {
       content,
       file,
     };
+  };
+
+  // Create a Promise to load video metadata
+  const getVideoMetadata = (video: HTMLVideoElement): Promise<void> => {
+    return new Promise((resolve) => {
+      video.onloadedmetadata = () => {
+        resolve();
+      };
+    });
   };
 
   return (
