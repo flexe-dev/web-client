@@ -13,25 +13,30 @@ interface Props {
 const MBRATIO = 1000000;
 
 const UploadUserImages = ({ setUploadedFiles }: Props) => {
-  const handleFileUpload = (files: File[]) => {
-    //Only Accept Images of Min Resolution 1000px x 660px
-    files.forEach(async (file) => {
-      if (file.type.includes("image")) {
-        const content = await handleImageValidation(file);
-        if (content) setUploadedFiles((prev) => [...prev, content]);
-        return;
-      }
-      if (file.type.includes("video")) {
-        const content = await handleVideoValidation(file);
-        if (content) setUploadedFiles((prev) => [...prev, content]);
-        return;
-      }
+  const handleFileUpload = async (files: File[]) => {
+    const validFiles: PostUserMedia[] = [];
+    await Promise.all(
+      files.map(async (file) => {
+        if (file.type.includes("image")) {
+          const content = await handleImageValidation(file);
+          if (content) {
+            validFiles.push(content);
+          }
+        } else if (file.type.includes("video")) {
+          const content = await handleVideoValidation(file);
+          if (content) {
+            validFiles.push(content);
+          }
+        } else {
+          toast.message(file.name, {
+            description:
+              "This file is not supported (must be an image or video).",
+          });
+        }
+      })
+    );
 
-      toast.message(file.name, {
-        description:
-          "This image has not been included as it is not an Image or Video file",
-      });
-    });
+    setUploadedFiles((prev) => [...prev, ...validFiles]);
   };
 
   const handleImageValidation = async (

@@ -78,7 +78,6 @@ export const PostCreatorProvider = ({
   const [activeStylingTool, setActiveStylingTool] =
     useState<ContentStyling | null>(null);
   const [content, setContent] = useState<PostUserMedia[]>(propsContent);
-
   const onDelete = (id: string) => {
     setDocument((prev) => prev.filter((block) => block.id !== id));
   };
@@ -93,8 +92,6 @@ export const PostCreatorProvider = ({
       })
     );
   };
-
-  console.log(document);
 
   const onStyleChange = (id: string, style: Record<string, string>) => {
     setDocument((prev) =>

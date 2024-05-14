@@ -42,6 +42,11 @@ export interface PostUserMedia {
   file: File;
 }
 
+export interface PostUserMediaThumbnail {
+  thumbnail: string | undefined;
+  media: PostUserMedia;
+}
+
 export type ContentType = "title" | "subtitle" | "text" | "image" | "video";
 
 export interface ContentStyling {

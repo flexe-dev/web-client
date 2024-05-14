@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useState } from "react";
-import { cn } from "@/lib/utils";
+import React, { useEffect, useMemo, useState } from "react";
+import { cn, resizeImage } from "@/lib/utils";
 import {
   PhotoIcon,
   DocumentIcon,
@@ -19,8 +19,14 @@ import { AnimatePresence, motion } from "framer-motion";
 import { usePostCreator } from "../context/PostCreatorProvider";
 import UserVideoBlock from "./blocks/UserVideoBlock";
 import UserImageBlock from "./blocks/UserImageBlock";
+import { PostUserMedia, PostUserMediaThumbnail } from "@/lib/interface";
+import { PostContent } from "@prisma/client";
 
 type SidebarTab = "document" | "photo" | "content";
+
+interface ThumbnailProps {
+  thumbnailObject: PostUserMediaThumbnail[];
+}
 
 export const dropAnimationConfig: DropAnimation = {
   sideEffects: defaultDropAnimationSideEffects({
@@ -33,11 +39,16 @@ export const dropAnimationConfig: DropAnimation = {
 };
 
 const ContentSidebar = () => {
-  const { sidebarOpen, setSidebarOpen } = usePostCreator();
+  const { sidebarOpen, setSidebarOpen, content } = usePostCreator();
   const [activeTab, setActiveTab] = useState<SidebarTab>("photo");
+  const thumbnails = useMemo(
+    async () => await generateThumbnailObjects(content),
+    [content]
+  );
+
   const renderedContent: Record<SidebarTab, React.ReactNode> = {
     document: <DocumentTab />,
-    photo: <ContentTab />,
+    photo: <ContentTab thumbnailObject={thumbnails} />,
     content: <></>,
   };
 
@@ -130,7 +141,7 @@ const ContentSidebar = () => {
 
 export default ContentSidebar;
 
-const ContentTab = () => {
+const ContentTab = (props: ThumbnailProps) => {
   const { content: postContent } = usePostCreator();
   const content = ["block", "uploaded"] as const;
   type ContentType = (typeof content)[number];
@@ -189,8 +200,8 @@ const DocumentTab = () => {
   );
 };
 
-const UserMediaBlocks = () => {
-  const { content: postContent } = usePostCreator();
+const UserMediaBlocks = (props: ThumbnailProps) => {
+  const { thumbnailObject: postContent } = props;
 
   return postContent.map((content, index) => {
     if (content.content.format === "VIDEO") {
@@ -198,4 +209,19 @@ const UserMediaBlocks = () => {
     }
     return <UserImageBlock key={index} content={content} />;
   });
+};
+
+const generateThumbnailObjects = (
+  content: PostUserMedia[]
+): Promise<PostUserMediaThumbnail[]> => {
+  const thumbnails: Promise<PostUserMediaThumbnail[]> = Promise.all(
+    content.map(async (media) => ({
+      thumbnail:
+        media.content.format === "IMAGE"
+          ? await resizeImage(media.file, 100, 100)
+          : undefined,
+      media: media,
+    }))
+  );
+  return thumbnails;
 };

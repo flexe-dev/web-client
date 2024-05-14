@@ -1,18 +1,19 @@
 import React from "react";
-import { CreatePost } from "@/lib/interface";
-import { images } from "@/lib/placeholder";
+
 import Image from "next/image";
 import { CameraIcon } from "@heroicons/react/24/outline";
+import { PostUserMedia } from "@/lib/interface";
 
 interface MediaProps {
-  thumbnail?: CreatePost;
+  thumbnail?: PostUserMedia;
 }
 
 const UserMediaBlock = ({ thumbnail }: MediaProps) => {
   return (
     <button className="relative w-full h-full">
       <Image
-        {...images[0]}
+        src={thumbnail?.content.location ?? ""}
+        alt="User Media Thumbnail"
         fill
         style={{
           objectFit: "cover",
