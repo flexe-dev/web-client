@@ -44,7 +44,7 @@ export interface PostUserMedia {
 
 export interface PostUserMediaThumbnail {
   thumbnail: string | undefined;
-  media: PostUserMedia;
+  contentID: string;
 }
 
 export type ContentType = "title" | "subtitle" | "text" | "image" | "video";

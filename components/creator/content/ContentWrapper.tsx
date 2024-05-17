@@ -47,6 +47,10 @@ const ContentWrapper = ({ children, className, noDrag, id }: Props) => {
   return (
     <>
       <div
+        onClick={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+        }}
         className={cn(
           "border-2 bg-background/80 w-full rounded-md",
           className,

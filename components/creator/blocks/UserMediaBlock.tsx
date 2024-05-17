@@ -5,14 +5,14 @@ import { CameraIcon } from "@heroicons/react/24/outline";
 import { PostUserMedia } from "@/lib/interface";
 
 interface MediaProps {
-  thumbnail?: PostUserMedia;
+  thumbnail?: string;
 }
 
 const UserMediaBlock = ({ thumbnail }: MediaProps) => {
   return (
     <button className="relative w-full h-full">
       <Image
-        src={thumbnail?.content.location ?? ""}
+        src={thumbnail ?? ""}
         alt="User Media Thumbnail"
         fill
         style={{

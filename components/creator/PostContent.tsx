@@ -5,7 +5,7 @@ import {
   SortableContext,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
-import ContentSidebar, { dropAnimationConfig } from "./ContentSidebar";
+import ContentSidebar, { dropAnimationConfig } from "./sidebar/ContentSidebar";
 import Blocks, { BlockID } from "./blocks/Blocks";
 import { useBlockDrag } from "../context/PostDragProvider";
 import { usePostCreator } from "../context/PostCreatorProvider";
@@ -14,7 +14,13 @@ import UserVideoBlock from "./blocks/UserVideoBlock";
 import UserImageBlock from "./blocks/UserImageBlock";
 
 const PostContent = () => {
-  const { document, previewMode, setPreviewMode, content } = usePostCreator();
+  const {
+    document,
+    previewMode,
+    setPreviewMode,
+    content,
+    setActiveStylingTool,
+  } = usePostCreator();
   const { activeDragID } = useBlockDrag();
 
   const getRenderedDragOverlay = (id: string): React.ReactNode => {
@@ -47,7 +53,10 @@ const PostContent = () => {
   return (
     <>
       <ContentSidebar />
-      <section className="w-full justify-center h-full flex relative">
+      <section
+        onClick={() => setActiveStylingTool(null)}
+        className="w-full justify-center h-full flex relative"
+      >
         <section className="mx-16 lg:mx-6 relative w-full flex flex-col space-y-2 py-12 px-8 container border border-dashed rounded-md my-12 ">
           <div className="absolute flex space-x-2 right-10 top-4">
             <Switch

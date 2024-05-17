@@ -40,7 +40,14 @@ export function SortableItem({
     setActivatorNodeRef,
     transform,
     transition,
-  } = useSortable({ id });
+  } = useSortable({
+    id,
+    transition: {
+      duration: 500,
+      easing: "cubic-bezier(0.25, 1, 0.5, 1)",
+    },
+    animateLayoutChanges: () => false,
+  });
   const context = useMemo(
     () => ({
       attributes,

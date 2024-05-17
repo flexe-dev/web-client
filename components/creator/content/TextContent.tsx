@@ -21,7 +21,10 @@ export const TextContent = (props: ContentBlockProp) => {
     <SortableItem id={id}>
       <ContentWrapper id={id}>
         <Textarea
-          onClick={() => setActiveStylingTool({ id: id, type: "text" })}
+          onClick={(e) => {
+            
+            setActiveStylingTool({ id: id, type: "text" });
+          }}
           style={style}
           value={value as string}
           onChange={(e) => handleValueChange(e)}

@@ -75,6 +75,7 @@ export const PostCreatorProvider = ({
       content: TitleContent,
     },
   ]);
+
   const [activeStylingTool, setActiveStylingTool] =
     useState<ContentStyling | null>(null);
   const [content, setContent] = useState<PostUserMedia[]>(propsContent);

@@ -5,28 +5,18 @@ import { cn, resizeImage } from "@/lib/utils";
 import {
   PhotoIcon,
   DocumentIcon,
-  ArrowLeftIcon,
   ChevronDoubleRightIcon,
 } from "@heroicons/react/24/outline";
-import { Button } from "../ui/button";
-import TextBlock, { textTypes } from "./blocks/TextBlock";
-import UserMediaBlock from "./blocks/UserMediaBlock";
-import ImageBlock from "./blocks/ImageBlock";
-import VideoBlock from "./blocks/VideoBlock";
-import { ScrollArea } from "../ui/scroll-area";
+import { Button } from "../../ui/button";
 import { DropAnimation, defaultDropAnimationSideEffects } from "@dnd-kit/core";
 import { AnimatePresence, motion } from "framer-motion";
-import { usePostCreator } from "../context/PostCreatorProvider";
-import UserVideoBlock from "./blocks/UserVideoBlock";
-import UserImageBlock from "./blocks/UserImageBlock";
+import { usePostCreator } from "../../context/PostCreatorProvider";
 import { PostUserMedia, PostUserMediaThumbnail } from "@/lib/interface";
-import { PostContent } from "@prisma/client";
+import DocumentTab from "./TextTab";
+import ContentTab from "./VisualTab";
+import StylingTab from "./StylingTab";
 
-type SidebarTab = "document" | "photo" | "content";
-
-interface ThumbnailProps {
-  thumbnailObject: PostUserMediaThumbnail[];
-}
+type SidebarTab = "document" | "photo" | "styling";
 
 export const dropAnimationConfig: DropAnimation = {
   sideEffects: defaultDropAnimationSideEffects({
@@ -39,17 +29,31 @@ export const dropAnimationConfig: DropAnimation = {
 };
 
 const ContentSidebar = () => {
-  const { sidebarOpen, setSidebarOpen, content } = usePostCreator();
+  const { sidebarOpen, setSidebarOpen, content, activeStylingTool } =
+    usePostCreator();
   const [activeTab, setActiveTab] = useState<SidebarTab>("photo");
-  const thumbnails = useMemo(
-    async () => await generateThumbnailObjects(content),
-    [content]
-  );
+  const [thumbnails, setThumbnails] = useState<PostUserMediaThumbnail[]>([]);
+  const [previousTab, setPreviousTab] = useState<SidebarTab | undefined>();
+
+  useEffect(() => {
+    generateThumbnailObjects(content).then((thumbnails) => {
+      setThumbnails(thumbnails);
+    });
+  }, [content]);
+
+  useEffect(() => {
+    if (activeStylingTool && activeTab !== "styling") {
+      setPreviousTab(activeTab);
+      setActiveTab("styling");
+    } else {
+      setActiveTab(previousTab ?? "photo");
+    }
+  }, [activeStylingTool]);
 
   const renderedContent: Record<SidebarTab, React.ReactNode> = {
     document: <DocumentTab />,
     photo: <ContentTab thumbnailObject={thumbnails} />,
-    content: <></>,
+    styling: <StylingTab />,
   };
 
   return (
@@ -141,86 +145,16 @@ const ContentSidebar = () => {
 
 export default ContentSidebar;
 
-const ContentTab = (props: ThumbnailProps) => {
-  const { content: postContent } = usePostCreator();
-  const content = ["block", "uploaded"] as const;
-  type ContentType = (typeof content)[number];
-  const [renderedContent, setRenderedContent] = useState<ContentType>("block");
-  return (
-    <section className="w-full flex flex-col items-center">
-      <h2 className="w-full text-center mb-4 font-semibold py-2 border-b-2">
-        {renderedContent === "block" ? "Visuals" : "Uploaded"}
-      </h2>
-      {renderedContent === "block" ? (
-        <>
-          <div
-            className="relative w-5/6 max-w-[83.33%] mx-4 my-2 h-[8rem] cursor-pointer rounded-md border-2 border-transparent hover:border-primary"
-            onClick={() => {
-              setRenderedContent("uploaded");
-            }}
-          >
-            <UserMediaBlock thumbnail={postContent?.at(0)} />
-          </div>
-          <ImageBlock />
-          <VideoBlock />
-        </>
-      ) : (
-        <>
-          <div className="cursor-pointer w-full">
-            <Button
-              variant={"ghost"}
-              onClick={() => {
-                setRenderedContent("block");
-              }}
-              className="flex space-x-2 items-center justify-start ml-2"
-            >
-              <ArrowLeftIcon className="w-5 h-5" />
-              <span>Back</span>
-            </Button>
-          </div>
-          <ScrollArea className="h-[73dvh] w-full">
-            <UserMediaBlocks />
-          </ScrollArea>
-        </>
-      )}
-    </section>
-  );
-};
-
-const DocumentTab = () => {
-  return (
-    <section className="w-full flex flex-col items-center">
-      <h2 className="w-full text-center border-b-2 font-semibold py-2 mb-4">
-        Text
-      </h2>
-      {textTypes.map((text) => (
-        <TextBlock key={`text-block-${text}`} id={text} />
-      ))}
-    </section>
-  );
-};
-
-const UserMediaBlocks = (props: ThumbnailProps) => {
-  const { thumbnailObject: postContent } = props;
-
-  return postContent.map((content, index) => {
-    if (content.content.format === "VIDEO") {
-      return <UserVideoBlock key={index} content={content} />;
-    }
-    return <UserImageBlock key={index} content={content} />;
-  });
-};
-
-const generateThumbnailObjects = (
+const generateThumbnailObjects = async (
   content: PostUserMedia[]
 ): Promise<PostUserMediaThumbnail[]> => {
   const thumbnails: Promise<PostUserMediaThumbnail[]> = Promise.all(
     content.map(async (media) => ({
       thumbnail:
         media.content.format === "IMAGE"
-          ? await resizeImage(media.file, 100, 100)
+          ? await resizeImage(media.file, 500, 300)
           : undefined,
-      media: media,
+      contentID: media.content.id,
     }))
   );
   return thumbnails;
