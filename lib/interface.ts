@@ -1,5 +1,6 @@
 import { User } from "next-auth";
 import { UserProfile, UserPost, PostContent } from "@prisma/client";
+import { CSSProperties } from "react";
 
 export interface ClassNameProp {
   className?: string;
@@ -47,7 +48,7 @@ export interface PostUserMediaThumbnail {
   contentID: string;
 }
 
-export type ContentType = "title" | "subtitle" | "text" | "image" | "video";
+export type ContentType = "text" | "image" | "video";
 
 export interface ContentStyling {
   id: string;
@@ -57,7 +58,7 @@ export interface ContentStyling {
 export interface ContentBlockProp {
   id: string;
   value?: string | PostUserMedia;
-  style?: Record<string, string>;
+  style?: CSSProperties;
 }
 
 export interface PostContentBlock extends ContentBlockProp {

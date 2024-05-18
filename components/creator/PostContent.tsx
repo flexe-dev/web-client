@@ -27,7 +27,11 @@ const PostContent = () => {
     if (id.includes("draggable-content")) {
       const contentBlock = document.find((block) => block.id === id);
       return contentBlock ? (
-        <contentBlock.content id={contentBlock.id} value={contentBlock.value} />
+        <contentBlock.content
+          id={contentBlock.id}
+          value={contentBlock.value}
+          style={contentBlock.style}
+        />
       ) : null;
     }
     if (id.includes("user")) {
@@ -55,7 +59,7 @@ const PostContent = () => {
       <ContentSidebar />
       <section
         onClick={() => setActiveStylingTool(null)}
-        className="w-full justify-center h-full flex relative"
+        className="z-[20] w-full justify-center h-full flex relative"
       >
         <section className="mx-16 lg:mx-6 relative w-full flex flex-col space-y-2 py-12 px-8 container border border-dashed rounded-md my-12 ">
           <div className="absolute flex space-x-2 right-10 top-4">
@@ -88,6 +92,10 @@ const PostContent = () => {
       <DragOverlay dropAnimation={dropAnimationConfig}>
         {activeDragID ? getRenderedDragOverlay(activeDragID as string) : null}
       </DragOverlay>
+      <div
+        className="z-[10] absolute inset-0"
+        onClick={() => setActiveStylingTool(null)}
+      />
     </>
   );
 };

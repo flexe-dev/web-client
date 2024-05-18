@@ -43,12 +43,16 @@ const ContentSidebar = () => {
 
   useEffect(() => {
     if (activeStylingTool && activeTab !== "styling") {
-      setPreviousTab(activeTab);
-      setActiveTab("styling");
-    } else {
+      handleTabChange("styling");
+    } else if (!activeStylingTool && activeTab === "styling") {
       setActiveTab(previousTab ?? "photo");
     }
   }, [activeStylingTool]);
+
+  const handleTabChange = (tab: SidebarTab) => {
+    setPreviousTab(activeTab !== "styling" ? activeTab : previousTab);
+    setActiveTab(tab);
+  };
 
   const renderedContent: Record<SidebarTab, React.ReactNode> = {
     document: <DocumentTab />,
@@ -84,7 +88,7 @@ const ContentSidebar = () => {
             >
               <h1 className="flex border-b-2 divide-x-2">
                 <Button
-                  onClick={() => setActiveTab("document")}
+                  onClick={() => handleTabChange("document")}
                   variant={"outline"}
                   className={cn(
                     "flex border-0 rounded-none justify-center hover:bg-accent/50 items-center h-[2.25rem] w-full",
@@ -94,7 +98,7 @@ const ContentSidebar = () => {
                   <DocumentIcon className="h-7 w-7 stroke-secondary-header" />
                 </Button>
                 <Button
-                  onClick={() => setActiveTab("photo")}
+                  onClick={() => handleTabChange("photo")}
                   variant={"outline"}
                   className={cn(
                     "border-0 rounded-none flex justify-center items-center h-[2.25rem] hover:bg-accent/50 w-full",

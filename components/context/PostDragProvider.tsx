@@ -22,11 +22,14 @@ import { BlockID } from "../creator/blocks/Blocks";
 import { nanoid } from "nanoid";
 import { PostContentBlock } from "@/lib/interface";
 import { TextContent } from "../creator/content/TextContent";
-import { SubTitleContent } from "../creator/content/SubTitleContent";
-import { TitleContent } from "../creator/content/TitleContent";
 import { ImageContent } from "../creator/content/ImageContent";
 import { useMediaQuery } from "react-responsive";
 import VideoContent from "../creator/content/VideoContent";
+import {
+  DefaultSubtitle,
+  DefaultText,
+  DefaultTitle,
+} from "../creator/content/DefaultStyling";
 
 interface PostDragProviderState {
   activeDragID: UniqueIdentifier | null;
@@ -65,19 +68,22 @@ export const PostDragProvider = ({
 
   const RenderNewItem: Record<BlockID, PostContentBlock> = {
     "draggable-block-title": {
-      id: `draggable-content-title-${nanoid()}`,
+      id: `draggable-content-text-${nanoid()}`,
       value: "Title",
-      content: TitleContent,
+      content: TextContent,
+      style: DefaultTitle,
     },
     "draggable-block-subtitle": {
-      id: `draggable-content-subtitle-${nanoid()}`,
+      id: `draggable-content-text-${nanoid()}`,
       value: "Sub-Title",
-      content: SubTitleContent,
+      content: TextContent,
+      style: DefaultSubtitle,
     },
     "draggable-block-text": {
       id: `draggable-content-text-${nanoid()}`,
       value: "Text",
       content: TextContent,
+      style: DefaultText,
     },
     "draggable-block-image": {
       id: `draggable-content-image-${nanoid()}`,

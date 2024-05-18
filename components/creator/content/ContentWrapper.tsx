@@ -1,6 +1,6 @@
 import { usePostCreator } from "@/components/context/PostCreatorProvider";
 import { DragHandle } from "@/components/dnd/Sortable";
-import { ChildNodeProps, ClassNameProp } from "@/lib/interface";
+import { ChildNodeProps, ClassNameProp, ContentType } from "@/lib/interface";
 import React from "react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -17,19 +17,24 @@ import { Switch } from "@/components/ui/switch";
 interface Props extends ChildNodeProps, ClassNameProp {
   noDrag?: true;
   id: string;
+  type: ContentType;
 }
 
-const ContentWrapper = ({ children, className, noDrag, id }: Props) => {
+const ContentWrapper = ({ children, className, noDrag, id, type }: Props) => {
   const {
     document,
     previewMode,
     onDelete,
     showDeletionConfirmation,
     setShowDeletionConfirmation,
+    setActiveStylingTool,
   } = usePostCreator();
   const [showDeleteModal, setShowDeleteModal] = React.useState(false);
 
-  const handleDelete = () => {
+  const handleDelete = (
+    event: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
+    event.stopPropagation();
     if (document.length === 1) {
       toast.error("You can't delete the last block.", {
         position: "top-right",
@@ -50,6 +55,7 @@ const ContentWrapper = ({ children, className, noDrag, id }: Props) => {
         onClick={(e) => {
           e.preventDefault();
           e.stopPropagation();
+          setActiveStylingTool({ id: id, type: type });
         }}
         className={cn(
           "border-2 bg-background/80 w-full rounded-md",
@@ -59,17 +65,19 @@ const ContentWrapper = ({ children, className, noDrag, id }: Props) => {
       >
         {children}
         {!previewMode && (
-          <div className="flex absolute right-3 top-1/2 -translate-y-[50%]">
+          <>
+            <div className="flex absolute right-3 top-1/2 -translate-y-[50%]">
+              {!noDrag && <DragHandle />}
+            </div>
             <Button
-              onClick={handleDelete}
-              variant={"ghost"}
-              className="p-1 bg-background/90 hover:bg-accent/50"
+              onClick={(e) => handleDelete(e)}
+              variant={"destructive"}
+              size={"sm"}
+              className="h-5 p-1 w-5 rounded-full absolute -top-2 -right-2"
             >
-              <XMarkIcon className="w-7 h-7 stroke-destructive" />
+              <XMarkIcon className="w-4 h-4" />
             </Button>
-
-            {!noDrag && <DragHandle />}
-          </div>
+          </>
         )}
       </div>
       <AlertDialog open={showDeleteModal} onOpenChange={setShowDeleteModal}>

@@ -16,6 +16,7 @@ const PostCreator = (props: Props) => {
           <PostContent/>
         </PostDragProvider>
       </div>
+      
     </PostCreatorProvider>
   );
 };

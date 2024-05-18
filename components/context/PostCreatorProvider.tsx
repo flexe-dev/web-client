@@ -6,9 +6,10 @@ import {
   PostContentBlock,
   PostUserMedia,
 } from "@/lib/interface";
-import React, { createContext, useState } from "react";
+import React, { CSSProperties, createContext, useState } from "react";
 import { nanoid } from "nanoid";
-import { TitleContent } from "../creator/content/TitleContent";
+import { TextContent } from "../creator/content/TextContent";
+import { DefaultTitle } from "../creator/content/DefaultStyling";
 
 interface PostCreatorProviderState {
   //Context States
@@ -19,7 +20,7 @@ interface PostCreatorProviderState {
   sidebarOpen: boolean;
   activeStylingTool: ContentStyling | null;
   //Context Callbacks
-  onStyleChange: (id: string, style: Record<string, string>) => void;
+  onStyleChange: (id: string, style: CSSProperties) => void;
   onValueChange: (id: string, value: string) => void;
   onDelete: (id: string) => void;
   //Context State Dispatches
@@ -72,7 +73,8 @@ export const PostCreatorProvider = ({
     {
       id: `draggable-content-title-${nanoid()}`,
       value: "Title",
-      content: TitleContent,
+      content: TextContent,
+      style: DefaultTitle,
     },
   ]);
 
@@ -94,7 +96,7 @@ export const PostCreatorProvider = ({
     );
   };
 
-  const onStyleChange = (id: string, style: Record<string, string>) => {
+  const onStyleChange = (id: string, style: CSSProperties) => {
     setDocument((prev) =>
       prev.map((block) => {
         if (block.id === id) {

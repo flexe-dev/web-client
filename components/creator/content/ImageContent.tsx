@@ -1,23 +1,17 @@
 import { SortableItem } from "@/components/dnd/Sortable";
 import { ContentBlockProp, PostUserMedia } from "@/lib/interface";
 import React from "react";
-import { images } from "@/lib/placeholder";
 import Image from "next/image";
 import ContentWrapper from "./ContentWrapper";
-import { usePostCreator } from "@/components/context/PostCreatorProvider";
 import { PhotoIcon } from "@heroicons/react/24/outline";
 
 export const ImageContent = (props: ContentBlockProp) => {
-  const { setActiveStylingTool } = usePostCreator();
   const { value } = props;
 
   return (
     <SortableItem id={props.id}>
-      <ContentWrapper id={props.id}>
-        <div
-          onClick={() => setActiveStylingTool({ id: props.id, type: "image" })}
-          className="w-fit flex relative max-w-4xl aspect-[4/3] p-4"
-        >
+      <ContentWrapper id={props.id} type="image">
+        <div className="w-fit flex relative max-w-4xl aspect-[4/3] p-4">
           {value ? (
             <Image
               width={(value as PostUserMedia).content.width}
