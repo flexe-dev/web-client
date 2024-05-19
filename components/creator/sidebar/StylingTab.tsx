@@ -1,5 +1,12 @@
 import { usePostCreator } from "@/components/context/PostCreatorProvider";
 import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Select } from "@/components/ui/select";
 import { ContentType } from "@/lib/interface";
 import {
   Bars3Icon,
@@ -58,7 +65,52 @@ const StylingTab = () => {
   };
 
   const TextSizeTool = () => {
-    return <></>;
+    const size = [
+      {
+        title: "Heading 1",
+        fontSize: "1.875rem",
+        lineHeight: "2.25rem",
+      },
+      {
+        title: "Heading 2",
+        fontSize: "1.5rem",
+        lineHeight: "1.75rem",
+      },
+      {
+        title: "Heading 3",
+        fontSize: "1.25rem",
+        lineHeight: "1.5rem",
+      },
+      {
+        title: "Body",
+        fontSize: "1rem",
+        lineHeight: "1.25rem",
+      },
+      {
+        title: "Caption",
+        fontSize: "0.875rem",
+        lineHeight: "1rem",
+      },
+    ];
+    return (
+      <>
+        <h3 className="font-semibold mt-6">Font Size</h3>
+
+        <Select
+          className="mt-2"
+          value={size.find((s) => s.fontSize === content?.style.fontSize)}
+          onChange={(value) => {
+            onStyleChange(activeStylingTool.id, {
+              ...content.style,
+              fontSize: value?.fontSize,
+              lineHeight: value?.lineHeight,
+            });
+          }}
+          options={size}
+          getOptionLabel={(option) => option.title}
+        />
+      </>
+    );
   };
 
   const TextFontWeightTool = () => {
@@ -70,7 +122,7 @@ const StylingTab = () => {
   };
 
   const RenderedStylingTools: Record<ContentType, Array<() => JSX.Element>> = {
-    text: [PositionAlignmentTool],
+    text: [PositionAlignmentTool, TextSizeTool],
     image: [],
     video: [],
   };

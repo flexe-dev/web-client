@@ -5,7 +5,7 @@ export const DefaultText: CSSProperties = {
 };
 
 export const DefaultSubtitle: CSSProperties = {
-  height: "3rem",
+  height: "1rem",
   fontSize: "1.25rem" /* 20px */,
   lineHeight: "1.75rem" /* 28px */,
 };
