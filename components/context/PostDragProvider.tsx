@@ -30,6 +30,13 @@ import {
   DefaultText,
   DefaultTitle,
 } from "../creator/content/DefaultStyling";
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from "@/components/ui/select";
 
 interface PostDragProviderState {
   activeDragID: UniqueIdentifier | null;

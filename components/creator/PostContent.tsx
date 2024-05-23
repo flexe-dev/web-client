@@ -12,6 +12,13 @@ import { usePostCreator } from "../context/PostCreatorProvider";
 import { Switch } from "../ui/switch";
 import UserVideoBlock from "./blocks/UserVideoBlock";
 import UserImageBlock from "./blocks/UserImageBlock";
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from "@/components/ui/select";
 
 const PostContent = () => {
   const {

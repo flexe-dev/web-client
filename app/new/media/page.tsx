@@ -11,7 +11,9 @@ const page = () => {
   return (
     <>
       {uploadedFiles.length === 0 ? (
-        <PostCreator postContent={uploadedFiles} />
+        <>
+          <PostCreator postContent={uploadedFiles} />
+        </>
       ) : (
         <UploadUserImages setUploadedFiles={setUploadedFiles} />
       )}

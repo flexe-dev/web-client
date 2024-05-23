@@ -28,6 +28,7 @@ const ContentWrapper = ({ children, className, noDrag, id, type }: Props) => {
     showDeletionConfirmation,
     setShowDeletionConfirmation,
     setActiveStylingTool,
+    setPreviewMode,
   } = usePostCreator();
   const [showDeleteModal, setShowDeleteModal] = React.useState(false);
 
@@ -55,6 +56,7 @@ const ContentWrapper = ({ children, className, noDrag, id, type }: Props) => {
         onClick={(e) => {
           e.preventDefault();
           e.stopPropagation();
+          setPreviewMode(false);
           setActiveStylingTool({ id: id, type: type });
         }}
         className={cn(

@@ -1,9 +1,8 @@
-import { Navbar } from "@/components/navbar";
 import FeaturedSnippets from "@/components/ui//Landing/FeaturedSnippets";
 import { Footer } from "@/components/ui/Footer";
 import { BackgroundGrid } from "@/components/ui/GridBackground";
-import { CreationParallaxWrapper } from "@/components/ui/Landing/CreatorShowcase";
 import NewsletterPrompt from "@/components/ui/Landing/NewsletterPrompt";
+
 export default function Home() {
   return (
     <>

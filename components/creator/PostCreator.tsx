@@ -1,8 +1,11 @@
+"use client";
+
 import React from "react";
 import { PostUserMedia } from "@/lib/interface";
 import { PostDragProvider } from "../context/PostDragProvider";
 import PostContent from "./PostContent";
 import { PostCreatorProvider } from "../context/PostCreatorProvider";
+
 
 interface Props {
   postContent: PostUserMedia[];
@@ -13,10 +16,9 @@ const PostCreator = (props: Props) => {
     <PostCreatorProvider content={props.postContent}>
       <div className="w-full flex relative">
         <PostDragProvider>
-          <PostContent/>
+          <PostContent />
         </PostDragProvider>
       </div>
-      
     </PostCreatorProvider>
   );
 };
