@@ -24,7 +24,11 @@ const PostCreateDialog = ({ dispatch }: DialogProps) => {
   const { user } = useAccount();
   return (
     <DialogPortal>
+<<<<<<< HEAD
       <DialogOverlay className="bg-black/30" />
+=======
+      <DialogOverlay />
+>>>>>>> d92e31248ae4f10c2e31a25f558d85b160c2e17c
       <DialogContent className="w-full min-w-[37rem]">
         <DialogHeader className="mb-4 text-2xl font-bold">
           Create a new post
@@ -55,12 +59,19 @@ const PostCreateDialog = ({ dispatch }: DialogProps) => {
             </span>
             <div className="h-[1px] mr-1 bg-primary w-full" />
           </div>
+<<<<<<< HEAD
           <div className="mt-2 w-full flex justify-center space-x-4">
+=======
+          <div className="w-full flex justify-center space-x-4">
+>>>>>>> d92e31248ae4f10c2e31a25f558d85b160c2e17c
             <Link href={"/new/media"}>
               <Button
                 className="flex space-x-2"
                 onClick={() => dispatch(false)}
+<<<<<<< HEAD
                 variant={"outline"}
+=======
+>>>>>>> d92e31248ae4f10c2e31a25f558d85b160c2e17c
               >
                 <PhotoIcon className="w-6 h-6" />
                 <span>Media Editor</span>
@@ -69,7 +80,10 @@ const PostCreateDialog = ({ dispatch }: DialogProps) => {
 
             <Link href={"/new/text"}>
               <Button
+<<<<<<< HEAD
                 variant={"outline"}
+=======
+>>>>>>> d92e31248ae4f10c2e31a25f558d85b160c2e17c
                 className="flex space-x-2"
                 onClick={() => dispatch(false)}
               >

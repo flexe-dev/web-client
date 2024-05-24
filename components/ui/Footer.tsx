@@ -21,9 +21,10 @@ export const Footer = () => {
     <footer className="bg-background relative pb-8 md:mb-4 md:h-[15rem] flex flex-col md:flex-row overflow-hidden w-screen z-[30] border-t-2 antialiased ">
       <GlowingStarsBackgroundCard className="absolute top-0 opacity-60 z-0 " />
       <div className="w-full h-full flex flex-col pt-12 mx-8 md:ml-[6rem] lg:ml-[8rem] xl:ml-[12rem] z-[20]">
-        <div className="text-4xl font-semibold">designs.dev</div>
+        <div className="text-4xl font-semibold">FLEXE.dev</div>
         <div className="text-secondary-header mt-4 mr-8 md:mr-0">
-          Helping developers stand out among the rest
+          An Innovative Networking Application for Developers and Developer
+          Groups
         </div>
         <div className="mt-2">
           Created By{" "}
