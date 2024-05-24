@@ -15,9 +15,9 @@ import { Footer } from "@/components/ui/Footer";
 import { ChildNodeProps } from "@/lib/interface";
 
 export const metadata: Metadata = {
-  title: "designs.dev",
+  title: "FLEXE.dev",
   description:
-    "Find design and code inspiration easy and fast through our gallery of curated projects and portfolios",
+    "Network and build connections with other link-minded developers. Share your projects, find inspiration and connect.",
 };
 
 export default async function RootLayout({
