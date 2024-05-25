@@ -1,5 +1,6 @@
 import { User } from "next-auth";
 import { UserProfile, UserPost, PostContent } from "@prisma/client";
+import { CSSProperties } from "react";
 
 export interface ClassNameProp {
   className?: string;
@@ -37,9 +38,29 @@ export interface PostObject extends LoadingProps {
   userPosts: UserPost[];
 }
 
-export type PostCreationContent = Omit<PostContent, "id">;
-
-export interface CreatePost {
-  content: PostCreationContent;
+export interface PostUserMedia {
+  content: PostContent;
   file: File;
+}
+
+export interface PostUserMediaThumbnail {
+  thumbnail: string | undefined;
+  contentID: string;
+}
+
+export type ContentType = "text" | "image" | "video";
+
+export interface ContentStyling {
+  id: string;
+  type: ContentType;
+}
+
+export interface ContentBlockProp {
+  id: string;
+  value?: string | PostUserMedia;
+  style?: CSSProperties;
+}
+
+export interface PostContentBlock extends ContentBlockProp {
+  content: (props: ContentBlockProp) => React.JSX.Element;
 }

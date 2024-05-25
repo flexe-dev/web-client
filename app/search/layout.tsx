@@ -9,6 +9,7 @@ const Layout = ({ children }: LayoutProps) => {
   return (
     <>
       <main>{children}</main>
+      <Footer />
     </>
   );
 };

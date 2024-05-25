@@ -3,7 +3,7 @@ import { JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 import { ThemeProvider } from "@/components/theme/theme-provider";
-const jetBrainsMono = JetBrains_Mono({ subsets: ["latin"] });
+const jetBrainsMono = JetBrains_Mono({ subsets: ["latin"], weight: "400" });
 import { Toaster } from "@/components/ui/sonner";
 import SessionProvider from "@/components/context/SessionProvider";
 import { getServerSession } from "next-auth";
@@ -11,9 +11,8 @@ import { baseAuthOptions } from "@/lib/authOptions";
 import { OnboardModal } from "@/components/auth/OnboardModal";
 import { Navbar } from "@/components/navbar";
 import { AccountProvider } from "@/components/context/AccountProvider";
-import { Footer } from "@/components/ui/Footer";
 import { ChildNodeProps } from "@/lib/interface";
-
+import DndContext from "@/components/context/DndProvider";
 export const metadata: Metadata = {
   title: "FLEXE.dev",
   description:
@@ -38,18 +37,19 @@ export default async function RootLayout({
       >
         <SessionProvider session={session}>
           <AccountProvider>
-            <ThemeProvider
-              attribute="class"
-              defaultTheme="system"
-              enableSystem
-              disableTransitionOnChange
-            >
-              <Navbar />
-              <main className="w-[100dvw]">{children}</main>
-              <Toaster />
-              <OnboardModal />
-              <Footer />
-            </ThemeProvider>
+            <DndContext>
+              <ThemeProvider
+                attribute="class"
+                defaultTheme="system"
+                enableSystem
+                disableTransitionOnChange
+              >
+                <Navbar />
+                <main className="w-[100dvw]">{children}</main>
+                <Toaster />
+                <OnboardModal />
+              </ThemeProvider>
+            </DndContext>
           </AccountProvider>
         </SessionProvider>
       </body>

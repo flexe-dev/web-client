@@ -13,9 +13,8 @@ import {
 import { User } from "@prisma/client";
 import {
   CogIcon,
-  UserCircleIcon,
-  PlusIcon,
   PlusCircleIcon,
+  UserCircleIcon,
 } from "@heroicons/react/24/outline";
 import { LogoutIcon } from "../../icons/LogoutIcon";
 import { signOut } from "next-auth/react";
@@ -42,7 +41,7 @@ export const UserDropdown = ({ children, user }: UserDropdownProps) => {
   ];
 
   return (
-    <Dialog open={dialogOpen}>
+    <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
       <DropdownMenu modal={false}>
         <DropdownMenuTrigger asChild>{children}</DropdownMenuTrigger>
         <DropdownMenuContent className=" mt-2">

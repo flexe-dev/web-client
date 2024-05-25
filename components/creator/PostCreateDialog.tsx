@@ -24,7 +24,7 @@ const PostCreateDialog = ({ dispatch }: DialogProps) => {
   const { user } = useAccount();
   return (
     <DialogPortal>
-      <DialogOverlay />
+      <DialogOverlay className="bg-black/30" />
       <DialogContent className="w-full min-w-[37rem]">
         <DialogHeader className="mb-4 text-2xl font-bold">
           Create a new post
@@ -55,11 +55,12 @@ const PostCreateDialog = ({ dispatch }: DialogProps) => {
             </span>
             <div className="h-[1px] mr-1 bg-primary w-full" />
           </div>
-          <div className="w-full flex justify-center space-x-4">
+          <div className="mt-2 w-full flex justify-center space-x-4">
             <Link href={"/new/media"}>
               <Button
                 className="flex space-x-2"
                 onClick={() => dispatch(false)}
+                variant={"outline"}
               >
                 <PhotoIcon className="w-6 h-6" />
                 <span>Media Editor</span>
@@ -68,6 +69,7 @@ const PostCreateDialog = ({ dispatch }: DialogProps) => {
 
             <Link href={"/new/text"}>
               <Button
+                variant={"outline"}
                 className="flex space-x-2"
                 onClick={() => dispatch(false)}
               >
