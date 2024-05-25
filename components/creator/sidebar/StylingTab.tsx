@@ -18,7 +18,6 @@ import {
 } from "@heroicons/react/24/outline";
 import { FaBold, FaItalic, FaUnderline } from "react-icons/fa";
 import { cn } from "@/lib/utils";
-import { text } from "stream/consumers";
 import { ColourBox } from "@/components/ui/colourbox";
 
 const StylingTab = () => {
@@ -107,7 +106,7 @@ const StylingTab = () => {
     ];
     return (
       <>
-        <h3 className="font-semibold mt-6">Font Size</h3>
+        <h3 className="font-semibold mt-6 mb-2">Font Size</h3>
         <div>
           <Select
             defaultValue={
@@ -231,8 +230,8 @@ const StylingTab = () => {
   const TextColourTool = () => {
     return (
       <>
-        <h3 className="font-semibold mt-6">Text Styling</h3>
-        <ColourBox />
+        <h3 className="font-semibold mt-6 mb-2">Text Colour</h3>
+        <ColourBox content={content} />
       </>
     );
   };

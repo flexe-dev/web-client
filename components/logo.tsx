@@ -7,7 +7,7 @@ export const AppLogo = (props: ClassNameProp): React.ReactNode => {
     <div className="pt-4 lg:pt-[0.375rem]">
       <Logo
         {...props}
-        className={cn(props.className, "hidden w-0 lg:w-fit lg:flex h-8")}
+        className={cn(props.className, "hidden w-0 lg:w-fit lg:flex h-6")}
       />
       <MinimisedLogo
         {...props}

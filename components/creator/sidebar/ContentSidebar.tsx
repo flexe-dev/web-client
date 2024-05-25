@@ -73,7 +73,7 @@ const ContentSidebar = () => {
           },
         }}
         className={cn(
-          `h-screen top-[5rem] z-[60] left-0 fixed border-t border-r-2 bg-background`
+          `h-screen top-[5rem] z-[40] left-0 fixed border-t border-r-2 bg-background`
         )}
       >
         <AnimatePresence>

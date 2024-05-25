@@ -48,7 +48,7 @@ export const Navbar = () => {
     <>
       <nav className="sticky top-0 lg:pl-4 pr-8 z-[50] h-[5rem] border-b-2 backdrop-blur-xl w-[100dvw] flex ">
         <Link href={"/"} className="w-32 flex items-center mb-2 lg:w-fit">
-          <AppLogo className="mx-4 mt-2 h-16 w-16 cursor-pointer" />
+          <AppLogo className="mx-4 mt-2 cursor-pointer" />
         </Link>
         <section className="flex flex-grow items-end h-full justify-end md:justify-end ">
           <NavSearch />

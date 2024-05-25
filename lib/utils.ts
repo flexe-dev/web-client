@@ -36,5 +36,11 @@ export async function resizeImage(
   });
 }
 
+export const getSystemTheme = (): "light" | "dark" => {
+  return window.matchMedia("(prefers-color-scheme: dark)").matches
+    ? "dark"
+    : "light";
+};
+
 export const defaultPicture =
   "https://kkyhjzebnjjkhuncbfgo.supabase.co/storage/v1/object/public/user-profile/defaultpicture.jpg?t=2024-03-30T08%3A31%3A58.211Z";
