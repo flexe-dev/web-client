@@ -23,20 +23,14 @@ import { nanoid } from "nanoid";
 import { PostContentBlock } from "@/lib/interface";
 import { TextContent } from "../creator/content/TextContent";
 import { ImageContent } from "../creator/content/ImageContent";
+import { VideoContent } from "../creator/content/VideoContent";
 import { useMediaQuery } from "react-responsive";
-import VideoContent from "../creator/content/VideoContent";
 import {
+  DefaultMedia,
   DefaultSubtitle,
   DefaultText,
   DefaultTitle,
 } from "../creator/content/DefaultStyling";
-import {
-  Select,
-  SelectTrigger,
-  SelectValue,
-  SelectContent,
-  SelectItem,
-} from "@/components/ui/select";
 
 interface PostDragProviderState {
   activeDragID: UniqueIdentifier | null;
@@ -95,10 +89,13 @@ export const PostDragProvider = ({
     "draggable-block-image": {
       id: `draggable-content-image-${nanoid()}`,
       content: ImageContent,
+      style: DefaultMedia,
     },
     "draggable-block-video": {
       id: `draggable-content-video-${nanoid()}`,
-      content: ImageContent,
+      content: VideoContent,
+      playOnHover: false,
+      style: DefaultMedia,
     },
   };
 
@@ -116,6 +113,8 @@ export const PostDragProvider = ({
       id: `draggable-content-${type}-${nanoid()}`,
       value: content,
       content: type === "video" ? VideoContent : ImageContent,
+      style: DefaultMedia,
+      playOnHover: type === "video" ? false : undefined,
     };
   };
 

@@ -60,7 +60,7 @@ const ContentWrapper = ({ children, className, noDrag, id, type }: Props) => {
           setActiveStylingTool({ id: id, type: type });
         }}
         className={cn(
-          "border-2 bg-background/80 w-full rounded-md",
+          "border-2 bg-background/80 w-full rounded-md flex",
           className,
           previewMode && "border-transparent resize-none"
         )}

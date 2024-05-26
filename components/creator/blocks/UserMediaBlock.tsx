@@ -12,7 +12,7 @@ const UserMediaBlock = ({ thumbnail }: MediaProps) => {
   return (
     <button className="relative w-full h-full">
       <Image
-        src={thumbnail ?? ""}
+        src={thumbnail ?? process.env.NEXT_PUBLIC_FALLBACK_PHOTO}
         alt="User Media Thumbnail"
         fill
         style={{

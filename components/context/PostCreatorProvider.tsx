@@ -22,6 +22,7 @@ interface PostCreatorProviderState {
   //Context Callbacks
   onStyleChange: (id: string, style: CSSProperties) => void;
   onValueChange: (id: string, value: string) => void;
+  onVideoHoverChange: (id: string, playOnHover: boolean) => void;
   onDelete: (id: string) => void;
   //Context State Dispatches
   setPreviewMode: React.Dispatch<React.SetStateAction<boolean>>;
@@ -45,6 +46,7 @@ const initialState: PostCreatorProviderState = {
   onDelete: () => {},
   onValueChange: () => {},
   onStyleChange: () => {},
+  onVideoHoverChange: () => {},
 
   setDocument: () => {},
   setPreviewMode: () => {},
@@ -107,6 +109,17 @@ export const PostCreatorProvider = ({
     );
   };
 
+  const onVideoHoverChange = (id: string, playOnHover: boolean) => {
+    setDocument((prev) =>
+      prev.map((block) => {
+        if (block.id === id) {
+          return { ...block, playOnHover };
+        }
+        return block;
+      })
+    );
+  };
+
   return (
     <PostCreatorContext.Provider
       value={{
@@ -118,6 +131,7 @@ export const PostCreatorProvider = ({
         setPreviewMode,
         onDelete,
         onValueChange,
+        onVideoHoverChange,
         showDeletionConfirmation,
         setShowDeletionConfirmation,
         sidebarOpen,

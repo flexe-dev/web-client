@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { cn, resizeImage } from "@/lib/utils";
+import { cn, getVideoThumbnail, resizeImage } from "@/lib/utils";
 import {
   PhotoIcon,
   DocumentIcon,
@@ -155,9 +155,9 @@ const generateThumbnailObjects = async (
   const thumbnails: Promise<PostUserMediaThumbnail[]> = Promise.all(
     content.map(async (media) => ({
       thumbnail:
-        media.content.format === "IMAGE"
+        media.content.format !== "VIDEO"
           ? await resizeImage(media.file, 500, 300)
-          : undefined,
+          : await getVideoThumbnail(media.file),
       contentID: media.content.id,
     }))
   );

@@ -20,4 +20,12 @@ export const DefaultTitle: CSSProperties = {
   textAlign: "left",
   fontWeight: "bold",
 };
-export const DefaultMedia: CSSProperties = {};
+export const DefaultMedia: CSSProperties = {
+  height: "auto",
+  width: "100%",
+  objectFit: "contain",
+  justifyContent: "center",
+  alignItems: "center",
+  maxWidth: "56rem",
+  borderRadius: "0",
+};

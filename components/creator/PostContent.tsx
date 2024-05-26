@@ -51,7 +51,7 @@ const PostContent = () => {
       return (
         <div className="opacity-50">
           {type === "video" ? (
-            <UserVideoBlock content={contentMedia} />
+            <UserVideoBlock content={contentMedia} dragging />
           ) : (
             <UserImageBlock content={contentMedia} />
           )}
@@ -88,6 +88,7 @@ const PostContent = () => {
                     id={document.id}
                     value={document.value}
                     style={document.style}
+                    playOnHover={document.playOnHover}
                   />
                 </React.Fragment>
               );
