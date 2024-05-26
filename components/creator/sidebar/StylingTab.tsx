@@ -379,7 +379,7 @@ const StylingTab = () => {
       <ButtonMenu
         header="Rounded Corners"
         properties={rounded}
-        activeProperty={borderRadius}
+        activeProperty={borderRadius as Property.BorderRadius<string>}
         handlePropertyChange={handleBorderRadiusChange}
       />
     );

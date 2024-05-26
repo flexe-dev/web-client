@@ -6,8 +6,8 @@ import ContentWrapper from "./ContentWrapper";
 import { VideoCameraIcon } from "@heroicons/react/24/outline";
 import { cn, getVideoThumbnail } from "@/lib/utils";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Omit, omit } from "lodash";
-import { motion, AnimatePresence } from "framer-motion";
+import { omit } from "lodash";
+
 export const VideoContent = (props: ContentBlockProp) => {
   const { value, style } = props;
   const [vertPos, horizPos] = [style?.alignItems, style?.justifyContent];
@@ -52,31 +52,29 @@ const ContentVisual = ({ value, playOnHover }: ContentBlockProp) => {
 
   return (
     <div className="group">
-      <AnimatePresence>
-        <motion.video
-          width={(value as PostUserMedia).content.width}
-          height={(value as PostUserMedia).content.height}
-          src={(value as PostUserMedia).content.location}
-          autoPlay
-          loop
-          controls
-          className={cn(playOnHover && "hidden group-hover:block")}
-        />
-        {playOnHover && (
-          <motion.div className="group-hover:hidden">
-            {videoThumbnail ? (
-              <Image
-                width={(value as PostUserMedia).content.width}
-                height={(value as PostUserMedia).content.height}
-                src={videoThumbnail}
-                alt="Video Thumbnail"
-              />
-            ) : (
-              <Skeleton className="absolute inset-0" />
-            )}
-          </motion.div>
-        )}
-      </AnimatePresence>
+      <video
+        width={(value as PostUserMedia).content.width}
+        height={(value as PostUserMedia).content.height}
+        src={(value as PostUserMedia).content.location}
+        autoPlay
+        loop
+        controls
+        className={cn(playOnHover && "hidden group-hover:block")}
+      />
+      {playOnHover && (
+        <div className="group-hover:hidden">
+          {videoThumbnail ? (
+            <Image
+              width={(value as PostUserMedia).content.width}
+              height={(value as PostUserMedia).content.height}
+              src={videoThumbnail}
+              alt="Video Thumbnail"
+            />
+          ) : (
+            <Skeleton className="absolute inset-0" />
+          )}
+        </div>
+      )}
     </div>
   );
 };
