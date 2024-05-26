@@ -21,7 +21,6 @@ import { useAccount } from "../context/AccountProvider";
 import Image from "next/image";
 import { supabase } from "@/lib/supabase";
 import { toast } from "sonner";
-import { Skeleton } from "../ui/skeleton";
 import { Textarea } from "../ui/textarea";
 
 interface Props {
@@ -53,12 +52,14 @@ export const ProfileDetailsForm = (props: Props) => {
     const saveData = async (
       values: z.infer<typeof formSchema>
     ): Promise<boolean> => {
-      const imageURL = await uploadPicture();
-      if (!imageURL) return false;
+      var imageURL: string | undefined = undefined;
+      if (avatarURL !== user.image) {
+        imageURL = await uploadPicture();
+      }
 
       const response = await UpdateUserDetails(
         user.id,
-        imageURL,
+        imageURL ?? user.image,
         values.name,
         values.job,
         values.company,
@@ -73,7 +74,7 @@ export const ProfileDetailsForm = (props: Props) => {
         onboarded: true,
         username: values.username,
         name: values.name,
-        image: imageURL,
+        image: imageURL ?? user.image,
       });
 
       setProfile({
