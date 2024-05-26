@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { usePostCreator } from "@/components/context/PostCreatorProvider";
 import { Button } from "@/components/ui/button";
 import {
@@ -10,18 +9,46 @@ import {
   SelectValue,
   SelectContent,
 } from "@/components/ui/select";
-import { ContentType } from "@/lib/interface";
+import { ChildNodeProps, ContentType, ToolValueObject } from "@/lib/interface";
 import {
   Bars3Icon,
   Bars3BottomLeftIcon,
   Bars3BottomRightIcon,
 } from "@heroicons/react/24/outline";
 import { FaBold, FaItalic, FaUnderline } from "react-icons/fa";
+import {
+  PiAlignLeftSimple,
+  PiAlignCenterHorizontalSimple,
+  PiAlignRightSimple,
+} from "react-icons/pi";
+import {
+  TbBorderCornerSquare,
+  TbBorderCornerPill,
+  TbBorderCornerRounded,
+  TbBorderCornerIos,
+} from "react-icons/tb";
+
 import { cn } from "@/lib/utils";
 import { ColourBox } from "@/components/ui/colourbox";
+import {
+  Tooltip,
+  TooltipProvider,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { Property } from "csstype";
+import React from "react";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+
+type CSSPropertyKeys =
+  | Property.TextAlign
+  | Property.AlignItems
+  | Property.JustifyContent
+  | Property.BorderRadius;
 
 const StylingTab = () => {
-  const { activeStylingTool, onStyleChange, document } = usePostCreator();
+  const { activeStylingTool, onStyleChange, document, onVideoHoverChange } =
+    usePostCreator();
   const content = document.find(
     (content) => content.id === activeStylingTool?.id
   );
@@ -29,18 +56,21 @@ const StylingTab = () => {
   if (!activeStylingTool || !content) return null;
 
   const PositionAlignmentTool = () => {
-    const positions = [
+    const positions: ToolValueObject<Property.TextAlign>[] = [
       {
         icon: <Bars3BottomLeftIcon className="w-7 h-7" />,
         value: "left",
+        tooltip: "Left",
       },
       {
         icon: <Bars3Icon className="w-7 h-7" />,
         value: "center",
+        tooltip: "Center",
       },
       {
         icon: <Bars3BottomRightIcon className="w-7 h-7" />,
         value: "right",
+        tooltip: "Right",
       },
     ] as const;
     type Position = (typeof positions)[number]["value"];
@@ -53,26 +83,12 @@ const StylingTab = () => {
     };
 
     return (
-      <>
-        <h3 className="font-semibold">Allignment</h3>
-        <section className="flex mt-2 divide-x rounded-lg border w-full overflow-hidden">
-          {positions.map(({ icon, value }) => (
-            <Button
-              key={value}
-              size={"icon"}
-              className={cn(
-                `rounded-none px-2 flex flex-grow justify-center`,
-                textPosition === value &&
-                  "bg-accent hover:bg-accent/60 text-accent-foreground"
-              )}
-              variant={"ghost"}
-              onClick={() => handlePositionChange(value)}
-            >
-              {icon}
-            </Button>
-          ))}
-        </section>
-      </>
+      <ButtonMenu
+        header="Vertical Allignment"
+        properties={positions}
+        activeProperty={textPosition}
+        handlePropertyChange={handlePositionChange}
+      />
     );
   };
 
@@ -106,7 +122,7 @@ const StylingTab = () => {
     ];
     return (
       <>
-        <h3 className="font-semibold mt-6 mb-2">Font Size</h3>
+        <SectionHeader>Font Size</SectionHeader>
         <div>
           <Select
             defaultValue={
@@ -205,8 +221,8 @@ const StylingTab = () => {
 
     return (
       <>
-        <h3 className="font-semibold mt-6">Text Styling</h3>
-        <section className="flex mt-2 divide-x rounded-lg border w-full overflow-hidden">
+        <SectionHeader>Text Styling</SectionHeader>
+        <section className="flex divide-x rounded-lg border w-full overflow-hidden">
           {styles.map(({ name, icon }, index) => (
             <Button
               key={`styling-tool-${index}`}
@@ -230,18 +246,214 @@ const StylingTab = () => {
   const TextColourTool = () => {
     return (
       <>
-        <h3 className="font-semibold mt-6 mb-2">Text Colour</h3>
+        <SectionHeader>Text Colour</SectionHeader>
         <ColourBox content={content} />
       </>
     );
   };
 
   const MediaSizeTool = () => {
-    return <></>;
+    const sizes = [
+      {
+        title: "Small",
+        width: "36rem",
+      },
+      {
+        title: "Medium",
+        width: "42rem",
+      },
+      {
+        title: "Large",
+        width: "56rem",
+      },
+      {
+        title: "Screen",
+        width: "100%",
+      },
+    ];
+    return (
+      <>
+        <SectionHeader>Media Size</SectionHeader>
+        <div>
+          <Select
+            defaultValue={
+              sizes.find((s) => s.width === content?.style?.maxWidth)?.title
+            }
+            onValueChange={(value) => {
+              const selectedSize = sizes.find((s) => s.title === value);
+              if (!selectedSize) return;
+              onStyleChange(activeStylingTool.id, {
+                ...content.style,
+                maxWidth: selectedSize.width,
+              });
+            }}
+          >
+            <SelectTrigger>
+              <SelectValue></SelectValue>
+            </SelectTrigger>
+            <SelectContent className="z-[80]">
+              {sizes.map((s) => {
+                return (
+                  <SelectItem className="py-3" key={s.title} value={s.title}>
+                    {s.title}
+                  </SelectItem>
+                );
+              })}
+            </SelectContent>
+          </Select>
+        </div>
+      </>
+    );
   };
 
-  const MediaPositionTool = () => {
-    return <></>;
+  const MediaHorizontalPosition = () => {
+    const positions: ToolValueObject<Property.JustifyContent>[] = [
+      {
+        icon: <PiAlignLeftSimple className="w-7 h-7" />,
+        value: "start",
+        tooltip: "Left",
+      },
+      {
+        icon: <PiAlignCenterHorizontalSimple className="w-7 h-7" />,
+        value: "center",
+        tooltip: "Center",
+      },
+      {
+        icon: <PiAlignRightSimple className="w-7 h-7" />,
+        value: "end",
+        tooltip: "Right",
+      },
+    ] as const;
+    type Position = (typeof positions)[number]["value"];
+    const allignmentPosition = content.style?.justifyContent;
+    const handlePositionChange = (position: Position) => {
+      onStyleChange(activeStylingTool.id, {
+        ...content.style,
+        justifyContent: position,
+      });
+    };
+
+    return (
+      <ButtonMenu
+        header="Horizontal Allignment"
+        properties={positions}
+        activeProperty={allignmentPosition}
+        handlePropertyChange={handlePositionChange}
+      />
+    );
+  };
+
+  const MediaRoundedTool = () => {
+    const rounded: ToolValueObject<Property.BorderRadius>[] = [
+      {
+        icon: <TbBorderCornerSquare className="w-7 h-7" />,
+        value: "0",
+        tooltip: "No rounded corners",
+      },
+      {
+        icon: <TbBorderCornerRounded className="w-7 h-7" />,
+        value: "0.5rem",
+        tooltip: "Small rounded corners",
+      },
+      {
+        icon: <TbBorderCornerIos className="w-7 h-7" />,
+        value: "1rem",
+        tooltip: "Medium rounded corners",
+      },
+      {
+        icon: <TbBorderCornerPill className="w-7 h-7" />,
+        value: "2rem",
+        tooltip: "Large rounded corners",
+      },
+    ];
+    type Radius = (typeof rounded)[number]["value"];
+    const borderRadius = content.style?.borderRadius;
+    const handleBorderRadiusChange = (radius: Radius) => {
+      onStyleChange(activeStylingTool.id, {
+        ...content.style,
+        borderRadius: radius,
+      });
+    };
+
+    return (
+      <ButtonMenu
+        header="Rounded Corners"
+        properties={rounded}
+        activeProperty={borderRadius}
+        handlePropertyChange={handleBorderRadiusChange}
+      />
+    );
+  };
+
+  const VideoPlayOnHoverTool = () => {
+    const handleChange = (value: boolean) => {
+      onVideoHoverChange(activeStylingTool.id, value);
+    };
+    return (
+      <>
+        <SectionHeader>Video Playback Settings</SectionHeader>
+        <RadioGroup
+          className="ml-2"
+          defaultValue={content.playOnHover === true ? "onHover" : "autoPlay"}
+        >
+          <div
+            className="flex items-center space-x-2"
+            onClick={() => handleChange(false)}
+          >
+            <RadioGroupItem value="autoPlay" id="autoPlay" />
+            <label htmlFor="autoPlay">Auto Play</label>
+          </div>
+          <div
+            className="flex items-center space-x-2"
+            onClick={() => handleChange(true)}
+          >
+            <RadioGroupItem value="onHover" id="onHover" />
+            <label htmlFor="onHover">Play on Hover</label>
+          </div>
+        </RadioGroup>
+      </>
+    );
+  };
+
+  interface MenuItemProps<T> {
+    header: string;
+    properties: ToolValueObject<T>[];
+    activeProperty?: T;
+    handlePropertyChange: (property: T) => void;
+  }
+
+  const ButtonMenu = <T extends CSSPropertyKeys>(props: MenuItemProps<T>) => {
+    const { header, properties, activeProperty, handlePropertyChange } = props;
+    return (
+      <TooltipProvider>
+        <SectionHeader>{header}</SectionHeader>
+        <section className="flex mt-2 rounded-lg border w-full overflow-hidden">
+          {properties.map(({ icon, value, tooltip }) => (
+            <Tooltip key={value}>
+              <TooltipTrigger asChild>
+                <Button
+                  size={"icon"}
+                  className={cn(
+                    `rounded-none px-2 flex flex-grow justify-center`,
+                    activeProperty === value &&
+                      "bg-accent hover:bg-accent/60 text-accent-foreground"
+                  )}
+                  variant={"ghost"}
+                  onClick={() => handlePropertyChange(value)}
+                >
+                  {icon}
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>{tooltip}</TooltipContent>
+            </Tooltip>
+          ))}
+        </section>
+      </TooltipProvider>
+    );
+  };
+
+  const SectionHeader = ({ children }: ChildNodeProps) => {
+    return <h3 className="font-semibold mt-6 mb-2">{children}</h3>;
   };
 
   const RenderedStylingTools: Record<ContentType, Array<() => JSX.Element>> = {
@@ -251,8 +463,13 @@ const StylingTab = () => {
       TextStylingTool,
       TextColourTool,
     ],
-    image: [],
-    video: [],
+    image: [MediaSizeTool, MediaHorizontalPosition, MediaRoundedTool],
+    video: [
+      MediaSizeTool,
+      MediaHorizontalPosition,
+      MediaRoundedTool,
+      VideoPlayOnHoverTool,
+    ],
   };
 
   return (

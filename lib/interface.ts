@@ -59,8 +59,15 @@ export interface ContentBlockProp {
   id: string;
   value?: string | PostUserMedia;
   style?: CSSProperties;
+  playOnHover?: boolean;
 }
 
 export interface PostContentBlock extends ContentBlockProp {
   content: (props: ContentBlockProp) => React.JSX.Element;
+}
+
+export interface ToolValueObject<T> {
+  icon: React.ReactNode;
+  value: T;
+  tooltip?: string;
 }

@@ -26,7 +26,7 @@ const ContentTab = (props: ThumbnailProps) => {
       {renderedContent === "block" ? (
         <>
           <div
-            className="relative w-5/6 max-w-[83.33%] mx-4 my-2 h-[8rem] cursor-pointer rounded-md border-2 border-transparent hover:border-primary"
+            className="relative w-5/6 max-w-[83.33%] ml-2 mr-4 my-2 h-[8rem] cursor-pointer rounded-md border-2 border-transparent hover:border-primary"
             onClick={() => {
               setRenderedContent("uploaded");
             }}
@@ -66,13 +66,24 @@ const UserMediaBlocks = (props: ThumbnailProps) => {
   const { content } = usePostCreator();
   return content.map((content, index) => {
     if (content.content.format === "VIDEO") {
-      return <UserVideoBlock key={index} content={content} />;
+      return (
+        <UserVideoBlock
+          key={index}
+          content={content}
+          thumbnail={
+            postContent[index].thumbnail ??
+            process.env.NEXT_PUBLIC_FALLBACK_PHOTO
+          }
+        />
+      );
     }
     return (
       <UserImageBlock
         key={index}
         content={content}
-        thumbnail={postContent[index].thumbnail}
+        thumbnail={
+          postContent[index].thumbnail ?? process.env.NEXT_PUBLIC_FALLBACK_PHOTO
+        }
       />
     );
   });

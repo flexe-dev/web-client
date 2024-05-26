@@ -4,9 +4,6 @@ import {
   DialogOverlay,
   DialogContent,
   DialogHeader,
-  DialogDescription,
-  DialogClose,
-  DialogFooter,
 } from "../ui/dialog";
 import { useAccount } from "../context/AccountProvider";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
@@ -29,7 +26,7 @@ const PostCreateDialog = ({ dispatch }: DialogProps) => {
         <DialogHeader className="mb-4 text-2xl font-bold">
           Create a new post
         </DialogHeader>
-        <DialogDescription className="flex flex-col space-y-2">
+        <div className="flex flex-col space-y-2">
           <div className="flex items-center space-x-4">
             <Avatar>
               <AvatarImage
@@ -78,7 +75,7 @@ const PostCreateDialog = ({ dispatch }: DialogProps) => {
               </Button>
             </Link>
           </div>
-        </DialogDescription>
+        </div>
       </DialogContent>
     </DialogPortal>
   );
