@@ -394,7 +394,9 @@ const StylingTab = () => {
         <SectionHeader>Video Playback Settings</SectionHeader>
         <RadioGroup
           className="ml-2"
-          defaultValue={content.playOnHover === true ? "onHover" : "autoPlay"}
+          defaultValue={
+            content.options?.playOnHover === true ? "onHover" : "autoPlay"
+          }
         >
           <div
             className="flex items-center space-x-2"
@@ -413,6 +415,14 @@ const StylingTab = () => {
         </RadioGroup>
       </>
     );
+  };
+
+  const CarouselAutoplayTool = () => {
+    return <></>;
+  };
+
+  const CarouselLoopTool = () => {
+    return <></>;
   };
 
   interface MenuItemProps<T> {
@@ -470,6 +480,7 @@ const StylingTab = () => {
       MediaRoundedTool,
       VideoPlayOnHoverTool,
     ],
+    carousel: [MediaSizeTool, MediaHorizontalPosition, MediaRoundedTool],
   };
 
   return (
