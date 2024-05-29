@@ -2,6 +2,7 @@
 
 import {
   ChildNodeProps,
+  ContentBlockOptions,
   ContentStyling,
   PostContentBlock,
   PostUserMedia,
@@ -22,7 +23,11 @@ interface PostCreatorProviderState {
   //Context Callbacks
   onStyleChange: (id: string, style: CSSProperties) => void;
   onValueChange: (id: string, value: string) => void;
-  onVideoHoverChange: (id: string, playOnHover: boolean) => void;
+  onOptionsChange: (
+    id: string,
+    option: keyof ContentBlockOptions,
+    value: boolean
+  ) => void;
   onDelete: (id: string) => void;
   //Context State Dispatches
   setPreviewMode: React.Dispatch<React.SetStateAction<boolean>>;
@@ -46,7 +51,7 @@ const initialState: PostCreatorProviderState = {
   onDelete: () => {},
   onValueChange: () => {},
   onStyleChange: () => {},
-  onVideoHoverChange: () => {},
+  onOptionsChange: () => {},
 
   setDocument: () => {},
   setPreviewMode: () => {},
@@ -109,11 +114,15 @@ export const PostCreatorProvider = ({
     );
   };
 
-  const onVideoHoverChange = (id: string, playOnHover: boolean) => {
+  const onOptionsChange = (
+    id: string,
+    option: keyof ContentBlockOptions,
+    value: boolean
+  ) => {
     setDocument((prev) =>
       prev.map((block) => {
         if (block.id === id) {
-          return { ...block, playOnHover };
+          return { ...block, options: { ...block.options, [option]: value } };
         }
         return block;
       })
@@ -131,7 +140,7 @@ export const PostCreatorProvider = ({
         setPreviewMode,
         onDelete,
         onValueChange,
-        onVideoHoverChange,
+        onOptionsChange,
         showDeletionConfirmation,
         setShowDeletionConfirmation,
         sidebarOpen,

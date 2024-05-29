@@ -39,6 +39,7 @@ import {
 import { Property } from "csstype";
 import React from "react";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Switch } from "@/components/ui/switch";
 
 type CSSPropertyKeys =
   | Property.TextAlign
@@ -47,7 +48,7 @@ type CSSPropertyKeys =
   | Property.BorderRadius;
 
 const StylingTab = () => {
-  const { activeStylingTool, onStyleChange, document, onVideoHoverChange } =
+  const { activeStylingTool, onStyleChange, document, onOptionsChange } =
     usePostCreator();
   const content = document.find(
     (content) => content.id === activeStylingTool?.id
@@ -268,7 +269,7 @@ const StylingTab = () => {
       },
       {
         title: "Screen",
-        width: "100%",
+        width: "64rem",
       },
     ];
     return (
@@ -387,7 +388,7 @@ const StylingTab = () => {
 
   const VideoPlayOnHoverTool = () => {
     const handleChange = (value: boolean) => {
-      onVideoHoverChange(activeStylingTool.id, value);
+      onOptionsChange(activeStylingTool.id, "playOnHover", value);
     };
     return (
       <>
@@ -418,11 +419,35 @@ const StylingTab = () => {
   };
 
   const CarouselAutoplayTool = () => {
-    return <></>;
+    const handleChange = (value: boolean) => {
+      onOptionsChange(activeStylingTool.id, "carouselAutoplay", value);
+    };
+    return (
+      <div className="flex space-x-1 my-4 items-center">
+        <h3 className="font-semibold">Autoplay</h3>
+        <Switch
+          className="mr-4"
+          checked={content.options?.carouselAutoplay}
+          onCheckedChange={(checked) => handleChange(checked)}
+        />
+      </div>
+    );
   };
 
   const CarouselLoopTool = () => {
-    return <></>;
+    const handleChange = (value: boolean) => {
+      onOptionsChange(activeStylingTool.id, "carouselLoop", value);
+    };
+    return (
+      <div className="flex space-x-1 my-4 items-center">
+        <h3 className="font-semibold">Loop Content</h3>
+        <Switch
+          className="mr-4"
+          checked={content.options?.carouselAutoplay}
+          onCheckedChange={(checked) => handleChange(checked)}
+        />
+      </div>
+    );
   };
 
   interface MenuItemProps<T> {
@@ -480,7 +505,13 @@ const StylingTab = () => {
       MediaRoundedTool,
       VideoPlayOnHoverTool,
     ],
-    carousel: [MediaSizeTool, MediaHorizontalPosition, MediaRoundedTool],
+    carousel: [
+      MediaSizeTool,
+      MediaHorizontalPosition,
+      MediaRoundedTool,
+      CarouselAutoplayTool,
+      CarouselLoopTool,
+    ],
   };
 
   return (

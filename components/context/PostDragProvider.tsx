@@ -28,10 +28,7 @@ import { ImageContent } from "../creator/content/ImageContent";
 import { VideoContent } from "../creator/content/VideoContent";
 import GalleryContent from "../creator/content/CarouselContent";
 import { useMediaQuery } from "react-responsive";
-import {
-  restrictToHorizontalAxis,
-  restrictToWindowEdges,
-} from "@dnd-kit/modifiers";
+import { restrictToWindowEdges } from "@dnd-kit/modifiers";
 import {
   DefaultMedia,
   DefaultSubtitle,
@@ -183,8 +180,10 @@ export const PostDragProvider = ({
               options: {
                 carouselAutoplay: false,
                 carouselLoop: true,
+                carouselDuration: 5000,
+                carouselStopOnMouseEnter: true,
               },
-              style: DefaultMedia,
+              style: originalImageContent.style,
             };
             setDocument((items) => {
               const overIndex = items.findIndex((doc) => doc.id === over.id);

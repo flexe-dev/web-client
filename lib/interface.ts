@@ -59,6 +59,8 @@ export interface ContentBlockOptions {
   playOnHover?: boolean;
   carouselAutoplay?: boolean;
   carouselLoop?: boolean;
+  carouselStopOnMouseEnter?: boolean;
+  carouselDuration?: number;
 }
 
 export interface ContentBlockProp {

@@ -22,6 +22,19 @@ const GalleryContent = (props: ContentBlockProp) => {
   const [api, setAPI] = useState<CarouselApi>();
   const [current, setCurrent] = useState(0);
 
+  const generateCarouselPlugins = () => {
+    const plugins = [];
+    if (options?.carouselAutoplay) {
+      plugins.push(
+        Autoplay({
+          delay: options?.carouselDuration,
+          startOnInteraction: options?.carouselAutoplay,
+        })
+      );
+    }
+    return plugins;
+  };
+
   useEffect(() => {
     if (!api) {
       return;
@@ -33,9 +46,16 @@ const GalleryContent = (props: ContentBlockProp) => {
 
   return (
     <SortableItem id={id}>
-      <ContentWrapper id={id} type="carousel">
-        <Carousel className="w-full h-full relative" setApi={setAPI}>
-          <CarouselContent className="p-1">
+      <ContentWrapper id={id} className="overflow-hidden" type="carousel">
+        <Carousel
+          opts={{
+            loop: options?.carouselLoop,
+          }}
+          plugins={generateCarouselPlugins()}
+          className="m-4 w-full h-full relative"
+          setApi={setAPI}
+        >
+          <CarouselContent className="">
             {(value as PostUserMedia[]).map((image, index) => (
               <CarouselItem
                 className="w-full h-full flex"
@@ -57,21 +77,27 @@ const GalleryContent = (props: ContentBlockProp) => {
             ))}
           </CarouselContent>
           <div
-            id="carousel-progress"
-            className="flex space-x-2 absolute bottom-4 w-full left-1/2 right-1/2"
+            className="w-full flex"
+            style={{ justifyContent: horizPos, alignItems: vertPos }}
           >
-            {(value as PostUserMedia[]).map((_, index) => {
-              return (
-                <div
-                  key={`progress-${index}`}
-                  className={`rounded-full w-[1.25rem] aspect-square  ${
-                    index === current - 1
-                      ? "bg-inverted/80"
-                      : "bg-secondary-header/40"
-                  } transition-all`}
-                ></div>
-              );
-            })}
+            <div
+              id="carousel-progress"
+              style={{ width: style?.maxWidth }}
+              className="flex space-x-2 0 w-full h-4 bg-background justify-center mt-4"
+            >
+              {(value as PostUserMedia[]).map((_, index) => {
+                return (
+                  <div
+                    key={`progress-${index}`}
+                    className={`rounded-full w-4 aspect-square  ${
+                      index === current - 1
+                        ? "bg-primary"
+                        : "bg-secondary-header/40 backdrop-blur-md"
+                    } transition-all`}
+                  ></div>
+                );
+              })}
+            </div>
           </div>
         </Carousel>
       </ContentWrapper>
