@@ -63,9 +63,12 @@ export interface ContentBlockOptions {
   carouselDuration?: number;
 }
 
+export type OptionKeys = keyof ContentBlockOptions;
+export type OptionKeyValues = ContentBlockOptions[OptionKeys];
+export type ContentValue = string | PostUserMedia | PostUserMedia[];
 export interface ContentBlockProp {
   id: string;
-  value?: string | PostUserMedia | PostUserMedia[];
+  value?: ContentValue;
   style?: CSSProperties;
   options?: ContentBlockOptions;
 }

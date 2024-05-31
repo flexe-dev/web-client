@@ -71,7 +71,7 @@ const UserMediaBlocks = (props: ThumbnailProps) => {
           key={index}
           content={content}
           thumbnail={
-            postContent[index].thumbnail ??
+            postContent[index]?.thumbnail ??
             process.env.NEXT_PUBLIC_FALLBACK_PHOTO
           }
         />
@@ -82,7 +82,8 @@ const UserMediaBlocks = (props: ThumbnailProps) => {
         key={index}
         content={content}
         thumbnail={
-          postContent[index].thumbnail ?? process.env.NEXT_PUBLIC_FALLBACK_PHOTO
+          postContent[index]?.thumbnail ??
+          process.env.NEXT_PUBLIC_FALLBACK_PHOTO
         }
       />
     );

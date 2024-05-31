@@ -9,11 +9,20 @@ import {
   SelectValue,
   SelectContent,
 } from "@/components/ui/select";
-import { ChildNodeProps, ContentType, ToolValueObject } from "@/lib/interface";
+import {
+  ChildNodeProps,
+  ClassNameProp,
+  ContentType,
+  OptionKeyValues,
+  OptionKeys,
+  ToolValueObject,
+} from "@/lib/interface";
 import {
   Bars3Icon,
   Bars3BottomLeftIcon,
   Bars3BottomRightIcon,
+  PlusIcon,
+  MinusIcon,
 } from "@heroicons/react/24/outline";
 import { FaBold, FaItalic, FaUnderline } from "react-icons/fa";
 import {
@@ -40,6 +49,9 @@ import { Property } from "csstype";
 import React from "react";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Switch } from "@/components/ui/switch";
+import { Input } from "@/components/ui/input";
+import { divide } from "lodash";
+import { toast } from "sonner";
 
 type CSSPropertyKeys =
   | Property.TextAlign
@@ -387,67 +399,108 @@ const StylingTab = () => {
   };
 
   const VideoPlayOnHoverTool = () => {
-    const handleChange = (value: boolean) => {
-      onOptionsChange(activeStylingTool.id, "playOnHover", value);
-    };
     return (
-      <>
-        <SectionHeader>Video Playback Settings</SectionHeader>
-        <RadioGroup
-          className="ml-2"
-          defaultValue={
-            content.options?.playOnHover === true ? "onHover" : "autoPlay"
+      <div className="flex space-x-1 my-4 items-center justify-between">
+        <h3 className="font-semibold">Play On Hover</h3>
+        <Switch
+          className="mr-2"
+          checked={content.options?.playOnHover}
+          onCheckedChange={(checked) =>
+            handleOptionValueChange("playOnHover", checked)
           }
-        >
-          <div
-            className="flex items-center space-x-2"
-            onClick={() => handleChange(false)}
-          >
-            <RadioGroupItem value="autoPlay" id="autoPlay" />
-            <label htmlFor="autoPlay">Auto Play</label>
-          </div>
-          <div
-            className="flex items-center space-x-2"
-            onClick={() => handleChange(true)}
-          >
-            <RadioGroupItem value="onHover" id="onHover" />
-            <label htmlFor="onHover">Play on Hover</label>
-          </div>
-        </RadioGroup>
-      </>
+        />
+      </div>
     );
   };
 
   const CarouselAutoplayTool = () => {
-    const handleChange = (value: boolean) => {
-      onOptionsChange(activeStylingTool.id, "carouselAutoplay", value);
-    };
     return (
-      <div className="flex space-x-1 my-4 items-center">
-        <h3 className="font-semibold">Autoplay</h3>
+      <div className="flex space-x-1 my-4 items-center justify-between">
+        <h3 className="font-semibold">Autoplay Carousel</h3>
         <Switch
-          className="mr-4"
+          className="mr-2"
           checked={content.options?.carouselAutoplay}
-          onCheckedChange={(checked) => handleChange(checked)}
+          onCheckedChange={(checked) =>
+            handleOptionValueChange("carouselAutoplay", checked)
+          }
         />
       </div>
     );
   };
 
   const CarouselLoopTool = () => {
-    const handleChange = (value: boolean) => {
-      onOptionsChange(activeStylingTool.id, "carouselLoop", value);
-    };
     return (
-      <div className="flex space-x-1 my-4 items-center">
+      <div className="flex space-x-1 my-4 items-center justify-between">
         <h3 className="font-semibold">Loop Content</h3>
         <Switch
-          className="mr-4"
-          checked={content.options?.carouselAutoplay}
-          onCheckedChange={(checked) => handleChange(checked)}
+          className="mr-2"
+          checked={content.options?.carouselLoop}
+          onCheckedChange={(checked) =>
+            handleOptionValueChange("carouselLoop", checked)
+          }
         />
       </div>
     );
+  };
+
+  const CarouselAutoplayDelayTool = () => {
+    if (!content.options?.carouselAutoplay) return <></>;
+
+    const DEFAULT_AUTOPLAY_DURATION = 5000;
+    const MILLISECONDS = 1000;
+    const autoPlayDuration = content.options?.carouselDuration;
+    const sanitiseBeforeUpdate = (value: number) => {
+      onOptionsChange(
+        activeStylingTool.id,
+        "carouselDuration",
+        Math.round(value) * 1000
+      );
+    };
+    const handleValueIncrement = (action: "decrement" | "increment") => {
+      onOptionsChange(
+        activeStylingTool.id,
+        "carouselDuration",
+        (autoPlayDuration ?? DEFAULT_AUTOPLAY_DURATION) +
+          (action === "decrement" ? -1000 : 1000)
+      );
+    };
+
+    return (
+      <>
+        <SectionHeader className="mt-3">Autoplay Delay</SectionHeader>
+        <div className="flex w-full">
+          <Button
+            disabled={autoPlayDuration === 1 * MILLISECONDS}
+            variant={"outline"}
+            size={"icon"}
+            className="border-r-transparent rounded-r-none"
+            onClick={() => handleValueIncrement("decrement")}
+          >
+            <MinusIcon className="w-7 h-7 " />
+          </Button>
+          <div className="w-14 border-y flex justify-center items-center">
+            {divide(autoPlayDuration ?? DEFAULT_AUTOPLAY_DURATION, 1000)}
+            {"s"}
+          </div>
+          <Button
+            disabled={autoPlayDuration === 10 * MILLISECONDS}
+            variant={"outline"}
+            size={"icon"}
+            className="border-l-transparent rounded-l-none"
+            onClick={() => handleValueIncrement("increment")}
+          >
+            <PlusIcon className="w-7 h-7" />
+          </Button>
+        </div>
+      </>
+    );
+  };
+
+  const handleOptionValueChange = (
+    option: OptionKeys,
+    value: OptionKeyValues
+  ) => {
+    onOptionsChange(activeStylingTool.id, option, value);
   };
 
   interface MenuItemProps<T> {
@@ -487,8 +540,12 @@ const StylingTab = () => {
     );
   };
 
-  const SectionHeader = ({ children }: ChildNodeProps) => {
-    return <h3 className="font-semibold mt-6 mb-2">{children}</h3>;
+  interface SectionHeaderProps extends ChildNodeProps, ClassNameProp {}
+
+  const SectionHeader = ({ children, className }: SectionHeaderProps) => {
+    return (
+      <h3 className={cn("font-semibold mt-6 mb-2", className)}>{children}</h3>
+    );
   };
 
   const RenderedStylingTools: Record<ContentType, Array<() => JSX.Element>> = {
@@ -509,8 +566,9 @@ const StylingTab = () => {
       MediaSizeTool,
       MediaHorizontalPosition,
       MediaRoundedTool,
-      CarouselAutoplayTool,
       CarouselLoopTool,
+      CarouselAutoplayTool,
+      CarouselAutoplayDelayTool,
     ],
   };
 

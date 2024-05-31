@@ -40,7 +40,7 @@ const DefaultContent = () => {
   );
 };
 
-const ContentVisual = ({ value, playOnHover }: ContentBlockProp) => {
+const ContentVisual = ({ value, options }: ContentBlockProp) => {
   const [videoThumbnail, setVideoThumbnail] = useState<string | undefined>();
   useEffect(() => {
     const generateStaticThumbnail = async () => {
@@ -59,9 +59,9 @@ const ContentVisual = ({ value, playOnHover }: ContentBlockProp) => {
         autoPlay
         loop
         controls
-        className={cn(playOnHover && "hidden group-hover:block")}
+        className={cn(options?.playOnHover && "hidden group-hover:block")}
       />
-      {playOnHover && (
+      {options?.playOnHover && (
         <div className="group-hover:hidden">
           {videoThumbnail ? (
             <Image

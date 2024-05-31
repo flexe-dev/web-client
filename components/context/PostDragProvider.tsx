@@ -130,6 +130,17 @@ export const PostDragProvider = ({
     };
   };
 
+  const checkImageCarouselHandling = (active: Active, over: Over): boolean => {
+    const values = ["image", "carousel"];
+    const activeValid = values.some((value) =>
+      (active.id as string).includes(value)
+    );
+    const overValid = values.some((value) =>
+      (over.id as string).includes(value)
+    );
+    return activeValid && overValid;
+  };
+
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
 
@@ -158,11 +169,7 @@ export const PostDragProvider = ({
       (active.id as string).includes("draggable-block") &&
       (over.id as string).includes("draggable-content")
     ) {
-      if (
-        (active.id as string).includes("image") &&
-        ((over.id as string).includes("image") ||
-          (over.id as string).includes("carousel"))
-      ) {
+      if (checkImageCarouselHandling(active, over)) {
         //Special Case for Image Carousel
         if (checkContentThreshold(active, over)) {
           //Need to Generate a New Carousel Object
@@ -271,11 +278,7 @@ export const PostDragProvider = ({
       over.id !== "draggable-content-new-block"
     ) {
       //Handle Dragging an Image into another Image to Form a Carousel
-      if (
-        (active.id as string).includes("image") &&
-        ((over.id as string).includes("image") ||
-          (over.id as string).includes("carousel"))
-      ) {
+      if (checkImageCarouselHandling(active, over)) {
         //Check If its within an acceptable threshold
         if (checkContentThreshold(active, over)) {
           clearGhostBlock();

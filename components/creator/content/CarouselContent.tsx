@@ -15,12 +15,15 @@ import {
 } from "@/components/ui/carousel";
 import { SortableItem } from "@/components/dnd/Sortable";
 import Autoplay from "embla-carousel-autoplay";
+import { Button } from "@/components/ui/button";
+import { usePostCreator } from "@/components/context/PostCreatorProvider";
 
 const GalleryContent = (props: ContentBlockProp) => {
   const { value, style, id, options } = props;
   const [vertPos, horizPos] = [style?.alignItems, style?.justifyContent];
   const [api, setAPI] = useState<CarouselApi>();
   const [current, setCurrent] = useState(0);
+  const { onValueChange } = usePostCreator();
 
   const generateCarouselPlugins = () => {
     const plugins = [];
@@ -43,6 +46,22 @@ const GalleryContent = (props: ContentBlockProp) => {
     setCurrent(api.selectedScrollSnap() + 1);
     api.on("select", () => [setCurrent(api.selectedScrollSnap() + 1)]);
   }, [api]);
+
+  const removeFromCarousel = (
+    event: React.MouseEvent<HTMLButtonElement>,
+    index: number
+  ) => {
+    event.stopPropagation();
+    onValueChange(
+      id,
+      (value as PostUserMedia[]).filter((_, i) => i !== index)
+    );
+    if ((value as PostUserMedia[]).length === 1) {
+      ConvertToImageBlock();
+    }
+  };
+
+  const ConvertToImageBlock = () => {};
 
   return (
     <SortableItem id={id}>
@@ -72,6 +91,13 @@ const GalleryContent = (props: ContentBlockProp) => {
                     src={image.content.location}
                     alt={image.file.name}
                   />
+                  <Button
+                    onClick={(e) => removeFromCarousel(e, index)}
+                    variant={"outline"}
+                    className="border-destructive text-xs w-fit p-1 absolute top-4 right-4 bg-destructive/30 hover:bg-destructive/60 text-destructive"
+                  >
+                    Remove
+                  </Button>
                 </div>
               </CarouselItem>
             ))}
