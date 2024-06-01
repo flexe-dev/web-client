@@ -12,13 +12,6 @@ import { usePostCreator } from "../context/PostCreatorProvider";
 import { Switch } from "../ui/switch";
 import UserVideoBlock from "./blocks/UserVideoBlock";
 import UserImageBlock from "./blocks/UserImageBlock";
-import {
-  Select,
-  SelectTrigger,
-  SelectValue,
-  SelectContent,
-  SelectItem,
-} from "@/components/ui/select";
 import { AnimatePresence } from "framer-motion";
 
 const PostContent = () => {
@@ -39,6 +32,7 @@ const PostContent = () => {
           id={contentBlock.id}
           value={contentBlock.value}
           style={contentBlock.style}
+          options={contentBlock.options}
         />
       ) : null;
     }

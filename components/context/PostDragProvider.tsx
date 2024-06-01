@@ -28,7 +28,6 @@ import { ImageContent } from "../creator/content/ImageContent";
 import { VideoContent } from "../creator/content/VideoContent";
 import GalleryContent from "../creator/content/CarouselContent";
 import { useMediaQuery } from "react-responsive";
-import { restrictToWindowEdges } from "@dnd-kit/modifiers";
 import {
   DefaultMedia,
   DefaultSubtitle,
@@ -201,6 +200,7 @@ export const PostDragProvider = ({
                 carouselLoop: true,
                 carouselDuration: 5000,
                 carouselStopOnMouseEnter: true,
+                activeIndex: 0,
               },
               style: originalImageContent.style,
             };

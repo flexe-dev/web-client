@@ -1,5 +1,13 @@
 "use client";
 
+/* 
+todo: 
+  - Convert Carousel Back to Image Block if only one image is left
+  - Improve Visuals from when moving carousel
+  - Add Ability To Rearrange Order of Content in Carousel
+  - Fix Resizing Issue from Image to Carousel On Mac
+*/
+
 import { ContentBlockProp, PostUserMedia } from "@/lib/interface";
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
@@ -10,8 +18,6 @@ import {
   CarouselApi,
   CarouselContent,
   CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
 } from "@/components/ui/carousel";
 import { SortableItem } from "@/components/dnd/Sortable";
 import Autoplay from "embla-carousel-autoplay";
@@ -24,7 +30,8 @@ const GalleryContent = (props: ContentBlockProp) => {
   const [vertPos, horizPos] = [style?.alignItems, style?.justifyContent];
   const [api, setAPI] = useState<CarouselApi>();
   const [current, setCurrent] = useState(0);
-  const { onValueChange } = usePostCreator();
+  const [startIndex, setStartIndex] = useState<boolean>(false);
+  const { onValueChange, onOptionsChange } = usePostCreator();
 
   const generateCarouselPlugins = () => {
     const plugins = [];
@@ -44,8 +51,16 @@ const GalleryContent = (props: ContentBlockProp) => {
       return;
     }
 
+    if (!startIndex) {
+      api.scrollTo(options?.activeIndex ?? 0, true);
+      setStartIndex(true);
+    }
+
     setCurrent(api.selectedScrollSnap() + 1);
-    api.on("select", () => [setCurrent(api.selectedScrollSnap() + 1)]);
+    api.on("select", () => {
+      setCurrent(api.selectedScrollSnap() + 1);
+      onOptionsChange(id, "activeIndex", api.selectedScrollSnap());
+    });
   }, [api]);
 
   const removeFromCarousel = (
@@ -95,8 +110,8 @@ const GalleryContent = (props: ContentBlockProp) => {
                     />
                     <Button
                       onClick={(e) => removeFromCarousel(e, index)}
-                      variant={"outline"}
-                      className="border-destructive text-xs w-fit p-1 absolute top-4 right-4 bg-destructive/30 hover:bg-destructive/60 text-destructive"
+                      variant={"destructive"}
+                      className="border-destructive text-xs w-fit p-1 absolute top-4 right-4"
                     >
                       Remove
                     </Button>

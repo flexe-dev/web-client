@@ -61,6 +61,7 @@ export interface ContentBlockOptions {
   carouselLoop?: boolean;
   carouselStopOnMouseEnter?: boolean;
   carouselDuration?: number;
+  activeIndex?: number;
 }
 
 export type OptionKeys = keyof ContentBlockOptions;
