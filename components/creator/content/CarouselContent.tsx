@@ -5,7 +5,7 @@ todo:
   - Convert Carousel Back to Image Block if only one image is left
   - Improve Visuals from when moving carousel
   - Add Ability To Rearrange Order of Content in Carousel
-  - Fix Resizing Issue from Image to Carousel On Mac
+  - Fix Resizing Issue from Image to Carousel On Mac 
 */
 
 import { ContentBlockProp, PostUserMedia } from "@/lib/interface";
@@ -111,7 +111,7 @@ const GalleryContent = (props: ContentBlockProp) => {
                     <Button
                       onClick={(e) => removeFromCarousel(e, index)}
                       variant={"destructive"}
-                      className="border-destructive text-xs w-fit p-1 absolute top-4 right-4"
+                      className="border-destructive text-xs w-fit p-1 h-fit absolute top-4 right-4"
                     >
                       Remove
                     </Button>
