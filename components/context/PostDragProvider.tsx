@@ -48,8 +48,31 @@ const initialState: PostDragProviderState = {
   setActiveDragID: () => {},
 };
 
+export const carouselRelatedValues = ["image", "carousel"];
+
 export const PostDragContext =
   createContext<PostDragProviderState>(initialState);
+
+export const checkContentThreshold = (active: Active, over: Over): boolean => {
+  if (!over || !active.rect.current.translated) return false;
+  return (
+    active.rect?.current?.translated?.bottom - over.rect.top >= 20 &&
+    over.rect.bottom - active.rect?.current?.translated?.bottom >= 20
+  );
+};
+
+export const checkImageCarouselHandling = (
+  active: Active,
+  over: Over
+): boolean => {
+  const activeValid = carouselRelatedValues.some((value) =>
+    (active.id as string).includes(value)
+  );
+  const overValid = carouselRelatedValues.some((value) =>
+    (over.id as string).includes(value)
+  );
+  return activeValid && overValid;
+};
 
 export const PostDragProvider = ({
   children,
@@ -128,17 +151,6 @@ export const PostDragProvider = ({
         playOnHover: type === "video" ? false : undefined,
       },
     };
-  };
-
-  const checkImageCarouselHandling = (active: Active, over: Over): boolean => {
-    const values = ["image", "carousel"];
-    const activeValid = values.some((value) =>
-      (active.id as string).includes(value)
-    );
-    const overValid = values.some((value) =>
-      (over.id as string).includes(value)
-    );
-    return activeValid && overValid;
   };
 
   const handleDragEnd = (event: DragEndEvent) => {
@@ -253,14 +265,6 @@ export const PostDragProvider = ({
     }
   };
 
-  const checkContentThreshold = (active: Active, over: Over): boolean => {
-    if (!over || !active.rect.current.translated) return false;
-    return (
-      active.rect?.current?.translated?.bottom - over.rect.top >= 20 &&
-      over.rect.bottom - active.rect?.current?.translated?.bottom >= 20
-    );
-  };
-
   const handleDragMove = (event: DragOverEvent) => {
     const { active, over } = event;
 
@@ -334,7 +338,7 @@ export const PostDragProvider = ({
         sensors={sensors}
         id="Document-Creator-Drag-Context"
         onDragStart={handleDragStart}
-        modifiers={[restrictToWindowEdges]}
+        modifiers={[]}
         onDragMove={handleDragMove}
         onDragEnd={handleDragEnd}
         collisionDetection={

@@ -20,7 +20,7 @@ interface Props extends ChildNodeProps, ClassNameProp {
   type: ContentType;
 }
 
-const ContentWrapper = ({ children, className, noDrag, id, type }: Props) => {
+const ContentWrapper = ({ children, className, noDrag, id, type}: Props) => {
   const {
     document,
     previewMode,

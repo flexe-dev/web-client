@@ -17,6 +17,7 @@ import { SortableItem } from "@/components/dnd/Sortable";
 import Autoplay from "embla-carousel-autoplay";
 import { Button } from "@/components/ui/button";
 import { usePostCreator } from "@/components/context/PostCreatorProvider";
+import { ImageCarouselVisualEffect } from "./ImageCarouselVisualWrapper";
 
 const GalleryContent = (props: ContentBlockProp) => {
   const { value, style, id, options } = props;
@@ -74,34 +75,36 @@ const GalleryContent = (props: ContentBlockProp) => {
           className="m-4 w-full h-full relative"
           setApi={setAPI}
         >
-          <CarouselContent className="">
-            {(value as PostUserMedia[]).map((image, index) => (
-              <CarouselItem
-                className="w-full h-full flex"
-                style={{ justifyContent: horizPos, alignItems: vertPos }}
-                key={index}
-              >
-                <div
-                  style={omit(style, ["justifyContent", "alignItems"])}
-                  className="basis-full w-fit flex relative aspect-[4/3]  overflow-hidden"
+          <ImageCarouselVisualEffect id={id}>
+            <CarouselContent>
+              {(value as PostUserMedia[]).map((image, index) => (
+                <CarouselItem
+                  className="w-full h-full flex"
+                  style={{ justifyContent: horizPos, alignItems: vertPos }}
+                  key={index}
                 >
-                  <Image
-                    width={image.content.width}
-                    height={image.content.height}
-                    src={image.content.location}
-                    alt={image.file.name}
-                  />
-                  <Button
-                    onClick={(e) => removeFromCarousel(e, index)}
-                    variant={"outline"}
-                    className="border-destructive text-xs w-fit p-1 absolute top-4 right-4 bg-destructive/30 hover:bg-destructive/60 text-destructive"
+                  <div
+                    style={omit(style, ["justifyContent", "alignItems"])}
+                    className="basis-full w-fit flex relative aspect-[4/3]  overflow-hidden"
                   >
-                    Remove
-                  </Button>
-                </div>
-              </CarouselItem>
-            ))}
-          </CarouselContent>
+                    <Image
+                      width={image.content.width}
+                      height={image.content.height}
+                      src={image.content.location}
+                      alt={image.file.name}
+                    />
+                    <Button
+                      onClick={(e) => removeFromCarousel(e, index)}
+                      variant={"outline"}
+                      className="border-destructive text-xs w-fit p-1 absolute top-4 right-4 bg-destructive/30 hover:bg-destructive/60 text-destructive"
+                    >
+                      Remove
+                    </Button>
+                  </div>
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+          </ImageCarouselVisualEffect>
           <div
             className="w-full flex"
             style={{ justifyContent: horizPos, alignItems: vertPos }}
