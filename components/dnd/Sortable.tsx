@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useMemo } from "react";
 import type { CSSProperties, PropsWithChildren } from "react";
 import type {
+  DraggableAttributes,
   DraggableSyntheticListeners,
   UniqueIdentifier,
 } from "@dnd-kit/core";
@@ -15,13 +16,13 @@ interface Props extends ClassNameProp {
 }
 
 interface Context {
-  attributes: Record<string, any>;
+  attributes: DraggableAttributes | null;
   listeners: DraggableSyntheticListeners;
   ref(node: HTMLElement | null): void;
 }
 
 const SortableItemContext = createContext<Context>({
-  attributes: {},
+  attributes: null,
   listeners: undefined,
   ref() {},
 });
@@ -48,6 +49,13 @@ export function SortableItem({
     },
     animateLayoutChanges: () => false,
   });
+
+  const style: CSSProperties = {
+    opacity: isDragging ? 0.4 : undefined,
+    transform: CSS.Translate.toString(transform),
+    transition,
+  };
+
   const context = useMemo(
     () => ({
       attributes,
@@ -56,11 +64,7 @@ export function SortableItem({
     }),
     [attributes, listeners, setActivatorNodeRef]
   );
-  const style: CSSProperties = {
-    opacity: isDragging ? 0.4 : undefined,
-    transform: CSS.Translate.toString(transform),
-    transition,
-  };
+
   return (
     <SortableItemContext.Provider value={context}>
       <div
@@ -85,4 +89,14 @@ export function DragHandle({ className }: ClassNameProp) {
       </svg>
     </button>
   );
+}
+
+export function useSortableItem() {
+  const context = useContext(SortableItemContext);
+  if (context === undefined) {
+    throw new Error(
+      "useSortableItem must be used within a SortableItemProvider"
+    );
+  }
+  return context;
 }

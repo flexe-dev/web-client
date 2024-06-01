@@ -20,13 +20,14 @@ interface Props extends ChildNodeProps, ClassNameProp {
   type: ContentType;
 }
 
-const ContentWrapper = ({ children, className, noDrag, id, type }: Props) => {
+const ContentWrapper = ({ children, className, noDrag, id, type}: Props) => {
   const {
     document,
     previewMode,
     onDelete,
     showDeletionConfirmation,
     setShowDeletionConfirmation,
+    activeStylingTool,
     setActiveStylingTool,
     setPreviewMode,
   } = usePostCreator();
@@ -62,7 +63,8 @@ const ContentWrapper = ({ children, className, noDrag, id, type }: Props) => {
         className={cn(
           "border-2 bg-background/80 w-full rounded-md flex",
           className,
-          previewMode && "border-transparent resize-none"
+          previewMode && "border-transparent resize-none",
+          activeStylingTool?.id === id && "border-primary"
         )}
       >
         {children}

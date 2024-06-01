@@ -12,13 +12,7 @@ import { usePostCreator } from "../context/PostCreatorProvider";
 import { Switch } from "../ui/switch";
 import UserVideoBlock from "./blocks/UserVideoBlock";
 import UserImageBlock from "./blocks/UserImageBlock";
-import {
-  Select,
-  SelectTrigger,
-  SelectValue,
-  SelectContent,
-  SelectItem,
-} from "@/components/ui/select";
+import { AnimatePresence } from "framer-motion";
 
 const PostContent = () => {
   const {
@@ -38,6 +32,7 @@ const PostContent = () => {
           id={contentBlock.id}
           value={contentBlock.value}
           style={contentBlock.style}
+          options={contentBlock.options}
         />
       ) : null;
     }
@@ -76,24 +71,26 @@ const PostContent = () => {
             />
             <h3>Preview Mode</h3>
           </div>
-          <SortableContext
-            id="droppable-post-content"
-            strategy={verticalListSortingStrategy}
-            items={document.map((document) => document.id)}
-          >
-            {document.map((document, index) => {
-              return (
-                <React.Fragment key={`document-component-${index}`}>
-                  <document.content
-                    id={document.id}
-                    value={document.value}
-                    style={document.style}
-                    playOnHover={document.playOnHover}
-                  />
-                </React.Fragment>
-              );
-            })}
-          </SortableContext>
+          <AnimatePresence>
+            <SortableContext
+              id="droppable-post-content"
+              strategy={verticalListSortingStrategy}
+              items={document.map((document) => document.id)}
+            >
+              {document.map((document, index) => {
+                return (
+                  <React.Fragment key={`document-component-${index}`}>
+                    <document.content
+                      id={document.id}
+                      value={document.value}
+                      style={document.style}
+                      options={document.options}
+                    />
+                  </React.Fragment>
+                );
+              })}
+            </SortableContext>
+          </AnimatePresence>
         </section>
       </section>
 

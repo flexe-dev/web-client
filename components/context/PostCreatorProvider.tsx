@@ -2,7 +2,11 @@
 
 import {
   ChildNodeProps,
+  ContentBlockOptions,
   ContentStyling,
+  ContentValue,
+  OptionKeyValues,
+  OptionKeys,
   PostContentBlock,
   PostUserMedia,
 } from "@/lib/interface";
@@ -21,8 +25,12 @@ interface PostCreatorProviderState {
   activeStylingTool: ContentStyling | null;
   //Context Callbacks
   onStyleChange: (id: string, style: CSSProperties) => void;
-  onValueChange: (id: string, value: string) => void;
-  onVideoHoverChange: (id: string, playOnHover: boolean) => void;
+  onValueChange: (id: string, value: ContentValue) => void;
+  onOptionsChange: (
+    id: string,
+    option: OptionKeys,
+    value: OptionKeyValues
+  ) => void;
   onDelete: (id: string) => void;
   //Context State Dispatches
   setPreviewMode: React.Dispatch<React.SetStateAction<boolean>>;
@@ -46,7 +54,7 @@ const initialState: PostCreatorProviderState = {
   onDelete: () => {},
   onValueChange: () => {},
   onStyleChange: () => {},
-  onVideoHoverChange: () => {},
+  onOptionsChange: () => {},
 
   setDocument: () => {},
   setPreviewMode: () => {},
@@ -87,7 +95,7 @@ export const PostCreatorProvider = ({
     setDocument((prev) => prev.filter((block) => block.id !== id));
   };
 
-  const onValueChange = (id: string, value: string) => {
+  const onValueChange = (id: string, value: ContentValue) => {
     setDocument((prev) =>
       prev.map((block) => {
         if (block.id === id) {
@@ -109,11 +117,15 @@ export const PostCreatorProvider = ({
     );
   };
 
-  const onVideoHoverChange = (id: string, playOnHover: boolean) => {
+  const onOptionsChange = (
+    id: string,
+    option: OptionKeys,
+    value: OptionKeyValues
+  ) => {
     setDocument((prev) =>
       prev.map((block) => {
         if (block.id === id) {
-          return { ...block, playOnHover };
+          return { ...block, options: { ...block.options, [option]: value } };
         }
         return block;
       })
@@ -131,7 +143,7 @@ export const PostCreatorProvider = ({
         setPreviewMode,
         onDelete,
         onValueChange,
-        onVideoHoverChange,
+        onOptionsChange,
         showDeletionConfirmation,
         setShowDeletionConfirmation,
         sidebarOpen,

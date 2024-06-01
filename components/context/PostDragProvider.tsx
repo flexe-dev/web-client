@@ -2,12 +2,14 @@
 
 import React, { createContext, useState } from "react";
 import {
+  Active,
   DndContext,
   DragEndEvent,
   DragOverEvent,
   DragStartEvent,
   KeyboardSensor,
   MouseSensor,
+  Over,
   PointerSensor,
   UniqueIdentifier,
   closestCenter,
@@ -20,10 +22,11 @@ import { usePostCreator } from "./PostCreatorProvider";
 import BlockPreview from "../creator/blocks/BlockPreview";
 import { BlockID } from "../creator/blocks/Blocks";
 import { nanoid } from "nanoid";
-import { PostContentBlock } from "@/lib/interface";
+import { PostContentBlock, PostUserMedia } from "@/lib/interface";
 import { TextContent } from "../creator/content/TextContent";
 import { ImageContent } from "../creator/content/ImageContent";
 import { VideoContent } from "../creator/content/VideoContent";
+import GalleryContent from "../creator/content/CarouselContent";
 import { useMediaQuery } from "react-responsive";
 import {
   DefaultMedia,
@@ -44,8 +47,31 @@ const initialState: PostDragProviderState = {
   setActiveDragID: () => {},
 };
 
+export const carouselRelatedValues = ["image", "carousel"];
+
 export const PostDragContext =
   createContext<PostDragProviderState>(initialState);
+
+export const checkContentThreshold = (active: Active, over: Over): boolean => {
+  if (!over || !active.rect.current.translated) return false;
+  return (
+    active.rect?.current?.translated?.bottom - over.rect.top >= 20 &&
+    over.rect.bottom - active.rect?.current?.translated?.bottom >= 20
+  );
+};
+
+export const checkImageCarouselHandling = (
+  active: Active,
+  over: Over
+): boolean => {
+  const activeValid = carouselRelatedValues.some((value) =>
+    (active.id as string).includes(value)
+  );
+  const overValid = carouselRelatedValues.some((value) =>
+    (over.id as string).includes(value)
+  );
+  return activeValid && overValid;
+};
 
 export const PostDragProvider = ({
   children,
@@ -94,16 +120,22 @@ export const PostDragProvider = ({
     "draggable-block-video": {
       id: `draggable-content-video-${nanoid()}`,
       content: VideoContent,
-      playOnHover: false,
+      options: {
+        playOnHover: false,
+      },
       style: DefaultMedia,
     },
+  };
+
+  const findMediaInUploaded = (id: string): PostUserMedia | undefined => {
+    return uploadedContent.find((media) => media.content.id === id);
   };
 
   const handleInsertUploadedMedia = (blockID: string): PostContentBlock => {
     //format: draggable-block-user-image-<id>
     const mediaTypes = ["image", "video", "gif"];
     const [_, type, id] = blockID.split("||");
-    const content = uploadedContent.find((media) => media.content.id === id);
+    const content = findMediaInUploaded(id);
 
     if (!mediaTypes.includes(type) || !content) {
       return RenderNewItem["draggable-block-image"];
@@ -114,7 +146,9 @@ export const PostDragProvider = ({
       value: content,
       content: type === "video" ? VideoContent : ImageContent,
       style: DefaultMedia,
-      playOnHover: type === "video" ? false : undefined,
+      options: {
+        playOnHover: type === "video" ? false : undefined,
+      },
     };
   };
 
@@ -146,6 +180,66 @@ export const PostDragProvider = ({
       (active.id as string).includes("draggable-block") &&
       (over.id as string).includes("draggable-content")
     ) {
+      if (checkImageCarouselHandling(active, over)) {
+        //Special Case for Image Carousel
+        if (checkContentThreshold(active, over)) {
+          //Need to Generate a New Carousel Object
+          if (over.id.toString().includes("image")) {
+            const originalImageContent = document.find(
+              (doc) => doc.id === over.id
+            );
+            const [_, type, id] = (active.id as string).split("||");
+            const content = findMediaInUploaded(id);
+            if (!content || !originalImageContent?.value) return;
+            const newCarouselBlock: PostContentBlock = {
+              id: `draggable-content-carousel-${nanoid()}}`,
+              value: [originalImageContent?.value as PostUserMedia, content],
+              content: GalleryContent,
+              options: {
+                carouselAutoplay: false,
+                carouselLoop: true,
+                carouselDuration: 5000,
+                carouselStopOnMouseEnter: true,
+                activeIndex: 0,
+              },
+              style: originalImageContent.style,
+            };
+            setDocument((items) => {
+              const overIndex = items.findIndex((doc) => doc.id === over.id);
+              return [
+                ...items.slice(0, overIndex),
+                newCarouselBlock,
+                ...items.slice(overIndex + 1, items.length),
+              ];
+            });
+          }
+          //Need to Append Image Data to End of Carousel
+          else {
+            const imageCarousel = document.find((doc) => doc.id === over.id);
+            const [_, type, id] = (active.id as string).split("||");
+            const content = findMediaInUploaded(id);
+            if (!content || !imageCarousel) return;
+            const newImages = [
+              ...(imageCarousel.value as PostUserMedia[]),
+              content,
+            ];
+            const newCarouselBlock: PostContentBlock = {
+              ...imageCarousel,
+              value: newImages,
+            };
+            setDocument((items) => {
+              const overIndex = items.findIndex((doc) => doc.id === over.id);
+              return [
+                ...items.slice(0, overIndex),
+                newCarouselBlock,
+                ...items.slice(overIndex + 1, items.length),
+              ];
+            });
+          }
+          return;
+        }
+      }
+
       const newBlock = document.findIndex(
         (doc) => doc.id === "draggable-content-new-block"
       );
@@ -163,15 +257,19 @@ export const PostDragProvider = ({
     setActiveDragID(null);
   };
 
-  const handleDragOver = (event: DragOverEvent) => {
+  const clearGhostBlock = () => {
+    if (document.find((doc) => doc.id === "draggable-content-new-block")) {
+      setDocument((prev) => {
+        return prev.filter((doc) => doc.id !== "draggable-content-new-block");
+      });
+    }
+  };
+
+  const handleDragMove = (event: DragOverEvent) => {
     const { active, over } = event;
 
     if (!over) {
-      if (document.find((doc) => doc.id === "draggable-content-new-block")) {
-        setDocument((prev) => {
-          return prev.filter((doc) => doc.id !== "draggable-content-new-block");
-        });
-      }
+      clearGhostBlock();
       return;
     }
 
@@ -180,8 +278,18 @@ export const PostDragProvider = ({
     //Handle In Container Manipulation
     if (
       (active.id as string).includes("draggable-block") &&
-      (over.id as string).includes("draggable-content")
+      (over.id as string).includes("draggable-content") &&
+      over.id !== "draggable-content-new-block"
     ) {
+      //Handle Dragging an Image into another Image to Form a Carousel
+      if (checkImageCarouselHandling(active, over)) {
+        //Check If its within an acceptable threshold
+        if (checkContentThreshold(active, over)) {
+          clearGhostBlock();
+          //todo: Visual Indication that this is a valid drop
+          return;
+        }
+      }
       const newContentBlock: PostContentBlock = {
         id: "draggable-content-new-block",
         value: "",
@@ -230,8 +338,9 @@ export const PostDragProvider = ({
         sensors={sensors}
         id="Document-Creator-Drag-Context"
         onDragStart={handleDragStart}
+        modifiers={[]}
+        onDragMove={handleDragMove}
         onDragEnd={handleDragEnd}
-        onDragOver={handleDragOver}
         collisionDetection={
           activeDragID && (activeDragID as string).includes("draggable-content")
             ? closestCenter

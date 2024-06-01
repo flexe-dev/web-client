@@ -48,18 +48,30 @@ export interface PostUserMediaThumbnail {
   contentID: string;
 }
 
-export type ContentType = "text" | "image" | "video";
+export type ContentType = "text" | "image" | "video" | "carousel";
 
 export interface ContentStyling {
   id: string;
   type: ContentType;
 }
 
+export interface ContentBlockOptions {
+  playOnHover?: boolean;
+  carouselAutoplay?: boolean;
+  carouselLoop?: boolean;
+  carouselStopOnMouseEnter?: boolean;
+  carouselDuration?: number;
+  activeIndex?: number;
+}
+
+export type OptionKeys = keyof ContentBlockOptions;
+export type OptionKeyValues = ContentBlockOptions[OptionKeys];
+export type ContentValue = string | PostUserMedia | PostUserMedia[];
 export interface ContentBlockProp {
   id: string;
-  value?: string | PostUserMedia;
+  value?: ContentValue;
   style?: CSSProperties;
-  playOnHover?: boolean;
+  options?: ContentBlockOptions;
 }
 
 export interface PostContentBlock extends ContentBlockProp {
