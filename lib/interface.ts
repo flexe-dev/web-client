@@ -40,7 +40,7 @@ export interface PostObject extends LoadingProps {
 
 export interface PostUserMedia {
   content: PostContent;
-  file: File;
+  file?: File;
 }
 
 export interface PostUserMediaThumbnail {

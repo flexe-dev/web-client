@@ -1,13 +1,12 @@
 "use client";
 
-import { SortableItem, useSortableItem } from "@/components/dnd/Sortable";
+import { SortableItem } from "@/components/dnd/Sortable";
 import { ContentBlockProp, PostUserMedia } from "@/lib/interface";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import Image from "next/image";
 import ContentWrapper from "./ContentWrapper";
 import { PhotoIcon } from "@heroicons/react/24/outline";
 import { omit } from "lodash";
-import { useDroppable } from "@dnd-kit/core";
 import { ImageCarouselVisualEffect } from "./ImageCarouselVisualWrapper";
 
 export const ImageContent = (props: ContentBlockProp) => {
@@ -31,7 +30,7 @@ export const ImageContent = (props: ContentBlockProp) => {
                   width={(value as PostUserMedia).content.width}
                   height={(value as PostUserMedia).content.height}
                   src={(value as PostUserMedia).content.location}
-                  alt={(value as PostUserMedia).file.name}
+                  alt="alt text"
                 />
               ) : (
                 <DefaultContent />
