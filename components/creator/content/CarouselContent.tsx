@@ -22,7 +22,7 @@ import {
 import { SortableItem } from "@/components/dnd/Sortable";
 import Autoplay from "embla-carousel-autoplay";
 import { Button } from "@/components/ui/button";
-import { usePostCreator } from "@/components/context/PostCreatorProvider";
+import { useDocumentCreator } from "@/components/context/DocumentCreatorProvider";
 import { ImageCarouselVisualEffect } from "./ImageCarouselVisualWrapper";
 
 const GalleryContent = (props: ContentBlockProp) => {
@@ -31,7 +31,7 @@ const GalleryContent = (props: ContentBlockProp) => {
   const [api, setAPI] = useState<CarouselApi>();
   const [current, setCurrent] = useState(0);
   const [startIndex, setStartIndex] = useState<boolean>(false);
-  const { onValueChange, onOptionsChange } = usePostCreator();
+  const { onValueChange, onOptionsChange } = useDocumentCreator();
 
   const generateCarouselPlugins = () => {
     const plugins = [];
@@ -106,7 +106,7 @@ const GalleryContent = (props: ContentBlockProp) => {
                       width={image.content.width}
                       height={image.content.height}
                       src={image.content.location}
-                      alt={image.file.name}
+                      alt={`Carousel Image ${index}`}
                     />
                     <Button
                       onClick={(e) => removeFromCarousel(e, index)}

@@ -8,11 +8,12 @@ import {
 import ContentSidebar, { dropAnimationConfig } from "./sidebar/ContentSidebar";
 import Blocks, { BlockID } from "./blocks/Blocks";
 import { useBlockDrag } from "../context/PostDragProvider";
-import { usePostCreator } from "../context/PostCreatorProvider";
+import { useDocumentCreator } from "../context/DocumentCreatorProvider";
 import { Switch } from "../ui/switch";
 import UserVideoBlock from "./blocks/UserVideoBlock";
 import UserImageBlock from "./blocks/UserImageBlock";
 import { AnimatePresence } from "framer-motion";
+import { CreatorHeader } from "./PostCreatorHeader";
 
 const PostContent = () => {
   const {
@@ -21,7 +22,7 @@ const PostContent = () => {
     setPreviewMode,
     content,
     setActiveStylingTool,
-  } = usePostCreator();
+  } = useDocumentCreator();
   const { activeDragID } = useBlockDrag();
 
   const getRenderedDragOverlay = (id: string): React.ReactNode => {
@@ -61,9 +62,10 @@ const PostContent = () => {
       <ContentSidebar />
       <section
         onClick={() => setActiveStylingTool(null)}
-        className="z-[20] w-full justify-center h-full flex relative"
+        className="z-[20] w-full items-center flex flex-col relative"
       >
-        <section className="mx-16 lg:mx-6 relative w-full flex flex-col space-y-2 py-12 px-8 container border border-dashed rounded-md my-12 ">
+        <CreatorHeader />
+        <section className="mx-16 lg:mx-6 relative w-full flex flex-col space-y-2 py-12 px-8 container border border-dashed rounded-md my-6 ">
           <div className="absolute flex space-x-2 right-10 top-4">
             <Switch
               checked={previewMode}

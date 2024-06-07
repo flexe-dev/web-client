@@ -1,12 +1,8 @@
 import { Draggable } from "@/components/dnd/Draggable";
 import React from "react";
 import Image from "next/image";
-import { PostUserMedia } from "@/lib/interface";
-import {
-  VideoCameraIcon,
-  PhotoIcon,
-  GifIcon,
-} from "@heroicons/react/24/outline";
+import { PostContentType, PostUserMedia } from "@/lib/interface";
+import { PhotoIcon, GifIcon } from "@heroicons/react/24/outline";
 
 interface Props {
   thumbnail?: string;
@@ -18,11 +14,11 @@ const UserImageBlock = (props: Props) => {
   return (
     <Draggable id={`draggable-block-user||image||${content.content.id}`}>
       <div className="relative w-5/6 mx-4 my-2 h-[8rem] cursor-pointer rounded-md  transition-all">
-        {content.content.format === "IMAGE" ? (
+        {content.content.format === PostContentType.IMAGE ? (
           <Image
             key={`user-media-${content.content.id}`}
             src={thumbnail || content.content.location}
-            alt={content.file.name}
+            alt={content.content.alt}
             fill
             style={{
               objectFit: "cover",
@@ -33,7 +29,7 @@ const UserImageBlock = (props: Props) => {
           <GIFVisual content={content} thumbnail={thumbnail} />
         )}
         <div className="absolute right-2 top-2">
-          {content.content.format === "GIF" ? (
+          {content.content.format === PostContentType.GIF ? (
             <GifIcon className="w-8 h-8 stroke-neutral-200" />
           ) : (
             <PhotoIcon className="w-8 h-8 stroke-neutral-200" />
@@ -50,7 +46,7 @@ const GIFVisual = (props: Props) => {
     <React.Fragment key={`user-media-${content.content.id}`}>
       <Image
         src={content.content.location}
-        alt={content.file.name}
+        alt={content.content.alt}
         fill
         style={{
           objectFit: "cover",
@@ -59,7 +55,7 @@ const GIFVisual = (props: Props) => {
       />
       <Image
         src={thumbnail || content.content.location}
-        alt={content.file.name}
+        alt={content.content.alt}
         fill
         style={{
           objectFit: "cover",

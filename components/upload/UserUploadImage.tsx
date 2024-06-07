@@ -2,9 +2,9 @@
 
 import { toast } from "sonner";
 import { FileUploader } from "../FileUploader";
-import { PostContent, PostContentType } from "@prisma/client";
 import { nanoid } from "nanoid";
 import { PostUserMedia } from "@/lib/interface";
+import { PostContentType, PostContent } from "@/lib/interface";
 
 interface Props {
   setUploadedFiles: React.Dispatch<React.SetStateAction<PostUserMedia[]>>;
@@ -62,10 +62,11 @@ const UploadUserImages = ({ setUploadedFiles }: Props) => {
 
     const content: PostContent = {
       id: nanoid(),
-      userPostId: null,
       location: img.src,
       width: img.width,
       height: img.height,
+      alt: file.name,
+      uploaded: false,
       format: file.type.includes("gif")
         ? PostContentType.GIF
         : PostContentType.IMAGE,
@@ -102,10 +103,11 @@ const UploadUserImages = ({ setUploadedFiles }: Props) => {
 
     const content: PostContent = {
       id: nanoid(),
-      userPostId: null,
       location: video.src,
       width: video.videoWidth,
       height: video.videoHeight,
+      alt: file.name,
+      uploaded: false,
       format: PostContentType.VIDEO,
     };
     return {

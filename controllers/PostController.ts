@@ -1,29 +1,46 @@
-import { PostComments, UserPost } from "@prisma/client";
+import { PostContent, PostUserMedia, UserPost } from "@/lib/interface";
+import { supabase } from "@/lib/supabase";
+import { ObjectId } from "mongodb";
 
-const createNewPost = async (post: UserPost) => {};
-const deletePost = async (postID: string) => {};
-const updatePost = async (post: UserPost) => {};
-
-const fetchPost = async (postID: string) => {};
-const fetchManyPosts = async (postIDs: string[]) => {};
-
-const fetchUserPosts = async (userID: string): Promise<UserPost[]> => {
-  return [];
+export const savePostAsDraft = async (
+  post: Omit<UserPost, "external">,
+  userID: string
+): Promise<boolean> => {
+  const postToUpload: UserPost = {
+    data: post.data,
+    document: post.document,
+    external: {
+      likes: 0,
+      comments: 0,
+      views: 0,
+    },
+  };
+  console.log(postToUpload);
+  //Either Upload New Post Document to the database, or save to an existing document
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}post/upload/draft`,
+      {
+        method: `PUT`,
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ postToUpload, userID }),
+      }
+    );
+    return response.ok;
+  } catch (e) {
+    console.error(e);
+    return false;
+  }
 };
-const fetchPostComments = async (postID: string) => {};
-const createPostComment = async (comment: PostComments) => {};
-const deletePostComment = async (commentID: string) => {};
-const updatePostComment = async (comment: PostComments) => {};
 
-export {
-  createNewPost,
-  deletePost,
-  updatePost,
-  fetchPost,
-  fetchManyPosts,
-  fetchUserPosts,
-  fetchPostComments,
-  createPostComment,
-  deletePostComment,
-  updatePostComment,
+export const publishPost = async (post: UserPost) => {
+  if (!post.data.id) {
+    //Create new Database Object
+  } else {
+    //Update existing Database Object
+  }
 };
+
+export const archiveDocument = async (postID: string) => {};

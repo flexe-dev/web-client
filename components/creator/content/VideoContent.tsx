@@ -44,7 +44,9 @@ const ContentVisual = ({ value, options }: ContentBlockProp) => {
   const [videoThumbnail, setVideoThumbnail] = useState<string | undefined>();
   useEffect(() => {
     const generateStaticThumbnail = async () => {
-      const thumbnail = await getVideoThumbnail((value as PostUserMedia).file);
+      const thumbnail = await getVideoThumbnail(
+        (value as PostUserMedia).content.location
+      );
       setVideoThumbnail(thumbnail);
     };
     generateStaticThumbnail();

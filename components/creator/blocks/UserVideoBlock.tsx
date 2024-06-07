@@ -44,7 +44,7 @@ const BlockVisual = (props: Props) => {
       {!dragging && (
         <Image
           src={thumbnail || content.content.location}
-          alt={content.file.name}
+          alt={content.content.alt}
           fill
           style={{
             objectFit: "fill",

@@ -30,13 +30,13 @@ import {
   TooltipTrigger,
 } from "./tooltip";
 import { useTheme } from "next-themes";
-import { usePostCreator } from "../context/PostCreatorProvider";
+import { useDocumentCreator } from "../context/DocumentCreatorProvider";
 interface Props {
   content: PostContentBlock;
 }
 export function ColourBox({ content }: Props) {
   const [open, setOpen] = useState(false);
-  const { onStyleChange } = usePostCreator();
+  const { onStyleChange } = useDocumentCreator();
   const [colourValue, setColourValue] = useState<Colour | undefined>();
   const [search, setSearch] = useState<string>("");
   const theme = useTheme();

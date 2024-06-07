@@ -15,7 +15,7 @@ import { nanoid } from "nanoid";
 import { TextContent } from "../creator/content/TextContent";
 import { DefaultTitle } from "../creator/content/DefaultStyling";
 
-interface PostCreatorProviderState {
+interface DocumentCreatorProviderState {
   //Context States
   document: PostContentBlock[];
   content: PostUserMedia[];
@@ -43,7 +43,16 @@ interface PostCreatorProviderState {
   setContent: React.Dispatch<React.SetStateAction<PostUserMedia[]>>;
 }
 
-const initialState: PostCreatorProviderState = {
+const defaultDocumentState: PostContentBlock[] = [
+  {
+    id: `draggable-content-title-${nanoid()}`,
+    value: "Title",
+    content: TextContent,
+    style: DefaultTitle,
+  },
+];
+
+const initialState: DocumentCreatorProviderState = {
   document: [],
   content: [],
   previewMode: false,
@@ -64,29 +73,26 @@ const initialState: PostCreatorProviderState = {
   setContent: () => {},
 };
 
-export const PostCreatorContext =
-  createContext<PostCreatorProviderState>(initialState);
+export const DocumentCreatorContext =
+  createContext<DocumentCreatorProviderState>(initialState);
 
 interface Props extends ChildNodeProps {
   content: PostUserMedia[];
+  document?: PostContentBlock[];
 }
 
-export const PostCreatorProvider = ({
+export const DocumentCreatorProvider = ({
   children,
   content: propsContent,
+  document: postDocument,
 }: Props) => {
   const [previewMode, setPreviewMode] = useState<boolean>(false);
   const [showDeletionConfirmation, setShowDeletionConfirmation] =
     useState<boolean>(true);
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(true);
-  const [document, setDocument] = useState<PostContentBlock[]>([
-    {
-      id: `draggable-content-title-${nanoid()}`,
-      value: "Title",
-      content: TextContent,
-      style: DefaultTitle,
-    },
-  ]);
+  const [document, setDocument] = useState<PostContentBlock[]>(
+    postDocument ?? defaultDocumentState
+  );
 
   const [activeStylingTool, setActiveStylingTool] =
     useState<ContentStyling | null>(null);
@@ -133,7 +139,7 @@ export const PostCreatorProvider = ({
   };
 
   return (
-    <PostCreatorContext.Provider
+    <DocumentCreatorContext.Provider
       value={{
         document,
         content,
@@ -154,14 +160,16 @@ export const PostCreatorProvider = ({
       }}
     >
       {children}
-    </PostCreatorContext.Provider>
+    </DocumentCreatorContext.Provider>
   );
 };
 
-export const usePostCreator = () => {
-  const context = React.useContext(PostCreatorContext);
+export const useDocumentCreator = () => {
+  const context = React.useContext(DocumentCreatorContext);
   if (context === undefined) {
-    throw new Error("usePostCreator must be used within a PostCreatorProvider");
+    throw new Error(
+      "useDocumentCreator must be used within a DocumentCreatorProvider"
+    );
   }
   return context;
 };

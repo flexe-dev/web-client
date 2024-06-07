@@ -2,7 +2,7 @@
 
 import UploadUserImages from "@/components/upload/UserUploadImage";
 import React from "react";
-import PostCreator from "@/components/creator/PostCreator";
+import DocumentCreator from "@/components/creator/PostCreator";
 import { PostUserMedia } from "@/lib/interface";
 
 const page = () => {
@@ -12,7 +12,7 @@ const page = () => {
     <>
       {uploadedFiles.length > 0 ? (
         <>
-          <PostCreator postContent={uploadedFiles} />
+          <DocumentCreator postContent={uploadedFiles} />
         </>
       ) : (
         <UploadUserImages setUploadedFiles={setUploadedFiles} />

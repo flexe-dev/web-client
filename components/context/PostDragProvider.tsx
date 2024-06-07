@@ -18,7 +18,7 @@ import {
 } from "@dnd-kit/core";
 import { arrayMove } from "@dnd-kit/sortable";
 import { sortableKeyboardCoordinates } from "@dnd-kit/sortable";
-import { usePostCreator } from "./PostCreatorProvider";
+import { useDocumentCreator } from "./DocumentCreatorProvider";
 import BlockPreview from "../creator/blocks/BlockPreview";
 import { BlockID } from "../creator/blocks/Blocks";
 import { nanoid } from "nanoid";
@@ -82,8 +82,12 @@ export const PostDragProvider = ({
     null
   );
   const fixedSidebar = useMediaQuery({ query: "(max-width: 1024px)" });
-  const { setSidebarOpen } = usePostCreator();
-  const { document, setDocument, content: uploadedContent } = usePostCreator();
+  const { setSidebarOpen } = useDocumentCreator();
+  const {
+    document,
+    setDocument,
+    content: uploadedContent,
+  } = useDocumentCreator();
   const [originalDocumentState, setOriginalDocumentState] = useState<
     PostContentBlock[] | undefined
   >();

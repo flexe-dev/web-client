@@ -92,40 +92,32 @@ model UserPost {
   id             String           @id @default(auto()) @map("_id") @db.ObjectId
   userId         String           @db.ObjectId
   document       PostDocument[]
+  title          String
   tags           String[]
   technologies   String[]
   createdAt      DateTime         @default(now())
   commentCount   Int              @default(0)
+  likeCount      Int              @default(0)
   viewCount      Int              @default(0)
   user           User             @relation(fields: [userId], references: [id])
   PostComments   PostComments[]
   UserLikedPosts UserLikedPosts[]
   UserSavedPosts UserSavedPosts[]
-  isDraft        Boolean          @default(false)
-  postContentId  String           @db.ObjectId
+  postStatus     PostStatus       @default(DRAFT)
 }
 
-enum PostContentType {
-  IMAGE
-  VIDEO
-  GIF
+enum PostStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
 }
 
 type PostDocument {
   id        String
-  value     Json
-  style     Json
-  options   Json
+  value     Json?
+  style     Json?
+  options   Json?
   component String
-}
-
-type PostContent {
-  id       String
-  location String
-  format   PostContentType
-  width    Int
-  height   Int
-  alt      String
 }
 
 model PostComments {

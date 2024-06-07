@@ -3,11 +3,11 @@ import { ContentBlockProp } from "@/lib/interface";
 import { Textarea } from "@/components/ui/textarea";
 import React, { useEffect, useState } from "react";
 import ContentWrapper from "./ContentWrapper";
-import { usePostCreator } from "@/components/context/PostCreatorProvider";
+import { useDocumentCreator } from "@/components/context/DocumentCreatorProvider";
 import { Input } from "@/components/ui/input";
 
 export const TextContent = (props: ContentBlockProp) => {
-  const { onValueChange, onStyleChange } = usePostCreator();
+  const { onValueChange, onStyleChange } = useDocumentCreator();
   const { value, id, style } = props;
   const handleValueChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     onValueChange(id, event.target.value);

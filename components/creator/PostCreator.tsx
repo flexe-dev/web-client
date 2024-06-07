@@ -4,23 +4,25 @@ import React from "react";
 import { PostUserMedia } from "@/lib/interface";
 import { PostDragProvider } from "../context/PostDragProvider";
 import PostContent from "./PostContent";
-import { PostCreatorProvider } from "../context/PostCreatorProvider";
-
+import { DocumentCreatorProvider } from "../context/DocumentCreatorProvider";
+import { PostCreatorAuxProvider } from "../context/PostCreatorAuxProvider";
 
 interface Props {
   postContent: PostUserMedia[];
 }
 
-const PostCreator = (props: Props) => {
+const DocumentCreator = (props: Props) => {
   return (
-    <PostCreatorProvider content={props.postContent}>
-      <div className="w-full flex relative">
-        <PostDragProvider>
-          <PostContent />
-        </PostDragProvider>
-      </div>
-    </PostCreatorProvider>
+    <PostCreatorAuxProvider>
+      <DocumentCreatorProvider content={props.postContent}>
+        <div className="w-full flex relative">
+          <PostDragProvider>
+            <PostContent />
+          </PostDragProvider>
+        </div>
+      </DocumentCreatorProvider>
+    </PostCreatorAuxProvider>
   );
 };
 
-export default PostCreator;
+export default DocumentCreator;

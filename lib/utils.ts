@@ -1,7 +1,6 @@
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 import bcrypt from "bcryptjs";
-import Resizer from "react-image-file-resizer";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -12,38 +11,42 @@ export async function HashPassword(password: string) {
   return hashedPassword;
 }
 
-type Format = "JPEG" | "PNG";
-
 export async function resizeImage(
-  file: File,
-  height: number,
+  url: string,
   width: number,
-  format: Format = "JPEG"
-): Promise<string> {
-  return new Promise((resolve) => {
-    Resizer.imageFileResizer(
-      file,
-      width, // new image max width
-      height, // new image max height
-      format, // default type
-      100, // new image quality
-      0, // rotation degree
-      (uri) => {
-        resolve(uri as string); //returning a string uri of the resized image
-      },
-      "base64" // output type -> string
-    );
+  height: number
+): Promise<string | undefined> {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.crossOrigin = "Anonymous";
+    img.src = url;
+    img.onload = () => {
+      const canvas = document.createElement("canvas");
+      canvas.width = width;
+      canvas.height = height;
+      const ctx = canvas.getContext("2d");
+      if (!ctx) return;
+      ctx.drawImage(img, 0, 0, width, height);
+      canvas.toBlob((blob) => {
+        if (!blob) return;
+        const resizedImageURL = URL.createObjectURL(blob);
+        resolve(resizedImageURL);
+      }, "image/jpeg");
+    };
+    img.onerror = (err) => {
+      reject(err);
+    };
   });
 }
 
 export async function getVideoThumbnail(
-  file: File,
+  content: string,
   timeStamp: number = 0.0
 ): Promise<string | undefined> {
   return new Promise((resolve, reject) => {
     // load the file to a video player
     const videoPlayer = document.createElement("video");
-    videoPlayer.setAttribute("src", URL.createObjectURL(file));
+    videoPlayer.setAttribute("src", content);
     videoPlayer.load();
     videoPlayer.addEventListener("error", (ex) => {
       reject(ex);

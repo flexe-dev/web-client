@@ -1,7 +1,6 @@
 import { User } from "next-auth";
-import { UserProfile, UserPost, PostContent } from "@prisma/client";
+import { PostStatus, UserProfile } from "@prisma/client";
 import { CSSProperties } from "react";
-
 export interface ClassNameProp {
   className?: string;
 }
@@ -43,6 +42,16 @@ export interface PostUserMedia {
   file?: File;
 }
 
+export interface PostContent {
+  id: string;
+  location: string;
+  format: PostContentType;
+  width: number;
+  height: number;
+  alt: string;
+  uploaded: boolean;
+}
+
 export interface PostUserMediaThumbnail {
   thumbnail: string | undefined;
   contentID: string;
@@ -82,4 +91,31 @@ export interface ToolValueObject<T> {
   icon: React.ReactNode;
   value: T;
   tooltip?: string;
+}
+
+export interface PostAuxilliaryData {
+  id: string | undefined;
+  postStatus: PostStatus;
+  title: string;
+  tags: string[];
+  tech: string[];
+  thumbnail: PostUserMedia | undefined;
+}
+
+export interface PostExternalData {
+  likes: number;
+  comments: number;
+  views: number;
+}
+
+export interface UserPost {
+  document: PostContentBlock[];
+  data: PostAuxilliaryData;
+  external: PostExternalData;
+}
+
+export enum PostContentType {
+  "IMAGE",
+  "VIDEO",
+  "GIF",
 }

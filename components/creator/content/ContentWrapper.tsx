@@ -1,4 +1,4 @@
-import { usePostCreator } from "@/components/context/PostCreatorProvider";
+import { useDocumentCreator } from "@/components/context/DocumentCreatorProvider";
 import { DragHandle } from "@/components/dnd/Sortable";
 import { ChildNodeProps, ClassNameProp, ContentType } from "@/lib/interface";
 import React from "react";
@@ -20,7 +20,7 @@ interface Props extends ChildNodeProps, ClassNameProp {
   type: ContentType;
 }
 
-const ContentWrapper = ({ children, className, noDrag, id, type}: Props) => {
+const ContentWrapper = ({ children, className, noDrag, id, type }: Props) => {
   const {
     document,
     previewMode,
@@ -30,7 +30,7 @@ const ContentWrapper = ({ children, className, noDrag, id, type}: Props) => {
     activeStylingTool,
     setActiveStylingTool,
     setPreviewMode,
-  } = usePostCreator();
+  } = useDocumentCreator();
   const [showDeleteModal, setShowDeleteModal] = React.useState(false);
 
   const handleDelete = (

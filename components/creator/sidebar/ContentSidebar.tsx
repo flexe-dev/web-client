@@ -10,8 +10,12 @@ import {
 import { Button } from "../../ui/button";
 import { DropAnimation, defaultDropAnimationSideEffects } from "@dnd-kit/core";
 import { AnimatePresence, motion } from "framer-motion";
-import { usePostCreator } from "../../context/PostCreatorProvider";
-import { PostUserMedia, PostUserMediaThumbnail } from "@/lib/interface";
+import { useDocumentCreator } from "../../context/DocumentCreatorProvider";
+import {
+  PostContentType,
+  PostUserMedia,
+  PostUserMediaThumbnail,
+} from "@/lib/interface";
 import DocumentTab from "./TextTab";
 import ContentTab from "./VisualTab";
 import StylingTab from "./StylingTab";
@@ -30,7 +34,7 @@ export const dropAnimationConfig: DropAnimation = {
 
 const ContentSidebar = () => {
   const { sidebarOpen, setSidebarOpen, content, activeStylingTool } =
-    usePostCreator();
+    useDocumentCreator();
   const [activeTab, setActiveTab] = useState<SidebarTab>("photo");
   const [thumbnails, setThumbnails] = useState<PostUserMediaThumbnail[]>([]);
   const [previousTab, setPreviousTab] = useState<SidebarTab | undefined>();
@@ -73,7 +77,7 @@ const ContentSidebar = () => {
           },
         }}
         className={cn(
-          `h-screen top-[5rem] z-[40] left-0 fixed border-t border-r-2 bg-background`
+          `h-screen top-[5rem] z-[40] left-0 fixed border-r-2 bg-background`
         )}
       >
         <AnimatePresence>
@@ -155,9 +159,9 @@ const generateThumbnailObjects = async (
   const thumbnails: Promise<PostUserMediaThumbnail[]> = Promise.all(
     content.map(async (media) => ({
       thumbnail:
-        media.content.format !== "VIDEO"
-          ? await resizeImage(media.file, 500, 300)
-          : await getVideoThumbnail(media.file),
+        media.content.format !== PostContentType.VIDEO
+          ? await resizeImage(media.content.location, 500, 300)
+          : await getVideoThumbnail(media.content.location),
       contentID: media.content.id,
     }))
   );

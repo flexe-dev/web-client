@@ -1,6 +1,6 @@
 "use client";
 
-import { usePostCreator } from "@/components/context/PostCreatorProvider";
+import { useDocumentCreator } from "@/components/context/DocumentCreatorProvider";
 import { Button } from "@/components/ui/button";
 import {
   Select,
@@ -15,6 +15,8 @@ import {
   ContentType,
   OptionKeyValues,
   OptionKeys,
+  PostContent,
+  PostUserMedia,
   ToolValueObject,
 } from "@/lib/interface";
 import {
@@ -47,11 +49,9 @@ import {
 } from "@/components/ui/tooltip";
 import { Property } from "csstype";
 import React from "react";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Switch } from "@/components/ui/switch";
 import { Input } from "@/components/ui/input";
 import { divide } from "lodash";
-import { toast } from "sonner";
 
 type CSSPropertyKeys =
   | Property.TextAlign
@@ -60,8 +60,13 @@ type CSSPropertyKeys =
   | Property.BorderRadius;
 
 const StylingTab = () => {
-  const { activeStylingTool, onStyleChange, document, onOptionsChange } =
-    usePostCreator();
+  const {
+    activeStylingTool,
+    onStyleChange,
+    document,
+    onOptionsChange,
+    onValueChange,
+  } = useDocumentCreator();
   const content = document.find(
     (content) => content.id === activeStylingTool?.id
   );
@@ -540,6 +545,29 @@ const StylingTab = () => {
     );
   };
 
+  const ContentAltTextTool = () => {
+    const handleAltTextChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+      e.preventDefault();
+      if (!e.target.value.trim()) return;
+      onValueChange(activeStylingTool.id, {
+        ...(content.value as PostUserMedia),
+        content: {
+          ...(content.value as PostUserMedia).content,
+          alt: e.target.value,
+        },
+      });
+    };
+    return (
+      <>
+        <SectionHeader>Image Alt Text</SectionHeader>
+        <Input
+          value={(content.value as PostUserMedia).content?.alt ?? "User Image"}
+          onChange={(e) => handleAltTextChange(e)}
+        />
+      </>
+    );
+  };
+
   interface SectionHeaderProps extends ChildNodeProps, ClassNameProp {}
 
   const SectionHeader = ({ children, className }: SectionHeaderProps) => {
@@ -555,12 +583,18 @@ const StylingTab = () => {
       TextStylingTool,
       TextColourTool,
     ],
-    image: [MediaSizeTool, MediaHorizontalPosition, MediaRoundedTool],
+    image: [
+      MediaSizeTool,
+      MediaHorizontalPosition,
+      MediaRoundedTool,
+      ContentAltTextTool,
+    ],
     video: [
       MediaSizeTool,
       MediaHorizontalPosition,
       MediaRoundedTool,
       VideoPlayOnHoverTool,
+      ContentAltTextTool,
     ],
     carousel: [
       MediaSizeTool,

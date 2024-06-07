@@ -1,4 +1,4 @@
-import { usePostCreator } from "@/components/context/PostCreatorProvider";
+import { useDocumentCreator } from "@/components/context/DocumentCreatorProvider";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { ArrowLeftIcon } from "lucide-react";
@@ -8,7 +8,7 @@ import UserImageBlock from "../blocks/UserImageBlock";
 import UserMediaBlock from "../blocks/UserMediaBlock";
 import UserVideoBlock from "../blocks/UserVideoBlock";
 import VideoBlock from "../blocks/VideoBlock";
-import { PostUserMediaThumbnail } from "@/lib/interface";
+import { PostContentType, PostUserMediaThumbnail } from "@/lib/interface";
 
 interface ThumbnailProps {
   thumbnailObject: PostUserMediaThumbnail[];
@@ -63,9 +63,9 @@ const ContentTab = (props: ThumbnailProps) => {
 
 const UserMediaBlocks = (props: ThumbnailProps) => {
   const { thumbnailObject: postContent } = props;
-  const { content } = usePostCreator();
+  const { content } = useDocumentCreator();
   return content.map((content, index) => {
-    if (content.content.format === "VIDEO") {
+    if (content.content.format === PostContentType.VIDEO) {
       return (
         <UserVideoBlock
           key={index}
