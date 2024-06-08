@@ -1,14 +1,23 @@
 package com.flexe.flex_core.entity.posts;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.List;
 
 public class PostAuxData {
+    @JsonProperty("id")
     private String id;
+    @JsonProperty("userID")
     private String userID;
-    private UserPostStatus status;
+    @JsonProperty("postStatus")
+    private UserPostStatus postStatus;
+    @JsonProperty("title")
     private String title;
+    @JsonProperty("tags")
     private List<String> tags;
+    @JsonProperty("tech")
     private List<String> tech;
+    @JsonProperty("thumbnail")
     private String thumbnail;
 
     public enum UserPostStatus {
@@ -24,7 +33,7 @@ public class PostAuxData {
             List<String> tech, String thumbnail) {
         this.id = id;
         this.userID = userID;
-        this.status = status;
+        this.postStatus = status;
         this.title = title;
         this.tags = tags;
         this.tech = tech;

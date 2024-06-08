@@ -1,42 +1,40 @@
 "use client";
 
+import { savePostAsDraft } from "@/controllers/PostController";
+import { UserPost } from "@/lib/interface";
+import { useState } from "react";
+import { toast } from "sonner";
+import CancelWarn from "../CancelWarn";
+import { useAccount } from "../context/AccountProvider";
+import { useDocumentCreator } from "../context/DocumentCreatorProvider";
+import { usePostAuxData } from "../context/PostCreatorAuxProvider";
 import { Button } from "../ui/button";
 import PostSubmit from "./PostSubmit";
-import { useDocumentCreator } from "../context/DocumentCreatorProvider";
-import { toast } from "sonner";
-import { usePostAuxData } from "../context/PostCreatorAuxProvider";
-import CancelWarn from "../CancelWarn";
-import { useState } from "react";
-import { savePostAsDraft } from "@/controllers/PostController";
-import { useAccount } from "../context/AccountProvider";
 
 export const CreatorHeader = () => {
-  const { document, content } = useDocumentCreator();
+  const { document } = useDocumentCreator();
   const { user } = useAccount();
-  const { id, title, tags, tech, thumbnail, postStatus, setThumbnail } =
-    usePostAuxData();
+  const { thumbnail, id, title, tags, tech, postStatus } = usePostAuxData();
   const [showCancelModal, setShowCancelModal] = useState(false);
   const [showPublishModal, setShowPublishModal] = useState(false);
   const [savedDraft, setSavedDraft] = useState(false);
 
   const saveAsDraft = async () => {
     if (!user) return;
-    if (!thumbnail) {
-      setThumbnail(content[0]);
-    }
-    const post = {
+    const post: Omit<UserPost, "externalData"> = {
+      id,
       document,
-      data: {
-        id,
+      auxData: {
+        userID: user.id,
         title,
         tags,
         tech,
         thumbnail,
-        postStatus,
+        postStatus: "DRAFT",
       },
     };
-    console.log(post);
-    toast.promise(savePostAsDraft(post, user.id), {
+
+    toast.promise(savePostAsDraft(post), {
       loading: "Saving Draft...",
       success: "Draft Saved",
       error: "Failed to Save Draft",

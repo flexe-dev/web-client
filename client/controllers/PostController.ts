@@ -1,28 +1,28 @@
 import { UserPost } from "@/lib/interface";
 
 export const savePostAsDraft = async (
-  post: Omit<UserPost, "external">,
-  userID: string
+  post: Omit<UserPost, "externalData">
 ): Promise<boolean> => {
   const postToUpload: UserPost = {
-    data: post.data,
+    id: post.id,
+    auxData: post.auxData,
     document: post.document,
-    external: {
-      likes: 0,
-      comments: 0,
-      views: 0,
+    externalData: {
+      likeCount: 0,
+      commentCount: 0,
+      viewCount: 0,
     },
   };
-  //Either Upload New Post Document to the database, or save to an existing document
+  console.log(JSON.stringify(postToUpload));
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}post/upload/draft`,
+      `${process.env.NEXT_PUBLIC_CORE_BACKEND_API_URL}post/upload`,
       {
-        method: `PUT`,
+        method: `POST`,
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ postToUpload, userID }),
+        body: JSON.stringify({ postToUpload }),
       }
     );
     return response.ok;
@@ -33,7 +33,7 @@ export const savePostAsDraft = async (
 };
 
 export const publishPost = async (post: UserPost) => {
-  if (!post.data.id) {
+  if (!post.id) {
     //Create new Database Object
   } else {
     //Update existing Database Object

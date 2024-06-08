@@ -2,15 +2,20 @@ package com.flexe.flex_core.entity.posts;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection = "MediaPosts")
 public class UserPost {
     @Id
+    @JsonProperty("id")
     private String id;
+    @JsonProperty("auxData")
     private PostAuxData auxData;
+    @JsonProperty("externalData")
     private PostExternalData externalData;
+    @JsonProperty("document")
     private List<PostContent> document;
 
     public UserPost() {

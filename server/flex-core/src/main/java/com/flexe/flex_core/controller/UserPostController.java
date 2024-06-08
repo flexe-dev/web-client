@@ -1,5 +1,6 @@
 package com.flexe.flex_core.controller;
 
+import org.apache.tomcat.util.json.JSONParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,10 +17,11 @@ import com.flexe.flex_core.service.UserPostService;
 public class UserPostController {
 
     @Autowired
-    private UserPostService service;
+    UserPostService service;
 
-    @PostMapping("/upload/draft")
+    @PostMapping("/upload")
     public UserPost savePost(@RequestBody UserPost post) {
+        UserPost content = post;
         return service.savePost(post);
     }
 

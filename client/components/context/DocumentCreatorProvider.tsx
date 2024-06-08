@@ -2,7 +2,6 @@
 
 import {
   ChildNodeProps,
-  ContentBlockOptions,
   ContentStyling,
   ContentValue,
   OptionKeyValues,
@@ -10,10 +9,10 @@ import {
   PostContentBlock,
   PostUserMedia,
 } from "@/lib/interface";
-import React, { CSSProperties, createContext, useState } from "react";
 import { nanoid } from "nanoid";
-import { TextContent } from "../creator/content/TextContent";
+import React, { CSSProperties, createContext, useState } from "react";
 import { DefaultTitle } from "../creator/content/DefaultStyling";
+import { TextContent } from "../creator/content/TextContent";
 
 interface DocumentCreatorProviderState {
   //Context States
@@ -46,9 +45,10 @@ interface DocumentCreatorProviderState {
 const defaultDocumentState: PostContentBlock[] = [
   {
     id: `draggable-content-title-${nanoid()}`,
-    value: "Title",
+    value: { contentValue: "Title" },
     content: TextContent,
     style: DefaultTitle,
+    type: "TEXT",
   },
 ];
 

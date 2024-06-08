@@ -1,4 +1,4 @@
-import { PostStatus, UserProfile } from "@prisma/client";
+import { UserProfile } from "@prisma/client";
 import { User } from "next-auth";
 import { CSSProperties } from "react";
 export interface ClassNameProp {
@@ -75,13 +75,17 @@ export interface ContentBlockOptions {
 
 export type OptionKeys = keyof ContentBlockOptions;
 export type OptionKeyValues = ContentBlockOptions[OptionKeys];
-export type ContentValue = string | PostUserMedia | PostUserMedia[];
+
+export interface ContentValue {
+  contentValue: string | PostUserMedia | PostUserMedia[];
+}
+
 export interface ContentBlockProp {
   id: string;
   value?: ContentValue;
   style?: CSSProperties;
   options?: ContentBlockOptions;
-  type: ContentBlockType;
+  type?: ContentBlockType;
 }
 
 export interface PostContentBlock extends ContentBlockProp {
@@ -95,7 +99,7 @@ export interface ToolValueObject<T> {
 }
 
 export interface PostAuxilliaryData {
-  id: string | undefined;
+  userID: string;
   postStatus: PostStatus;
   title: string;
   tags: string[];
@@ -104,15 +108,16 @@ export interface PostAuxilliaryData {
 }
 
 export interface PostExternalData {
-  likes: number;
-  comments: number;
-  views: number;
+  likeCount: number;
+  commentCount: number;
+  viewCount: number;
 }
 
 export interface UserPost {
+  id: string | undefined;
   document: PostContentBlock[];
-  data: PostAuxilliaryData;
-  external: PostExternalData;
+  auxData: PostAuxilliaryData;
+  externalData: PostExternalData;
 }
 
 export enum PostContentType {
@@ -121,9 +126,8 @@ export enum PostContentType {
   "GIF",
 }
 
-export enum ContentBlockType {
-  "TEXT",
-  "IMAGE",
-  "VIDEO",
-  "CAROUSEL",
-}
+const postStatuses = ["DRAFT", "PUBLISHED", "ARCHIVED"] as const;
+export type PostStatus = (typeof postStatuses)[number];
+
+const contentBlockTypes = ["TEXT", "IMAGE", "VIDEO", "CAROUSEL"] as const;
+export type ContentBlockType = (typeof contentBlockTypes)[number];

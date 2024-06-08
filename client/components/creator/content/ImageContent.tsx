@@ -2,11 +2,10 @@
 
 import { SortableItem } from "@/components/dnd/Sortable";
 import { ContentBlockProp, PostUserMedia } from "@/lib/interface";
-import React from "react";
-import Image from "next/image";
-import ContentWrapper from "./ContentWrapper";
 import { PhotoIcon } from "@heroicons/react/24/outline";
 import { omit } from "lodash";
+import Image from "next/image";
+import ContentWrapper from "./ContentWrapper";
 import { ImageCarouselVisualEffect } from "./ImageCarouselVisualWrapper";
 
 export const ImageContent = (props: ContentBlockProp) => {
@@ -27,9 +26,9 @@ export const ImageContent = (props: ContentBlockProp) => {
             >
               {value ? (
                 <Image
-                  width={(value as PostUserMedia).content.width}
-                  height={(value as PostUserMedia).content.height}
-                  src={(value as PostUserMedia).content.location}
+                  width={(value.contentValue as PostUserMedia).content.width}
+                  height={(value.contentValue as PostUserMedia).content.height}
+                  src={(value.contentValue as PostUserMedia).content.location}
                   alt="alt text"
                 />
               ) : (

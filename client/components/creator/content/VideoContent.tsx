@@ -1,12 +1,12 @@
 import { SortableItem } from "@/components/dnd/Sortable";
-import { ContentBlockProp, PostUserMedia } from "@/lib/interface";
-import React, { useEffect, useState } from "react";
-import Image from "next/image";
-import ContentWrapper from "./ContentWrapper";
-import { VideoCameraIcon } from "@heroicons/react/24/outline";
-import { cn, getVideoThumbnail } from "@/lib/utils";
 import { Skeleton } from "@/components/ui/skeleton";
+import { ContentBlockProp, PostUserMedia } from "@/lib/interface";
+import { cn, getVideoThumbnail } from "@/lib/utils";
+import { VideoCameraIcon } from "@heroicons/react/24/outline";
 import { omit } from "lodash";
+import Image from "next/image";
+import { useEffect, useState } from "react";
+import ContentWrapper from "./ContentWrapper";
 
 export const VideoContent = (props: ContentBlockProp) => {
   const { value, style } = props;
@@ -45,7 +45,7 @@ const ContentVisual = ({ value, options }: ContentBlockProp) => {
   useEffect(() => {
     const generateStaticThumbnail = async () => {
       const thumbnail = await getVideoThumbnail(
-        (value as PostUserMedia).content.location
+        (value?.contentValue as PostUserMedia).content.location
       );
       setVideoThumbnail(thumbnail);
     };
@@ -55,9 +55,9 @@ const ContentVisual = ({ value, options }: ContentBlockProp) => {
   return (
     <div className="group">
       <video
-        width={(value as PostUserMedia).content.width}
-        height={(value as PostUserMedia).content.height}
-        src={(value as PostUserMedia).content.location}
+        width={(value?.contentValue as PostUserMedia).content.width}
+        height={(value?.contentValue as PostUserMedia).content.height}
+        src={(value?.contentValue as PostUserMedia).content.location}
         autoPlay
         loop
         controls
@@ -67,8 +67,8 @@ const ContentVisual = ({ value, options }: ContentBlockProp) => {
         <div className="group-hover:hidden">
           {videoThumbnail ? (
             <Image
-              width={(value as PostUserMedia).content.width}
-              height={(value as PostUserMedia).content.height}
+              width={(value?.contentValue as PostUserMedia).content.width}
+              height={(value?.contentValue as PostUserMedia).content.height}
               src={videoThumbnail}
               alt="Video Thumbnail"
             />

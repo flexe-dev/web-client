@@ -10,7 +10,7 @@ import com.flexe.flex_core.repository.UserPostRepository;
 public class UserPostService {
 
     @Autowired
-    private UserPostRepository repository;
+    UserPostRepository repository;
 
     public UserPost savePost(UserPost post) {
         return repository.save(post);

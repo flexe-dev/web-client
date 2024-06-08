@@ -1,19 +1,19 @@
 "use client";
 import { DragOverlay } from "@dnd-kit/core";
-import React from "react";
 import {
   SortableContext,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
-import ContentSidebar, { dropAnimationConfig } from "./sidebar/ContentSidebar";
-import Blocks, { BlockID } from "./blocks/Blocks";
-import { useBlockDrag } from "../context/PostDragProvider";
-import { useDocumentCreator } from "../context/DocumentCreatorProvider";
-import { Switch } from "../ui/switch";
-import UserVideoBlock from "./blocks/UserVideoBlock";
-import UserImageBlock from "./blocks/UserImageBlock";
 import { AnimatePresence } from "framer-motion";
+import React from "react";
+import { useDocumentCreator } from "../context/DocumentCreatorProvider";
+import { useBlockDrag } from "../context/PostDragProvider";
+import { Switch } from "../ui/switch";
 import { CreatorHeader } from "./PostCreatorHeader";
+import Blocks, { BlockID } from "./blocks/Blocks";
+import UserImageBlock from "./blocks/UserImageBlock";
+import UserVideoBlock from "./blocks/UserVideoBlock";
+import ContentSidebar, { dropAnimationConfig } from "./sidebar/ContentSidebar";
 
 const PostContent = () => {
   const {
@@ -34,6 +34,7 @@ const PostContent = () => {
           value={contentBlock.value}
           style={contentBlock.style}
           options={contentBlock.options}
+          type={contentBlock.type}
         />
       ) : null;
     }
@@ -87,6 +88,7 @@ const PostContent = () => {
                       value={document.value}
                       style={document.style}
                       options={document.options}
+                      type={document.type}
                     />
                   </React.Fragment>
                 );

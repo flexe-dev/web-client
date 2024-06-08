@@ -1,13 +1,16 @@
 "use client";
 
-import { createContext, useContext, useState } from "react";
 import {
   ChildNodeProps,
   PostAuxilliaryData,
+  PostStatus,
   PostUserMedia,
+  UserPost,
 } from "@/lib/interface";
-import { PostStatus } from "@prisma/client";
-interface PostCreatorAuxProviderState extends PostAuxilliaryData {
+import { createContext, useContext, useState } from "react";
+interface PostCreatorAuxProviderState
+  extends Omit<PostAuxilliaryData, "userID"> {
+  id: string | undefined;
   onTagDelete: (tag: string) => void;
   onTechDelete: (tech: string) => void;
   setThumbnail: React.Dispatch<React.SetStateAction<PostUserMedia | undefined>>;
@@ -23,7 +26,7 @@ const initialState: PostCreatorAuxProviderState = {
   tags: [],
   tech: [],
   thumbnail: undefined,
-  postStatus: PostStatus.DRAFT,
+  postStatus: "DRAFT",
   onTagDelete: () => {},
   onTechDelete: () => {},
   setID: () => {},
@@ -37,17 +40,17 @@ export const PostCreatorAuxContext =
   createContext<PostCreatorAuxProviderState>(initialState);
 
 interface Props extends ChildNodeProps {
-  postData?: PostAuxilliaryData;
+  post?: UserPost;
 }
 
-export const PostCreatorAuxProvider = ({ children, postData }: Props) => {
-  const [id, setID] = useState<string | undefined>(postData?.id ?? undefined);
-  const [title, setTitle] = useState<string>(postData?.title ?? "");
-  const [tags, setTags] = useState<string[]>(postData?.tags ?? []);
+export const PostCreatorAuxProvider = ({ children, post }: Props) => {
+  const [id, setID] = useState<string | undefined>(post?.id ?? undefined);
+  const [title, setTitle] = useState<string>(post?.auxData?.title ?? "");
+  const [tags, setTags] = useState<string[]>(post?.auxData?.tags ?? []);
   const [postStatus, setPostStatus] = useState<PostStatus>(
-    postData?.postStatus ?? PostStatus.DRAFT
+    post?.auxData?.postStatus ?? "DRAFT"
   );
-  const [tech, setTech] = useState<string[]>(postData?.tech ?? []);
+  const [tech, setTech] = useState<string[]>(post?.auxData?.tech ?? []);
   const [thumbnail, setThumbnail] = useState<PostUserMedia | undefined>(
     undefined
   );
