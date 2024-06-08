@@ -9,7 +9,7 @@ export default function Home() {
       <BackgroundGrid />
       <div className="h-[80dvh] px-12 lg:px-24 max-w-screen-lg flex flex-col mt-48 z-[30]">
         <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold text-neutral-800 dark:text-neutral-200 ">
-          Being a Developer doesn't need to be so difficult all the time
+          Standing out in the tech world has never been easier
         </h1>
         <h2 className="text-lg md:text-xl lg:text-2xl md:ml-2 mt-6 md:mt-12 max-w-screen-sm text-secondary-header">
           Join a community of

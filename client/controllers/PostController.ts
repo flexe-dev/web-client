@@ -1,6 +1,4 @@
-import { PostContent, PostUserMedia, UserPost } from "@/lib/interface";
-import { supabase } from "@/lib/supabase";
-import { ObjectId } from "mongodb";
+import { UserPost } from "@/lib/interface";
 
 export const savePostAsDraft = async (
   post: Omit<UserPost, "external">,
@@ -15,7 +13,6 @@ export const savePostAsDraft = async (
       views: 0,
     },
   };
-  console.log(postToUpload);
   //Either Upload New Post Document to the database, or save to an existing document
   try {
     const response = await fetch(

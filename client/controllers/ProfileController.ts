@@ -1,5 +1,4 @@
-import { prisma } from "@/lib/prismadb";
-import { User, UserProfile } from "@prisma/client";
+import { UserProfile } from "@prisma/client";
 const CreateUserProfile = async (userId: string) => {
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_API_URL}profile/createProfile`,
