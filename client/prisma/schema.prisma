@@ -1,0 +1,133 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("MONGODB_URI")
+}
+
+model Account {
+  id                String  @id @default(auto()) @map("_id") @db.ObjectId
+  userId            String  @db.ObjectId
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.String
+  access_token      String? @db.String
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.String
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  sessionToken String   @unique
+  userId       String   @db.ObjectId
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model User {
+  id             String           @id @default(auto()) @map("_id") @db.ObjectId
+  email          String           @unique
+  emailVerified  DateTime?
+  password       String?
+  username       String           @unique @default(uuid())
+  name           String
+  image          String           @default("https://kkyhjzebnjjkhuncbfgo.supabase.co/storage/v1/object/public/user-profile/defaultpicture.jpg?t=2024-03-30T08%3A31%3A58.211Z") @db.String
+  onboarded      Boolean          @default(false)
+  accounts       Account[]
+  sessions       Session[]
+  userProfile    UserProfile[]
+  UserLikedPosts UserLikedPosts[]
+  UserSavedPosts UserSavedPosts[]
+  UserPost       UserPost[]
+  PostComments   PostComments[]
+}
+
+model UserProfile {
+  id        String  @id @default(auto()) @map("_id") @db.ObjectId
+  user      User    @relation(fields: [userId], references: [id])
+  userId    String  @unique @db.ObjectId
+  job       String?
+  followers Int     @default(0)
+  following Int     @default(0)
+  company   String?
+  pronouns  String?
+  location  String?
+  bio       String?
+  readMe    Bytes?
+}
+
+model UserLikedPosts {
+  id     String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId String   @db.ObjectId
+  postId String   @db.ObjectId
+  user   User     @relation(fields: [userId], references: [id])
+  post   UserPost @relation(fields: [postId], references: [id])
+}
+
+model UserSavedPosts {
+  id     String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId String   @db.ObjectId
+  postId String   @db.ObjectId
+  user   User     @relation(fields: [userId], references: [id])
+  post   UserPost @relation(fields: [postId], references: [id])
+}
+
+model UserPost {
+  id             String           @id @default(auto()) @map("_id") @db.ObjectId
+  userId         String           @db.ObjectId
+  document       PostDocument[]
+  title          String
+  tags           String[]
+  technologies   String[]
+  createdAt      DateTime         @default(now())
+  commentCount   Int              @default(0)
+  likeCount      Int              @default(0)
+  viewCount      Int              @default(0)
+  user           User             @relation(fields: [userId], references: [id])
+  PostComments   PostComments[]
+  UserLikedPosts UserLikedPosts[]
+  UserSavedPosts UserSavedPosts[]
+  postStatus     PostStatus       @default(DRAFT)
+}
+
+enum PostStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+type PostDocument {
+  id        String
+  value     Json?
+  style     Json?
+  options   Json?
+  component String
+}
+
+model PostComments {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  postId    String   @db.ObjectId
+  parentID  String?  @db.ObjectId
+  userId    String   @db.ObjectId
+  comment   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user      User     @relation(fields: [userId], references: [id])
+  post      UserPost @relation(fields: [postId], references: [id])
+}
