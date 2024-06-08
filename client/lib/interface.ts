@@ -1,5 +1,5 @@
-import { User } from "next-auth";
 import { PostStatus, UserProfile } from "@prisma/client";
+import { User } from "next-auth";
 import { CSSProperties } from "react";
 export interface ClassNameProp {
   className?: string;
@@ -81,6 +81,7 @@ export interface ContentBlockProp {
   value?: ContentValue;
   style?: CSSProperties;
   options?: ContentBlockOptions;
+  type: ContentBlockType;
 }
 
 export interface PostContentBlock extends ContentBlockProp {
@@ -118,4 +119,11 @@ export enum PostContentType {
   "IMAGE",
   "VIDEO",
   "GIF",
+}
+
+export enum ContentBlockType {
+  "TEXT",
+  "IMAGE",
+  "VIDEO",
+  "CAROUSEL",
 }

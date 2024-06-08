@@ -5,6 +5,13 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "type": "java",
+            "name": "FlexCoreApplication",
+            "request": "launch",
+            "mainClass": "com.flexe.flex_core.FlexCoreApplication",
+            "projectName": "flex-core"
+        },
+        {
             "type": "chrome",
             "request": "launch",
             "name": "Launch Chrome against localhost",
