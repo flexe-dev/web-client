@@ -1,6 +1,6 @@
-import { type ClassValue, clsx } from "clsx";
-import { twMerge } from "tailwind-merge";
 import bcrypt from "bcryptjs";
+import { clsx, type ClassValue } from "clsx";
+import { twMerge } from "tailwind-merge";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -38,6 +38,25 @@ export async function resizeImage(
     };
   });
 }
+
+export const generateMongoID = async (): Promise<string | undefined> => {
+  /*
+  Generates a new BSON ID used for preprocessing with data stored MongoDB
+  Needed to be a backend call due to React Issues with Bson generation on the front end
+  */
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}util/generateBson`,
+      {
+        method: `GET`,
+      }
+    );
+    const res = await response.json();
+    return res.id;
+  } catch (e) {
+    console.error(e);
+  }
+};
 
 export async function getVideoThumbnail(
   content: string,

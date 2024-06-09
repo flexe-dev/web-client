@@ -12,7 +12,7 @@ import { Button } from "../ui/button";
 import PostSubmit from "./PostSubmit";
 
 export const CreatorHeader = () => {
-  const { document } = useDocumentCreator();
+  const { document, setDocument } = useDocumentCreator();
   const { user } = useAccount();
   const { thumbnail, id, title, tags, tech, postStatus } = usePostAuxData();
   const [showCancelModal, setShowCancelModal] = useState(false);
@@ -34,11 +34,17 @@ export const CreatorHeader = () => {
       },
     };
 
-    toast.promise(savePostAsDraft(post), {
-      loading: "Saving Draft...",
-      success: "Draft Saved",
-      error: "Failed to Save Draft",
-    });
+    toast.promise(
+      savePostAsDraft(post).then((post) => {
+        if (!post) return;
+        setDocument(post.document);
+      }),
+      {
+        loading: "Saving Draft...",
+        success: "Draft Saved",
+        error: "Failed to Save Draft",
+      }
+    );
   };
 
   const onCancel = () => {

@@ -31,7 +31,6 @@ public class PostAuxData {
 
     public PostAuxData(String id, String userID, UserPostStatus status, String title, List<String> tags,
             List<String> tech, String thumbnail) {
-        this.id = id;
         this.userID = userID;
         this.postStatus = status;
         this.title = title;

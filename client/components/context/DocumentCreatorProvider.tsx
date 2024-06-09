@@ -4,19 +4,18 @@ import {
   ChildNodeProps,
   ContentStyling,
   ContentValue,
+  Document,
   OptionKeyValues,
   OptionKeys,
-  PostContentBlock,
   PostUserMedia,
 } from "@/lib/interface";
 import { nanoid } from "nanoid";
 import React, { CSSProperties, createContext, useState } from "react";
 import { DefaultTitle } from "../creator/content/DefaultStyling";
-import { TextContent } from "../creator/content/TextContent";
 
 interface DocumentCreatorProviderState {
   //Context States
-  document: PostContentBlock[];
+  document: Document;
   content: PostUserMedia[];
   previewMode: boolean;
   showDeletionConfirmation: boolean;
@@ -33,7 +32,7 @@ interface DocumentCreatorProviderState {
   onDelete: (id: string) => void;
   //Context State Dispatches
   setPreviewMode: React.Dispatch<React.SetStateAction<boolean>>;
-  setDocument: React.Dispatch<React.SetStateAction<PostContentBlock[]>>;
+  setDocument: React.Dispatch<React.SetStateAction<Document>>;
   setShowDeletionConfirmation: React.Dispatch<React.SetStateAction<boolean>>;
   setSidebarOpen: React.Dispatch<React.SetStateAction<boolean>>;
   setActiveStylingTool: React.Dispatch<
@@ -42,11 +41,10 @@ interface DocumentCreatorProviderState {
   setContent: React.Dispatch<React.SetStateAction<PostUserMedia[]>>;
 }
 
-const defaultDocumentState: PostContentBlock[] = [
+const defaultDocumentState: Document = [
   {
     id: `draggable-content-title-${nanoid()}`,
     value: { contentValue: "Title" },
-    content: TextContent,
     style: DefaultTitle,
     type: "TEXT",
   },
@@ -78,7 +76,7 @@ export const DocumentCreatorContext =
 
 interface Props extends ChildNodeProps {
   content: PostUserMedia[];
-  document?: PostContentBlock[];
+  document?: Document;
 }
 
 export const DocumentCreatorProvider = ({
@@ -90,7 +88,7 @@ export const DocumentCreatorProvider = ({
   const [showDeletionConfirmation, setShowDeletionConfirmation] =
     useState<boolean>(true);
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(true);
-  const [document, setDocument] = useState<PostContentBlock[]>(
+  const [document, setDocument] = useState<Document>(
     postDocument ?? defaultDocumentState
   );
 

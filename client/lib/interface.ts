@@ -88,9 +88,7 @@ export interface ContentBlockProp {
   type?: ContentBlockType;
 }
 
-export interface PostContentBlock extends ContentBlockProp {
-  content: (props: ContentBlockProp) => React.JSX.Element;
-}
+export type ContentComponent = (props: ContentBlockProp) => React.JSX.Element;
 
 export interface ToolValueObject<T> {
   icon: React.ReactNode;
@@ -98,13 +96,15 @@ export interface ToolValueObject<T> {
   tooltip?: string;
 }
 
+export type Document = ContentBlockProp[];
+
 export interface PostAuxilliaryData {
   userID: string;
   postStatus: PostStatus;
   title: string;
   tags: string[];
   tech: string[];
-  thumbnail: PostUserMedia | undefined;
+  thumbnail: string;
 }
 
 export interface PostExternalData {
@@ -115,7 +115,7 @@ export interface PostExternalData {
 
 export interface UserPost {
   id: string | undefined;
-  document: PostContentBlock[];
+  document: Document;
   auxData: PostAuxilliaryData;
   externalData: PostExternalData;
 }
@@ -129,5 +129,11 @@ export enum PostContentType {
 const postStatuses = ["DRAFT", "PUBLISHED", "ARCHIVED"] as const;
 export type PostStatus = (typeof postStatuses)[number];
 
-const contentBlockTypes = ["TEXT", "IMAGE", "VIDEO", "CAROUSEL"] as const;
+const contentBlockTypes = [
+  "TEXT",
+  "IMAGE",
+  "VIDEO",
+  "CAROUSEL",
+  "PREVIEW",
+] as const;
 export type ContentBlockType = (typeof contentBlockTypes)[number];

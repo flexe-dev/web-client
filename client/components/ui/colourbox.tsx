@@ -1,9 +1,5 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import { ChevronsUpDown } from "lucide-react";
-import { cn } from "@/lib/utils";
-import { omit } from "lodash";
 import { Button } from "@/components/ui/button";
 import {
   Command,
@@ -19,9 +15,15 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Colour, ColourType, colours } from "@/lib/colours";
-import { ScrollArea } from "./scroll-area";
-import { PostContentBlock } from "@/lib/interface";
+import { ContentBlockProp } from "@/lib/interface";
+import { cn } from "@/lib/utils";
 import { XMarkIcon } from "@heroicons/react/24/outline";
+import { omit } from "lodash";
+import { ChevronsUpDown } from "lucide-react";
+import { useTheme } from "next-themes";
+import React, { useEffect, useState } from "react";
+import { useDocumentCreator } from "../context/DocumentCreatorProvider";
+import { ScrollArea } from "./scroll-area";
 import { Separator } from "./separator";
 import {
   Tooltip,
@@ -29,10 +31,8 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "./tooltip";
-import { useTheme } from "next-themes";
-import { useDocumentCreator } from "../context/DocumentCreatorProvider";
 interface Props {
-  content: PostContentBlock;
+  content: ContentBlockProp;
 }
 export function ColourBox({ content }: Props) {
   const [open, setOpen] = useState(false);
@@ -132,7 +132,7 @@ export function ColourBox({ content }: Props) {
                           <div className="flex justify-center flex-nowrap pb-1">
                             {colours[section as ColourType]?.map((colour) => {
                               return (
-                                <Tooltip>
+                                <Tooltip key={`colour-${colour.code}`}>
                                   <TooltipTrigger>
                                     <CommandItem
                                       key={`${colour.name}-${colour.code}`}

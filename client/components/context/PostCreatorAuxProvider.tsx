@@ -4,7 +4,6 @@ import {
   ChildNodeProps,
   PostAuxilliaryData,
   PostStatus,
-  PostUserMedia,
   UserPost,
 } from "@/lib/interface";
 import { createContext, useContext, useState } from "react";
@@ -13,7 +12,7 @@ interface PostCreatorAuxProviderState
   id: string | undefined;
   onTagDelete: (tag: string) => void;
   onTechDelete: (tech: string) => void;
-  setThumbnail: React.Dispatch<React.SetStateAction<PostUserMedia | undefined>>;
+  setThumbnail: React.Dispatch<React.SetStateAction<string>>;
   setTitle: React.Dispatch<React.SetStateAction<string>>;
   setTags: React.Dispatch<React.SetStateAction<string[]>>;
   setTech: React.Dispatch<React.SetStateAction<string[]>>;
@@ -25,7 +24,7 @@ const initialState: PostCreatorAuxProviderState = {
   title: "",
   tags: [],
   tech: [],
-  thumbnail: undefined,
+  thumbnail: "",
   postStatus: "DRAFT",
   onTagDelete: () => {},
   onTechDelete: () => {},
@@ -51,8 +50,8 @@ export const PostCreatorAuxProvider = ({ children, post }: Props) => {
     post?.auxData?.postStatus ?? "DRAFT"
   );
   const [tech, setTech] = useState<string[]>(post?.auxData?.tech ?? []);
-  const [thumbnail, setThumbnail] = useState<PostUserMedia | undefined>(
-    undefined
+  const [thumbnail, setThumbnail] = useState<string>(
+    post?.auxData?.thumbnail ?? ""
   );
 
   const onTagDelete = (deleteNode: string) => {

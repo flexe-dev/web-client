@@ -1,6 +1,6 @@
 "use client";
 
-import { PostContentBlock, PostUserMedia } from "@/lib/interface";
+import { ContentBlockProp, Document, PostUserMedia } from "@/lib/interface";
 import {
   Active,
   DndContext,
@@ -20,18 +20,13 @@ import { arrayMove, sortableKeyboardCoordinates } from "@dnd-kit/sortable";
 import { nanoid } from "nanoid";
 import React, { createContext, useState } from "react";
 import { useMediaQuery } from "react-responsive";
-import BlockPreview from "../creator/blocks/BlockPreview";
 import { BlockID } from "../creator/blocks/Blocks";
-import GalleryContent from "../creator/content/CarouselContent";
 import {
   DefaultMedia,
   DefaultSubtitle,
   DefaultText,
   DefaultTitle,
 } from "../creator/content/DefaultStyling";
-import { ImageContent } from "../creator/content/ImageContent";
-import { TextContent } from "../creator/content/TextContent";
-import { VideoContent } from "../creator/content/VideoContent";
 import { useDocumentCreator } from "./DocumentCreatorProvider";
 
 interface PostDragProviderState {
@@ -88,7 +83,7 @@ export const PostDragProvider = ({
     content: uploadedContent,
   } = useDocumentCreator();
   const [originalDocumentState, setOriginalDocumentState] = useState<
-    PostContentBlock[] | undefined
+    Document | undefined
   >();
   const handleDragStart = (e: DragStartEvent) => {
     setActiveDragID(e.active.id);
@@ -96,13 +91,12 @@ export const PostDragProvider = ({
     fixedSidebar && setSidebarOpen(false);
   };
 
-  const RenderNewItem: Record<BlockID, PostContentBlock> = {
+  const RenderNewItem: Record<BlockID, ContentBlockProp> = {
     "draggable-block-title": {
       id: `draggable-content-text-${nanoid()}`,
       value: {
         contentValue: "Sub-Title",
       },
-      content: TextContent,
       style: DefaultTitle,
       type: "TEXT",
     },
@@ -111,7 +105,6 @@ export const PostDragProvider = ({
       value: {
         contentValue: "Sub-Title",
       },
-      content: TextContent,
       style: DefaultSubtitle,
       type: "TEXT",
     },
@@ -120,19 +113,16 @@ export const PostDragProvider = ({
       value: {
         contentValue: "Text",
       },
-      content: TextContent,
       style: DefaultText,
       type: "TEXT",
     },
     "draggable-block-image": {
       id: `draggable-content-image-${nanoid()}`,
-      content: ImageContent,
       style: DefaultMedia,
       type: "IMAGE",
     },
     "draggable-block-video": {
       id: `draggable-content-video-${nanoid()}`,
-      content: VideoContent,
       options: {
         playOnHover: false,
       },
@@ -145,7 +135,7 @@ export const PostDragProvider = ({
     return uploadedContent.find((media) => media.content.id === id);
   };
 
-  const handleInsertUploadedMedia = (blockID: string): PostContentBlock => {
+  const handleInsertUploadedMedia = (blockID: string): ContentBlockProp => {
     //format: draggable-block-user-image-<id>
     const mediaTypes = ["image", "video", "gif"];
     const [_, type, id] = blockID.split("||");
@@ -161,7 +151,6 @@ export const PostDragProvider = ({
         contentValue: content,
       },
       type: type.toUpperCase() as "IMAGE" | "VIDEO",
-      content: type === "video" ? VideoContent : ImageContent,
       style: DefaultMedia,
       options: {
         playOnHover: type === "video" ? false : undefined,
@@ -208,7 +197,7 @@ export const PostDragProvider = ({
             const [_, type, id] = (active.id as string).split("||");
             const content = findMediaInUploaded(id);
             if (!content || !originalImageContent?.value) return;
-            const newCarouselBlock: PostContentBlock = {
+            const newCarouselBlock: ContentBlockProp = {
               id: `draggable-content-carousel-${nanoid()}}`,
               value: {
                 contentValue: [
@@ -216,7 +205,6 @@ export const PostDragProvider = ({
                   content,
                 ],
               },
-              content: GalleryContent,
               type: "CAROUSEL",
               options: {
                 carouselAutoplay: false,
@@ -247,7 +235,7 @@ export const PostDragProvider = ({
 
               content,
             ];
-            const newCarouselBlock: PostContentBlock = {
+            const newCarouselBlock: ContentBlockProp = {
               ...imageCarousel,
               value: {
                 contentValue: newImages,
@@ -316,12 +304,12 @@ export const PostDragProvider = ({
           return;
         }
       }
-      const newContentBlock: PostContentBlock = {
+      const newContentBlock: ContentBlockProp = {
         id: "draggable-content-new-block",
         value: {
           contentValue: "New Block",
         },
-        content: BlockPreview,
+        type: "PREVIEW",
       };
       setDocument((items) => {
         const overIndex = items.findIndex((doc) => doc.id === over.id);
