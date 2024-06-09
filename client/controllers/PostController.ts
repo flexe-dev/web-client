@@ -1,6 +1,6 @@
 import { Document, PostUserMedia, UserPost } from "@/lib/interface";
 import { supabase } from "@/lib/supabase";
-import { generateMongoID } from "@/lib/utils";
+import { generateMongoID, getVideoThumbnail, resizeImage } from "@/lib/utils";
 
 export const savePostAsDraft = async (
   post: Omit<UserPost, "externalData">
@@ -16,7 +16,12 @@ export const savePostAsDraft = async (
 
   const postToUpload: UserPost = {
     id: postID,
-    auxData: post.auxData,
+    auxData: {
+      ...post.auxData,
+      thumbnail:
+        post.auxData.thumbnail ??
+        (await generateDefaultThumbnail(uploadedDocument)),
+    },
     document: uploadedDocument,
     externalData: {
       likeCount: 0,
@@ -41,6 +46,12 @@ export const savePostAsDraft = async (
     console.error(e);
   }
 };
+
+export const archiveDocument = async (postID: string) => {};
+
+/* 
+Helper Functions
+*/
 
 const generateNewContentFromUpload = async (
   document: Document,
@@ -79,10 +90,6 @@ const generateNewContentFromUpload = async (
   );
 };
 
-/* 
-Helper Functions
-*/
-
 const uploadContentToSupabase = async (
   userID: string,
   media: PostUserMedia,
@@ -110,6 +117,38 @@ const uploadContentToSupabase = async (
   };
 };
 
+const generateDefaultThumbnail = async (
+  document: Document
+): Promise<string> => {
+  //This will find the first instance of visual content and generate a sized down thumbnail for the post
+  const visualTypes = ["IMAGE", "VIDEO", "CAROUSEL"];
+  const content = document.find(
+    (block) => block.type && visualTypes.includes(block.type)
+  );
+  if (!content || !content.value?.contentValue)
+    return process.env.NEXT_PUBLIC_FALLBACK_PHOTO;
+  const media = content.value.contentValue;
+  if (media instanceof Array) {
+    return (
+      (await resizeImage(media[0].content.location, 300, 300)) ??
+      process.env.NEXT_PUBLIC_FALLBACK_PHOTO
+    );
+  } else {
+    const location = (media as PostUserMedia).content.location;
+    if (content.type === "VIDEO") {
+      return (
+        (await getVideoThumbnail(location)) ??
+        process.env.NEXT_PUBLIC_FALLBACK_PHOTO
+      );
+    } else {
+      return (
+        (await resizeImage(location, 300, 300)) ??
+        process.env.NEXT_PUBLIC_FALLBACK_PHOTO
+      );
+    }
+  }
+};
+
 export const publishPost = async (post: UserPost) => {
   if (!post.id) {
     //Create new Database Object
@@ -117,5 +156,3 @@ export const publishPost = async (post: UserPost) => {
     //Update existing Database Object
   }
 };
-
-export const archiveDocument = async (postID: string) => {};

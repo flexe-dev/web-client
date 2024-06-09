@@ -17,6 +17,7 @@ interface PostCreatorAuxProviderState
   setTags: React.Dispatch<React.SetStateAction<string[]>>;
   setTech: React.Dispatch<React.SetStateAction<string[]>>;
   setID: React.Dispatch<React.SetStateAction<string | undefined>>;
+  setAuxData: (post: UserPost) => void;
 }
 
 const initialState: PostCreatorAuxProviderState = {
@@ -33,6 +34,7 @@ const initialState: PostCreatorAuxProviderState = {
   setTitle: () => {},
   setTags: () => {},
   setTech: () => {},
+  setAuxData: () => {},
 };
 
 export const PostCreatorAuxContext =
@@ -62,6 +64,15 @@ export const PostCreatorAuxProvider = ({ children, post }: Props) => {
     setTech(tech.filter((t) => t !== deletedNode));
   };
 
+  const setAuxData = (post: UserPost) => {
+    setID(post.id);
+    setTitle(post.auxData.title);
+    setTags(post.auxData.tags);
+    setTech(post.auxData.tech);
+    setThumbnail(post.auxData.thumbnail);
+    setPostStatus(post.auxData.postStatus);
+  };
+
   return (
     <PostCreatorAuxContext.Provider
       value={{
@@ -78,6 +89,7 @@ export const PostCreatorAuxProvider = ({ children, post }: Props) => {
         setThumbnail,
         onTagDelete,
         onTechDelete,
+        setAuxData,
       }}
     >
       {children}

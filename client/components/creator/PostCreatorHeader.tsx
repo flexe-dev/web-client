@@ -14,7 +14,8 @@ import PostSubmit from "./PostSubmit";
 export const CreatorHeader = () => {
   const { document, setDocument } = useDocumentCreator();
   const { user } = useAccount();
-  const { thumbnail, id, title, tags, tech, postStatus } = usePostAuxData();
+  const { thumbnail, id, title, tags, tech, postStatus, setAuxData } =
+    usePostAuxData();
   const [showCancelModal, setShowCancelModal] = useState(false);
   const [showPublishModal, setShowPublishModal] = useState(false);
   const [savedDraft, setSavedDraft] = useState(false);
@@ -38,6 +39,7 @@ export const CreatorHeader = () => {
       savePostAsDraft(post).then((post) => {
         if (!post) return;
         setDocument(post.document);
+        setAuxData(post);
       }),
       {
         loading: "Saving Draft...",
