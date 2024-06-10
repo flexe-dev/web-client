@@ -11,6 +11,14 @@ export async function HashPassword(password: string) {
   return hashedPassword;
 }
 
+export function nullIfEmpty(value: string) {
+  return value === "" ? null : value;
+}
+
+export function toTitleCase(value: string) {
+  return value.charAt(0).toUpperCase() + value.slice(1).toLowerCase();
+}
+
 export async function resizeImage(
   url: string,
   width: number,
@@ -98,6 +106,21 @@ export async function getVideoThumbnail(
     });
   });
 }
+
+export const convertImageSourceToFile = async (
+  url: string,
+  filename: string
+) => {
+  return new Promise<File | undefined>((resolve) => {
+    fetch(url).then(async (res) => {
+      const contentType = res.headers.get("content-type");
+      if (!contentType) return;
+      const blob = await res.blob();
+      const file = new File([blob], filename, { type: contentType });
+      resolve(file);
+    });
+  });
+};
 
 export const getSystemTheme = (): "light" | "dark" => {
   return window.matchMedia("(prefers-color-scheme: dark)").matches

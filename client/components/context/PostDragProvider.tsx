@@ -95,7 +95,7 @@ export const PostDragProvider = ({
     "draggable-block-title": {
       id: `draggable-content-text-${nanoid()}`,
       value: {
-        contentValue: "Sub-Title",
+        contentValue: "Title",
       },
       style: DefaultTitle,
       type: "TEXT",

@@ -1,27 +1,24 @@
 "use client";
 
-import React, { Dispatch, SetStateAction } from "react";
 import { useRouter } from "next/navigation";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogFooter,
-  DialogDescription,
   DialogTrigger,
 } from "./ui/dialog";
 
+import { ModalProps } from "@/lib/interface";
 import { Button } from "./ui/button";
-import { ChildNodeProps } from "@/lib/interface";
 
-interface Props {
+interface Props extends ModalProps {
   path: string;
-  modalVisible: boolean;
-  callback: Dispatch<SetStateAction<boolean>>;
 }
 
-const CancelWarn = ({ path, modalVisible: visible, callback }: Props) => {
+const CancelWarn = ({ path, open: visible, callback }: Props) => {
   const router = useRouter();
 
   const onConfirm = () => {

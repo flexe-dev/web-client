@@ -12,6 +12,11 @@ export interface LinkProps {
   restrict?: boolean;
 }
 
+export interface ModalProps {
+  open: boolean;
+  callback: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
 export interface SidebarButtonProps extends ClassNameProp {
   callback: React.Dispatch<React.SetStateAction<boolean>>;
 }

@@ -1,8 +1,13 @@
 import { Document, PostUserMedia, UserPost } from "@/lib/interface";
 import { supabase } from "@/lib/supabase";
-import { generateMongoID, getVideoThumbnail, resizeImage } from "@/lib/utils";
-
-export const savePostAsDraft = async (
+import {
+  convertImageSourceToFile,
+  generateMongoID,
+  getVideoThumbnail,
+  nullIfEmpty,
+  resizeImage,
+} from "@/lib/utils";
+export const savePost = async (
   post: Omit<UserPost, "externalData">
 ): Promise<UserPost | undefined> => {
   const postID = post.id ?? (await generateMongoID());
@@ -13,14 +18,15 @@ export const savePostAsDraft = async (
     postID,
     post.auxData.userID
   );
+  const thumbnail =
+    nullIfEmpty(post.auxData.thumbnail) ??
+    (await handlePostThumbnail(uploadedDocument, postID, post.auxData.userID));
 
   const postToUpload: UserPost = {
     id: postID,
     auxData: {
       ...post.auxData,
-      thumbnail:
-        post.auxData.thumbnail ??
-        (await generateDefaultThumbnail(uploadedDocument)),
+      thumbnail: thumbnail,
     },
     document: uploadedDocument,
     externalData: {
@@ -111,15 +117,27 @@ const uploadContentToSupabase = async (
     ...media,
     content: {
       ...media.content,
-      location: `${process.env.NEXT_PUBLIC_SUPABASE_IMAGE_RETRIEVAL_URL}/post-content/${userID}/${folder}/${media.content.id}`,
+      location: `${process.env.NEXT_PUBLIC_SUPABASE_IMAGE_RETRIEVAL_URL}post-content/${userID}/${folder}/${media.content.id}`,
       uploaded: true,
     },
   };
 };
 
-const generateDefaultThumbnail = async (
-  document: Document
+const handlePostThumbnail = async (
+  document: Document,
+  postID: string,
+  userID: string
 ): Promise<string> => {
+  const thumbnail = await generateThumbnailSource(document);
+  const uploadedFile = await convertImageSourceToFile(
+    thumbnail,
+    "thumbnail.jpg"
+  );
+  if (!uploadedFile) return process.env.NEXT_PUBLIC_FALLBACK_PHOTO; //Fallback Photo
+  return await uploadThumbnailToSupabase(uploadedFile, postID, userID);
+};
+
+const generateThumbnailSource = async (document: Document): Promise<string> => {
   //This will find the first instance of visual content and generate a sized down thumbnail for the post
   const visualTypes = ["IMAGE", "VIDEO", "CAROUSEL"];
   const content = document.find(
@@ -127,6 +145,7 @@ const generateDefaultThumbnail = async (
   );
   if (!content || !content.value?.contentValue)
     return process.env.NEXT_PUBLIC_FALLBACK_PHOTO;
+
   const media = content.value.contentValue;
   if (media instanceof Array) {
     return (
@@ -147,6 +166,24 @@ const generateDefaultThumbnail = async (
       );
     }
   }
+};
+
+const uploadThumbnailToSupabase = async (
+  thumbnail: File,
+  postID: string,
+  userID: string
+): Promise<string> => {
+  const { error } = await supabase.storage
+    .from("post-content")
+    .upload(`/${userID}/${postID}/thumbnail.jpg`, thumbnail, {
+      cacheControl: "3600",
+      upsert: true,
+    });
+  if (error) {
+    console.error(error);
+    return process.env.NEXT_PUBLIC_FALLBACK_PHOTO; //Fallback Photo
+  }
+  return `${process.env.NEXT_PUBLIC_SUPABASE_IMAGE_RETRIEVAL_URL}post-content/${userID}/${postID}/thumbnail.jpg`;
 };
 
 export const publishPost = async (post: UserPost) => {

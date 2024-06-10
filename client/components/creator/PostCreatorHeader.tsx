@@ -1,7 +1,10 @@
 "use client";
 
-import { savePostAsDraft } from "@/controllers/PostController";
-import { UserPost } from "@/lib/interface";
+import { savePost } from "@/controllers/PostController";
+import { PostStatus, UserPost } from "@/lib/interface";
+import { cn, toTitleCase } from "@/lib/utils";
+import { useMotionValueEvent, useScroll } from "framer-motion";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
 import CancelWarn from "../CancelWarn";
@@ -14,13 +17,28 @@ import PostSubmit from "./PostSubmit";
 export const CreatorHeader = () => {
   const { document, setDocument } = useDocumentCreator();
   const { user } = useAccount();
+  const router = useRouter();
+  const { scrollY } = useScroll();
   const { thumbnail, id, title, tags, tech, postStatus, setAuxData } =
     usePostAuxData();
+
   const [showCancelModal, setShowCancelModal] = useState(false);
   const [showPublishModal, setShowPublishModal] = useState(false);
-  const [savedDraft, setSavedDraft] = useState(false);
+  const [scrollPosition, setScrollPosition] = useState(0);
+  const THRESHOLD = 400;
 
-  const saveAsDraft = async () => {
+  useMotionValueEvent(scrollY, "change", (latest) => {
+    setScrollPosition(latest);
+    router.push(`${user?.username}/posts`);
+  });
+
+  const publishPost = () => {
+    handlePostSave("PUBLISHED").then(() => {
+      setShowPublishModal(false);
+    });
+  };
+
+  const handlePostSave = async (type: PostStatus) => {
     if (!user) return;
     const post: Omit<UserPost, "externalData"> = {
       id,
@@ -31,20 +49,20 @@ export const CreatorHeader = () => {
         tags,
         tech,
         thumbnail,
-        postStatus: "DRAFT",
+        postStatus: type,
       },
     };
 
     toast.promise(
-      savePostAsDraft(post).then((post) => {
+      savePost(post).then((post) => {
         if (!post) return;
         setDocument(post.document);
         setAuxData(post);
       }),
       {
-        loading: "Saving Draft...",
-        success: "Draft Saved",
-        error: "Failed to Save Draft",
+        loading: `Saving ${toTitleCase(type)}...`,
+        success: `${toTitleCase(type)} Saved`,
+        error: `Failed to Save ${toTitleCase(type)}`,
       }
     );
   };
@@ -54,7 +72,12 @@ export const CreatorHeader = () => {
   };
   return (
     <>
-      <section className="h-[4rem] w-full py-4 sticky z-[40] top-[5rem] flex">
+      <section
+        className={cn(
+          "h-[4rem] w-full py-4 sticky z-[40] top-[5rem] origin-top flex opacity-100 transition-all",
+          scrollPosition > THRESHOLD && "opacity-0 -top-[1rem]"
+        )}
+      >
         <div className="hidden md:block w-24 px-6">
           <Button onClick={onCancel} variant={"destructive"}>
             Cancel
@@ -70,7 +93,9 @@ export const CreatorHeader = () => {
           </Button>
 
           <Button
-            onClick={saveAsDraft}
+            onClick={() => {
+              handlePostSave("DRAFT");
+            }}
             className="backdrop-blur-md z-[99]"
             variant={"outline"}
           >
@@ -79,10 +104,14 @@ export const CreatorHeader = () => {
           <Button onClick={() => setShowPublishModal(true)}>Publish</Button>
         </div>
       </section>
-      <PostSubmit />
+      <PostSubmit
+        onSubmit={publishPost}
+        open={showPublishModal}
+        callback={setShowPublishModal}
+      />
       <CancelWarn
         path="/"
-        modalVisible={showCancelModal}
+        open={showCancelModal}
         callback={setShowCancelModal}
       />
     </>
