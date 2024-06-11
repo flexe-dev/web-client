@@ -1,14 +1,13 @@
 "use client";
 
-import React, { SetStateAction, useState } from "react";
-import { userProfileViewer } from "../context/UserProfileProvider";
-import { ChildNodeProps, ClassNameProp } from "@/lib/interface";
+import { ChildNodeProps, ClassNameProp, UserPost } from "@/lib/interface";
 import { cn } from "@/lib/utils";
 import { ArrowUpTrayIcon, PlusCircleIcon } from "@heroicons/react/24/outline";
-import { Button } from "../ui/button";
-import { UserPost } from "@prisma/client";
-import { Dialog, DialogTrigger } from "../ui/dialog";
+import React, { SetStateAction, useState } from "react";
+import { userProfileViewer } from "../context/UserProfileProvider";
 import PostCreateDialog from "../creator/PostCreateDialog";
+import { Button } from "../ui/button";
+import { Dialog, DialogTrigger } from "../ui/dialog";
 const Posts = () => {
   const { userPosts } = userProfileViewer();
   const [openDialog, setOpenDialog] = useState<boolean>(false);

@@ -1,19 +1,33 @@
 "use client";
+import { ContentBlockType, ContentComponent } from "@/lib/interface";
 import { DragOverlay } from "@dnd-kit/core";
-import React from "react";
 import {
   SortableContext,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
-import ContentSidebar, { dropAnimationConfig } from "./sidebar/ContentSidebar";
-import Blocks, { BlockID } from "./blocks/Blocks";
-import { useBlockDrag } from "../context/PostDragProvider";
-import { useDocumentCreator } from "../context/DocumentCreatorProvider";
-import { Switch } from "../ui/switch";
-import UserVideoBlock from "./blocks/UserVideoBlock";
-import UserImageBlock from "./blocks/UserImageBlock";
 import { AnimatePresence } from "framer-motion";
+import React from "react";
+import { useDocumentCreator } from "../context/DocumentCreatorProvider";
+import { useBlockDrag } from "../context/PostDragProvider";
+import { Switch } from "../ui/switch";
 import { CreatorHeader } from "./PostCreatorHeader";
+import BlockPreview from "./blocks/BlockPreview";
+import Blocks, { BlockID } from "./blocks/Blocks";
+import UserImageBlock from "./blocks/UserImageBlock";
+import UserVideoBlock from "./blocks/UserVideoBlock";
+import GalleryContent from "./content/CarouselContent";
+import { ImageContent } from "./content/ImageContent";
+import { TextContent } from "./content/TextContent";
+import { VideoContent } from "./content/VideoContent";
+import ContentSidebar, { dropAnimationConfig } from "./sidebar/ContentSidebar";
+
+export const getBlockComponent: Record<ContentBlockType, ContentComponent> = {
+  TEXT: TextContent,
+  IMAGE: ImageContent,
+  VIDEO: VideoContent,
+  CAROUSEL: GalleryContent,
+  PREVIEW: BlockPreview,
+};
 
 const PostContent = () => {
   const {
@@ -28,14 +42,18 @@ const PostContent = () => {
   const getRenderedDragOverlay = (id: string): React.ReactNode => {
     if (id.includes("draggable-content")) {
       const contentBlock = document.find((block) => block.id === id);
-      return contentBlock ? (
-        <contentBlock.content
+      if (!contentBlock || !contentBlock.type) return null;
+      const Component = getBlockComponent[contentBlock.type];
+
+      return (
+        <Component
           id={contentBlock.id}
           value={contentBlock.value}
           style={contentBlock.style}
           options={contentBlock.options}
+          type={contentBlock.type}
         />
-      ) : null;
+      );
     }
     if (id.includes("user")) {
       const [_, type, contentId] = id.split("||");
@@ -80,9 +98,10 @@ const PostContent = () => {
               items={document.map((document) => document.id)}
             >
               {document.map((document, index) => {
+                const Component = getBlockComponent[document.type!];
                 return (
                   <React.Fragment key={`document-component-${index}`}>
-                    <document.content
+                    <Component
                       id={document.id}
                       value={document.value}
                       style={document.style}

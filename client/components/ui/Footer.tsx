@@ -8,7 +8,6 @@ interface Link {
   href: string;
 }
 const links: Link[] = [
-  { name: "Portfolios", href: "/portfolio" },
   { name: "About", href: "/about" },
   { name: "Contact", href: "/contact" },
   { name: "Projects", href: "/projects" },

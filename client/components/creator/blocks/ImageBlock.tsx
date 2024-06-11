@@ -1,7 +1,6 @@
 import React from "react";
 import { BlockWrapper } from "./Wrapper";
 import { Draggable } from "@/components/dnd/Draggable";
-import { useBlockDrag } from "@/components/context/PostDragProvider";
 const ImageBlock = () => {
   return (
     <>

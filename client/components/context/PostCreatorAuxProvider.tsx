@@ -1,20 +1,23 @@
 "use client";
 
-import { createContext, useContext, useState } from "react";
 import {
   ChildNodeProps,
   PostAuxilliaryData,
-  PostUserMedia,
+  PostStatus,
+  UserPost,
 } from "@/lib/interface";
-import { PostStatus } from "@prisma/client";
-interface PostCreatorAuxProviderState extends PostAuxilliaryData {
+import { createContext, useContext, useState } from "react";
+interface PostCreatorAuxProviderState
+  extends Omit<PostAuxilliaryData, "userID"> {
+  id: string | undefined;
   onTagDelete: (tag: string) => void;
   onTechDelete: (tech: string) => void;
-  setThumbnail: React.Dispatch<React.SetStateAction<PostUserMedia | undefined>>;
+  setThumbnail: React.Dispatch<React.SetStateAction<string>>;
   setTitle: React.Dispatch<React.SetStateAction<string>>;
   setTags: React.Dispatch<React.SetStateAction<string[]>>;
   setTech: React.Dispatch<React.SetStateAction<string[]>>;
   setID: React.Dispatch<React.SetStateAction<string | undefined>>;
+  setAuxData: (post: UserPost) => void;
 }
 
 const initialState: PostCreatorAuxProviderState = {
@@ -22,8 +25,8 @@ const initialState: PostCreatorAuxProviderState = {
   title: "",
   tags: [],
   tech: [],
-  thumbnail: undefined,
-  postStatus: PostStatus.DRAFT,
+  thumbnail: "",
+  postStatus: "DRAFT",
   onTagDelete: () => {},
   onTechDelete: () => {},
   setID: () => {},
@@ -31,25 +34,26 @@ const initialState: PostCreatorAuxProviderState = {
   setTitle: () => {},
   setTags: () => {},
   setTech: () => {},
+  setAuxData: () => {},
 };
 
 export const PostCreatorAuxContext =
   createContext<PostCreatorAuxProviderState>(initialState);
 
 interface Props extends ChildNodeProps {
-  postData?: PostAuxilliaryData;
+  post?: UserPost;
 }
 
-export const PostCreatorAuxProvider = ({ children, postData }: Props) => {
-  const [id, setID] = useState<string | undefined>(postData?.id ?? undefined);
-  const [title, setTitle] = useState<string>(postData?.title ?? "");
-  const [tags, setTags] = useState<string[]>(postData?.tags ?? []);
+export const PostCreatorAuxProvider = ({ children, post }: Props) => {
+  const [id, setID] = useState<string | undefined>(post?.id ?? undefined);
+  const [title, setTitle] = useState<string>(post?.auxData?.title ?? "");
+  const [tags, setTags] = useState<string[]>(post?.auxData?.tags ?? []);
   const [postStatus, setPostStatus] = useState<PostStatus>(
-    postData?.postStatus ?? PostStatus.DRAFT
+    post?.auxData?.postStatus ?? "DRAFT"
   );
-  const [tech, setTech] = useState<string[]>(postData?.tech ?? []);
-  const [thumbnail, setThumbnail] = useState<PostUserMedia | undefined>(
-    undefined
+  const [tech, setTech] = useState<string[]>(post?.auxData?.tech ?? []);
+  const [thumbnail, setThumbnail] = useState<string>(
+    post?.auxData?.thumbnail ?? ""
   );
 
   const onTagDelete = (deleteNode: string) => {
@@ -58,6 +62,15 @@ export const PostCreatorAuxProvider = ({ children, postData }: Props) => {
 
   const onTechDelete = (deletedNode: string) => {
     setTech(tech.filter((t) => t !== deletedNode));
+  };
+
+  const setAuxData = (post: UserPost) => {
+    setID(post.id);
+    setTitle(post.auxData.title);
+    setTags(post.auxData.tags);
+    setTech(post.auxData.tech);
+    setThumbnail(post.auxData.thumbnail);
+    setPostStatus(post.auxData.postStatus);
   };
 
   return (
@@ -76,6 +89,7 @@ export const PostCreatorAuxProvider = ({ children, postData }: Props) => {
         setThumbnail,
         onTagDelete,
         onTechDelete,
+        setAuxData,
       }}
     >
       {children}

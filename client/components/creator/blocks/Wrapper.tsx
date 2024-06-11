@@ -1,7 +1,6 @@
 "use client";
 import { ChildNodeProps, ClassNameProp } from "@/lib/interface";
 import { cn } from "@/lib/utils";
-import { CSSProperties, forwardRef } from "react";
 
 interface Props extends ChildNodeProps, ClassNameProp {}
 export const BlockWrapper = ({ className, children }: Props) => {

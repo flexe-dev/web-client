@@ -1,23 +1,21 @@
 "use client";
 
-import React from "react";
+import { LinkProps } from "@/lib/interface";
+import {
+  BriefcaseIcon,
+  CodeBracketIcon,
+  InboxIcon,
+  MagnifyingGlassIcon,
+  UserGroupIcon,
+} from "@heroicons/react/24/outline";
+import { User } from "@prisma/client";
+import Link from "next/link";
+import { useAccount } from "./context/AccountProvider";
 import { AppLogo } from "./logo";
 import { ModeToggle } from "./theme/theme-toggle";
-import Link from "next/link";
 import AuthProfile from "./ui/AuthProfile";
-import { LinkProps } from "@/lib/interface";
 import MobileView from "./ui/MobileNav";
-import {
-  InboxIcon,
-  UserGroupIcon,
-  CodeBracketIcon,
-  BriefcaseIcon,
-  MagnifyingGlassIcon,
-} from "@heroicons/react/24/outline";
-import { link } from "fs";
 import { NavSearch } from "./ui/Search/NavSearch";
-import { useAccount } from "./context/AccountProvider";
-import { User } from "@prisma/client";
 
 //Styling for the Navbar main logo
 
@@ -32,8 +30,8 @@ export const Navbar = () => {
       icon: <UserGroupIcon />,
     },
     {
-      href: `/${user?.username}/portfolio`,
-      label: "My Portfolio",
+      href: `/${user?.username}/posts`,
+      label: "My Work",
       restrict: true,
       icon: <BriefcaseIcon />,
     },

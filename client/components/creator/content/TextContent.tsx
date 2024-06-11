@@ -1,16 +1,17 @@
-import { DragHandle, SortableItem } from "@/components/dnd/Sortable";
-import { ContentBlockProp } from "@/lib/interface";
-import { Textarea } from "@/components/ui/textarea";
-import React, { useEffect, useState } from "react";
-import ContentWrapper from "./ContentWrapper";
 import { useDocumentCreator } from "@/components/context/DocumentCreatorProvider";
-import { Input } from "@/components/ui/input";
+import { SortableItem } from "@/components/dnd/Sortable";
+import { Textarea } from "@/components/ui/textarea";
+import { ContentBlockProp } from "@/lib/interface";
+import React from "react";
+import ContentWrapper from "./ContentWrapper";
 
 export const TextContent = (props: ContentBlockProp) => {
   const { onValueChange, onStyleChange } = useDocumentCreator();
   const { value, id, style } = props;
   const handleValueChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-    onValueChange(id, event.target.value);
+    onValueChange(id, {
+      contentValue: event.target.value,
+    });
     onStyleChange(id, {
       ...style,
       height: `${event.target.scrollHeight}px`,
@@ -22,7 +23,7 @@ export const TextContent = (props: ContentBlockProp) => {
       <ContentWrapper id={id} type="text">
         <Textarea
           style={style}
-          value={value as string}
+          value={value?.contentValue as string}
           rows={1}
           onChange={(e) => handleValueChange(e)}
           placeholder="Write a quick description about your post"

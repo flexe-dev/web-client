@@ -1,22 +1,21 @@
 "use client";
 
-import { cn } from "@/lib/utils";
-import React, { useState, useEffect } from "react";
-import { useMediaQuery } from "react-responsive";
-import { Button } from "../button";
-import { Bars3CenterLeftIcon } from "@heroicons/react/24/outline";
-import { AnimatePresence } from "framer-motion";
-import { motion } from "framer-motion";
-import { InputChips, Chip } from "./InputChips";
 import {
+  containerVars,
+  menuVars,
   mobileHeaderVars,
   mobileLinkVars,
-  menuVars,
-  containerVars,
 } from "@/app/gallery/animationValues";
-import { BgTransitionButton } from "../AnimatedButton";
-import { ScrollArea } from "../scroll-area";
 import { ChildNodeProps, ClassNameProp } from "@/lib/interface";
+import { cn } from "@/lib/utils";
+import { Bars3CenterLeftIcon } from "@heroicons/react/24/outline";
+import { AnimatePresence, motion } from "framer-motion";
+import { useEffect, useState } from "react";
+import { useMediaQuery } from "react-responsive";
+import { BgTransitionButton } from "../AnimatedButton";
+import { Button } from "../button";
+import { ScrollArea } from "../scroll-area";
+import { InputChips } from "./InputChips";
 interface AnimatedContainerProps extends ChildNodeProps, ClassNameProp {}
 
 const contentPreference = [
@@ -31,8 +30,8 @@ const contentPreference = [
 
 const GallerySidebarWrapper = ({ children }: ChildNodeProps) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [contentSearchTags, setContentSearchTags] = useState<Chip[]>([]);
-  const [techStackTags, setTechStackTags] = useState<Chip[]>([]);
+  const [contentSearchTags, setContentSearchTags] = useState<string[]>([]);
+  const [techStackTags, setTechStackTags] = useState<string[]>([]);
   const desktop = useMediaQuery({ query: "(min-width: 1024px)" });
 
   useEffect(() => {

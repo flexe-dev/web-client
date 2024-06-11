@@ -84,8 +84,8 @@ const UpdateUserDetails = async (
 };
 
 export {
+  CreateUserProfile,
   FindProfileByUserId,
   UpdateUserDetails,
-  CreateUserProfile,
   UploadProfileReadMe,
 };

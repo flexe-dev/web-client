@@ -1,16 +1,16 @@
 package com.flexe.flex_core.service;
 
+import com.flexe.flex_core.entity.media.UserPost;
+import com.flexe.flex_core.repository.UserPostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import com.flexe.flex_core.entity.posts.UserPost;
-import com.flexe.flex_core.repository.UserPostRepository;
 
 @Service
 public class UserPostService {
 
     @Autowired
-    private UserPostRepository repository;
+    private
+    UserPostRepository repository;
 
     public UserPost savePost(UserPost post) {
         return repository.save(post);

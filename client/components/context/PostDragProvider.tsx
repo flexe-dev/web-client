@@ -1,6 +1,6 @@
 "use client";
 
-import React, { createContext, useState } from "react";
+import { ContentBlockProp, Document, PostUserMedia } from "@/lib/interface";
 import {
   Active,
   DndContext,
@@ -16,24 +16,18 @@ import {
   useSensor,
   useSensors,
 } from "@dnd-kit/core";
-import { arrayMove } from "@dnd-kit/sortable";
-import { sortableKeyboardCoordinates } from "@dnd-kit/sortable";
-import { useDocumentCreator } from "./DocumentCreatorProvider";
-import BlockPreview from "../creator/blocks/BlockPreview";
-import { BlockID } from "../creator/blocks/Blocks";
+import { arrayMove, sortableKeyboardCoordinates } from "@dnd-kit/sortable";
 import { nanoid } from "nanoid";
-import { PostContentBlock, PostUserMedia } from "@/lib/interface";
-import { TextContent } from "../creator/content/TextContent";
-import { ImageContent } from "../creator/content/ImageContent";
-import { VideoContent } from "../creator/content/VideoContent";
-import GalleryContent from "../creator/content/CarouselContent";
+import React, { createContext, useState } from "react";
 import { useMediaQuery } from "react-responsive";
+import { BlockID } from "../creator/blocks/Blocks";
 import {
   DefaultMedia,
   DefaultSubtitle,
   DefaultText,
   DefaultTitle,
 } from "../creator/content/DefaultStyling";
+import { useDocumentCreator } from "./DocumentCreatorProvider";
 
 interface PostDragProviderState {
   activeDragID: UniqueIdentifier | null;
@@ -89,7 +83,7 @@ export const PostDragProvider = ({
     content: uploadedContent,
   } = useDocumentCreator();
   const [originalDocumentState, setOriginalDocumentState] = useState<
-    PostContentBlock[] | undefined
+    Document | undefined
   >();
   const handleDragStart = (e: DragStartEvent) => {
     setActiveDragID(e.active.id);
@@ -97,37 +91,43 @@ export const PostDragProvider = ({
     fixedSidebar && setSidebarOpen(false);
   };
 
-  const RenderNewItem: Record<BlockID, PostContentBlock> = {
+  const RenderNewItem: Record<BlockID, ContentBlockProp> = {
     "draggable-block-title": {
       id: `draggable-content-text-${nanoid()}`,
-      value: "Title",
-      content: TextContent,
+      value: {
+        contentValue: "Title",
+      },
       style: DefaultTitle,
+      type: "TEXT",
     },
     "draggable-block-subtitle": {
       id: `draggable-content-text-${nanoid()}`,
-      value: "Sub-Title",
-      content: TextContent,
+      value: {
+        contentValue: "Sub-Title",
+      },
       style: DefaultSubtitle,
+      type: "TEXT",
     },
     "draggable-block-text": {
       id: `draggable-content-text-${nanoid()}`,
-      value: "Text",
-      content: TextContent,
+      value: {
+        contentValue: "Text",
+      },
       style: DefaultText,
+      type: "TEXT",
     },
     "draggable-block-image": {
       id: `draggable-content-image-${nanoid()}`,
-      content: ImageContent,
       style: DefaultMedia,
+      type: "IMAGE",
     },
     "draggable-block-video": {
       id: `draggable-content-video-${nanoid()}`,
-      content: VideoContent,
       options: {
         playOnHover: false,
       },
       style: DefaultMedia,
+      type: "VIDEO",
     },
   };
 
@@ -135,7 +135,7 @@ export const PostDragProvider = ({
     return uploadedContent.find((media) => media.content.id === id);
   };
 
-  const handleInsertUploadedMedia = (blockID: string): PostContentBlock => {
+  const handleInsertUploadedMedia = (blockID: string): ContentBlockProp => {
     //format: draggable-block-user-image-<id>
     const mediaTypes = ["image", "video", "gif"];
     const [_, type, id] = blockID.split("||");
@@ -147,8 +147,10 @@ export const PostDragProvider = ({
 
     return {
       id: `draggable-content-${type}-${nanoid()}`,
-      value: content,
-      content: type === "video" ? VideoContent : ImageContent,
+      value: {
+        contentValue: content,
+      },
+      type: type.toUpperCase() as "IMAGE" | "VIDEO",
       style: DefaultMedia,
       options: {
         playOnHover: type === "video" ? false : undefined,
@@ -195,10 +197,15 @@ export const PostDragProvider = ({
             const [_, type, id] = (active.id as string).split("||");
             const content = findMediaInUploaded(id);
             if (!content || !originalImageContent?.value) return;
-            const newCarouselBlock: PostContentBlock = {
+            const newCarouselBlock: ContentBlockProp = {
               id: `draggable-content-carousel-${nanoid()}}`,
-              value: [originalImageContent?.value as PostUserMedia, content],
-              content: GalleryContent,
+              value: {
+                contentValue: [
+                  originalImageContent?.value.contentValue as PostUserMedia,
+                  content,
+                ],
+              },
+              type: "CAROUSEL",
               options: {
                 carouselAutoplay: false,
                 carouselLoop: true,
@@ -223,13 +230,16 @@ export const PostDragProvider = ({
             const [_, type, id] = (active.id as string).split("||");
             const content = findMediaInUploaded(id);
             if (!content || !imageCarousel) return;
-            const newImages = [
-              ...(imageCarousel.value as PostUserMedia[]),
+            const newImages: PostUserMedia[] = [
+              ...(imageCarousel.value?.contentValue as PostUserMedia[]),
+
               content,
             ];
-            const newCarouselBlock: PostContentBlock = {
+            const newCarouselBlock: ContentBlockProp = {
               ...imageCarousel,
-              value: newImages,
+              value: {
+                contentValue: newImages,
+              },
             };
             setDocument((items) => {
               const overIndex = items.findIndex((doc) => doc.id === over.id);
@@ -294,10 +304,12 @@ export const PostDragProvider = ({
           return;
         }
       }
-      const newContentBlock: PostContentBlock = {
+      const newContentBlock: ContentBlockProp = {
         id: "draggable-content-new-block",
-        value: "",
-        content: BlockPreview,
+        value: {
+          contentValue: "New Block",
+        },
+        type: "PREVIEW",
       };
       setDocument((items) => {
         const overIndex = items.findIndex((doc) => doc.id === over.id);

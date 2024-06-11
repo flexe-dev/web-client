@@ -2,7 +2,6 @@ import React from "react";
 import TextBlock, { textTypes } from "./TextBlock";
 import ImageBlock from "./ImageBlock";
 import VideoBlock from "./VideoBlock";
-import { DropAnimation } from "@dnd-kit/core";
 interface Props {
   id: BlockID;
 }

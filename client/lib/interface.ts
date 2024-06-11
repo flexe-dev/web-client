@@ -1,4 +1,4 @@
-import { PostStatus, UserProfile } from "@prisma/client";
+import { UserProfile } from "@prisma/client";
 import { User } from "next-auth";
 import { CSSProperties } from "react";
 export interface ClassNameProp {
@@ -10,6 +10,11 @@ export interface LinkProps {
   label: string;
   icon?: React.ReactNode;
   restrict?: boolean;
+}
+
+export interface ModalProps {
+  open: boolean;
+  callback: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export interface SidebarButtonProps extends ClassNameProp {
@@ -75,18 +80,20 @@ export interface ContentBlockOptions {
 
 export type OptionKeys = keyof ContentBlockOptions;
 export type OptionKeyValues = ContentBlockOptions[OptionKeys];
-export type ContentValue = string | PostUserMedia | PostUserMedia[];
+
+export interface ContentValue {
+  contentValue: string | PostUserMedia | PostUserMedia[];
+}
+
 export interface ContentBlockProp {
   id: string;
   value?: ContentValue;
   style?: CSSProperties;
   options?: ContentBlockOptions;
-  type: ContentBlockType;
+  type?: ContentBlockType;
 }
 
-export interface PostContentBlock extends ContentBlockProp {
-  content: (props: ContentBlockProp) => React.JSX.Element;
-}
+export type ContentComponent = (props: ContentBlockProp) => React.JSX.Element;
 
 export interface ToolValueObject<T> {
   icon: React.ReactNode;
@@ -94,25 +101,28 @@ export interface ToolValueObject<T> {
   tooltip?: string;
 }
 
+export type Document = ContentBlockProp[];
+
 export interface PostAuxilliaryData {
-  id: string | undefined;
+  userID: string;
   postStatus: PostStatus;
   title: string;
   tags: string[];
   tech: string[];
-  thumbnail: PostUserMedia | undefined;
+  thumbnail: string;
 }
 
 export interface PostExternalData {
-  likes: number;
-  comments: number;
-  views: number;
+  likeCount: number;
+  commentCount: number;
+  viewCount: number;
 }
 
 export interface UserPost {
-  document: PostContentBlock[];
-  data: PostAuxilliaryData;
-  external: PostExternalData;
+  id: string | undefined;
+  document: Document;
+  auxData: PostAuxilliaryData;
+  externalData: PostExternalData;
 }
 
 export enum PostContentType {
@@ -121,9 +131,14 @@ export enum PostContentType {
   "GIF",
 }
 
-export enum ContentBlockType {
+const postStatuses = ["DRAFT", "PUBLISHED", "ARCHIVED"] as const;
+export type PostStatus = (typeof postStatuses)[number];
+
+const contentBlockTypes = [
   "TEXT",
   "IMAGE",
   "VIDEO",
   "CAROUSEL",
-}
+  "PREVIEW",
+] as const;
+export type ContentBlockType = (typeof contentBlockTypes)[number];

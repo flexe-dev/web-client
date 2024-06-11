@@ -1,45 +1,76 @@
 "use client";
 
+import { savePost } from "@/controllers/PostController";
+import { PostStatus, UserPost } from "@/lib/interface";
+import { cn, toTitleCase } from "@/lib/utils";
+import { useMotionValueEvent, useScroll } from "framer-motion";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { toast } from "sonner";
+import CancelWarn from "../CancelWarn";
+import { useAccount } from "../context/AccountProvider";
+import { useDocumentCreator } from "../context/DocumentCreatorProvider";
+import { usePostAuxData } from "../context/PostCreatorAuxProvider";
 import { Button } from "../ui/button";
 import PostSubmit from "./PostSubmit";
-import { useDocumentCreator } from "../context/DocumentCreatorProvider";
-import { toast } from "sonner";
-import { usePostAuxData } from "../context/PostCreatorAuxProvider";
-import CancelWarn from "../CancelWarn";
-import { useState } from "react";
-import { savePostAsDraft } from "@/controllers/PostController";
-import { useAccount } from "../context/AccountProvider";
 
 export const CreatorHeader = () => {
-  const { document, content } = useDocumentCreator();
+  const { document, setDocument } = useDocumentCreator();
   const { user } = useAccount();
-  const { id, title, tags, tech, thumbnail, postStatus, setThumbnail } =
+  const router = useRouter();
+  const { scrollY } = useScroll();
+  const { thumbnail, id, title, tags, tech, postStatus, setAuxData } =
     usePostAuxData();
+
   const [showCancelModal, setShowCancelModal] = useState(false);
   const [showPublishModal, setShowPublishModal] = useState(false);
-  const [savedDraft, setSavedDraft] = useState(false);
+  const [scrollPosition, setScrollPosition] = useState(0);
+  const THRESHOLD = 400;
 
-  const saveAsDraft = async () => {
-    if (!user) return;
-    if (!thumbnail) {
-      setThumbnail(content[0]);
-    }
-    const post = {
-      document,
-      data: {
+  useMotionValueEvent(scrollY, "change", (latest) => {
+    setScrollPosition(latest);
+  });
+
+  const publishPost = async () => {
+    const response = await handlePostSave("PUBLISHED");
+    console.log(response);
+    if (!response) return;
+
+    setShowPublishModal(false);
+    router.push(`/${user?.username}/posts`);
+  };
+
+  const handlePostSave = async (type: PostStatus): Promise<boolean> => {
+    if (!user) return false;
+    return new Promise<boolean>((resolve, reject) => {
+      const post: Omit<UserPost, "externalData"> = {
         id,
-        title,
-        tags,
-        tech,
-        thumbnail,
-        postStatus,
-      },
-    };
-    console.log(post);
-    toast.promise(savePostAsDraft(post, user.id), {
-      loading: "Saving Draft...",
-      success: "Draft Saved",
-      error: "Failed to Save Draft",
+        document,
+        auxData: {
+          userID: user.id,
+          title,
+          tags,
+          tech,
+          thumbnail,
+          postStatus: type,
+        },
+      };
+
+      toast.promise(savePost(post), {
+        loading: `Saving ${toTitleCase(type)}...`,
+        success: (data) => {
+          if (!data) return;
+
+          setDocument(data.document);
+          setAuxData(data);
+          resolve(true);
+          return `Saved ${toTitleCase(type)} Successfully`;
+        },
+        error: () => {
+          reject(false);
+          return `Failed to Save ${toTitleCase(type)}`;
+        },
+      });
     });
   };
 
@@ -48,7 +79,12 @@ export const CreatorHeader = () => {
   };
   return (
     <>
-      <section className="h-[4rem] w-full py-4 sticky z-[40] top-[5rem] flex">
+      <section
+        className={cn(
+          "h-[4rem] w-full py-4 sticky z-[40] top-[5rem] origin-top flex opacity-100 transition-all",
+          scrollPosition > THRESHOLD && "opacity-0 -top-[1rem]"
+        )}
+      >
         <div className="hidden md:block w-24 px-6">
           <Button onClick={onCancel} variant={"destructive"}>
             Cancel
@@ -64,7 +100,9 @@ export const CreatorHeader = () => {
           </Button>
 
           <Button
-            onClick={saveAsDraft}
+            onClick={() => {
+              handlePostSave("DRAFT");
+            }}
             className="backdrop-blur-md z-[99]"
             variant={"outline"}
           >
@@ -73,10 +111,14 @@ export const CreatorHeader = () => {
           <Button onClick={() => setShowPublishModal(true)}>Publish</Button>
         </div>
       </section>
-      <PostSubmit />
+      <PostSubmit
+        onSubmit={publishPost}
+        open={showPublishModal}
+        callback={setShowPublishModal}
+      />
       <CancelWarn
         path="/"
-        modalVisible={showCancelModal}
+        open={showCancelModal}
         callback={setShowCancelModal}
       />
     </>

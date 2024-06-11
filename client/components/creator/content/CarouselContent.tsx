@@ -8,21 +8,21 @@ todo:
   - Fix Resizing Issue from Image to Carousel On Mac 
 */
 
-import { ContentBlockProp, PostUserMedia } from "@/lib/interface";
-import React, { useState, useEffect } from "react";
-import Image from "next/image";
-import ContentWrapper from "./ContentWrapper";
-import { omit } from "lodash";
+import { useDocumentCreator } from "@/components/context/DocumentCreatorProvider";
+import { SortableItem } from "@/components/dnd/Sortable";
+import { Button } from "@/components/ui/button";
 import {
   Carousel,
   CarouselApi,
   CarouselContent,
   CarouselItem,
 } from "@/components/ui/carousel";
-import { SortableItem } from "@/components/dnd/Sortable";
+import { ContentBlockProp, PostUserMedia } from "@/lib/interface";
 import Autoplay from "embla-carousel-autoplay";
-import { Button } from "@/components/ui/button";
-import { useDocumentCreator } from "@/components/context/DocumentCreatorProvider";
+import { omit } from "lodash";
+import Image from "next/image";
+import React, { useEffect, useState } from "react";
+import ContentWrapper from "./ContentWrapper";
 import { ImageCarouselVisualEffect } from "./ImageCarouselVisualWrapper";
 
 const GalleryContent = (props: ContentBlockProp) => {
@@ -68,11 +68,12 @@ const GalleryContent = (props: ContentBlockProp) => {
     index: number
   ) => {
     event.stopPropagation();
-    onValueChange(
-      id,
-      (value as PostUserMedia[]).filter((_, i) => i !== index)
-    );
-    if ((value as PostUserMedia[]).length === 1) {
+    onValueChange(id, {
+      contentValue: (value?.contentValue as PostUserMedia[]).filter(
+        (_, i) => i !== index
+      ),
+    });
+    if ((value?.contentValue as PostUserMedia[]).length === 1) {
       ConvertToImageBlock();
     }
   };
@@ -92,7 +93,7 @@ const GalleryContent = (props: ContentBlockProp) => {
         >
           <ImageCarouselVisualEffect id={id}>
             <CarouselContent>
-              {(value as PostUserMedia[]).map((image, index) => (
+              {(value?.contentValue as PostUserMedia[]).map((image, index) => (
                 <CarouselItem
                   className="w-full h-full flex"
                   style={{ justifyContent: horizPos, alignItems: vertPos }}
@@ -129,7 +130,7 @@ const GalleryContent = (props: ContentBlockProp) => {
               style={{ width: style?.maxWidth }}
               className="flex space-x-2 0 w-full h-4 bg-background justify-center mt-4"
             >
-              {(value as PostUserMedia[]).map((_, index) => {
+              {(value?.contentValue as PostUserMedia[]).map((_, index) => {
                 return (
                   <div
                     key={`progress-${index}`}

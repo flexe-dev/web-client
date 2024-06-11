@@ -1,9 +1,9 @@
 "use client";
 
-import UploadUserImages from "@/components/upload/UserUploadImage";
-import React from "react";
 import DocumentCreator from "@/components/creator/PostCreator";
+import UploadUserImages from "@/components/upload/UserUploadImage";
 import { PostUserMedia } from "@/lib/interface";
+import React from "react";
 
 const page = () => {
   const [uploadedFiles, setUploadedFiles] = React.useState<PostUserMedia[]>([]);

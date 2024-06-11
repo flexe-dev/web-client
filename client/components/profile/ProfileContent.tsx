@@ -1,18 +1,13 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import React, { useEffect, useState } from "react";
-import Link from "next/link";
-import { userProfileViewer } from "../context/UserProfileProvider";
-import { useParams } from "next/navigation";
-import ErrorPage from "../Error";
 import { ChildNodeProps } from "@/lib/interface";
-export const profileTabs = [
-  "readme",
-  "portfolio",
-  "posts",
-  "activity",
-] as const;
+import Link from "next/link";
+import { useParams } from "next/navigation";
+import React, { useEffect, useState } from "react";
+import ErrorPage from "../Error";
+import { userProfileViewer } from "../context/UserProfileProvider";
+export const profileTabs = ["readme", "posts", "activity"] as const;
 export type Tabs = (typeof profileTabs)[number];
 
 const ProfileContent: React.FC<ChildNodeProps> = ({ children }) => {
@@ -23,7 +18,6 @@ const ProfileContent: React.FC<ChildNodeProps> = ({ children }) => {
   );
 
   const tabLink: Record<Tabs, string> = {
-    portfolio: `/${fetchedUser.user?.username}/portfolio`,
     activity: `/${fetchedUser.user?.username}/activity`,
     posts: `/${fetchedUser.user?.username}/posts`,
     readme: `/${fetchedUser.user?.username}/`,
