@@ -32,38 +32,46 @@ export const CreatorHeader = () => {
   });
 
   const publishPost = async () => {
-    await handlePostSave("PUBLISHED");
+    const response = await handlePostSave("PUBLISHED");
+    console.log(response);
+    if (!response) return;
+
     setShowPublishModal(false);
     router.push(`/${user?.username}/posts`);
   };
 
-  const handlePostSave = async (type: PostStatus) => {
-    if (!user) return;
-    const post: Omit<UserPost, "externalData"> = {
-      id,
-      document,
-      auxData: {
-        userID: user.id,
-        title,
-        tags,
-        tech,
-        thumbnail,
-        postStatus: type,
-      },
-    };
+  const handlePostSave = async (type: PostStatus): Promise<boolean> => {
+    if (!user) return false;
+    return new Promise<boolean>((resolve, reject) => {
+      const post: Omit<UserPost, "externalData"> = {
+        id,
+        document,
+        auxData: {
+          userID: user.id,
+          title,
+          tags,
+          tech,
+          thumbnail,
+          postStatus: type,
+        },
+      };
 
-    toast.promise(
-      savePost(post).then((post) => {
-        if (!post) return;
-        setDocument(post.document);
-        setAuxData(post);
-      }),
-      {
+      toast.promise(savePost(post), {
         loading: `Saving ${toTitleCase(type)}...`,
-        success: `${toTitleCase(type)} Saved`,
-        error: `Failed to Save ${toTitleCase(type)}`,
-      }
-    );
+        success: (data) => {
+          if (!data) return;
+
+          setDocument(data.document);
+          setAuxData(data);
+          resolve(true);
+          return `Saved ${toTitleCase(type)} Successfully`;
+        },
+        error: () => {
+          reject(false);
+          return `Failed to Save ${toTitleCase(type)}`;
+        },
+      });
+    });
   };
 
   const onCancel = () => {

@@ -43,7 +43,7 @@ export const savePost = async (
   // Send Data to Proxy Server
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}post/upload`,
+      `${process.env.NEXT_PUBLIC_CORE_BACKEND_API_URL}post/media/upload`,
       {
         method: `POST`,
         headers: {
@@ -69,9 +69,8 @@ export const GetAllUserPosts = async (
 ): Promise<UserPost[] | undefined> => {
   try {
     const response = fetch(
-      `${process.env.NEXT_PUBLIC_CORE_BACKEND_API_URL}post/user/${userID}`
+      `${process.env.NEXT_PUBLIC_CORE_BACKEND_API_URL}post/media/user/${userID}`
     );
-    console.log((await response).status);
     return (await response).json();
   } catch (e) {
     console.error(e);

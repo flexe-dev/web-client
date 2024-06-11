@@ -82,7 +82,6 @@ export const ProviderViewerProvider = ({ children }: ChildNodeProps) => {
 
       Promise.all([profilePromise, postPromise]).then((values) => {
         const [profile, userPosts] = values;
-        console.log(profile, userPosts);
         if (profile) {
           setFetchedProfile({
             profile,

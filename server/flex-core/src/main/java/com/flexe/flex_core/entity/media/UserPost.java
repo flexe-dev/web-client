@@ -1,10 +1,10 @@
-package com.flexe.flex_core.entity.posts;
-
-import java.util.List;
+package com.flexe.flex_core.entity.media;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+
+import java.util.List;
 
 @Document(collection = "MediaPosts")
 public class UserPost {

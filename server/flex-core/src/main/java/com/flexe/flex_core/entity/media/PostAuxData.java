@@ -1,4 +1,4 @@
-package com.flexe.flex_core.entity.posts;
+package com.flexe.flex_core.entity.media;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -18,19 +18,13 @@ public class PostAuxData {
     @JsonProperty("thumbnail")
     private String thumbnail;
 
-    public enum UserPostStatus {
-        DRAFT,
-        PUBLISHED,
-        ARCHIVED
-    }
-
     public PostAuxData() {
     }
 
     public PostAuxData(String userID, UserPostStatus status, String title, List<String> tags,
-            List<String> tech, String thumbnail) {
+                       List<String> tech, String thumbnail) {
         this.userID = userID;
-        this.postStatus = status;
+        postStatus = status;
         this.title = title;
         this.tags = tags;
         this.tech = tech;
@@ -39,6 +33,12 @@ public class PostAuxData {
 
     public String getUserID() {
         return userID;
+    }
+
+    public enum UserPostStatus {
+        DRAFT,
+        PUBLISHED,
+        ARCHIVED
     }
 
 }

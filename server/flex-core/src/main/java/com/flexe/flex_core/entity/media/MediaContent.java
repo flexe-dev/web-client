@@ -1,6 +1,6 @@
-package com.flexe.flex_core.entity.posts;
+package com.flexe.flex_core.entity.media;
 
-public class MediaContent {
+class MediaContent {
     private String id;
     private String location;
     private PostContentType format;
