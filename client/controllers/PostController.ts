@@ -7,6 +7,11 @@ import {
   nullIfEmpty,
   resizeImage,
 } from "@/lib/utils";
+
+/*
+  Post Uploading/Manipulation
+*/
+
 export const savePost = async (
   post: Omit<UserPost, "externalData">
 ): Promise<UserPost | undefined> => {
@@ -54,6 +59,25 @@ export const savePost = async (
 };
 
 export const archiveDocument = async (postID: string) => {};
+
+/*
+  Post Retrieval
+*/
+
+export const GetAllUserPosts = async (
+  userID: string
+): Promise<UserPost[] | undefined> => {
+  try {
+    const response = fetch(
+      `${process.env.NEXT_PUBLIC_CORE_BACKEND_API_URL}post/user/${userID}`
+    );
+    console.log((await response).status);
+    return (await response).json();
+  } catch (e) {
+    console.error(e);
+    return;
+  }
+};
 
 /* 
 Helper Functions

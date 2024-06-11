@@ -41,21 +41,17 @@ model Session {
 }
 
 model User {
-  id             String           @id @default(auto()) @map("_id") @db.ObjectId
-  email          String           @unique
-  emailVerified  DateTime?
-  password       String?
-  username       String           @unique @default(uuid())
-  name           String
-  image          String           @default("https://kkyhjzebnjjkhuncbfgo.supabase.co/storage/v1/object/public/user-profile/defaultpicture.jpg?t=2024-03-30T08%3A31%3A58.211Z") @db.String
-  onboarded      Boolean          @default(false)
-  accounts       Account[]
-  sessions       Session[]
-  userProfile    UserProfile[]
-  UserLikedPosts UserLikedPosts[]
-  UserSavedPosts UserSavedPosts[]
-  UserPost       UserPost[]
-  PostComments   PostComments[]
+  id            String        @id @default(auto()) @map("_id") @db.ObjectId
+  email         String        @unique
+  emailVerified DateTime?
+  password      String?
+  username      String        @unique @default(uuid())
+  name          String
+  image         String        @default("https://kkyhjzebnjjkhuncbfgo.supabase.co/storage/v1/object/public/user-profile/defaultpicture.jpg?t=2024-03-30T08%3A31%3A58.211Z") @db.String
+  onboarded     Boolean       @default(false)
+  accounts      Account[]
+  sessions      Session[]
+  userProfile   UserProfile[]
 }
 
 model UserProfile {
@@ -70,64 +66,4 @@ model UserProfile {
   location  String?
   bio       String?
   readMe    Bytes?
-}
-
-model UserLikedPosts {
-  id     String   @id @default(auto()) @map("_id") @db.ObjectId
-  userId String   @db.ObjectId
-  postId String   @db.ObjectId
-  user   User     @relation(fields: [userId], references: [id])
-  post   UserPost @relation(fields: [postId], references: [id])
-}
-
-model UserSavedPosts {
-  id     String   @id @default(auto()) @map("_id") @db.ObjectId
-  userId String   @db.ObjectId
-  postId String   @db.ObjectId
-  user   User     @relation(fields: [userId], references: [id])
-  post   UserPost @relation(fields: [postId], references: [id])
-}
-
-model UserPost {
-  id             String           @id @default(auto()) @map("_id") @db.ObjectId
-  userId         String           @db.ObjectId
-  document       PostDocument[]
-  title          String
-  tags           String[]
-  technologies   String[]
-  createdAt      DateTime         @default(now())
-  commentCount   Int              @default(0)
-  likeCount      Int              @default(0)
-  viewCount      Int              @default(0)
-  user           User             @relation(fields: [userId], references: [id])
-  PostComments   PostComments[]
-  UserLikedPosts UserLikedPosts[]
-  UserSavedPosts UserSavedPosts[]
-  postStatus     PostStatus       @default(DRAFT)
-}
-
-enum PostStatus {
-  DRAFT
-  PUBLISHED
-  ARCHIVED
-}
-
-type PostDocument {
-  id        String
-  value     Json?
-  style     Json?
-  options   Json?
-  component String
-}
-
-model PostComments {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  postId    String   @db.ObjectId
-  parentID  String?  @db.ObjectId
-  userId    String   @db.ObjectId
-  comment   String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  user      User     @relation(fields: [userId], references: [id])
-  post      UserPost @relation(fields: [postId], references: [id])
 }

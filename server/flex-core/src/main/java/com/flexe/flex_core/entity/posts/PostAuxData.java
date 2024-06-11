@@ -5,8 +5,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
 public class PostAuxData {
-    @JsonProperty("id")
-    private String id;
     @JsonProperty("userID")
     private String userID;
     @JsonProperty("postStatus")
@@ -29,7 +27,7 @@ public class PostAuxData {
     public PostAuxData() {
     }
 
-    public PostAuxData(String id, String userID, UserPostStatus status, String title, List<String> tags,
+    public PostAuxData(String userID, UserPostStatus status, String title, List<String> tags,
             List<String> tech, String thumbnail) {
         this.userID = userID;
         this.postStatus = status;
@@ -37,10 +35,6 @@ public class PostAuxData {
         this.tags = tags;
         this.tech = tech;
         this.thumbnail = thumbnail;
-    }
-
-    public String getId() {
-        return id;
     }
 
     public String getUserID() {

@@ -29,13 +29,12 @@ export const CreatorHeader = () => {
 
   useMotionValueEvent(scrollY, "change", (latest) => {
     setScrollPosition(latest);
-    router.push(`${user?.username}/posts`);
   });
 
-  const publishPost = () => {
-    handlePostSave("PUBLISHED").then(() => {
-      setShowPublishModal(false);
-    });
+  const publishPost = async () => {
+    await handlePostSave("PUBLISHED");
+    setShowPublishModal(false);
+    router.push(`/${user?.username}/posts`);
   };
 
   const handlePostSave = async (type: PostStatus) => {

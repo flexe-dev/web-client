@@ -2,20 +2,20 @@
 
 /*This context will be used to display the details of the searched user's profile*/
 
-import React, { useEffect, useState, createContext, use } from "react";
-import { useParams } from "next/navigation";
-import { UserPost, UserProfile } from "@prisma/client";
-import { User } from "next-auth";
-import ErrorPage from "../Error";
 import { useAccount } from "@/components/context/AccountProvider";
 import { FindUserByUsername } from "@/controllers/AuthController";
+import { GetAllUserPosts } from "@/controllers/PostController";
 import { FindProfileByUserId } from "@/controllers/ProfileController";
 import {
-  UserObject,
-  ProfileObject,
-  PostObject,
   ChildNodeProps,
+  PostObject,
+  ProfileObject,
+  UserObject,
 } from "@/lib/interface";
+import { User } from "next-auth";
+import { useParams } from "next/navigation";
+import React, { createContext, useEffect, useState } from "react";
+import ErrorPage from "../Error";
 
 interface ProfileViewerProviderState {
   isOwnProfile: boolean;
@@ -72,19 +72,40 @@ export const ProviderViewerProvider = ({ children }: ChildNodeProps) => {
         });
         return;
       }
-
       setFetchedUser({
         user,
         loading: false,
       });
-      FindProfileByUserId(user.id).then((profile) => {
+
+      const profilePromise = FindProfileByUserId(user.id);
+      const postPromise = GetAllUserPosts(user.id);
+
+      Promise.all([profilePromise, postPromise]).then((values) => {
+        const [profile, userPosts] = values;
+        console.log(profile, userPosts);
         if (profile) {
           setFetchedProfile({
             profile,
             loading: false,
           });
         }
+        if (userPosts) {
+          setUserPosts({
+            userPosts,
+            loading: false,
+          });
+        }
       });
+    });
+  };
+
+  const retrieveUserPosts = async (userID: string) => {
+    const posts = await GetAllUserPosts(userID);
+    if (!posts) return;
+
+    setUserPosts({
+      userPosts: posts,
+      loading: false,
     });
   };
 
@@ -100,7 +121,7 @@ export const ProviderViewerProvider = ({ children }: ChildNodeProps) => {
         profile: profile,
         loading: false,
       });
-
+      retrieveUserPosts(user.id);
       setisOwnProfile(true);
     } else {
       fetchProfileDetails(username);

@@ -1,19 +1,13 @@
 package com.flexe.flex_core.controller;
 
-import org.apache.tomcat.util.json.JSONParser;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.flexe.flex_core.entity.posts.UserPost;
 import com.flexe.flex_core.service.UserPostService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("api/post")
+@CrossOrigin(origins = "http://localhost:3000")
 public class UserPostController {
 
     @Autowired
@@ -23,11 +17,6 @@ public class UserPostController {
     public UserPost savePost(@RequestBody UserPost post) {
         UserPost content = post;
         return service.savePost(post);
-    }
-
-    @GetMapping("/hi")
-    public String hi() {
-        return "Hello";
     }
 
     @GetMapping("/{id}")
