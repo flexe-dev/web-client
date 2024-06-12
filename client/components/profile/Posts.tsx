@@ -3,11 +3,14 @@
 import { ChildNodeProps, ClassNameProp, UserPost } from "@/lib/interface";
 import { cn } from "@/lib/utils";
 import { ArrowUpTrayIcon, PlusCircleIcon } from "@heroicons/react/24/outline";
+import Image from "next/image";
+import Link from "next/link";
 import React, { SetStateAction, useState } from "react";
 import { userProfileViewer } from "../context/UserProfileProvider";
 import PostCreateDialog from "../creator/PostCreateDialog";
 import { Button } from "../ui/button";
 import { Dialog, DialogTrigger } from "../ui/dialog";
+
 const Posts = () => {
   const { userPosts } = userProfileViewer();
   const [openDialog, setOpenDialog] = useState<boolean>(false);
@@ -70,13 +73,19 @@ const UserPosts = (posts: UserPostsProps) => {
     <div className="flex flex-wrap justify-center relative my-4 w-full">
       {posts.posts.map((post, index) => (
         <PostTile key={post.id}>
-          {/* <div className="w-full h-full flex justify-center items-center">
-            <img
-              src={post.thumbnail}
-              alt={post.title}
-              className="w-full h-full object-cover"
-            />
-          </div> */}
+          <Link className="w-full h-full" href={`/post/media/${post.id}`}>
+            <div className="relative w-full h-full">
+              <Image
+                src={
+                  post.auxData.thumbnail ??
+                  process.env.NEXT_PUBLIC_DEFAULT_IMAGE
+                }
+                fill
+                alt={`Post ${post.auxData.title} cover image`}
+                objectFit="cover"
+              />
+            </div>
+          </Link>
         </PostTile>
       ))}
     </div>

@@ -5,7 +5,6 @@ import {
   generateMongoID,
   getVideoThumbnail,
   nullIfEmpty,
-  resizeImage,
 } from "@/lib/utils";
 
 /*
@@ -171,10 +170,7 @@ const generateThumbnailSource = async (document: Document): Promise<string> => {
 
   const media = content.value.contentValue;
   if (media instanceof Array) {
-    return (
-      (await resizeImage(media[0].content.location, 300, 300)) ??
-      process.env.NEXT_PUBLIC_FALLBACK_PHOTO
-    );
+    return media[0].content.location ?? process.env.NEXT_PUBLIC_FALLBACK_PHOTO;
   } else {
     const location = (media as PostUserMedia).content.location;
     if (content.type === "VIDEO") {
@@ -183,10 +179,7 @@ const generateThumbnailSource = async (document: Document): Promise<string> => {
         process.env.NEXT_PUBLIC_FALLBACK_PHOTO
       );
     } else {
-      return (
-        (await resizeImage(location, 300, 300)) ??
-        process.env.NEXT_PUBLIC_FALLBACK_PHOTO
-      );
+      return location ?? process.env.NEXT_PUBLIC_FALLBACK_PHOTO;
     }
   }
 };

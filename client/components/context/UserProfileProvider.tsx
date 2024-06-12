@@ -54,7 +54,7 @@ export const ProfileViewerContext =
   createContext<ProfileViewerProviderState>(initialState);
 
 export const ProviderViewerProvider = ({ children }: ChildNodeProps) => {
-  const { user, profile } = useAccount();
+  const { user, profile, mediaPosts } = useAccount();
   const params = useParams<{ username: string; tag: string }>();
 
   const [isOwnProfile, setisOwnProfile] = useState(false);
@@ -98,16 +98,6 @@ export const ProviderViewerProvider = ({ children }: ChildNodeProps) => {
     });
   };
 
-  const retrieveUserPosts = async (userID: string) => {
-    const posts = await GetAllUserPosts(userID);
-    if (!posts) return;
-
-    setUserPosts({
-      userPosts: posts,
-      loading: false,
-    });
-  };
-
   useEffect(() => {
     const { username } = params;
     //Check whether or not the user name is the current user or if the user is visiting another profile
@@ -120,7 +110,11 @@ export const ProviderViewerProvider = ({ children }: ChildNodeProps) => {
         profile: profile,
         loading: false,
       });
-      retrieveUserPosts(user.id);
+      setUserPosts({
+        userPosts: mediaPosts,
+        loading: false,
+      });
+
       setisOwnProfile(true);
     } else {
       fetchProfileDetails(username);
