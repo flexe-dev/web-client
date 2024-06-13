@@ -47,7 +47,7 @@ const PostTile = ({ children, className }: TileProps) => {
   return (
     <div
       className={cn(
-        "aspect-[4/3] md:basis-1/3 lg:basis-1/4 mx-2 my-2 flex-grow flex-shrink min-w-[18rem] w-full border-2 rounded-sm",
+        "aspect-[4/3] w-full mx-auto my-2 min-w-[18rem] border-2 rounded-sm hover:brightness-50 transition-all",
         className
       )}
     >
@@ -70,7 +70,7 @@ interface UserPostsProps {
 
 const UserPosts = (posts: UserPostsProps) => {
   return (
-    <div className="flex flex-wrap justify-center relative my-4 w-full">
+    <div className="grid p-8 md:p-2 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-2 justify-center  relative my-4 w-full ">
       {posts.posts.map((post, index) => (
         <PostTile key={post.id}>
           <Link className="w-full h-full" href={`/post/media/${post.id}`}>
