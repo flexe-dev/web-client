@@ -5,6 +5,7 @@ import {
   generateMongoID,
   getVideoThumbnail,
   nullIfEmpty,
+  resizeImage,
 } from "@/lib/utils";
 
 /*
@@ -170,7 +171,10 @@ const generateThumbnailSource = async (document: Document): Promise<string> => {
 
   const media = content.value.contentValue;
   if (media instanceof Array) {
-    return media[0].content.location ?? process.env.NEXT_PUBLIC_FALLBACK_PHOTO;
+    return (
+      (await resizeImage(media[0].content.location, 900, 900)) ??
+      process.env.NEXT_PUBLIC_FALLBACK_PHOTO
+    );
   } else {
     const location = (media as PostUserMedia).content.location;
     if (content.type === "VIDEO") {
@@ -179,7 +183,10 @@ const generateThumbnailSource = async (document: Document): Promise<string> => {
         process.env.NEXT_PUBLIC_FALLBACK_PHOTO
       );
     } else {
-      return location ?? process.env.NEXT_PUBLIC_FALLBACK_PHOTO;
+      return (
+        (await resizeImage(location, 900, 900)) ??
+        process.env.NEXT_PUBLIC_FALLBACK_PHOTO
+      );
     }
   }
 };
@@ -200,12 +207,4 @@ const uploadThumbnailToSupabase = async (
     return process.env.NEXT_PUBLIC_FALLBACK_PHOTO; //Fallback Photo
   }
   return `${process.env.NEXT_PUBLIC_SUPABASE_IMAGE_RETRIEVAL_URL}post-content/${userID}/${postID}/thumbnail.jpg`;
-};
-
-export const publishPost = async (post: UserPost) => {
-  if (!post.id) {
-    //Create new Database Object
-  } else {
-    //Update existing Database Object
-  }
 };
