@@ -15,7 +15,7 @@ import BlockPreview from "./blocks/BlockPreview";
 import Blocks, { BlockID } from "./blocks/Blocks";
 import UserImageBlock from "./blocks/UserImageBlock";
 import UserVideoBlock from "./blocks/UserVideoBlock";
-import GalleryContent from "./content/CarouselContent";
+import { GalleryContent } from "./content/CarouselContent";
 import { ImageContent } from "./content/ImageContent";
 import { TextContent } from "./content/TextContent";
 import { VideoContent } from "./content/VideoContent";

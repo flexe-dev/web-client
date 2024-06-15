@@ -142,7 +142,7 @@ export const ProviderViewerProvider = ({ children }: ChildNodeProps) => {
   );
 };
 
-export const userProfileViewer = () => {
+export const useProfileViewer = () => {
   const context = React.useContext(ProfileViewerContext);
   if (context === undefined) {
     throw new Error(

@@ -7,11 +7,11 @@ import { Building } from "lucide-react";
 import { CircleDashed } from "lucide-react";
 import { useAccount } from "../context/AccountProvider";
 import { Separator } from "../ui/separator";
-import { userProfileViewer } from "../context/UserProfileProvider";
+import { useProfileViewer } from "../context/UserProfileProvider";
 import { Skeleton } from "../ui/skeleton";
 
 const ProfileDetails = () => {
-  const { fetchedProfile} = userProfileViewer();
+  const { fetchedProfile} = useProfileViewer();
   const {loading, profile} = fetchedProfile
 
   if (!profile) return null;

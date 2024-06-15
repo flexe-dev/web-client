@@ -6,12 +6,12 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import ErrorPage from "../Error";
-import { userProfileViewer } from "../context/UserProfileProvider";
+import { useProfileViewer } from "../context/UserProfileProvider";
 export const profileTabs = ["readme", "posts", "activity"] as const;
 export type Tabs = (typeof profileTabs)[number];
 
 const ProfileContent: React.FC<ChildNodeProps> = ({ children }) => {
-  const { fetchedUser } = userProfileViewer();
+  const { fetchedUser } = useProfileViewer();
   const params = useParams<{ username: string; tag: string }>();
   const [activeTab, setActiveTab] = useState<Tabs>(
     (params.tag as Tabs) || "readme"

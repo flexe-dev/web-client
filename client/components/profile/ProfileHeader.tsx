@@ -7,11 +7,11 @@ import ProfileDetails from "./ProfileDetails";
 import { EditProfileModal } from "./EditProfileModal";
 import Image from "next/image";
 import { defaultPicture } from "@/lib/utils";
-import { userProfileViewer } from "../context/UserProfileProvider";
+import { useProfileViewer } from "../context/UserProfileProvider";
 import { Skeleton } from "../ui/skeleton";
 
 function ProfileHeader() {
-  const { fetchedProfile, fetchedUser, isOwnProfile } = userProfileViewer();
+  const { fetchedProfile, fetchedUser, isOwnProfile } = useProfileViewer();
   const { loading: loadingUser, user } = fetchedUser;
   const { loading: loadingProfile, profile } = fetchedProfile;
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);

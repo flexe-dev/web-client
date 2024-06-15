@@ -1,21 +1,20 @@
 "use client";
 
-import React from "react";
 import { FileUploader } from "@/components/FileUploader";
+import { useProfileViewer } from "@/components/context/UserProfileProvider";
 import { Button } from "@/components/ui/button";
-import { PencilSquareIcon, PlusCircleIcon } from "@heroicons/react/24/outline";
-import { toast } from "sonner";
 import { UploadProfileReadMe } from "@/controllers/ProfileController";
-import rehypeRaw from "rehype-raw";
-import MarkdownPrevew from "@uiw/react-markdown-preview";
-import MarkdownEditor from "./mdEditor";
-import { userProfileViewer } from "@/components/context/UserProfileProvider";
 import readMeTemplate from "@/lib/baseReadme";
+import { PencilSquareIcon, PlusCircleIcon } from "@heroicons/react/24/outline";
+import MarkdownPrevew from "@uiw/react-markdown-preview";
+import rehypeRaw from "rehype-raw";
 import rehypeSanitize from "rehype-sanitize";
 import remarkGfm from "remark-gfm";
+import { toast } from "sonner";
+import MarkdownEditor from "./mdEditor";
 const ReadMe = () => {
   const { fetchedProfile, fetchedUser, setFetchedProfile, isOwnProfile } =
-    userProfileViewer();
+    useProfileViewer();
 
   const readMe = fetchedProfile.profile?.readMe;
   const { user, loading: userLoading } = fetchedUser;

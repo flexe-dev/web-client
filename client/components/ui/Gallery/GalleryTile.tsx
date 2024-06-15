@@ -1,11 +1,10 @@
-import React from "react";
-import Image from "next/image";
-import { ImageProps } from "next/image";
-import { User } from "@prisma/client";
-import { Card, CardFooter } from "../card";
 import { EyeIcon, HandThumbUpIcon } from "@heroicons/react/24/outline";
+import { User } from "@prisma/client";
+import Image, { ImageProps } from "next/image";
 import { Avatar, AvatarImage } from "../avatar";
+import { Card, CardFooter } from "../card";
 
+//todo: replace this with the user post object
 interface GalleryPostProps {
   title: string;
   link: string;
