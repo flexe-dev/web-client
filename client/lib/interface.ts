@@ -1,3 +1,4 @@
+import { PencilIcon } from "@heroicons/react/24/outline";
 import { UserProfile } from "@prisma/client";
 import { User } from "next-auth";
 import { CSSProperties } from "react";
@@ -12,6 +13,7 @@ export interface LinkProps {
   restrict?: boolean;
 }
 
+export type IconType = typeof PencilIcon;
 export interface ModalProps {
   open: boolean;
   callback: React.Dispatch<React.SetStateAction<boolean>>;

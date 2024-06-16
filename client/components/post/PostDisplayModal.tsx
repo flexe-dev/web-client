@@ -29,25 +29,21 @@ const PostDisplayModal = (props: Props) => {
     <TooltipProvider>
       <Tooltip defaultOpen={false} delayDuration={30}>
         <Dialog open={!!selectedPost} onOpenChange={callback}>
-          <DialogContent className="p-0 min-w-[80%] lg:max-w-[90%] max-h-[80%] overscroll-none overflow-x-hidden overflow-y-scroll">
-            <div className="sticky top-0 w-full flex justify-center items-center z-[80] h-[3rem] bg-background border-b-2">
+          <DialogContent className="p-0 min-w-[80%] lg:max-w-[90%] h-[80dvh] flex flex-col">
+            <div className="w-full flex justify-center items-center z-[80] min-h-[3rem] max-h-[3rem] bg-background border-b-2">
               <UserPostOptions post={selectedPost}>
-                {isOwnProfile && (
-                  <Button
-                    size={"icon"}
-                    variant={"ghost"}
-                    className="absolute left-2 h-8"
-                  >
-                    <EllipsisHorizontalIcon className="w-6 h-6" />
-                  </Button>
-                )}
+                <Button
+                  size={"icon"}
+                  variant={"ghost"}
+                  className="absolute left-2 h-8"
+                >
+                  <EllipsisHorizontalIcon className="w-6 h-6" />
+                </Button>
               </UserPostOptions>
               <Link href={`/post/media/${selectedPost.id}`}>
-                <Button variant={"link"}>
-                  <h2 className="w-[15rem] truncate">
-                    {selectedPost.auxData.title}{" "}
-                  </h2>
-                </Button>
+                <h2 className="w-[15rem] truncate text-xl font-bold hover:underline">
+                  {selectedPost.auxData.title}{" "}
+                </h2>
               </Link>
               <DialogClose className="absolute right-2">
                 <Button size={"icon"} className="h-8" variant={"ghost"}>
@@ -55,9 +51,8 @@ const PostDisplayModal = (props: Props) => {
                 </Button>
               </DialogClose>
             </div>
-            <div className="flex relative -my-4">
+            <div className="flex -mt-4 h-[calc(80dvh-3.25rem)]">
               <PostAuxData selectedPost={selectedPost} />
-
               <DisplayPost post={selectedPost} />
             </div>
           </DialogContent>
