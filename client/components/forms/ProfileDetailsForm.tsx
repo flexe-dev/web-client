@@ -5,7 +5,7 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Button } from "../ui/button";
-import { UpdateUserDetails } from "@/controllers/ProfileController";
+import { UpdateUserDetails } from "@/controllers/UserController";
 import {
   Form,
   FormControl,

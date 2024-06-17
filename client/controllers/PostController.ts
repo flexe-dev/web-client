@@ -68,10 +68,24 @@ export const GetAllUserPosts = async (
   userID: string
 ): Promise<UserPost[] | undefined> => {
   try {
-    const response = fetch(
+    const response = await fetch(
       `${process.env.NEXT_PUBLIC_CORE_BACKEND_API_URL}post/media/user/${userID}`
     );
-    return (await response).json();
+    return response.json();
+  } catch (e) {
+    console.error(e);
+    return;
+  }
+};
+
+export const getPostById = async (
+  postID: string
+): Promise<UserPost | undefined> => {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_CORE_BACKEND_API_URL}post/media/${postID}`
+    );
+    return response.json();
   } catch (e) {
     console.error(e);
     return;

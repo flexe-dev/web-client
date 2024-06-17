@@ -1,3 +1,5 @@
+"use client";
+
 import { useDocumentCreator } from "@/components/context/DocumentCreatorProvider";
 import { SortableItem } from "@/components/dnd/Sortable";
 import { Textarea } from "@/components/ui/textarea";

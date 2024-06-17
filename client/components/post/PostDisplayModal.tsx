@@ -51,9 +51,11 @@ const PostDisplayModal = (props: Props) => {
                 </Button>
               </DialogClose>
             </div>
-            <div className="flex -mt-4 h-[calc(80dvh-3.25rem)]">
+            <div className="flex -mt-4 h-[calc(80dvh-3.125rem)]">
               <PostAuxData selectedPost={selectedPost} />
-              <DisplayPost post={selectedPost} />
+              <div className="overflow-y-auto overflow-x-hidden w-full">
+                <DisplayPost post={selectedPost} />
+              </div>
             </div>
           </DialogContent>
         </Dialog>

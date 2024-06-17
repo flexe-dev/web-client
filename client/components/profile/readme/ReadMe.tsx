@@ -3,7 +3,7 @@
 import { FileUploader } from "@/components/FileUploader";
 import { useProfileViewer } from "@/components/context/UserProfileProvider";
 import { Button } from "@/components/ui/button";
-import { UploadProfileReadMe } from "@/controllers/ProfileController";
+import { UploadProfileReadMe } from "@/controllers/UserController";
 import readMeTemplate from "@/lib/baseReadme";
 import { PencilSquareIcon, PlusCircleIcon } from "@heroicons/react/24/outline";
 import MarkdownPrevew from "@uiw/react-markdown-preview";

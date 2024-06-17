@@ -10,7 +10,7 @@ import {
   CompleteUserOnboard,
 } from "@/controllers/AuthController";
 
-import { CreateUserProfile } from "@/controllers/ProfileController";
+import { CreateUserProfile } from "@/controllers/UserController";
 
 import { debounce } from "lodash";
 import {

@@ -9,7 +9,7 @@ import {
   AlertDialogAction,
 } from "@/components/ui/alert-dialog";
 import { useTheme } from "next-themes";
-import { UploadProfileReadMe } from "@/controllers/ProfileController";
+import { UploadProfileReadMe } from "@/controllers/UserController";
 import { useAccount } from "@/components/context/AccountProvider";
 import { toast } from "sonner";
 import rehypeSanitize from "rehype-sanitize";

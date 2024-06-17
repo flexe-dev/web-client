@@ -9,7 +9,7 @@ const mockComment3: string =
 const PostComments = () => {
   return (
     <section className="w-full h-full p-4">
-      <div className="">
+      <div className="pb-8 flex flex-col divide-y-2">
         <Comment user={"User1"} comment={mockComment1} />
         <Comment user={"User2"} comment={mockComment2} />
         <Comment user={"User3"} comment={mockComment3} />
@@ -30,7 +30,7 @@ const Comment = (props: CommentProps) => {
   //todo: Add an Expand Option to Lengthy Comments
 
   return (
-    <div className="flex">
+    <div className="flex my-2">
       {props.isChild && <div></div>}
       <div>
         <div className="flex space-x-2 my-2">
@@ -44,7 +44,7 @@ const Comment = (props: CommentProps) => {
           <span>{props.user}</span>
           <span>• 2d ago</span>
         </div>
-        <div className="border-b-2">{props.comment}</div>
+        <div>{props.comment}</div>
       </div>
     </div>
   );

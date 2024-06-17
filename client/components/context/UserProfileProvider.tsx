@@ -5,7 +5,7 @@
 import { useAccount } from "@/components/context/AccountProvider";
 import { FindUserByUsername } from "@/controllers/AuthController";
 import { GetAllUserPosts } from "@/controllers/PostController";
-import { FindProfileByUserId } from "@/controllers/ProfileController";
+import { FindProfileByUserId } from "@/controllers/UserController";
 import {
   ChildNodeProps,
   PostObject,

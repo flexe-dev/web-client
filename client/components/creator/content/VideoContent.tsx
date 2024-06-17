@@ -1,3 +1,5 @@
+"use client";
+
 import { SortableItem } from "@/components/dnd/Sortable";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ContentBlockProp, PostUserMedia } from "@/lib/interface";
