@@ -1,4 +1,4 @@
-package com.flexe.flex_core.entity.media;
+package com.flexe.flex_core.entity.posts.media;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

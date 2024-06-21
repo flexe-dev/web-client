@@ -1,18 +1,15 @@
 "use client";
 
-import React from "react";
+import { nullIfEmpty } from "@/lib/utils";
 import { BriefcaseIcon } from "@heroicons/react/24/outline";
-import { MapPinIcon } from "lucide-react";
-import { Building } from "lucide-react";
-import { CircleDashed } from "lucide-react";
-import { useAccount } from "../context/AccountProvider";
-import { Separator } from "../ui/separator";
+import { Building, CircleDashed, MapPinIcon } from "lucide-react";
 import { useProfileViewer } from "../context/UserProfileProvider";
+import { Separator } from "../ui/separator";
 import { Skeleton } from "../ui/skeleton";
 
 const ProfileDetails = () => {
-  const { fetchedProfile} = useProfileViewer();
-  const {loading, profile} = fetchedProfile
+  const { fetchedProfile } = useProfileViewer();
+  const { loading, profile } = fetchedProfile;
 
   if (!profile) return null;
 
@@ -43,7 +40,7 @@ const ProfileDetails = () => {
         <div className="flex flex-col items-center">
           <Separator className="mt-4" />
           <p className="text-xs py-2 text-gray-200 text-wrap text-secondary-foreground">
-            {profile.bio ?? "No Bio Yet"}
+            {nullIfEmpty(profile.bio ?? "") ?? "No Bio Yet"}
           </p>
           <Separator className="mb-4" />
         </div>

@@ -1,5 +1,4 @@
 import { User } from "next-auth";
-import { User as PrismaUser } from "@prisma/client";
 
 interface EmailUser {
   email: string;
@@ -22,7 +21,7 @@ const CreateEmailUser = async (credentials: EmailUser) => {
 
 const FindUserByEmail = async (email: string): Promise<User | null> => {
   const response = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}auth/findUserByEmail/${email}`,
+    `${process.env.NEXT_PUBLIC_CORE_BACKEND_API_URL}/user/find/email/${email}`,
     {
       method: "GET",
       headers: {
@@ -53,7 +52,7 @@ const CheckUserPassword = async (userID: string, password: string) => {
 
 const FindUserByUsername = async (username: string): Promise<User | null> => {
   const response = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}auth/findUserByUsername/${username}`,
+    `${process.env.NEXT_PUBLIC_CORE_BACKEND_API_URL}user/find/username/${username}`,
     {
       method: "GET",
       headers: {
@@ -72,7 +71,7 @@ const CompleteUserOnboard = async (
   image: string
 ): Promise<boolean> => {
   const response = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}auth/onboardUser`,
+    `${process.env.NEXT_PUBLIC_CORE_BACKEND_API_URL}/user/onboard/complete`,
     {
       method: "PUT",
       headers: {
@@ -85,9 +84,9 @@ const CompleteUserOnboard = async (
 };
 
 export {
+  CheckUserPassword,
+  CompleteUserOnboard,
   CreateEmailUser,
   FindUserByEmail,
   FindUserByUsername,
-  CompleteUserOnboard,
-  CheckUserPassword,
 };

@@ -1,32 +1,32 @@
 package com.flexe.flex_core.controller;
 
-import com.flexe.flex_core.entity.media.UserPost;
-import com.flexe.flex_core.service.UserPostService;
+import com.flexe.flex_core.entity.posts.media.MediaPost;
+import com.flexe.flex_core.service.MediaPostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("api/post/media")
-@CrossOrigin(origins = "http://localhost:3000")
-public class UserMediaPostController {
+public class PostController {
 
     @Autowired
     private
-    UserPostService service;
+    MediaPostService service;
 
     @PostMapping("/upload")
-    public UserPost savePost(@RequestBody UserPost post) {
-        UserPost content = post;
+    public MediaPost savePost(@RequestBody MediaPost post) {
+        MediaPost content = post;
         return service.savePost(post);
     }
 
     @GetMapping("/{id}")
-    public UserPost getUserPostFromID(@PathVariable String id) {
+    public MediaPost getUserPostFromID(@PathVariable String id) {
         return service.getUserPostFromID(id);
     }
 
     @GetMapping("/user/{userID}")
-    public UserPost[] getAllPostFromUser(@PathVariable String userID) {
+    public MediaPost[] getAllPostFromUser(@PathVariable String userID) {
         return service.getAllPostFromUser(userID);
     }
 

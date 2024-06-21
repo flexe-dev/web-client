@@ -1,18 +1,22 @@
 "use client";
 
+import {
+  CompleteUserOnboard,
+  FindUserByUsername,
+} from "@/controllers/AuthController";
+import { CreateUserProfile } from "@/controllers/UserController";
+import { UserProfile } from "@/lib/interface";
+import { supabase } from "@/lib/supabase";
+import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { debounce } from "lodash";
+import Image from "next/image";
 import React, { useCallback, useState } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { z } from "zod";
+import { useAccount } from "../context/AccountProvider";
 import { Button } from "../ui/button";
-import {
-  FindUserByUsername,
-  CompleteUserOnboard,
-} from "@/controllers/AuthController";
-
-import { CreateUserProfile } from "@/controllers/UserController";
-
-import { debounce } from "lodash";
 import {
   Form,
   FormControl,
@@ -24,12 +28,6 @@ import {
 } from "../ui/form";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
-import { cn } from "@/lib/utils";
-import { useAccount } from "../context/AccountProvider";
-import Image from "next/image";
-import { supabase } from "@/lib/supabase";
-import { toast } from "sonner";
-import { UserProfile } from "@prisma/client";
 
 interface Props {
   onSuccess: React.Dispatch<React.SetStateAction<boolean>>;

@@ -2,8 +2,8 @@
 
 import { GetAllUserPosts } from "@/controllers/PostController";
 import { FindProfileByUserId } from "@/controllers/UserController";
-import { ChildNodeProps, UserPost } from "@/lib/interface";
-import { User, UserProfile } from "@prisma/client";
+import { ChildNodeProps, UserPost, UserProfile } from "@/lib/interface";
+import { User } from "@prisma/client";
 import { useSession } from "next-auth/react";
 import React, { createContext, useEffect } from "react";
 

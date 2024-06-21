@@ -1,11 +1,11 @@
 "use client";
 
+import { UpdateUserDetails } from "@/controllers/UserController";
 import { zodResolver } from "@hookform/resolvers/zod";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Button } from "../ui/button";
-import { UpdateUserDetails } from "@/controllers/UserController";
 import {
   Form,
   FormControl,
@@ -17,10 +17,12 @@ import {
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 
-import { useAccount } from "../context/AccountProvider";
-import Image from "next/image";
+import { UserProfile } from "@/lib/interface";
 import { supabase } from "@/lib/supabase";
+import { User } from "@prisma/client";
+import Image from "next/image";
 import { toast } from "sonner";
+import { useAccount } from "../context/AccountProvider";
 import { Textarea } from "../ui/textarea";
 
 interface Props {
@@ -57,16 +59,21 @@ export const ProfileDetailsForm = (props: Props) => {
         imageURL = await uploadPicture();
       }
 
-      const response = await UpdateUserDetails(
-        user.id,
-        imageURL ?? user.image,
-        values.name,
-        values.job,
-        values.company,
-        values.pronouns,
-        values.location,
-        values.bio
-      );
+      const updatedUser: User = {
+        ...user,
+        name: values.name,
+        image: imageURL ?? user.image,
+      };
+
+      const updatedProfile: UserProfile = {
+        ...profile,
+        job: values.job,
+        company: values.company,
+        pronouns: values.pronouns,
+        location: values.location,
+        bio: values.bio,
+      };
+      const response = await UpdateUserDetails(updatedProfile, updatedUser);
 
       // Update User Account Details
       setUser({

@@ -1,4 +1,4 @@
-import ReadMe from "@/components/profile/readme/ReadMe";
+import { ReadMe } from "@/components/profile/readMe/ReadMe";
 
 const Page = () => {
   return <ReadMe />;

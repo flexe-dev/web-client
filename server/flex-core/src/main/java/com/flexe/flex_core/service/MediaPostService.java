@@ -1,27 +1,27 @@
 package com.flexe.flex_core.service;
 
-import com.flexe.flex_core.entity.media.UserPost;
-import com.flexe.flex_core.repository.UserPostRepository;
+import com.flexe.flex_core.entity.posts.media.MediaPost;
+import com.flexe.flex_core.repository.post.MediaPostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class UserPostService {
+public class MediaPostService {
 
     @Autowired
     private
-    UserPostRepository repository;
+    MediaPostRepository repository;
 
-    public UserPost savePost(UserPost post) {
+    public MediaPost savePost(MediaPost post) {
         return repository.save(post);
     }
 
-    public UserPost getUserPostFromID(String id) {
+    public MediaPost getUserPostFromID(String id) {
         return repository.findById(id).orElse(null);
     }
 
-    public UserPost[] getAllPostFromUser(String userID) {
+    public MediaPost[] getAllPostFromUser(String userID) {
         return repository.findAll().stream().filter(post -> post.getAuxData().getUserID().equals(userID))
-                .toArray(UserPost[]::new);
+                .toArray(MediaPost[]::new);
     }
 }

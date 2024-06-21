@@ -1,5 +1,5 @@
 import { PencilIcon } from "@heroicons/react/24/outline";
-import { UserProfile } from "@prisma/client";
+import { ObjectId } from "mongodb";
 import { User } from "next-auth";
 import { CSSProperties } from "react";
 export interface ClassNameProp {
@@ -25,6 +25,28 @@ export interface SidebarButtonProps extends ClassNameProp {
 
 export interface ChildNodeProps {
   children?: React.ReactNode;
+}
+
+//User Profile Object
+export interface UserProfile {
+  id: string;
+  userId: ObjectId;
+  job?: string;
+  followers: number;
+  following: number;
+  company?: string;
+  pronouns?: string;
+  location?: string;
+  bio?: string;
+  external: ProfileExternalLinks;
+}
+
+export interface ProfileExternalLinks {
+  website?: string;
+  github?: string;
+  twitter?: string;
+  linkedin?: string;
+  instagram?: string;
 }
 
 //Profile Interfaces

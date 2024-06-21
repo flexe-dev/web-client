@@ -1,4 +1,4 @@
-package com.flexe.flex_core.entity.media;
+package com.flexe.flex_core.entity.posts.media;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.data.annotation.Id;
@@ -7,7 +7,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import java.util.List;
 
 @Document(collection = "MediaPosts")
-public class UserPost {
+public class MediaPost {
     @Id
     @JsonProperty("id")
     private String id;
@@ -18,10 +18,10 @@ public class UserPost {
     @JsonProperty("document")
     private List<PostContent> document;
 
-    public UserPost() {
+    public MediaPost() {
     }
 
-    public UserPost(String id, PostAuxData auxData, PostExternalData externalData, List<PostContent> document) {
+    public MediaPost(String id, PostAuxData auxData, PostExternalData externalData, List<PostContent> document) {
         this.id = id;
         this.auxData = auxData;
         this.externalData = externalData;

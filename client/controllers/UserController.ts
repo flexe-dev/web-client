@@ -1,7 +1,9 @@
-import { UserProfile } from "@prisma/client";
+import { UserProfile } from "@/lib/interface";
+import { User } from "@prisma/client";
+
 const CreateUserProfile = async (userId: string) => {
   const response = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}profile/createProfile`,
+    `${process.env.NEXT_PUBLIC_CORE_BACKEND_API_URL}user/profile/create`,
     {
       method: "POST",
       headers: {
@@ -20,7 +22,7 @@ const FindProfileByUserId = async (
   userId: string
 ): Promise<UserProfile | null> => {
   const response = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}profile/findProfileByUserId/${userId}`,
+    `${process.env.NEXT_PUBLIC_CORE_BACKEND_API_URL}user/profile/find/${userId}`,
     {
       method: "GET",
       headers: {
@@ -31,61 +33,34 @@ const FindProfileByUserId = async (
   if (response.status === 404) {
     return null;
   }
-  const userProfile: UserProfile = await response.json();
+  console.log(response);
+  const userProfile = await response.json();
+
   return userProfile;
 };
 
-const UploadProfileReadMe = async (
-  buffer: Buffer,
-  userID: string
-): Promise<boolean> => {
-  const response = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}profile/uploadReadMeBuffer`,
-    {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ buffer, userID }),
-    }
-  );
-  return response.ok;
-};
-
 const UpdateUserDetails = async (
-  userID: string,
-  image: string,
-  name: string,
-  job: string,
-  company: string,
-  pronouns: string,
-  location: string,
-  bio: string
+  userProfile: UserProfile,
+  user: User
 ): Promise<boolean> => {
+  console.log(userProfile, user);
+  console.log(JSON.stringify({ userProfile, user }));
+  console.log("hello");
   const response = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}profile/updateUserDetails`,
+    `${process.env.NEXT_PUBLIC_CORE_BACKEND_API_URL}user/profile/update`,
     {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        userID,
-        image,
-        name,
-        job,
-        company,
-        pronouns,
-        location,
+        userProfile,
+        user,
       }),
     }
   );
+  console.log(response);
   return response.ok;
 };
 
-export {
-  CreateUserProfile,
-  FindProfileByUserId,
-  UpdateUserDetails,
-  UploadProfileReadMe,
-};
+export { CreateUserProfile, FindProfileByUserId, UpdateUserDetails };
