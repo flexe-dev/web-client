@@ -9,13 +9,9 @@ import java.util.List;
 @Document(collection = "MediaPosts")
 public class MediaPost {
     @Id
-    @JsonProperty("id")
     private String id;
-    @JsonProperty("auxData")
     private PostAuxData auxData;
-    @JsonProperty("externalData")
     private PostExternalData externalData;
-    @JsonProperty("document")
     private List<PostContent> document;
 
     public MediaPost() {
