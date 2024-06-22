@@ -1,5 +1,5 @@
-import { UserProfile } from "@/lib/interface";
-import { User } from "@prisma/client";
+import { UserAccount, UserProfile } from "@/lib/interface";
+import { User } from "next-auth";
 
 const CreateUserProfile = async (userId: string) => {
   const response = await fetch(
@@ -33,19 +33,75 @@ const FindProfileByUserId = async (
   if (response.status === 404) {
     return null;
   }
-  console.log(response);
-  const userProfile = await response.json();
-
-  return userProfile;
+  return response.json();
 };
 
-const UpdateUserDetails = async (
-  userProfile: UserProfile,
-  user: User
-): Promise<boolean> => {
-  console.log(userProfile, user);
-  console.log(JSON.stringify({ userProfile, user }));
-  console.log("hello");
+const FindAccountByUserId = async (
+  userId: string
+): Promise<UserAccount | null> => {
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_CORE_BACKEND_API_URL}user/account/find/${userId}`,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+  if (response.status === 404) {
+    return null;
+  }
+  return response.json();
+};
+
+const FindAccountByUsername = async (
+  username: string
+): Promise<UserAccount | null> => {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_CORE_BACKEND_API_URL}user/account/find/username/${username}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    if (response.status === 404) {
+      console.log(`UserAccount with username ${username} not found.`);
+      return null;
+    }
+
+    if (!response.ok) {
+      console.error(`Error: ${response.status} - ${response.statusText}`);
+      return null;
+    }
+
+    return await response.json();
+  } catch (err) {
+    console.error("Fetch error:", err);
+    return null;
+  }
+};
+
+const UpdateUserDetails = async (user: User): Promise<User> => {
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_CORE_BACKEND_API_URL}/user/onboard/complete`,
+    {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(user),
+    }
+  );
+  return response.json();
+};
+
+const UpdateUserAccount = async (
+  userAccount: UserAccount
+): Promise<UserAccount> => {
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_CORE_BACKEND_API_URL}user/profile/update`,
     {
@@ -54,13 +110,18 @@ const UpdateUserDetails = async (
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        userProfile,
-        user,
+        userAccount,
       }),
     }
   );
-  console.log(response);
-  return response.ok;
+  return response.json();
 };
 
-export { CreateUserProfile, FindProfileByUserId, UpdateUserDetails };
+export {
+  CreateUserProfile,
+  FindAccountByUserId,
+  FindAccountByUsername,
+  FindProfileByUserId,
+  UpdateUserAccount,
+  UpdateUserDetails,
+};

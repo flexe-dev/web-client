@@ -1,5 +1,4 @@
 import { PencilIcon } from "@heroicons/react/24/outline";
-import { ObjectId } from "mongodb";
 import { User } from "next-auth";
 import { CSSProperties } from "react";
 export interface ClassNameProp {
@@ -27,10 +26,16 @@ export interface ChildNodeProps {
   children?: React.ReactNode;
 }
 
+export interface UserAccount {
+  user: User;
+  profile?: UserProfile;
+  mediaPosts: UserPost[];
+}
+
 //User Profile Object
 export interface UserProfile {
   id: string;
-  userId: ObjectId;
+  userId: string;
   job?: string;
   followers: number;
   following: number;

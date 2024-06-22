@@ -2,11 +2,14 @@ package com.flexe.flex_core.entity.user;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
+import org.springframework.data.mongodb.core.mapping.FieldType;
 
 @Document(collection = "UserProfile")
 public class UserProfile{
     @Id
     private String id;
+    @Field(targetType = FieldType.OBJECT_ID)
     private String userId;
     private String job;
     private Integer followers;

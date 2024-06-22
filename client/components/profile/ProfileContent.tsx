@@ -11,16 +11,16 @@ export const profileTabs = ["readme", "posts", "activity"] as const;
 export type Tabs = (typeof profileTabs)[number];
 
 const ProfileContent: React.FC<ChildNodeProps> = ({ children }) => {
-  const { fetchedUser } = useProfileViewer();
+  const { fetchedAccount } = useProfileViewer();
   const params = useParams<{ username: string; tag: string }>();
   const [activeTab, setActiveTab] = useState<Tabs>(
     (params.tag as Tabs) || "readme"
   );
 
   const tabLink: Record<Tabs, string> = {
-    activity: `/${fetchedUser.user?.username}/activity`,
-    posts: `/${fetchedUser.user?.username}/posts`,
-    readme: `/${fetchedUser.user?.username}/`,
+    activity: `/${fetchedAccount?.user?.username}/activity`,
+    posts: `/${fetchedAccount?.user?.username}/posts`,
+    readme: `/${fetchedAccount?.user?.username}/`,
   };
 
   useEffect(() => {

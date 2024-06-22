@@ -12,14 +12,16 @@ import { Button } from "../ui/button";
 import { Dialog, DialogTrigger } from "../ui/dialog";
 
 const Posts = () => {
-  const { userPosts, fetchedUser } = useProfileViewer();
   const [openDialog, setOpenDialog] = useState<boolean>(false);
   const [selectedPost, setSelectedPost] = useState<UserPost | undefined>();
-  const { userPosts: posts, loading } = userPosts;
+
+  const { fetchedAccount, loading } = useProfileViewer();
+  if (!fetchedAccount) return null;
+  const { user, mediaPosts: posts } = fetchedAccount;
 
   const closePostModal = () => {
     setSelectedPost(undefined);
-    window.history.pushState(null, "", `/${fetchedUser?.user?.username}/posts`);
+    window.history.pushState(null, "", `/${user.username}/posts`);
   };
 
   return (
@@ -79,7 +81,7 @@ interface UserPostProps {
 }
 
 const UserPosts = ({ onSelect }: UserPostProps) => {
-  const { userPosts } = useProfileViewer();
+  const { fetchedAccount } = useProfileViewer();
 
   const openPost = (post: UserPost) => {
     onSelect(post);
@@ -89,7 +91,7 @@ const UserPosts = ({ onSelect }: UserPostProps) => {
   return (
     <>
       <div className="grid p-8 md:p-2 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-2 justify-center  relative my-4 w-full ">
-        {userPosts.userPosts.map((post) => (
+        {fetchedAccount?.mediaPosts.map((post) => (
           <PostTile key={post.id}>
             <div className="w-full h-full" onClick={() => openPost(post)}>
               <div className="relative w-full h-full">

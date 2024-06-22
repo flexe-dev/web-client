@@ -1,15 +1,12 @@
 package com.flexe.flex_core.controller;
 
-import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.flexe.flex_core.entity.user.UserAccount;
 import com.flexe.flex_core.entity.user.UserProfile;
 import com.flexe.flex_core.entity.user.User;
-import com.flexe.flex_core.service.UserProfileService;
-import com.flexe.flex_core.service.UserService;
-import org.bson.json.JsonObject;
+import com.flexe.flex_core.service.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Base64;
 
 @RestController
 @RequestMapping("api/user")
@@ -18,12 +15,10 @@ public class UserController {
 
     @Autowired
     private UserService userService;
-    @Autowired
-    private UserProfileService userProfileService;
 
     @PostMapping("/profile/create")
     public UserProfile createProfile(@RequestBody String userId){
-        return userProfileService.createProfile(userId);
+        return userService.createProfile(userId);
     }
 
     @GetMapping("/find/id/{id}")
@@ -43,21 +38,39 @@ public class UserController {
 
     @GetMapping("/profile/find/{userId}")
     public UserProfile findProfileFromUser(@PathVariable String userId){
-        return userProfileService.findProfile(userId);
+        return userService.findProfile(userId);
+    }
+
+    @GetMapping("/account/find/{userId}")
+    public ResponseEntity<UserAccount> findUserAccount(@PathVariable String userId){
+        UserAccount account = userService.findUserAccount(userId);
+        if(account == null){
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(account);
+    }
+
+    @GetMapping("/account/find/username/{username}")
+    public ResponseEntity<UserAccount> findUserAccountByUsername(@PathVariable String username){
+        UserAccount account = userService.findUserAccountByUsername(username);
+        if(account == null){
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(account);
     }
 
     @PutMapping("/profile/update")
-    public Boolean updateProfile(@RequestBody JsonObject request) {
-        JsonObject yes = request;
-        String No = "no";
-        return true;
-//        User updatedUser = userService.updateUser(user);
-//        UserProfile updatedProfile = userProfileService.updateProfile(userProfile);
-//        return updatedUser != null && updatedProfile != null;
+    public UserProfile updateUserProfile(@RequestBody UserProfile profile) {
+        return userService.updateProfile(profile);
     }
 
-    @PostMapping("/onboard/complete")
-    public User completeOnboarding(@RequestBody String userID, @RequestBody String username, @RequestBody String name, @RequestBody String image){
-        return userService.completeOnboarding(userID, username, name, image);
+    @PutMapping("/user/update")
+    public User updateUserDetails(@RequestBody User user){
+        return userService.updateUser(user);
+    }
+
+    @PutMapping("/account/update")
+    public UserAccount updateUserAccount(@RequestBody UserAccount account){
+        return account;
     }
 }

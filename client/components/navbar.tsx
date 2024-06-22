@@ -8,7 +8,7 @@ import {
   MagnifyingGlassIcon,
   UserGroupIcon,
 } from "@heroicons/react/24/outline";
-import { User } from "@prisma/client";
+import { User } from "next-auth";
 import Link from "next/link";
 import { useAccount } from "./context/AccountProvider";
 import { AppLogo } from "./logo";

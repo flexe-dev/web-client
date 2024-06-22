@@ -8,26 +8,22 @@ import { Separator } from "../ui/separator";
 import { Skeleton } from "../ui/skeleton";
 
 const ProfileDetails = () => {
-  const { fetchedProfile } = useProfileViewer();
-  const { loading, profile } = fetchedProfile;
-
-  if (!profile) return null;
-
+  const { fetchedAccount: account, loading } = useProfileViewer();
   const profileDetails = [
     {
-      detail: profile.job,
+      detail: account?.profile?.job,
       icon: <BriefcaseIcon className="stroke-secondary-header w-5 h-5" />,
     },
     {
-      detail: profile.company,
+      detail: account?.profile?.company,
       icon: <Building className="stroke-secondary-header w-5 h-5" />,
     },
     {
-      detail: profile.pronouns,
+      detail: account?.profile?.pronouns,
       icon: <CircleDashed className="stroke-secondary-header w-5 h-5" />,
     },
     {
-      detail: profile.location,
+      detail: account?.profile?.location,
       icon: <MapPinIcon className="stroke-secondary-header w-5 h-5" />,
     },
   ];
@@ -40,7 +36,7 @@ const ProfileDetails = () => {
         <div className="flex flex-col items-center">
           <Separator className="mt-4" />
           <p className="text-xs py-2 text-gray-200 text-wrap text-secondary-foreground">
-            {nullIfEmpty(profile.bio ?? "") ?? "No Bio Yet"}
+            {nullIfEmpty(account?.profile?.bio ?? "") ?? "No Bio Yet"}
           </p>
           <Separator className="mb-4" />
         </div>

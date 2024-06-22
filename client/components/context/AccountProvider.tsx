@@ -1,9 +1,8 @@
 "use client";
 
-import { GetAllUserPosts } from "@/controllers/PostController";
-import { FindProfileByUserId } from "@/controllers/UserController";
+import { FindAccountByUserId } from "@/controllers/UserController";
 import { ChildNodeProps, UserPost, UserProfile } from "@/lib/interface";
-import { User } from "@prisma/client";
+import { User } from "next-auth";
 import { useSession } from "next-auth/react";
 import React, { createContext, useEffect } from "react";
 
@@ -44,12 +43,11 @@ export const AccountProvider = ({ children }: ChildNodeProps) => {
     try {
       const userData = session.data?.user;
       if (userData) {
-        const userProfile = FindProfileByUserId(userData.id);
-        const mediaPosts = GetAllUserPosts(userData.id);
-        Promise.all([userProfile, mediaPosts]).then(([profile, posts]) => {
-          setProfile(profile ?? undefined);
-          setMediaPosts(posts ?? []);
-        });
+        const account = await FindAccountByUserId(userData.id);
+        if (account) {
+          setProfile(account.profile);
+          setMediaPosts(account.mediaPosts ?? []);
+        }
       }
     } catch (error) {
       console.error("Error fetching user profile:", error);

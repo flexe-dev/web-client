@@ -1,11 +1,15 @@
 package com.flexe.flex_core.entity.posts.media;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.springframework.data.mongodb.core.mapping.Field;
+import org.springframework.data.mongodb.core.mapping.FieldType;
+
 
 import java.util.List;
 
 public class PostAuxData {
     @JsonProperty("userID")
+    @Field(targetType = FieldType.OBJECT_ID)
     private String userID;
     @JsonProperty("postStatus")
     private UserPostStatus postStatus;

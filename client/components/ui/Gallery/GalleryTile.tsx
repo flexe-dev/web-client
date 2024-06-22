@@ -1,5 +1,5 @@
 import { EyeIcon, HandThumbUpIcon } from "@heroicons/react/24/outline";
-import { User } from "@prisma/client";
+import { User } from "next-auth";
 import Image, { ImageProps } from "next/image";
 import { Avatar, AvatarImage } from "../avatar";
 import { Card, CardFooter } from "../card";
@@ -40,7 +40,10 @@ export const GalleryTile = (props: GalleryPostProps) => {
         <div className="flex items-center space-x-2">
           <div>{creator.name}</div>
           <Avatar className="w-7 h-7">
-            <AvatarImage className="object-cover" src={creator.image} />
+            <AvatarImage
+              className="object-cover"
+              src={creator.image ?? process.env.NEXT_PUBLIC_FALLBACK_PHOTO}
+            />
           </Avatar>
         </div>
       </CardFooter>

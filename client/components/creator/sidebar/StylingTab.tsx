@@ -4,54 +4,54 @@ import { useDocumentCreator } from "@/components/context/DocumentCreatorProvider
 import { Button } from "@/components/ui/button";
 import {
   Select,
+  SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-  SelectContent,
 } from "@/components/ui/select";
 import {
   ChildNodeProps,
   ClassNameProp,
   ContentType,
+  ContentValue,
   OptionKeyValues,
   OptionKeys,
-  PostContent,
   PostUserMedia,
   ToolValueObject,
 } from "@/lib/interface";
 import {
-  Bars3Icon,
   Bars3BottomLeftIcon,
   Bars3BottomRightIcon,
-  PlusIcon,
+  Bars3Icon,
   MinusIcon,
+  PlusIcon,
 } from "@heroicons/react/24/outline";
 import { FaBold, FaItalic, FaUnderline } from "react-icons/fa";
 import {
-  PiAlignLeftSimple,
   PiAlignCenterHorizontalSimple,
+  PiAlignLeftSimple,
   PiAlignRightSimple,
 } from "react-icons/pi";
 import {
-  TbBorderCornerSquare,
+  TbBorderCornerIos,
   TbBorderCornerPill,
   TbBorderCornerRounded,
-  TbBorderCornerIos,
+  TbBorderCornerSquare,
 } from "react-icons/tb";
 
-import { cn } from "@/lib/utils";
 import { ColourBox } from "@/components/ui/colourbox";
+import { Input } from "@/components/ui/input";
+import { Switch } from "@/components/ui/switch";
 import {
   Tooltip,
-  TooltipProvider,
   TooltipContent,
+  TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { cn } from "@/lib/utils";
 import { Property } from "csstype";
-import React from "react";
-import { Switch } from "@/components/ui/switch";
-import { Input } from "@/components/ui/input";
 import { divide } from "lodash";
+import React from "react";
 
 type CSSPropertyKeys =
   | Property.TextAlign
@@ -550,10 +550,12 @@ const StylingTab = () => {
       e.preventDefault();
       if (!e.target.value.trim()) return;
       onValueChange(activeStylingTool.id, {
-        ...(content.value as PostUserMedia),
-        content: {
-          ...(content.value as PostUserMedia).content,
-          alt: e.target.value,
+        ...(content.value as ContentValue),
+        contentValue: {
+          content: {
+            ...(content.value?.contentValue as PostUserMedia).content,
+            alt: e.target.value,
+          },
         },
       });
     };
@@ -561,7 +563,10 @@ const StylingTab = () => {
       <>
         <SectionHeader>Image Alt Text</SectionHeader>
         <Input
-          value={(content.value as PostUserMedia).content?.alt ?? "User Image"}
+          value={
+            (content.value?.contentValue as PostUserMedia).content.alt ??
+            "User Image"
+          }
           onChange={(e) => handleAltTextChange(e)}
         />
       </>

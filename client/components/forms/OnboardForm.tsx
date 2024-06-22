@@ -1,10 +1,10 @@
 "use client";
 
+import { FindUserByUsername } from "@/controllers/AuthController";
 import {
-  CompleteUserOnboard,
-  FindUserByUsername,
-} from "@/controllers/AuthController";
-import { CreateUserProfile } from "@/controllers/UserController";
+  CreateUserProfile,
+  UpdateUserDetails,
+} from "@/controllers/UserController";
 import { UserProfile } from "@/lib/interface";
 import { supabase } from "@/lib/supabase";
 import { cn } from "@/lib/utils";
@@ -54,7 +54,9 @@ export const OnboardForm = (props: Props) => {
     useState<UsernameStatus>("checking");
 
   const [avatarFile, setAvatarFile] = useState<File>();
-  const [avatarURL, setAvatarURL] = useState<string>(user.image);
+  const [avatarURL, setAvatarURL] = useState<string>(
+    user.image ?? process.env.NEXT_PUBLIC_DEFAULT_PHOTO
+  );
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     const saveData = async (
@@ -64,12 +66,12 @@ export const OnboardForm = (props: Props) => {
 
       if (usernameValid !== "available" || !imageURL) return false;
 
-      const userResponse = await CompleteUserOnboard(
-        user.id,
-        values.username,
-        values.name,
-        imageURL
-      );
+      const userDetailsResponse = await UpdateUserDetails({
+        ...user,
+        username: values.username,
+        name: values.name,
+        image: imageURL,
+      });
       const profileResponse: UserProfile = await CreateUserProfile(user.id);
 
       // Update User Account Details
@@ -82,7 +84,7 @@ export const OnboardForm = (props: Props) => {
       });
 
       setProfile(profileResponse);
-      if (userResponse && profileResponse) {
+      if (userDetailsResponse && profileResponse) {
         props.onSuccess(true);
         return true;
       }
@@ -100,8 +102,8 @@ export const OnboardForm = (props: Props) => {
     resolver: zodResolver(formSchema),
     defaultValues: {
       username: "",
-      name: user.name,
-      image: user.image,
+      name: user.name ?? "",
+      image: user.image ?? process.env.NEXT_PUBLIC_DEFAULT_PHOTO,
     },
   });
 

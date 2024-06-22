@@ -1,53 +1,26 @@
 "use client";
 
-/*This context will be used to display the details of the searched user's profile*/
-
 import { useAccount } from "@/components/context/AccountProvider";
-import { FindUserByUsername } from "@/controllers/AuthController";
-import { GetAllUserPosts } from "@/controllers/PostController";
-import { FindProfileByUserId } from "@/controllers/UserController";
-import {
-  ChildNodeProps,
-  PostObject,
-  ProfileObject,
-  UserObject,
-} from "@/lib/interface";
-import { User } from "next-auth";
+import { FindAccountByUsername } from "@/controllers/UserController";
+import { ChildNodeProps, UserAccount } from "@/lib/interface";
 import { useParams } from "next/navigation";
 import React, { createContext, useEffect, useState } from "react";
 import ErrorPage from "../Error";
 
 interface ProfileViewerProviderState {
   isOwnProfile: boolean;
-  fetchedUser: UserObject;
-  fetchedProfile: ProfileObject;
-  userPosts: PostObject;
-  setFetchedUser: React.Dispatch<React.SetStateAction<UserObject>>;
-  setFetchedProfile: React.Dispatch<React.SetStateAction<ProfileObject>>;
+  fetchedAccount?: UserAccount;
+  loading: boolean;
+  setFetchedAccount: React.Dispatch<
+    React.SetStateAction<UserAccount | undefined>
+  >;
 }
 
-const initialUser: UserObject = {
-  user: undefined,
-  loading: true,
-};
-
-const initialProfile: ProfileObject = {
-  profile: undefined,
-  loading: true,
-};
-
-const initialPosts: PostObject = {
-  userPosts: [],
-  loading: true,
-};
-
 const initialState: ProfileViewerProviderState = {
-  fetchedUser: initialUser,
-  fetchedProfile: initialProfile,
-  userPosts: initialPosts,
   isOwnProfile: false,
-  setFetchedUser: () => {},
-  setFetchedProfile: () => {},
+  fetchedAccount: undefined,
+  loading: true,
+  setFetchedAccount: () => {},
 };
 
 export const ProfileViewerContext =
@@ -58,86 +31,48 @@ export const ProviderViewerProvider = ({ children }: ChildNodeProps) => {
   const params = useParams<{ username: string; tag: string }>();
 
   const [isOwnProfile, setisOwnProfile] = useState(false);
-  const [fetchedUser, setFetchedUser] = useState<UserObject>(initialUser);
-  const [fetchedProfile, setFetchedProfile] =
-    useState<ProfileObject>(initialProfile);
-  const [userPosts, setUserPosts] = useState<PostObject>(initialPosts);
-
+  const [fetchedAccount, setFetchedAccount] = useState<
+    UserAccount | undefined
+  >();
+  const [loading, setLoading] = useState<boolean>(true);
   const fetchProfileDetails = async (username: string) => {
-    await FindUserByUsername(username).then((user) => {
-      if (!user) {
-        setFetchedUser({
-          user: undefined,
-          loading: false,
-        });
-        return;
+    try {
+      const account = await FindAccountByUsername(username);
+      if (account) {
+        setFetchedAccount(account);
       }
-      setFetchedUser({
-        user,
-        loading: false,
-      });
-
-      const profilePromise = FindProfileByUserId(user.id);
-      const postPromise = GetAllUserPosts(user.id);
-
-      Promise.all([profilePromise, postPromise]).then((values) => {
-        const [profile, userPosts] = values;
-        if (profile) {
-          setFetchedProfile({
-            profile,
-            loading: false,
-          });
-        }
-        if (userPosts) {
-          setUserPosts({
-            userPosts,
-            loading: false,
-          });
-        }
-      });
-    });
+      setLoading(false);
+    } catch (error) {
+      console.error("Error fetching user profile:", error);
+    }
   };
 
   useEffect(() => {
     const { username } = params;
     //Check whether or not the user name is the current user or if the user is visiting another profile
     if (username === user?.username) {
-      setFetchedUser({
-        user: user as User,
-        loading: false,
-      });
-      setFetchedProfile({
+      setFetchedAccount({
+        user: user,
         profile: profile,
-        loading: false,
+        mediaPosts: mediaPosts,
       });
-      setUserPosts({
-        userPosts: mediaPosts,
-        loading: false,
-      });
-
       setisOwnProfile(true);
+      setLoading(false);
     } else {
       fetchProfileDetails(username);
     }
   }, [user, profile]);
 
-  useEffect(() => {
-    if (fetchedUser) {
-    }
-  }, [fetchedUser]);
-
   return (
     <ProfileViewerContext.Provider
       value={{
-        fetchedUser,
-        fetchedProfile,
-        userPosts,
-        setFetchedUser,
-        setFetchedProfile,
+        loading,
+        fetchedAccount,
+        setFetchedAccount,
         isOwnProfile,
       }}
     >
-      {!fetchedUser.loading && !fetchedUser.user ? <ErrorPage /> : children}
+      {!loading && !fetchedAccount ? <ErrorPage /> : children}
     </ProfileViewerContext.Provider>
   );
 };

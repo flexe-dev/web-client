@@ -7,6 +7,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface UserProfileRepository extends MongoRepository<UserProfile, String> {
-    @Query("{ 'userId' : ?0 }")
+    @Query("{ 'userId' : ObjectId(?0) }")
     UserProfile findByUserId(String userId);
 }

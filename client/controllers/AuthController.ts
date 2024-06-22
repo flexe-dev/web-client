@@ -64,28 +64,10 @@ const FindUserByUsername = async (username: string): Promise<User | null> => {
   return user;
 };
 
-const CompleteUserOnboard = async (
-  userID: string,
-  username: string,
-  name: string,
-  image: string
-): Promise<boolean> => {
-  const response = await fetch(
-    `${process.env.NEXT_PUBLIC_CORE_BACKEND_API_URL}/user/onboard/complete`,
-    {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ userID, username, name, image }),
-    }
-  );
-  return response.ok;
-};
+
 
 export {
   CheckUserPassword,
-  CompleteUserOnboard,
   CreateEmailUser,
   FindUserByEmail,
   FindUserByUsername,

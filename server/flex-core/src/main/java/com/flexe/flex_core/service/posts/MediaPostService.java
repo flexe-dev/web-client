@@ -1,4 +1,4 @@
-package com.flexe.flex_core.service;
+package com.flexe.flex_core.service.posts;
 
 import com.flexe.flex_core.entity.posts.media.MediaPost;
 import com.flexe.flex_core.repository.post.MediaPostRepository;
@@ -20,8 +20,7 @@ public class MediaPostService {
         return repository.findById(id).orElse(null);
     }
 
-    public MediaPost[] getAllPostFromUser(String userID) {
-        return repository.findAll().stream().filter(post -> post.getAuxData().getUserID().equals(userID))
-                .toArray(MediaPost[]::new);
+    public MediaPost[] getAllPostFromUser(String userId) {
+        return repository.findAllPostByUserId(userId);
     }
 }

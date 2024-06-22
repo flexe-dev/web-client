@@ -1,7 +1,7 @@
 package com.flexe.flex_core.controller;
 
 import com.flexe.flex_core.entity.posts.media.MediaPost;
-import com.flexe.flex_core.service.MediaPostService;
+import com.flexe.flex_core.service.posts.MediaPostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,9 +25,9 @@ public class PostController {
         return service.getUserPostFromID(id);
     }
 
-    @GetMapping("/user/{userID}")
-    public MediaPost[] getAllPostFromUser(@PathVariable String userID) {
-        return service.getAllPostFromUser(userID);
+    @GetMapping("/user/{userId}")
+    public MediaPost[] getAllPostFromUser(@PathVariable String userId) {
+        return service.getAllPostFromUser(userId);
     }
 
 }
