@@ -23,6 +23,12 @@ public class UserProfile{
     public UserProfile() {
     }
 
+    public UserProfile(String userId){
+        this.userId = userId;
+        this.followers = 0;
+        this.following = 0;
+    }
+
     public UserProfile(String id, String userId, String job, Integer followers, Integer following, String company, String location, UserExternalLinks external, String bio, String pronouns, byte[] readMe) {
         this.id = id;
         this.userId = userId;

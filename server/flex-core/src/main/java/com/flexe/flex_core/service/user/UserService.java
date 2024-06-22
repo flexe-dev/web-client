@@ -58,8 +58,7 @@ public class UserService {
     //User Creation
 
     public UserProfile createProfile(String userId){
-        UserProfile profile = new UserProfile();
-        profile.setUserId(userId);
+        UserProfile profile = new UserProfile(userId);
         return userProfileRepository.save(profile);
     }
 

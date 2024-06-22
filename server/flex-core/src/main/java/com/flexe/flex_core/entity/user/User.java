@@ -77,4 +77,12 @@ public class User{
     public void setImage(String image) {
         this.image = image;
     }
+
+    public Boolean getOnboarded() {
+        return onboarded;
+    }
+
+    public void setOnboarded(Boolean onboarded) {
+        this.onboarded = onboarded;
+    }
 }

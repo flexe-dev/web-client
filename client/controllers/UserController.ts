@@ -1,21 +1,18 @@
 import { UserAccount, UserProfile } from "@/lib/interface";
 import { User } from "next-auth";
 
-const CreateUserProfile = async (userId: string) => {
+const CreateUserProfile = async (userId: string): Promise<UserProfile> => {
+  console.log(JSON.stringify(userId));
   const response = await fetch(
-    `${process.env.NEXT_PUBLIC_CORE_BACKEND_API_URL}user/profile/create`,
+    `${process.env.NEXT_PUBLIC_CORE_BACKEND_API_URL}user/profile/create/${userId}`,
     {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ userId }),
     }
   );
-  const res = await response.json();
-  const profile: UserProfile = res.profile;
-
-  return profile;
+  return response.json();
 };
 
 const FindProfileByUserId = async (
@@ -87,7 +84,7 @@ const FindAccountByUsername = async (
 
 const UpdateUserDetails = async (user: User): Promise<User> => {
   const response = await fetch(
-    `${process.env.NEXT_PUBLIC_CORE_BACKEND_API_URL}/user/onboard/complete`,
+    `${process.env.NEXT_PUBLIC_CORE_BACKEND_API_URL}user/details/update`,
     {
       method: "PUT",
       headers: {
@@ -103,15 +100,13 @@ const UpdateUserAccount = async (
   userAccount: UserAccount
 ): Promise<UserAccount> => {
   const response = await fetch(
-    `${process.env.NEXT_PUBLIC_CORE_BACKEND_API_URL}user/profile/update`,
+    `${process.env.NEXT_PUBLIC_CORE_BACKEND_API_URL}user/account/update`,
     {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({
-        userAccount,
-      }),
+      body: JSON.stringify(userAccount),
     }
   );
   return response.json();

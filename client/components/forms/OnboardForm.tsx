@@ -70,6 +70,7 @@ export const OnboardForm = (props: Props) => {
         ...user,
         username: values.username,
         name: values.name,
+        onboarded: true,
         image: imageURL,
       });
       const profileResponse: UserProfile = await CreateUserProfile(user.id);
@@ -82,7 +83,8 @@ export const OnboardForm = (props: Props) => {
         name: values.name,
         image: imageURL,
       });
-
+      console.log(userDetailsResponse, profileResponse);
+      
       setProfile(profileResponse);
       if (userDetailsResponse && profileResponse) {
         props.onSuccess(true);
@@ -108,7 +110,8 @@ export const OnboardForm = (props: Props) => {
   });
 
   const uploadPicture = async (): Promise<string | undefined> => {
-    if (!avatarFile) return;
+    if (!avatarFile) return avatarURL;
+
     const fileExt = avatarFile.name.split(".").pop();
     const filePath = `${user.id}-${Math.random()}.${fileExt}`;
 

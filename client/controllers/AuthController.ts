@@ -60,11 +60,13 @@ const FindUserByUsername = async (username: string): Promise<User | null> => {
       },
     }
   );
-  const user: User | null = await response.json();
-  return user;
+
+  if (response.status === 404) {
+    return null;
+  }
+
+  return response.json();
 };
-
-
 
 export {
   CheckUserPassword,
