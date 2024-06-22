@@ -10,7 +10,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "../dropdown-menu";
-import { User } from "@prisma/client";
+import { User } from "next-auth";
 import {
   CogIcon,
   PlusCircleIcon,

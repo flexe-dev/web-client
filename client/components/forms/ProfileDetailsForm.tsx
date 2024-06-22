@@ -1,11 +1,11 @@
 "use client";
 
+import { UpdateUserAccount } from "@/controllers/UserController";
 import { zodResolver } from "@hookform/resolvers/zod";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Button } from "../ui/button";
-import { UpdateUserDetails } from "@/controllers/ProfileController";
 import {
   Form,
   FormControl,
@@ -17,10 +17,12 @@ import {
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 
-import { useAccount } from "../context/AccountProvider";
-import Image from "next/image";
+import { UserProfile } from "@/lib/interface";
 import { supabase } from "@/lib/supabase";
+import { User } from "next-auth";
+import Image from "next/image";
 import { toast } from "sonner";
+import { useAccount } from "../context/AccountProvider";
 import { Textarea } from "../ui/textarea";
 
 interface Props {
@@ -34,7 +36,7 @@ const formSchema = z.object({
   name: z.string().min(2, {
     message: "Name must be at least 2 characters.",
   }),
-  image: z.string().url(),
+  image: z.string().url().optional(),
   job: z.string(),
   company: z.string(),
   pronouns: z.string(),
@@ -43,11 +45,13 @@ const formSchema = z.object({
 });
 
 export const ProfileDetailsForm = (props: Props) => {
-  const { user, setUser, profile, setProfile } = useAccount();
+  const { user, setUser, profile, setProfile, mediaPosts } = useAccount();
   if (!user || !profile) return null;
 
   const [avatarFile, setAvatarFile] = useState<File>();
-  const [avatarURL, setAvatarURL] = useState<string>(user.image);
+  const [avatarURL, setAvatarURL] = useState<string>(
+    user.image ?? process.env.NEXT_PUBLIC_DEFAULT_AVATAR!
+  );
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     const saveData = async (
       values: z.infer<typeof formSchema>
@@ -57,16 +61,26 @@ export const ProfileDetailsForm = (props: Props) => {
         imageURL = await uploadPicture();
       }
 
-      const response = await UpdateUserDetails(
-        user.id,
-        imageURL ?? user.image,
-        values.name,
-        values.job,
-        values.company,
-        values.pronouns,
-        values.location,
-        values.bio
-      );
+      const updatedUser: User = {
+        ...user,
+        name: values.name,
+        image: imageURL ?? user.image,
+      };
+
+      const updatedProfile: UserProfile = {
+        ...profile,
+        job: values.job,
+        company: values.company,
+        pronouns: values.pronouns,
+        location: values.location,
+        bio: values.bio,
+      };
+
+      const response = await UpdateUserAccount({
+        user: updatedUser,
+        profile: updatedProfile,
+        mediaPosts: mediaPosts,
+      });
 
       // Update User Account Details
       setUser({
@@ -104,8 +118,8 @@ export const ProfileDetailsForm = (props: Props) => {
     resolver: zodResolver(formSchema),
     defaultValues: {
       username: user.username,
-      name: user.name,
-      image: user.image,
+      name: user.name ?? "",
+      image: user.image ?? process.env.NEXT_PUBLIC_DEFAULT_PHOTO,
       job: profile.job ?? "",
       company: profile.company ?? "",
       pronouns: profile.pronouns ?? "",

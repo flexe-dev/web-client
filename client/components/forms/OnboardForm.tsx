@@ -1,18 +1,22 @@
 "use client";
 
+import { FindUserByUsername } from "@/controllers/AuthController";
+import {
+  CreateUserProfile,
+  UpdateUserDetails,
+} from "@/controllers/UserController";
+import { UserProfile } from "@/lib/interface";
+import { supabase } from "@/lib/supabase";
+import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { debounce } from "lodash";
+import Image from "next/image";
 import React, { useCallback, useState } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { z } from "zod";
+import { useAccount } from "../context/AccountProvider";
 import { Button } from "../ui/button";
-import {
-  FindUserByUsername,
-  CompleteUserOnboard,
-} from "@/controllers/AuthController";
-
-import { CreateUserProfile } from "@/controllers/ProfileController";
-
-import { debounce } from "lodash";
 import {
   Form,
   FormControl,
@@ -24,12 +28,6 @@ import {
 } from "../ui/form";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
-import { cn } from "@/lib/utils";
-import { useAccount } from "../context/AccountProvider";
-import Image from "next/image";
-import { supabase } from "@/lib/supabase";
-import { toast } from "sonner";
-import { UserProfile } from "@prisma/client";
 
 interface Props {
   onSuccess: React.Dispatch<React.SetStateAction<boolean>>;
@@ -56,7 +54,9 @@ export const OnboardForm = (props: Props) => {
     useState<UsernameStatus>("checking");
 
   const [avatarFile, setAvatarFile] = useState<File>();
-  const [avatarURL, setAvatarURL] = useState<string>(user.image);
+  const [avatarURL, setAvatarURL] = useState<string>(
+    user.image ?? process.env.NEXT_PUBLIC_DEFAULT_PHOTO
+  );
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     const saveData = async (
@@ -66,12 +66,13 @@ export const OnboardForm = (props: Props) => {
 
       if (usernameValid !== "available" || !imageURL) return false;
 
-      const userResponse = await CompleteUserOnboard(
-        user.id,
-        values.username,
-        values.name,
-        imageURL
-      );
+      const userDetailsResponse = await UpdateUserDetails({
+        ...user,
+        username: values.username,
+        name: values.name,
+        onboarded: true,
+        image: imageURL,
+      });
       const profileResponse: UserProfile = await CreateUserProfile(user.id);
 
       // Update User Account Details
@@ -82,9 +83,10 @@ export const OnboardForm = (props: Props) => {
         name: values.name,
         image: imageURL,
       });
-
+      console.log(userDetailsResponse, profileResponse);
+      
       setProfile(profileResponse);
-      if (userResponse && profileResponse) {
+      if (userDetailsResponse && profileResponse) {
         props.onSuccess(true);
         return true;
       }
@@ -102,13 +104,14 @@ export const OnboardForm = (props: Props) => {
     resolver: zodResolver(formSchema),
     defaultValues: {
       username: "",
-      name: user.name,
-      image: user.image,
+      name: user.name ?? "",
+      image: user.image ?? process.env.NEXT_PUBLIC_DEFAULT_PHOTO,
     },
   });
 
   const uploadPicture = async (): Promise<string | undefined> => {
-    if (!avatarFile) return;
+    if (!avatarFile) return avatarURL;
+
     const fileExt = avatarFile.name.split(".").pop();
     const filePath = `${user.id}-${Math.random()}.${fileExt}`;
 

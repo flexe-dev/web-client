@@ -1,17 +1,17 @@
-import React, { SetStateAction } from "react";
-import {
-  DialogPortal,
-  DialogOverlay,
-  DialogContent,
-  DialogHeader,
-} from "../ui/dialog";
-import { useAccount } from "../context/AccountProvider";
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
-import { GetNameInitials } from "../ui/User/UserAvatar";
-import { Textarea } from "../ui/textarea";
-import { Button } from "../ui/button";
 import { DocumentIcon, PhotoIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
+import React, { SetStateAction } from "react";
+import { useAccount } from "../context/AccountProvider";
+import { GetNameInitials } from "../ui/User/UserAvatar";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { Button } from "../ui/button";
+import {
+  DialogContent,
+  DialogHeader,
+  DialogOverlay,
+  DialogPortal,
+} from "../ui/dialog";
+import { Textarea } from "../ui/textarea";
 
 interface DialogProps {
   dispatch: React.Dispatch<SetStateAction<boolean>>;
@@ -19,6 +19,7 @@ interface DialogProps {
 
 const PostCreateDialog = ({ dispatch }: DialogProps) => {
   const { user } = useAccount();
+  if (!user) return null;
   return (
     <DialogPortal>
       <DialogOverlay className="bg-black/30" />
@@ -31,9 +32,11 @@ const PostCreateDialog = ({ dispatch }: DialogProps) => {
             <Avatar>
               <AvatarImage
                 src={user?.image ?? process.env.NEXT_PUBLIC_DEFAULT_PHOTO}
-                alt={user?.name}
+                alt={user.name ?? ""}
               />
-              <AvatarFallback>{GetNameInitials(user?.name)}</AvatarFallback>
+              <AvatarFallback>
+                {GetNameInitials(user.name ?? "")}
+              </AvatarFallback>
             </Avatar>
             <Textarea
               placeholder="What's on your mind?"

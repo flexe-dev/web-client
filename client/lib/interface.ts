@@ -1,4 +1,4 @@
-import { UserProfile } from "@prisma/client";
+import { PencilIcon } from "@heroicons/react/24/outline";
 import { User } from "next-auth";
 import { CSSProperties } from "react";
 export interface ClassNameProp {
@@ -12,6 +12,7 @@ export interface LinkProps {
   restrict?: boolean;
 }
 
+export type IconType = typeof PencilIcon;
 export interface ModalProps {
   open: boolean;
   callback: React.Dispatch<React.SetStateAction<boolean>>;
@@ -23,6 +24,34 @@ export interface SidebarButtonProps extends ClassNameProp {
 
 export interface ChildNodeProps {
   children?: React.ReactNode;
+}
+
+export interface UserAccount {
+  user: User;
+  profile?: UserProfile;
+  mediaPosts: UserPost[];
+}
+
+//User Profile Object
+export interface UserProfile {
+  id: string;
+  userId: string;
+  job?: string;
+  followers: number;
+  following: number;
+  company?: string;
+  pronouns?: string;
+  location?: string;
+  bio?: string;
+  external: ProfileExternalLinks;
+}
+
+export interface ProfileExternalLinks {
+  website?: string;
+  github?: string;
+  twitter?: string;
+  linkedin?: string;
+  instagram?: string;
 }
 
 //Profile Interfaces

@@ -1,5 +1,4 @@
 import { User } from "next-auth";
-import { User as PrismaUser } from "@prisma/client";
 
 interface EmailUser {
   email: string;
@@ -22,7 +21,7 @@ const CreateEmailUser = async (credentials: EmailUser) => {
 
 const FindUserByEmail = async (email: string): Promise<User | null> => {
   const response = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}auth/findUserByEmail/${email}`,
+    `${process.env.NEXT_PUBLIC_CORE_BACKEND_API_URL}/user/find/email/${email}`,
     {
       method: "GET",
       headers: {
@@ -53,7 +52,7 @@ const CheckUserPassword = async (userID: string, password: string) => {
 
 const FindUserByUsername = async (username: string): Promise<User | null> => {
   const response = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}auth/findUserByUsername/${username}`,
+    `${process.env.NEXT_PUBLIC_CORE_BACKEND_API_URL}user/find/username/${username}`,
     {
       method: "GET",
       headers: {
@@ -61,33 +60,17 @@ const FindUserByUsername = async (username: string): Promise<User | null> => {
       },
     }
   );
-  const user: User | null = await response.json();
-  return user;
-};
 
-const CompleteUserOnboard = async (
-  userID: string,
-  username: string,
-  name: string,
-  image: string
-): Promise<boolean> => {
-  const response = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}auth/onboardUser`,
-    {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ userID, username, name, image }),
-    }
-  );
-  return response.ok;
+  if (response.status === 404) {
+    return null;
+  }
+
+  return response.json();
 };
 
 export {
+  CheckUserPassword,
   CreateEmailUser,
   FindUserByEmail,
   FindUserByUsername,
-  CompleteUserOnboard,
-  CheckUserPassword,
 };

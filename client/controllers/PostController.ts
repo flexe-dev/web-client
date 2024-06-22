@@ -68,10 +68,24 @@ export const GetAllUserPosts = async (
   userID: string
 ): Promise<UserPost[] | undefined> => {
   try {
-    const response = fetch(
+    const response = await fetch(
       `${process.env.NEXT_PUBLIC_CORE_BACKEND_API_URL}post/media/user/${userID}`
     );
-    return (await response).json();
+    return response.json();
+  } catch (e) {
+    console.error(e);
+    return;
+  }
+};
+
+export const getPostById = async (
+  postID: string
+): Promise<UserPost | undefined> => {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_CORE_BACKEND_API_URL}post/media/${postID}`
+    );
+    return response.json();
   } catch (e) {
     console.error(e);
     return;
@@ -172,7 +186,7 @@ const generateThumbnailSource = async (document: Document): Promise<string> => {
   const media = content.value.contentValue;
   if (media instanceof Array) {
     return (
-      (await resizeImage(media[0].content.location, 300, 300)) ??
+      (await resizeImage(media[0].content.location, 900, 900)) ??
       process.env.NEXT_PUBLIC_FALLBACK_PHOTO
     );
   } else {
@@ -184,7 +198,7 @@ const generateThumbnailSource = async (document: Document): Promise<string> => {
       );
     } else {
       return (
-        (await resizeImage(location, 300, 300)) ??
+        (await resizeImage(location, 900, 900)) ??
         process.env.NEXT_PUBLIC_FALLBACK_PHOTO
       );
     }
@@ -207,12 +221,4 @@ const uploadThumbnailToSupabase = async (
     return process.env.NEXT_PUBLIC_FALLBACK_PHOTO; //Fallback Photo
   }
   return `${process.env.NEXT_PUBLIC_SUPABASE_IMAGE_RETRIEVAL_URL}post-content/${userID}/${postID}/thumbnail.jpg`;
-};
-
-export const publishPost = async (post: UserPost) => {
-  if (!post.id) {
-    //Create new Database Object
-  } else {
-    //Update existing Database Object
-  }
 };

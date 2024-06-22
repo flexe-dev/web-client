@@ -1,28 +1,30 @@
 "use client";
 
-import { FindProfileByUserId } from "@/controllers/ProfileController";
-import { ChildNodeProps } from "@/lib/interface";
-import { User, UserProfile } from "@prisma/client";
+import { FindAccountByUserId } from "@/controllers/UserController";
+import { ChildNodeProps, UserPost, UserProfile } from "@/lib/interface";
+import { User } from "next-auth";
 import { useSession } from "next-auth/react";
-import React, { createContext, useEffect, useMemo } from "react";
+import React, { createContext, useEffect } from "react";
 
 interface AccountProviderState {
   user: User | undefined;
   profile: UserProfile | undefined;
+  mediaPosts: UserPost[];
   setUser: React.Dispatch<React.SetStateAction<User | undefined>>;
   setProfile: React.Dispatch<React.SetStateAction<UserProfile | undefined>>;
+  setMediaPosts: React.Dispatch<React.SetStateAction<UserPost[]>>;
 }
 
 const initialState: AccountProviderState = {
   user: undefined,
   profile: undefined,
+  mediaPosts: [],
   setUser: () => {},
   setProfile: () => {},
+  setMediaPosts: () => {},
 };
 
 export const AccountContext = createContext<AccountProviderState>(initialState);
-
-
 
 export const AccountProvider = ({ children }: ChildNodeProps) => {
   const session = useSession();
@@ -33,14 +35,19 @@ export const AccountProvider = ({ children }: ChildNodeProps) => {
     undefined
   );
 
+  const [mediaPosts, setMediaPosts] = React.useState<UserPost[]>([]);
+
   const fetchProfile = async () => {
     if (!user) return; // No user ID available
 
     try {
       const userData = session.data?.user;
       if (userData) {
-        const userProfile = await FindProfileByUserId(userData.id);
-        setProfile(userProfile ?? undefined);
+        const account = await FindAccountByUserId(userData.id);
+        if (account) {
+          setProfile(account.profile);
+          setMediaPosts(account.mediaPosts ?? []);
+        }
       }
     } catch (error) {
       console.error("Error fetching user profile:", error);
@@ -56,8 +63,10 @@ export const AccountProvider = ({ children }: ChildNodeProps) => {
       value={{
         user,
         profile,
+        mediaPosts,
         setUser,
         setProfile,
+        setMediaPosts,
       }}
     >
       {children}

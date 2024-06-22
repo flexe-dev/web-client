@@ -16,6 +16,7 @@ import PostSubmit from "./PostSubmit";
 
 export const CreatorHeader = () => {
   const { document, setDocument } = useDocumentCreator();
+  const { setMediaPosts } = useAccount();
   const { user } = useAccount();
   const router = useRouter();
   const { scrollY } = useScroll();
@@ -63,6 +64,7 @@ export const CreatorHeader = () => {
 
           setDocument(data.document);
           setAuxData(data);
+          setMediaPosts((prev) => [...prev, data]);
           resolve(true);
           return `Saved ${toTitleCase(type)} Successfully`;
         },

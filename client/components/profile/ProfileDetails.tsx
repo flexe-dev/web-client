@@ -1,36 +1,29 @@
 "use client";
 
-import React from "react";
+import { nullIfEmpty } from "@/lib/utils";
 import { BriefcaseIcon } from "@heroicons/react/24/outline";
-import { MapPinIcon } from "lucide-react";
-import { Building } from "lucide-react";
-import { CircleDashed } from "lucide-react";
-import { useAccount } from "../context/AccountProvider";
+import { Building, CircleDashed, MapPinIcon } from "lucide-react";
+import { useProfileViewer } from "../context/UserProfileProvider";
 import { Separator } from "../ui/separator";
-import { userProfileViewer } from "../context/UserProfileProvider";
 import { Skeleton } from "../ui/skeleton";
 
 const ProfileDetails = () => {
-  const { fetchedProfile} = userProfileViewer();
-  const {loading, profile} = fetchedProfile
-
-  if (!profile) return null;
-
+  const { fetchedAccount: account, loading } = useProfileViewer();
   const profileDetails = [
     {
-      detail: profile.job,
+      detail: account?.profile?.job,
       icon: <BriefcaseIcon className="stroke-secondary-header w-5 h-5" />,
     },
     {
-      detail: profile.company,
+      detail: account?.profile?.company,
       icon: <Building className="stroke-secondary-header w-5 h-5" />,
     },
     {
-      detail: profile.pronouns,
+      detail: account?.profile?.pronouns,
       icon: <CircleDashed className="stroke-secondary-header w-5 h-5" />,
     },
     {
-      detail: profile.location,
+      detail: account?.profile?.location,
       icon: <MapPinIcon className="stroke-secondary-header w-5 h-5" />,
     },
   ];
@@ -43,7 +36,7 @@ const ProfileDetails = () => {
         <div className="flex flex-col items-center">
           <Separator className="mt-4" />
           <p className="text-xs py-2 text-gray-200 text-wrap text-secondary-foreground">
-            {profile.bio ?? "No Bio Yet"}
+            {nullIfEmpty(account?.profile?.bio ?? "") ?? "No Bio Yet"}
           </p>
           <Separator className="mb-4" />
         </div>

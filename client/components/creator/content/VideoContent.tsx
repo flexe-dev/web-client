@@ -1,3 +1,5 @@
+"use client";
+
 import { SortableItem } from "@/components/dnd/Sortable";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ContentBlockProp, PostUserMedia } from "@/lib/interface";
@@ -8,6 +10,7 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import ContentWrapper from "./ContentWrapper";
 
+//Editable Component
 export const VideoContent = (props: ContentBlockProp) => {
   const { value, style } = props;
   const [vertPos, horizPos] = [style?.alignItems, style?.justifyContent];
@@ -77,6 +80,26 @@ const ContentVisual = ({ value, options }: ContentBlockProp) => {
           )}
         </div>
       )}
+    </div>
+  );
+};
+
+//View Only Component
+export const VideoView = (props: ContentBlockProp) => {
+  const { value, style } = props;
+  const [vertPos, horizPos] = [style?.alignItems, style?.justifyContent];
+
+  return (
+    <div
+      className="flex w-full p-4"
+      style={{ justifyContent: horizPos, alignItems: vertPos }}
+    >
+      <div
+        className="w-fit flex relative aspect-[4/3] overflow-hidden"
+        style={omit(style, ["justifyContent", "alignItems"])}
+      >
+        {value ? <ContentVisual {...props} /> : <DefaultContent />}
+      </div>
     </div>
   );
 };
