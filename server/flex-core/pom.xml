@@ -18,6 +18,11 @@
 		<java.version>17</java.version>
 	</properties>
 	<dependencies>
+	    <dependency>
+			<groupId>io.sentry</groupId>
+			<artifactId>sentry-spring-boot-starter-jakarta</artifactId>
+			<version>7.10.0</version>
+		</dependency>
 
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
@@ -55,11 +60,11 @@
 			<scope>test</scope>
 		</dependency>
 
-
 		<dependency>
 			<groupId>org.apache.kafka</groupId>
 			<artifactId>kafka-streams</artifactId>
 		</dependency>
+
 	</dependencies>
 
 	<build>
@@ -67,13 +72,7 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
-				<configuration>
-					<arguments>
-						<argument>--add-opens java.base/java.nio=ALL-UNNAMED</argument>
-					</arguments>
-				</configuration>
 			</plugin>
-
 		</plugins>
 	</build>
 
