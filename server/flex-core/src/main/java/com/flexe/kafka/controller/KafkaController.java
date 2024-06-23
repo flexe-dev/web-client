@@ -1,6 +1,6 @@
-package com.example.kafka.controller;
+package com.flexe.kafka.controller;
 
-import com.example.kafka.producer.MessageProducer;
+import com.flexe.kafka.producer.MessageProducer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
