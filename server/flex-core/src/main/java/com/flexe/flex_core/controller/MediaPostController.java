@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("api/post/media")
-public class PostController {
+public class MediaPostController {
 
     @Autowired
     private

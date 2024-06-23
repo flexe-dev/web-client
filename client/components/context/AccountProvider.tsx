@@ -1,7 +1,12 @@
 "use client";
 
 import { FindAccountByUserId } from "@/controllers/UserController";
-import { ChildNodeProps, UserPost, UserProfile } from "@/lib/interface";
+import {
+  ChildNodeProps,
+  UserPost,
+  UserProfile,
+  UserTextPost,
+} from "@/lib/interface";
 import { User } from "next-auth";
 import { useSession } from "next-auth/react";
 import React, { createContext, useEffect } from "react";
@@ -10,18 +15,22 @@ interface AccountProviderState {
   user: User | undefined;
   profile: UserProfile | undefined;
   mediaPosts: UserPost[];
+  textPosts: UserTextPost[];
   setUser: React.Dispatch<React.SetStateAction<User | undefined>>;
   setProfile: React.Dispatch<React.SetStateAction<UserProfile | undefined>>;
   setMediaPosts: React.Dispatch<React.SetStateAction<UserPost[]>>;
+  setTextPosts: React.Dispatch<React.SetStateAction<UserTextPost[]>>;
 }
 
 const initialState: AccountProviderState = {
   user: undefined,
   profile: undefined,
   mediaPosts: [],
+  textPosts: [],
   setUser: () => {},
   setProfile: () => {},
   setMediaPosts: () => {},
+  setTextPosts: () => {},
 };
 
 export const AccountContext = createContext<AccountProviderState>(initialState);
@@ -36,6 +45,7 @@ export const AccountProvider = ({ children }: ChildNodeProps) => {
   );
 
   const [mediaPosts, setMediaPosts] = React.useState<UserPost[]>([]);
+  const [textPosts, setTextPosts] = React.useState<UserTextPost[]>([]);
 
   const fetchProfile = async () => {
     if (!user) return; // No user ID available
@@ -47,6 +57,7 @@ export const AccountProvider = ({ children }: ChildNodeProps) => {
         if (account) {
           setProfile(account.profile);
           setMediaPosts(account.mediaPosts ?? []);
+          setTextPosts(account.textPosts ?? []);
         }
       }
     } catch (error) {
@@ -64,9 +75,11 @@ export const AccountProvider = ({ children }: ChildNodeProps) => {
         user,
         profile,
         mediaPosts,
+        textPosts,
         setUser,
         setProfile,
         setMediaPosts,
+        setTextPosts,
       }}
     >
       {children}

@@ -30,6 +30,7 @@ export interface UserAccount {
   user: User;
   profile?: UserProfile;
   mediaPosts: UserPost[];
+  textPosts: UserTextPost[];
 }
 
 //User Profile Object
@@ -151,6 +152,14 @@ export interface UserPost {
   id: string | undefined;
   document: Document;
   auxData: PostAuxilliaryData;
+  externalData: PostExternalData;
+}
+
+export interface UserTextPost {
+  id: string | undefined;
+  userID: string;
+  textpost: string;
+  createdAt: Date;
   externalData: PostExternalData;
 }
 

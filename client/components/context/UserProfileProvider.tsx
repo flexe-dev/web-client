@@ -27,7 +27,7 @@ export const ProfileViewerContext =
   createContext<ProfileViewerProviderState>(initialState);
 
 export const ProviderViewerProvider = ({ children }: ChildNodeProps) => {
-  const { user, profile, mediaPosts } = useAccount();
+  const { user, profile, mediaPosts, textPosts } = useAccount();
   const params = useParams<{ username: string; tag: string }>();
 
   const [isOwnProfile, setisOwnProfile] = useState(false);
@@ -55,6 +55,7 @@ export const ProviderViewerProvider = ({ children }: ChildNodeProps) => {
         user: user,
         profile: profile,
         mediaPosts: mediaPosts,
+        textPosts: textPosts,
       });
       setisOwnProfile(true);
       setLoading(false);

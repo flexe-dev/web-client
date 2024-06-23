@@ -1,17 +1,24 @@
-import { DocumentIcon, PhotoIcon } from "@heroicons/react/24/outline";
-import Link from "next/link";
 import React, { SetStateAction } from "react";
-import { useAccount } from "../context/AccountProvider";
-import { GetNameInitials } from "../ui/User/UserAvatar";
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
-import { Button } from "../ui/button";
 import {
+  DialogPortal,
+  DialogOverlay,
   DialogContent,
   DialogHeader,
-  DialogOverlay,
-  DialogPortal,
+  DialogDescription,
+  DialogClose,
+  DialogFooter,
 } from "../ui/dialog";
+import { useEffect, useState } from "react";
+import { saveTextPost } from "@/controllers/PostController";
+import { useAccount } from "../context/AccountProvider";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { GetNameInitials } from "../ui/User/UserAvatar";
 import { Textarea } from "../ui/textarea";
+import { toast } from "sonner";
+import { Button } from "../ui/button";
+import { DocumentIcon, PhotoIcon } from "@heroicons/react/24/outline";
+import Link from "next/link";
+import { UserTextPost } from "@/lib/interface";
 
 interface DialogProps {
   dispatch: React.Dispatch<SetStateAction<boolean>>;
@@ -19,7 +26,41 @@ interface DialogProps {
 
 const PostCreateDialog = ({ dispatch }: DialogProps) => {
   const { user } = useAccount();
+
+  const [givenTextPost, setTextPost] = useState<string>("");
+
   if (!user) return null;
+
+  const publishTextPost = async () => {
+    const response = await handleTextPostPublish();
+    console.log(response);
+    if (!response) return;
+    dispatch(false);
+  };
+
+  const handleTextPostPublish = async (): Promise<boolean> => {
+    return new Promise<boolean>((resolve, reject) => {
+      const textPost: Omit<UserTextPost, "externalData"> = {
+        id: undefined,
+        userID: user?.id,
+        createdAt: new Date(),
+        textpost: givenTextPost,
+      };
+
+      toast.promise(saveTextPost(textPost), {
+        success: (data) => {
+          if (!data) return;
+          resolve(true);
+          return `Your message has been posted`;
+        },
+        error: () => {
+          reject(false);
+          return "Opps! something went wrong";
+        },
+      });
+    });
+  };
+
   return (
     <DialogPortal>
       <DialogOverlay className="bg-black/30" />
@@ -41,10 +82,16 @@ const PostCreateDialog = ({ dispatch }: DialogProps) => {
             <Textarea
               placeholder="What's on your mind?"
               className="text-base h-12 max-h-[10rem] w-[30rem]"
+              onChange={(e) => setTextPost(e.target.value)}
             />
           </div>
           <div className="w-full flex justify-end">
-            <Button size={"sm"} variant={"outline"} className="mr-1 mt-2">
+            <Button
+              size={"sm"}
+              variant={"outline"}
+              className="mr-1 mt-2"
+              onClick={publishTextPost}
+            >
               Post
             </Button>
           </div>
