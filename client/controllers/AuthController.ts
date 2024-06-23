@@ -50,27 +50,4 @@ const CheckUserPassword = async (userID: string, password: string) => {
   return response.ok;
 };
 
-const FindUserByUsername = async (username: string): Promise<User | null> => {
-  const response = await fetch(
-    `${process.env.NEXT_PUBLIC_CORE_BACKEND_API_URL}user/find/username/${username}`,
-    {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    }
-  );
-
-  if (response.status === 404) {
-    return null;
-  }
-
-  return response.json();
-};
-
-export {
-  CheckUserPassword,
-  CreateEmailUser,
-  FindUserByEmail,
-  FindUserByUsername,
-};
+export { CheckUserPassword, CreateEmailUser, FindUserByEmail };

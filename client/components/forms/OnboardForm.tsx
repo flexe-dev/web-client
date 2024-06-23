@@ -1,8 +1,8 @@
 "use client";
 
-import { FindUserByUsername } from "@/controllers/AuthController";
 import {
   CreateUserProfile,
+  FindAccountByUsername,
   UpdateUserDetails,
 } from "@/controllers/UserController";
 import { UserProfile } from "@/lib/interface";
@@ -83,8 +83,6 @@ export const OnboardForm = (props: Props) => {
         name: values.name,
         image: imageURL,
       });
-      console.log(userDetailsResponse, profileResponse);
-      
       setProfile(profileResponse);
       if (userDetailsResponse && profileResponse) {
         props.onSuccess(true);
@@ -149,7 +147,7 @@ export const OnboardForm = (props: Props) => {
 
   const checkUsername = async (username: string) => {
     if (username.length < 2) return;
-    const isTaken = await FindUserByUsername(username);
+    const isTaken = await FindAccountByUsername(username);
     // If a user object returns, this indicates that the username is taken
     setUsernameValid(isTaken ? "taken" : "available");
   };

@@ -2,7 +2,6 @@ import { UserAccount, UserProfile } from "@/lib/interface";
 import { User } from "next-auth";
 
 const CreateUserProfile = async (userId: string): Promise<UserProfile> => {
-  console.log(JSON.stringify(userId));
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_CORE_BACKEND_API_URL}user/profile/create/${userId}`,
     {
