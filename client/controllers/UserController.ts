@@ -65,7 +65,6 @@ const FindAccountByUsername = async (
     );
 
     if (response.status === 404) {
-      console.log(`UserAccount with username ${username} not found.`);
       return null;
     }
 
