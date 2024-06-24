@@ -34,7 +34,6 @@ export const CreatorHeader = () => {
 
   const publishPost = async () => {
     const response = await handlePostSave("PUBLISHED");
-    console.log(response);
     if (!response) return;
 
     setShowPublishModal(false);
@@ -52,6 +51,7 @@ export const CreatorHeader = () => {
           title,
           tags,
           tech,
+          dateCreated: new Date(),
           thumbnail,
           postStatus: type,
         },

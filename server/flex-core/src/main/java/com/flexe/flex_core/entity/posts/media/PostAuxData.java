@@ -5,6 +5,7 @@ import org.springframework.data.mongodb.core.mapping.Field;
 import org.springframework.data.mongodb.core.mapping.FieldType;
 
 
+import java.util.Date;
 import java.util.List;
 
 public class PostAuxData {
@@ -12,6 +13,8 @@ public class PostAuxData {
     private String userID;
     private UserPostStatus postStatus;
     private String title;
+    private Date dateCreated;
+    private Date dateUpdated;
     private List<String> tags;
     private List<String> tech;
     private String thumbnail;
@@ -80,5 +83,21 @@ public class PostAuxData {
 
     public void setThumbnail(String thumbnail) {
         this.thumbnail = thumbnail;
+    }
+
+    public Date getDateCreated() {
+        return dateCreated;
+    }
+
+    public void setDateCreated(Date dateCreated) {
+        this.dateCreated = dateCreated;
+    }
+
+    public Date getDateUpdated() {
+        return dateUpdated;
+    }
+
+    public void setDateUpdated(Date dateUpdated) {
+        this.dateUpdated = dateUpdated;
     }
 }
