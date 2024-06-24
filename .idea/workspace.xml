@@ -1,13 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
   <component name="ChangeListManager">
     <list default="true" id="dc7c70a6-2788-4229-9875-4b65b7608440" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/server/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/server/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/flex-core/src/main/java/com/flexe/flex_core/entity/posts/media/ContentValue.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/flex-core/src/main/java/com/flexe/flex_core/entity/posts/media/MediaPost.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/flex-core/src/main/java/com/flexe/flex_core/entity/posts/media/MediaPost.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/flex-core/src/main/java/com/flexe/flex_core/entity/posts/media/PostAuxData.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/flex-core/src/main/java/com/flexe/flex_core/entity/posts/media/PostAuxData.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/flex-core/src/main/java/com/flexe/flex_core/entity/posts/media/PostContent.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/flex-core/src/main/java/com/flexe/flex_core/entity/posts/media/PostContent.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/flex-core/src/main/java/com/flexe/flex_core/entity/posts/media/PostExternalData.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/flex-core/src/main/java/com/flexe/flex_core/entity/posts/media/PostExternalData.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/api/profile/findUserTextPosts/[userId]/route.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/api/userposts/createTextPost/route.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/components/ui/Posts/textPostPreview.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/controllers/ProfileController.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/app/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/app/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/components/context/UserProfileProvider.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/components/context/UserProfileProvider.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/components/creator/PostCreateDialog.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/components/creator/PostCreateDialog.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/components/profile/Activity.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/components/profile/Activity.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/components/ui/glowing-stars.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/components/ui/glowing-stars.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/controllers/PostController.ts" beforeDir="false" afterPath="$PROJECT_DIR$/client/controllers/PostController.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/lib/interface.ts" beforeDir="false" afterPath="$PROJECT_DIR$/client/lib/interface.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/prisma/schema.prisma" beforeDir="false" afterPath="$PROJECT_DIR$/client/prisma/schema.prisma" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -28,12 +39,23 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "ASKED_MARK_IGNORED_FILES_AS_EXCLUDED": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "DD-50-Java-Backend-Migration",
+    "git-widget-placeholder": "DD-39-ability-to-create-text-posts",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "/home/dawad/Documents/GitHub/FLEXE.dev/server/flex-core"
+    "last_opened_file_path": "/home/dawad/Documents/GitHub/FLEXE.dev/server/flex-core",
+    "settings.editor.selected.configurable": "editor.preferences.fonts.default"
   }
 }]]></component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/client" />
+      <recent name="$PROJECT_DIR$/client/prisma" />
+      <recent name="$PROJECT_DIR$/client/lib" />
+      <recent name="$PROJECT_DIR$/client/controllers" />
+      <recent name="$PROJECT_DIR$/client/components/ui" />
+    </key>
+  </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">

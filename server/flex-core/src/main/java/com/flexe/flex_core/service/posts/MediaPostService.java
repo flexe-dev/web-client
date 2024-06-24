@@ -1,7 +1,9 @@
 package com.flexe.flex_core.service.posts;
 
 import com.flexe.flex_core.entity.posts.media.MediaPost;
+import com.flexe.flex_core.entity.posts.text.TextPost;
 import com.flexe.flex_core.repository.post.MediaPostRepository;
+import com.flexe.flex_core.repository.post.TextPostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
