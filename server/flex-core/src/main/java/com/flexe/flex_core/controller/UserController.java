@@ -5,11 +5,13 @@ import com.flexe.flex_core.entity.user.UserAccount;
 import com.flexe.flex_core.entity.user.UserProfile;
 import com.flexe.flex_core.entity.user.User;
 import com.flexe.flex_core.service.user.UserService;
+import io.sentry.Sentry;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+
 
 @RestController
 @RequestMapping("api/user")
@@ -31,56 +33,38 @@ public class UserController {
         return ResponseEntity.ok(profile);
         }
         catch (Exception e){
-            //Implement Sentry Logging
-            e.printStackTrace();
+            Sentry.captureException(e);
             return ResponseEntity.badRequest().build();
         }
     }
 
     @GetMapping("/find/id/{id}")
     public ResponseEntity<User> findUserById(@PathVariable String id){
-        try{
+
             User user = userService.findUserById(id);
             if(user == null){
                 throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
             }
             return ResponseEntity.ok(user);
-        } catch (Exception e){
-            //Implement Sentry Logging
-            e.printStackTrace();
-            return ResponseEntity.badRequest().build();
-        }
     }
 
     @GetMapping("/find/username/{username}")
     @ResponseBody
     public ResponseEntity<User> findUserByUsername(@PathVariable String username){
-        try{
         User user = userService.findUserByUsername(username);
         if(user == null){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
         }
         return ResponseEntity.ok(user);
-        } catch (Exception e){
-            //Implement Sentry Logging
-            e.printStackTrace();
-            return ResponseEntity.badRequest().build();
-        }
     }
 
     @GetMapping("/find/email/{email}")
     public ResponseEntity<User> findUserByEmail(@PathVariable String email){
-        try{
             User user = userService.findUserByEmail(email);
             if(user == null){
                 throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
             }
             return ResponseEntity.ok(user);
-        } catch (Exception e){
-            //Implement Sentry Logging
-            e.printStackTrace();
-            return ResponseEntity.badRequest().build();
-        }
     }
 
     @GetMapping("/profile/find/{userId}")
@@ -90,18 +74,11 @@ public class UserController {
 
     @GetMapping("/account/find/{userId}")
     public ResponseEntity<UserAccount> findUserAccount(@PathVariable String userId){
-        try{
-
         UserAccount account = userService.findUserAccount(userId);
         if(account == null){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
         }
         return ResponseEntity.ok(account);
-        } catch (Exception e){
-            //Implement Sentry Logging
-            e.printStackTrace();
-            return ResponseEntity.badRequest().build();
-        }
     }
 
     @GetMapping("/account/find/username/{username}")
@@ -120,8 +97,7 @@ public class UserController {
             User updatedUser = userService.updateUser(user);
             return ResponseEntity.ok(updatedUser);
         } catch (Exception e){
-            //Implement Sentry Logging
-            e.printStackTrace();
+            Sentry.captureException(e);
             return ResponseEntity.badRequest().build();
         }
     }
@@ -133,10 +109,20 @@ public class UserController {
             UserAccount updatedAccount = userService.updateUserAccount(account);
             return ResponseEntity.ok(updatedAccount);
         } catch (Exception e){
-            //Implement Sentry Logging
-            e.printStackTrace();
+            Sentry.captureException(e);
             return ResponseEntity.badRequest().build();
         }
 
     }
+
+    @GetMapping("/error")
+    @ResponseBody
+    public void throwError(){
+        try {
+            throw new Exception("This is a test.");
+        } catch (Exception e) {
+            Sentry.captureException(e);
+        }
+    }
 }
+
