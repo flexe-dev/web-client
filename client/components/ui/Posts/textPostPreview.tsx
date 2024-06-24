@@ -17,13 +17,11 @@ import { timeAgo } from "../../../lib/dateutils";
 interface TextPostPreviewProps {
   user: User;
   textpost: UserTextPost;
-  idx: number;
 }
 
 const TextPostPreview = (props: TextPostPreviewProps) => {
-  console.log(props.textpost);
   return (
-    <Card key={`gallery-tile-${props.idx}`} className=" w-full my-4">
+    <Card className=" w-full my-4">
       <main className="p-4">
         <section className="flex space-x-1 items-center p-2 justify-between">
           <div className="flex">

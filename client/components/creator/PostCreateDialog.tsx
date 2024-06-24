@@ -10,7 +10,7 @@ import {
 } from "../ui/dialog";
 import { useEffect, useState } from "react";
 import { saveTextPost } from "@/controllers/PostController";
-import { useAccount } from "../context/AccountProvider";
+import { AccountContext, useAccount } from "../context/AccountProvider";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { GetNameInitials } from "../ui/User/UserAvatar";
 import { Textarea } from "../ui/textarea";
@@ -25,15 +25,14 @@ interface DialogProps {
 }
 
 const PostCreateDialog = ({ dispatch }: DialogProps) => {
-  const { user } = useAccount();
+  const { user, textPosts, setTextPosts } = useAccount();
 
-  const [givenTextPost, setTextPost] = useState<string>("");
+  const [newTextPost, setNewTextPost] = useState<string>("");
 
   if (!user) return null;
 
   const publishTextPost = async () => {
     const response = await handleTextPostPublish();
-    console.log(response);
     if (!response) return;
     dispatch(false);
   };
@@ -44,12 +43,12 @@ const PostCreateDialog = ({ dispatch }: DialogProps) => {
         id: undefined,
         userID: user?.id,
         createdAt: new Date(),
-        textpost: givenTextPost,
+        textpost: newTextPost,
       };
-
       toast.promise(saveTextPost(textPost), {
         success: (data) => {
           if (!data) return;
+          setTextPosts([...textPosts, data]);
           resolve(true);
           return `Your message has been posted`;
         },
@@ -82,7 +81,7 @@ const PostCreateDialog = ({ dispatch }: DialogProps) => {
             <Textarea
               placeholder="What's on your mind?"
               className="text-base h-12 max-h-[10rem] w-[30rem]"
-              onChange={(e) => setTextPost(e.target.value)}
+              onChange={(e) => setNewTextPost(e.target.value)}
             />
           </div>
           <div className="w-full flex justify-end">
