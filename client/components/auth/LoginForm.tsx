@@ -1,14 +1,13 @@
 "use client";
-import { z } from "zod";
-import React, { useEffect, useState } from "react";
+import { signIn } from "next-auth/react";
+import Link from "next/link";
+import { useSearchParams } from "next/navigation";
+import React, { useEffect } from "react";
+import { toast } from "sonner";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import ThirdParty from "./ThirdPartyAuth";
-import Link from "next/link";
-import { signIn } from "next-auth/react";
-import { useSearchParams } from "next/navigation";
-import { toast } from "sonner";
 function LoginForm() {
   const searchParams = useSearchParams();
   const error = searchParams.get("error");
@@ -22,7 +21,6 @@ function LoginForm() {
 
   useEffect(() => {
     if (!error) return;
-    console.log(error);
     switch (error) {
       case "CredentialsSignin":
         setTimeout(
