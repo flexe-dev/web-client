@@ -2,8 +2,11 @@ package com.flexe.flex_core.controller;
 
 import com.flexe.flex_core.entity.posts.media.MediaPost;
 import com.flexe.flex_core.service.posts.MediaPostService;
+import io.sentry.Sentry;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
@@ -15,9 +18,19 @@ public class MediaPostController {
     MediaPostService service;
 
     @PostMapping("/upload")
-    public MediaPost savePost(@RequestBody MediaPost post) {
-        MediaPost content = post;
-        return service.savePost(post);
+    @ResponseBody
+    public ResponseEntity<MediaPost> savePost(@RequestBody MediaPost post) {
+        try{
+            MediaPost savedPost = service.savePost(post);
+            if(savedPost == null){
+                throw new ResponseStatusException(org.springframework.http.HttpStatus.BAD_REQUEST, "Post not saved");
+            }
+            return ResponseEntity.ok(savedPost);
+        }
+        catch (Exception e){
+            Sentry.captureException(e);
+           return null;
+        }
     }
 
     @GetMapping("/{id}")

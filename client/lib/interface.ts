@@ -135,6 +135,8 @@ export type Document = ContentBlockProp[];
 
 export interface PostAuxilliaryData {
   userID: string;
+  dateCreated: Date;
+  dateUpdated?: Date;
   postStatus: PostStatus;
   title: string;
   tags: string[];

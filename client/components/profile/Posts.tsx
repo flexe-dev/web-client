@@ -91,23 +91,29 @@ const UserPosts = ({ onSelect }: UserPostProps) => {
   return (
     <>
       <div className="grid p-8 md:p-2 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-2 justify-center  relative my-4 w-full ">
-        {fetchedAccount?.mediaPosts.map((post) => (
-          <PostTile key={post.id}>
-            <div className="w-full h-full" onClick={() => openPost(post)}>
-              <div className="relative w-full h-full">
-                <Image
-                  src={
-                    post.auxData.thumbnail ??
-                    process.env.NEXT_PUBLIC_DEFAULT_IMAGE
-                  }
-                  fill
-                  alt={`Post ${post.auxData.title} cover image`}
-                  objectFit="cover"
-                />
+        {fetchedAccount?.mediaPosts
+          .sort(
+            (a, b) =>
+              new Date(a.auxData.dateCreated).getTime() -
+              new Date(b.auxData.dateCreated).getTime()
+          )
+          .map((post) => (
+            <PostTile key={post.id}>
+              <div className="w-full h-full" onClick={() => openPost(post)}>
+                <div className="relative w-full h-full">
+                  <Image
+                    src={
+                      post.auxData.thumbnail ??
+                      process.env.NEXT_PUBLIC_DEFAULT_IMAGE
+                    }
+                    fill
+                    alt={`Post ${post.auxData.title} cover image`}
+                    objectFit="cover"
+                  />
+                </div>
               </div>
-            </div>
-          </PostTile>
-        ))}
+            </PostTile>
+          ))}
       </div>
     </>
   );
