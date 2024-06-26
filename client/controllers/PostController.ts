@@ -38,6 +38,7 @@ export const savePost = async (
       likeCount: 0,
       commentCount: 0,
       viewCount: 0,
+      saveCount: 0,
     },
   };
   // Send Data to Proxy Server
@@ -222,3 +223,9 @@ const uploadThumbnailToSupabase = async (
   }
   return `${process.env.NEXT_PUBLIC_SUPABASE_IMAGE_RETRIEVAL_URL}post-content/${userID}/${postID}/thumbnail.jpg`;
 };
+
+export const deletePost = async (postID: string) => {};
+
+export const favouritePost = () => {};
+
+export const likePost = () => {};

@@ -147,6 +147,7 @@ export interface PostExternalData {
   likeCount: number;
   commentCount: number;
   viewCount: number;
+  saveCount: number;
 }
 
 export interface UserPost {
