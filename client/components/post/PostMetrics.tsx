@@ -40,7 +40,7 @@ const PostMetrics = ({ post }: Props) => {
         className="flex items-center rounded-none w-full"
       >
         <BookmarkIcon className="w-4 h-4" />
-        <span className="ml-1">{0}</span>
+        <span className="ml-1">{post.externalData.saveCount}</span>
       </Button>
     </div>
   );

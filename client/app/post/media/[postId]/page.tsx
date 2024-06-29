@@ -1,9 +1,10 @@
 "use server";
 
 import ErrorPage from "@/components/Error";
-import DisplayPost from "@/components/post/DisplayPost";
 import PostDisplayWrapper from "@/components/post/PostDisplayWrapper";
+import { LoadingPost } from "@/components/post/loading";
 import { getPostById } from "@/controllers/PostController";
+import { Suspense } from "react";
 
 interface Props {
   params: {
@@ -15,7 +16,13 @@ const page = async ({ params }: Props) => {
   const post = await getPostById(postId as string);
   if (!post) return <ErrorPage />;
 
-  return <PostDisplayWrapper post={post}/>
+  return (
+    <>
+      <Suspense fallback={<LoadingPost />}>
+        <PostDisplayWrapper post={post} />
+      </Suspense>
+    </>
+  );
 };
 
 export default page;

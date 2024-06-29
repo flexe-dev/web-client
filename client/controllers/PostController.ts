@@ -224,8 +224,10 @@ const uploadThumbnailToSupabase = async (
   return `${process.env.NEXT_PUBLIC_SUPABASE_IMAGE_RETRIEVAL_URL}post-content/${userID}/${postID}/thumbnail.jpg`;
 };
 
-export const deletePost = async (postID: string) => {};
+export const DeletePost = async (postID: string) => {};
 
-export const favouritePost = () => {};
+export const FavouritePost = async (userID: string, postID: string) => {};
 
-export const likePost = () => {};
+export const LikePost = (userID: string, postID: string) => {};
+
+export const GetPostComments = async (postID: string) => {};
