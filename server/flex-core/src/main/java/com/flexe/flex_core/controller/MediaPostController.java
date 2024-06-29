@@ -11,7 +11,7 @@ import org.springframework.web.server.ResponseStatusException;
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("api/post/media")
-public class PostController {
+public class MediaPostController {
 
     @Autowired
     private

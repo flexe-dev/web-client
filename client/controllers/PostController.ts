@@ -1,4 +1,9 @@
-import { Document, PostUserMedia, UserPost } from "@/lib/interface";
+import {
+  Document,
+  PostUserMedia,
+  UserPost,
+  UserTextPost,
+} from "@/lib/interface";
 import { supabase } from "@/lib/supabase";
 import {
   convertImageSourceToFile,
@@ -11,6 +16,44 @@ import {
 /*
   Post Uploading/Manipulation
 */
+
+const defaultExternalData = {
+  likeCount: 0,
+  commentCount: 0,
+  viewCount: 0,
+  saveCount: 0,
+};
+
+export const saveTextPost = async (
+  textPost: Omit<UserTextPost, "externalData">
+): Promise<UserTextPost | undefined> => {
+  const textPostID = textPost.id ?? (await generateMongoID());
+  if (!textPostID) return;
+
+  const textPostToUpload: UserTextPost = {
+    id: textPostID,
+    userID: textPost.userID,
+    createdAt: textPost.createdAt,
+    textpost: textPost.textpost,
+    externalData: defaultExternalData,
+  };
+
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_CORE_BACKEND_API_URL}post/text/upload`,
+      {
+        method: `POST`,
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(textPostToUpload),
+      }
+    );
+    return await response.json();
+  } catch (e) {
+    console.error(e);
+  }
+};
 
 export const savePost = async (
   post: Omit<UserPost, "externalData">
@@ -34,12 +77,7 @@ export const savePost = async (
       thumbnail: thumbnail,
     },
     document: uploadedDocument,
-    externalData: {
-      likeCount: 0,
-      commentCount: 0,
-      viewCount: 0,
-      saveCount: 0,
-    },
+    externalData: defaultExternalData,
   };
   // Send Data to Proxy Server
   try {
