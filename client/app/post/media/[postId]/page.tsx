@@ -1,8 +1,8 @@
 "use server";
 
 import ErrorPage from "@/components/Error";
-import PostDisplayWrapper from "@/components/post/PostDisplayWrapper";
-import { LoadingPost } from "@/components/post/loading";
+import PostDisplayWrapper from "@/components/ui/Posts/media/PostDisplayWrapper";
+import { LoadingPost } from "@/components/ui/Posts/media/loading";
 import { getPostById } from "@/controllers/PostController";
 import { Suspense } from "react";
 
