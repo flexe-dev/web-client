@@ -8,7 +8,7 @@ import {
 } from "@/lib/interface";
 import { createContext, useContext, useState } from "react";
 interface PostCreatorAuxProviderState
-  extends Omit<PostAuxilliaryData, "userID"> {
+  extends Omit<PostAuxilliaryData, "userID" | "dateCreated" | "dateUpdated"> {
   id: string | undefined;
   onTagDelete: (tag: string) => void;
   onTechDelete: (tech: string) => void;
