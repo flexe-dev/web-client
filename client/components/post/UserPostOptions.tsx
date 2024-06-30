@@ -1,5 +1,9 @@
+"use client";
+
 import { ChildNodeProps, IconType, UserPost } from "@/lib/interface";
+import { copyToClipboard } from "@/lib/utils";
 import {
+  ArrowUpTrayIcon,
   ChartBarIcon,
   ChevronDoubleUpIcon,
   ClipboardIcon,
@@ -10,6 +14,9 @@ import {
   ViewfinderCircleIcon,
 } from "@heroicons/react/24/outline";
 import { PinIcon } from "lucide-react";
+import Link from "next/link";
+import { toast } from "sonner";
+import { usePostTools } from "../context/PostOptionToolProvider";
 import { useProfileViewer } from "../context/UserProfileProvider";
 import {
   DropdownMenu,
@@ -26,69 +33,91 @@ interface Props extends ChildNodeProps {
 }
 
 interface PostOption {
-  name: string;
+  name?: string;
   icon: IconType;
-  action: () => void;
+  action?: () => void;
   creatorOnly?: true | undefined;
   viewerOnly?: true | undefined;
+  component?: React.ReactNode;
 }
-
-const actionOptions: PostOption[] = [
-  {
-    name: "Edit Post",
-    icon: PencilIcon,
-    action: () => console.log("Edit Post"),
-    creatorOnly: true,
-  },
-  {
-    name: "Delete Post",
-    icon: TrashIcon,
-    action: () => console.log("Delete Post"),
-    creatorOnly: true,
-  },
-  {
-    name: "View Post",
-    icon: ViewfinderCircleIcon,
-    action: () => console.log("View Full Post"),
-  },
-  {
-    name: "Report Post",
-    icon: FlagIcon,
-    action: () => console.log("Report Post"),
-    viewerOnly: true,
-  },
-  {
-    name: "Share Post",
-    icon: ShareIcon,
-    action: () => console.log("Share Post"),
-  },
-  {
-    name: "Copy Link",
-    icon: ClipboardIcon,
-    action: () => console.log("Copy Link"),
-  },
-];
-
-const toolOptions: PostOption[] = [
-  {
-    name: "Post Insights",
-    icon: ChartBarIcon,
-    action: () => console.log("Post Insights"),
-  },
-  {
-    name: "Boost Post",
-    icon: ChevronDoubleUpIcon,
-    action: () => console.log("Boost Post"),
-  },
-  {
-    name: "Pin Post",
-    icon: PinIcon,
-    action: () => console.log("Pin Post"),
-  },
-];
 
 const UserPostOptions = ({ children, post }: Props) => {
   const { isOwnProfile } = useProfileViewer();
+  const { setTool } = usePostTools();
+  const actionOptions: PostOption[] = [
+    {
+      creatorOnly: true,
+      icon: PencilIcon,
+      component: (
+        <Link className="flex" href={`/post/edit/${post.id}`}>
+          <PencilIcon className="w-5 h-5 mr-2" />
+          <span>Edit Post</span>
+        </Link>
+      ),
+    },
+    {
+      name: "Delete Post",
+      icon: TrashIcon,
+      action: () => setTool("delete"),
+      creatorOnly: true,
+    },
+    {
+      name: "Archive Post",
+      icon: ArrowUpTrayIcon,
+      action: () => setTool("archive"),
+      creatorOnly: true,
+    },
+    {
+      icon: ViewfinderCircleIcon,
+      component: (
+        <Link className="flex" href={window.location.href}>
+          <ViewfinderCircleIcon className="w-5 h-5 mr-2" />
+          <span>View Post</span>
+        </Link>
+      ),
+    },
+    {
+      name: "Report Post",
+      icon: FlagIcon,
+      action: () => setTool("report"),
+      viewerOnly: true,
+    },
+    {
+      name: "Share Post",
+      icon: ShareIcon,
+      action: () => setTool("share"),
+    },
+    {
+      name: "Copy Link",
+      icon: ClipboardIcon,
+      action: () => {
+        copyToClipboard(window.location.href);
+        toast.success("Link Copied to Clipboard");
+      },
+    },
+  ];
+
+  const toolOptions: PostOption[] = [
+    {
+      icon: ChartBarIcon,
+      component: (
+        <Link className="flex" href={`/post/insights/${post.id}`}>
+          <ChartBarIcon className="w-5 h-5 mr-2" />
+          <span>Post Insights</span>
+        </Link>
+      ),
+    },
+    {
+      name: "Boost Post",
+      icon: ChevronDoubleUpIcon,
+      action: () => setTool("boost"),
+    },
+    {
+      name: "Pin Post",
+      icon: PinIcon,
+      action: () => setTool("pin"),
+    },
+  ];
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>{children}</DropdownMenuTrigger>
@@ -108,8 +137,12 @@ const UserPostOptions = ({ children, post }: Props) => {
                 key={`post-option-${index}`}
                 onClick={option.action}
               >
-                <option.icon className="w-5 h-5 mr-2" />
-                <span>{option.name}</span>
+                {option.component ?? (
+                  <>
+                    <option.icon className="w-5 h-5 mr-2" />
+                    <span>{option.name}</span>
+                  </>
+                )}
               </DropdownMenuItem>
             );
           })}
@@ -125,8 +158,12 @@ const UserPostOptions = ({ children, post }: Props) => {
                 key={`post-option-${index}`}
                 onClick={option.action}
               >
-                <option.icon className="w-5 h-5 mr-2" />
-                <span>{option.name}</span>
+                {option.component ?? (
+                  <>
+                    <option.icon className="w-5 h-5 mr-2" />
+                    <span>{option.name}</span>
+                  </>
+                )}
               </DropdownMenuItem>
             ))}
           </DropdownMenuGroup>

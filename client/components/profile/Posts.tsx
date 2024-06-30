@@ -92,6 +92,7 @@ const UserPosts = ({ onSelect }: UserPostProps) => {
     <>
       <div className="grid p-8 md:p-2 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-2 justify-center  relative my-4 w-full ">
         {fetchedAccount?.mediaPosts
+          .filter((post) => post.auxData.postStatus === "PUBLISHED")
           .sort(
             (a, b) =>
               new Date(a.auxData.dateCreated).getTime() -

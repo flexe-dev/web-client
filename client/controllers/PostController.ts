@@ -1,5 +1,6 @@
 import {
   Document,
+  PostExternalData,
   PostUserMedia,
   UserPost,
   UserTextPost,
@@ -17,10 +18,11 @@ import {
   Post Uploading/Manipulation
 */
 
-const defaultExternalData = {
+const defaultExternalData: PostExternalData = {
   likeCount: 0,
   commentCount: 0,
   viewCount: 0,
+  saveCount: 0,
 };
 
 export const saveTextPost = async (
@@ -260,3 +262,11 @@ const uploadThumbnailToSupabase = async (
   }
   return `${process.env.NEXT_PUBLIC_SUPABASE_IMAGE_RETRIEVAL_URL}post-content/${userID}/${postID}/thumbnail.jpg`;
 };
+
+export const DeletePost = async (postID: string) => {};
+
+export const FavouritePost = async (userID: string, postID: string) => {};
+
+export const LikePost = (userID: string, postID: string) => {};
+
+export const GetPostComments = async (postID: string) => {};

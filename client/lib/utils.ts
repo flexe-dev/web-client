@@ -19,6 +19,10 @@ export function toTitleCase(value: string) {
   return value.charAt(0).toUpperCase() + value.slice(1).toLowerCase();
 }
 
+export function copyToClipboard(value: string) {
+  navigator.clipboard.writeText(value);
+}
+
 export async function resizeImage(
   url: string,
   width: number,

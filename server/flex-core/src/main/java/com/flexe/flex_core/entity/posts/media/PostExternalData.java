@@ -4,10 +4,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class PostExternalData {
     private Integer likeCount;
-
     private Integer commentCount;
-
     private Integer viewCount;
+    private Integer saveCount;
 
     public Integer getLikeCount() {
         return likeCount;
@@ -31,5 +30,13 @@ public class PostExternalData {
 
     public void setViewCount(Integer viewCount) {
         this.viewCount = viewCount;
+    }
+
+    public Integer getSaveCount() {
+        return saveCount;
+    }
+
+    public void setSaveCount(Integer saveCount) {
+        this.saveCount = saveCount;
     }
 }

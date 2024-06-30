@@ -12,11 +12,11 @@ export default function Home() {
           Standing out in the tech world has never been easier
         </h1>
         <h2 className="text-lg md:text-xl lg:text-2xl md:ml-2 mt-6 md:mt-12 max-w-screen-sm text-secondary-header">
-          Join a community of
+          Build your digital portfolio and connect with our
           <span className="mx-2 text-primary animate-pulse font-bold">
             712801
           </span>
-          other likeminded techies who are passionate about all things software
+          other likeminded techies who are passionate about all things software,
           and explore content designed to help inspire, teach and connect to
           further assist your code.
         </h2>
