@@ -45,7 +45,8 @@ const formSchema = z.object({
 });
 
 export const ProfileDetailsForm = (props: Props) => {
-  const { user, setUser, profile, setProfile, mediaPosts } = useAccount();
+  const { user, setUser, profile, setProfile, mediaPosts, textPosts } =
+    useAccount();
   if (!user || !profile) return null;
 
   const [avatarFile, setAvatarFile] = useState<File>();
@@ -80,6 +81,7 @@ export const ProfileDetailsForm = (props: Props) => {
         user: updatedUser,
         profile: updatedProfile,
         mediaPosts: mediaPosts,
+        textPosts: textPosts,
       });
 
       // Update User Account Details
