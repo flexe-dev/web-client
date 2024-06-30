@@ -1,7 +1,7 @@
 "use client";
 
 import { UserPost } from "@/lib/interface";
-import ErrorPage from "../Error";
+import ErrorPage from "../../../Error";
 import DisplayPost from "./DisplayPost";
 
 interface Props {
