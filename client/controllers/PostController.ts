@@ -1,6 +1,7 @@
 import {
   Document,
   PostExternalData,
+  PostType,
   PostUserMedia,
   UserPost,
   UserTextPost,
@@ -263,7 +264,25 @@ const uploadThumbnailToSupabase = async (
   return `${process.env.NEXT_PUBLIC_SUPABASE_IMAGE_RETRIEVAL_URL}post-content/${userID}/${postID}/thumbnail.jpg`;
 };
 
-export const DeletePost = async (postID: string) => {};
+export const DeletePost = async (
+  postID: string,
+  postType: PostType
+): Promise<boolean> => {
+  try {
+    const response = await fetch(
+      `${
+        process.env.NEXT_PUBLIC_CORE_BACKEND_API_URL
+      }post/${postType.toLowerCase()}/delete/${postID}`,
+      {
+        method: `DELETE`,
+      }
+    );
+    return response.ok;
+  } catch (e) {
+    console.error(e);
+    return false;
+  }
+};
 
 export const FavouritePost = async (userID: string, postID: string) => {};
 

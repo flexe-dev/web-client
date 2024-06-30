@@ -43,4 +43,16 @@ public class MediaPostController {
         return service.getAllPostFromUser(userId);
     }
 
+    @DeleteMapping("/delete/{postId}")
+    public ResponseEntity<String> deletePost(@PathVariable String postId) {
+        try{
+            service.deletePost(postId);
+            return ResponseEntity.ok("Post deleted");
+        }
+        catch (Exception e){
+            Sentry.captureException(e);
+            return null;
+        }
+    }
+
 }

@@ -1,12 +1,12 @@
+import { PostToolsProvider } from "@/components/context/PostOptionToolProvider";
+import { useProfileViewer } from "@/components/context/UserProfileProvider";
+import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Tooltip, TooltipProvider } from "@/components/ui/tooltip";
 import { UserPost } from "@/lib/interface";
 import { EllipsisHorizontalIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import { useEffect } from "react";
-import { PostToolsProvider } from "@/components/context/PostOptionToolProvider";
-import { useProfileViewer } from "@/components/context/UserProfileProvider";
-import { Button } from "@/components/ui/button";
-import { Tooltip, TooltipProvider } from "@/components/ui/tooltip";
 import DisplayPost from "./DisplayPost";
 import PostAuxData from "./PostAuxData";
 
@@ -23,7 +23,7 @@ const PostDisplayModal = (props: Props) => {
     //Retrieve External Post Data (ie. Comments, User Likes, etc)
   }, [selectedPost]);
 
-  if (!selectedPost) return null;
+  if (!selectedPost || !selectedPost.id) return null;
 
   return (
     <TooltipProvider>
@@ -31,7 +31,7 @@ const PostDisplayModal = (props: Props) => {
         <Dialog open={!!selectedPost} onOpenChange={callback}>
           <DialogContent className="p-0 min-w-[80%] lg:max-w-[90%] md:h-[80dvh] flex flex-col overflow-none">
             <div className="w-full flex justify-center items-center z-[80] min-h-[3rem] max-h-[3rem] bg-background border-b-2">
-              <PostToolsProvider post={selectedPost}>
+              <PostToolsProvider postId={selectedPost.id} postType="MEDIA">
                 <Button
                   size={"icon"}
                   variant={"ghost"}

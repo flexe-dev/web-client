@@ -55,6 +55,9 @@ export interface ProfileExternalLinks {
   instagram?: string;
 }
 
+//Post Interfaces
+export type PostType = "TEXT" | "MEDIA";
+
 //Profile Interfaces
 export interface LoadingProps {
   loading: boolean;
