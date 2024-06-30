@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
-import { JetBrains_Mono } from "next/font/google";
+import { Manrope } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 import { ThemeProvider } from "@/components/theme/theme-provider";
-const jetBrainsMono = JetBrains_Mono({ subsets: ["latin"], weight: "400" });
+const manrope = Manrope({ subsets: ["latin"], weight: "600" });
 import { Toaster } from "@/components/ui/sonner";
 import SessionProvider from "@/components/context/SessionProvider";
 import { getServerSession } from "next-auth";
@@ -32,7 +32,7 @@ export default async function RootLayout({
       <body
         className={cn(
           "min-h-screen bg-background antialiased",
-          jetBrainsMono.className
+          manrope.className
         )}
       >
         <SessionProvider session={session}>
