@@ -7,12 +7,12 @@ import {
   ChatBubbleOvalLeftIcon,
   EllipsisHorizontalIcon,
 } from "@heroicons/react/24/outline";
-import { Card, CardFooter } from "../card";
+import { Card, CardFooter } from "../../card";
 import { User } from "next-auth";
 import { UserTextPost } from "@/lib/interface";
-import { Avatar, AvatarImage } from "../avatar";
-import { Button } from "../button";
-import { timeAgo } from "../../../lib/dateutils";
+import { Avatar, AvatarImage } from "../../avatar";
+import { Button } from "../../button";
+import { timeAgo } from "../../../../lib/dateutils";
 
 interface TextPostPreviewProps {
   user: User;

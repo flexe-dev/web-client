@@ -1,4 +1,4 @@
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 const mockComment1: string =
   "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Laboriosam dolor, consectetur pariatur veritatis vel nobis minus inventore? Nesciunt at ipsam beatae aliquam quod, earum officia, incidunt magni, repellat in corrupti unde sit.";

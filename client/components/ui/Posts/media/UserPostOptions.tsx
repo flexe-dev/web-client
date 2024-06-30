@@ -10,7 +10,7 @@ import {
   ViewfinderCircleIcon,
 } from "@heroicons/react/24/outline";
 import { PinIcon } from "lucide-react";
-import { useProfileViewer } from "../context/UserProfileProvider";
+import { useProfileViewer } from "@/components/context/UserProfileProvider";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -19,7 +19,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "../ui/dropdown-menu";
+} from "@/components/ui/dropdown-menu";
 
 interface Props extends ChildNodeProps {
   post: UserPost;

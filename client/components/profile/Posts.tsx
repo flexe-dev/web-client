@@ -5,11 +5,11 @@ import { cn } from "@/lib/utils";
 import { ArrowUpTrayIcon, PlusCircleIcon } from "@heroicons/react/24/outline";
 import Image from "next/image";
 import React, { Dispatch, SetStateAction, useState } from "react";
-import { useProfileViewer } from "../context/UserProfileProvider";
-import PostCreateDialog from "../creator/PostCreateDialog";
-import PostDisplayModal from "../post/PostDisplayModal";
-import { Button } from "../ui/button";
-import { Dialog, DialogTrigger } from "../ui/dialog";
+import { useProfileViewer } from "@/components/context/UserProfileProvider";
+import PostCreateDialog from "@/components/creator/PostCreateDialog";
+import PostDisplayModal from "@/components/ui/Posts/media/PostDisplayModal";
+import { Button } from "@/components/ui/button";
+import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 
 const Posts = () => {
   const [openDialog, setOpenDialog] = useState<boolean>(false);
