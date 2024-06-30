@@ -1,4 +1,4 @@
-import { Avatar, AvatarFallback, AvatarImage } from "../../ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 //Cut Down Version that would only show parent comments and "Show x replies" directing to full post view
 

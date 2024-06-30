@@ -1,9 +1,9 @@
 import { ContentBlockType, ContentComponent, UserPost } from "@/lib/interface";
-import { PreviewView } from "../creator/blocks/BlockPreview";
-import { CarouselView } from "../creator/content/CarouselContent";
-import { ImageView } from "../creator/content/ImageContent";
-import { TextView } from "../creator/content/TextContent";
-import { VideoView } from "../creator/content/VideoContent";
+import { PreviewView } from "@/components/creator/blocks/BlockPreview";
+import { CarouselView } from "@/components/creator/content/CarouselContent";
+import { ImageView } from "@/components/creator/content/ImageContent";
+import { TextView } from "@/components/creator/content/TextContent";
+import { VideoView } from "@/components/creator/content/VideoContent";
 
 interface Props {
   post: UserPost;

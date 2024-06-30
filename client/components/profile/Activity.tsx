@@ -1,6 +1,6 @@
 import React from "react";
-import { useProfileViewer } from "../context/UserProfileProvider";
-import TextPostPreview from "../ui/Posts/textPostPreview";
+import { useProfileViewer } from "@/components/context/UserProfileProvider";
+import TextPostPreview from "@/components/ui/Posts/text/textPostPreview";
 
 export const Activity = () => {
   const { fetchedAccount } = useProfileViewer();

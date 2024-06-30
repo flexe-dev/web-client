@@ -6,13 +6,13 @@ import React, {
   useEffect,
   useState,
 } from "react";
-import ArchivePostModal from "../post/Modals/ArchivePostModal";
-import BoostPostModal from "../post/Modals/BoostPostModal";
-import DeletePostModal from "../post/Modals/DeletePostModal";
-import PinPostModal from "../post/Modals/PinPostModal";
-import ReportPostModal from "../post/Modals/ReportPostModal";
-import SharePostModal from "../post/Modals/SharePostModal";
-import UserPostOptions from "../post/UserPostOptions";
+import ArchivePostModal from "@/components/ui/Posts/media/Modals/ArchivePostModal";
+import BoostPostModal from "@/components/ui/Posts/media/Modals/BoostPostModal";
+import DeletePostModal from "@/components/ui/Posts/media/Modals/DeletePostModal";
+import PinPostModal from "@/components/ui/Posts/media/Modals/PinPostModal";
+import ReportPostModal from "@/components/ui/Posts/media/Modals/ReportPostModal";
+import SharePostModal from "@/components/ui/Posts/media/Modals/SharePostModal";
+import UserPostOptions from "@/components/ui/Posts/media/UserPostOptions";
 import { Dialog } from "../ui/dialog";
 
 interface Props extends ChildNodeProps {
