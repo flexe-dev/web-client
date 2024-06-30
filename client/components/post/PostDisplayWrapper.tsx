@@ -2,7 +2,6 @@
 
 import { UserPost } from "@/lib/interface";
 import ErrorPage from "../Error";
-import CommentPanel from "./Comment/CommentPanel";
 import DisplayPost from "./DisplayPost";
 
 interface Props {
@@ -14,7 +13,7 @@ const PostDisplayWrapper = ({ post }: Props) => {
 
   return (
     <>
-      <CommentPanel postId={post.id} />
+      {/* <CommentPanel postId={post.id} /> */}
       <div className="w-full h-full flex-col">
         <DisplayPost post={post} />
       </div>

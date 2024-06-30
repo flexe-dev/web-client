@@ -1,5 +1,6 @@
 import {
   Document,
+  PostExternalData,
   PostUserMedia,
   UserPost,
   UserTextPost,
@@ -17,7 +18,7 @@ import {
   Post Uploading/Manipulation
 */
 
-const defaultExternalData = {
+const defaultExternalData: PostExternalData = {
   likeCount: 0,
   commentCount: 0,
   viewCount: 0,

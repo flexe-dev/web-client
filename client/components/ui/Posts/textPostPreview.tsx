@@ -1,18 +1,15 @@
 "use client";
 
-import React from "react";
+import { UserTextPost } from "@/lib/interface";
 import {
-  EyeIcon,
-  HandThumbUpIcon,
   ChatBubbleOvalLeftIcon,
   EllipsisHorizontalIcon,
+  HandThumbUpIcon,
 } from "@heroicons/react/24/outline";
-import { Card, CardFooter } from "../card";
 import { User } from "next-auth";
-import { UserTextPost } from "@/lib/interface";
-import { Avatar, AvatarImage } from "../avatar";
-import { Button } from "../button";
 import { timeAgo } from "../../../lib/dateutils";
+import { Avatar, AvatarImage } from "../avatar";
+import { Card, CardFooter } from "../card";
 
 interface TextPostPreviewProps {
   user: User;
