@@ -16,8 +16,8 @@ import {
 import { PinIcon } from "lucide-react";
 import Link from "next/link";
 import { toast } from "sonner";
-import { usePostTools } from "../context/PostOptionToolProvider";
-import { useProfileViewer } from "../context/UserProfileProvider";
+import { usePostTools } from "@/components/context/PostOptionToolProvider";
+import { useProfileViewer } from "@/components/context/UserProfileProvider";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -26,7 +26,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "../ui/dropdown-menu";
+} from "@/components/ui/dropdown-menu";
 
 interface Props extends ChildNodeProps {
   post: UserPost;

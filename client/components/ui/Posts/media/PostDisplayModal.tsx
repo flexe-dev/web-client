@@ -3,10 +3,10 @@ import { UserPost } from "@/lib/interface";
 import { EllipsisHorizontalIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import { useEffect } from "react";
-import { PostToolsProvider } from "../context/PostOptionToolProvider";
-import { useProfileViewer } from "../context/UserProfileProvider";
-import { Button } from "../ui/button";
-import { Tooltip, TooltipProvider } from "../ui/tooltip";
+import { PostToolsProvider } from "@/components/context/PostOptionToolProvider";
+import { useProfileViewer } from "@/components/context/UserProfileProvider";
+import { Button } from "@/components/ui/button";
+import { Tooltip, TooltipProvider } from "@/components/ui/tooltip";
 import DisplayPost from "./DisplayPost";
 import PostAuxData from "./PostAuxData";
 

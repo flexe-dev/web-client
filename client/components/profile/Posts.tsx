@@ -7,7 +7,7 @@ import Image from "next/image";
 import React, { Dispatch, SetStateAction, useState } from "react";
 import { useProfileViewer } from "../context/UserProfileProvider";
 import PostCreateDialog from "../creator/PostCreateDialog";
-import PostDisplayModal from "../post/PostDisplayModal";
+import PostDisplayModal from "@/components/ui/Posts/media/PostDisplayModal";
 import { Button } from "../ui/button";
 import { Dialog, DialogTrigger } from "../ui/dialog";
 

@@ -7,9 +7,9 @@ import {
   HandThumbUpIcon,
 } from "@heroicons/react/24/outline";
 import { User } from "next-auth";
-import { timeAgo } from "../../../lib/dateutils";
-import { Avatar, AvatarImage } from "../avatar";
-import { Card, CardFooter } from "../card";
+import { timeAgo } from "../../../../lib/dateutils";
+import { Avatar, AvatarImage } from "@/components/ui/avatar";
+import { Card, CardFooter } from "@/components/ui/card";
 
 interface TextPostPreviewProps {
   user: User;
