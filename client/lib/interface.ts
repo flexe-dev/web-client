@@ -186,3 +186,24 @@ const contentBlockTypes = [
   "PREVIEW",
 ] as const;
 export type ContentBlockType = (typeof contentBlockTypes)[number];
+
+export interface Comment {
+  id: string;
+  postId: string;
+  userId: string;
+  content: string;
+  parentId?: string;
+  dateCreated: Date;
+  dateUpdated?: Date;
+  likes: number;
+  dislikes: number;
+}
+
+export interface CommentNode {
+  comment: Comment;
+  children: CommentNode[];
+}
+
+export interface CommentTree {
+  root: CommentNode;
+}

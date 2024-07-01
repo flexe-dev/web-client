@@ -1,13 +1,14 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
 import { UserPost } from "@/lib/interface";
 import {
   BookmarkIcon,
   ChatBubbleOvalLeftEllipsisIcon,
   HandThumbUpIcon,
 } from "@heroicons/react/24/outline";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Button } from "@/components/ui/button";
 
 interface Props {
   post: UserPost;
@@ -16,31 +17,29 @@ interface Props {
 const PostMetrics = ({ post }: Props) => {
   const router = useRouter();
   return (
-    <div className="border-t-2 flex justify-between items-center">
+    <div className="flex flex-col -translate-x-24 translate-y-[16rem] z-[99] h-[1px] space-y-3">
       <Button
-        className="flex items-center rounded-none w-full"
+        className="flex flex-col items-center justify-center rounded-full w-[3.75rem] h-[3.75rem] bg-background hover:bg-background/50 text-primary border shadow-md shadow-neutral-600"
         onClick={() => {}}
-        variant={"ghost"}
       >
-        <HandThumbUpIcon className="w-4 h-4" />
-        <span className="ml-1">{post.externalData.likeCount}</span>
+        <HandThumbUpIcon className="w-6 h-6" />
+        <span className="mt-1">{post.externalData.likeCount}</span>
+      </Button>
+      <Button className="rounded-full w-[3.75rem] h-[3.75rem] bg-background hover:bg-background/50 text-primary">
+        <Link
+          href={window.location.href}
+          className="flex flex-col items-center justify-center"
+        >
+          <ChatBubbleOvalLeftEllipsisIcon className="w-6 h-6" />
+          <span className="mt-1">{post.externalData.commentCount}</span>
+        </Link>
       </Button>
       <Button
-        onClick={() => {
-          router.refresh();
-        }}
-        variant={"ghost"}
-        className="flex items-center rounded-none w-full"
+        className="flex flex-col items-center justify-center rounded-full w-[3.75rem] h-[3.75rem] bg-background hover:bg-background/50 text-primary"
+        onClick={() => {}}
       >
-        <ChatBubbleOvalLeftEllipsisIcon className="w-4 h-4" />
-        <span className="ml-1">{post.externalData.commentCount}</span>
-      </Button>
-      <Button
-        variant={"ghost"}
-        className="flex items-center rounded-none w-full"
-      >
-        <BookmarkIcon className="w-4 h-4" />
-        <span className="ml-1">{post.externalData.saveCount}</span>
+        <BookmarkIcon className="w-6 h-6" />
+        <span className="mt-1">{post.externalData.saveCount}</span>
       </Button>
     </div>
   );

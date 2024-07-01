@@ -1,5 +1,6 @@
 "use client";
 
+import PostDisplayModal from "@/components/ui/Posts/media/PostDisplayModal";
 import { ChildNodeProps, ClassNameProp, UserPost } from "@/lib/interface";
 import { cn } from "@/lib/utils";
 import { ArrowUpTrayIcon, PlusCircleIcon } from "@heroicons/react/24/outline";
@@ -7,7 +8,6 @@ import Image from "next/image";
 import React, { Dispatch, SetStateAction, useState } from "react";
 import { useProfileViewer } from "../context/UserProfileProvider";
 import PostCreateDialog from "../creator/PostCreateDialog";
-import PostDisplayModal from "@/components/ui/Posts/media/PostDisplayModal";
 import { Button } from "../ui/button";
 import { Dialog, DialogTrigger } from "../ui/dialog";
 
@@ -59,7 +59,7 @@ const PostTile = ({ children, className }: TileProps) => {
   return (
     <div
       className={cn(
-        "aspect-[4/3] w-full mx-auto my-2 min-w-[18rem] rounded-lg overflow-hidden border border-border/50 dark:border-2  shadow-md shadow-tertiary dark:shadow-none hover:brightness-50 transition-all",
+        "aspect-[4/3] w-full mx-auto my-2 min-w-[16rem] rounded-lg overflow-hidden border border-border/50 dark:border-2  shadow-md shadow-tertiary dark:shadow-none hover:brightness-50 transition-all",
         className
       )}
     >
@@ -90,13 +90,13 @@ const UserPosts = ({ onSelect }: UserPostProps) => {
 
   return (
     <>
-      <div className="grid p-8 md:p-2 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-2 justify-center  relative my-4 w-full ">
+      <div className="grid p-8 md:p-2 grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-x-2 justify-center auto-cols-auto  relative my-4 w-full ">
         {fetchedAccount?.mediaPosts
           .filter((post) => post.auxData.postStatus === "PUBLISHED")
           .sort(
             (a, b) =>
-              new Date(a.auxData.dateCreated).getTime() -
-              new Date(b.auxData.dateCreated).getTime()
+              new Date(b.auxData.dateCreated).getTime() -
+              new Date(a.auxData.dateCreated).getTime()
           )
           .map((post) => (
             <PostTile key={post.id}>

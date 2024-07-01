@@ -112,6 +112,11 @@ export const GetAllUserPosts = async (
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_CORE_BACKEND_API_URL}post/media/user/${userID}`
     );
+
+    if (response.status === 404) {
+      return;
+    }
+
     return response.json();
   } catch (e) {
     console.error(e);
@@ -126,6 +131,11 @@ export const getPostById = async (
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_CORE_BACKEND_API_URL}post/media/${postID}`
     );
+
+    if (response.status === 404) {
+      return;
+    }
+
     return response.json();
   } catch (e) {
     console.error(e);
