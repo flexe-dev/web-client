@@ -59,7 +59,7 @@ const PostTile = ({ children, className }: TileProps) => {
   return (
     <div
       className={cn(
-        "aspect-[4/3] w-full mx-auto my-2 min-w-[16rem] rounded-lg overflow-hidden border border-border/50 dark:border-2  shadow-md shadow-tertiary dark:shadow-none hover:brightness-50 transition-all",
+        "aspect-[4/3] w-full mx-auto my-2 min-w-[18rem] rounded-lg overflow-hidden border border-border/50 dark:border-2  shadow-md shadow-tertiary dark:shadow-none hover:brightness-50 transition-all",
         className
       )}
     >
@@ -90,7 +90,7 @@ const UserPosts = ({ onSelect }: UserPostProps) => {
 
   return (
     <>
-      <div className="grid p-8 md:p-2 grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-x-2 justify-center auto-cols-auto  relative my-4 w-full ">
+      <div className="grid p-8 md:p-2 grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-x-2 justify-center relative my-4 w-full ">
         {fetchedAccount?.mediaPosts
           .filter((post) => post.auxData.postStatus === "PUBLISHED")
           .sort(
