@@ -1,8 +1,5 @@
 "use client";
 
-import * as React from "react";
-import { Moon, Sun } from "lucide-react";
-import { useTheme } from "next-themes";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -10,14 +7,16 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { cn } from "@/lib/utils";
 import { ClassNameProp } from "@/lib/interface";
+import { cn } from "@/lib/utils";
+import { Moon, Sun } from "lucide-react";
+import { useTheme } from "next-themes";
 
-type ModeToggleVariants = "default" | "lg";
+type ModeToggleVariants = "default" | "mobile";
 
 const modeToggleVariants: Record<ModeToggleVariants, string> = {
   default: "h-[1.2rem] w-[1.2rem]",
-  lg: "h-[2rem] w-[2rem]",
+  mobile: "h-[2rem] w-[2rem]",
 };
 
 interface Props extends ClassNameProp {
@@ -35,7 +34,10 @@ export function ModeToggle(props: Props) {
           <Button
             variant={"outline"}
             size="icon"
-            className={cn(buttonClassName)}
+            className={cn(
+              buttonClassName,
+              variant === "mobile" && "hover:bg-background/30"
+            )}
           >
             <Sun
               className={cn(

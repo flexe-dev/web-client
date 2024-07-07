@@ -1,13 +1,13 @@
 "use client";
-import Link from "next/link";
-import React, { useState, Dispatch, SetStateAction } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { LinkProps } from "@/lib/interface";
 import { SidebarBurger } from "@/components/icons/SidebarBurger";
+import { LinkProps } from "@/lib/interface";
+import { MagnifyingGlassIcon, UserPlusIcon } from "@heroicons/react/24/outline";
+import { AnimatePresence, motion } from "framer-motion";
+import Link from "next/link";
+import React, { Dispatch, useState } from "react";
+import XMarkIcon from "../icons/xMarkIcon";
 import { ModeToggle } from "../theme/theme-toggle";
 import { Button } from "./button";
-import XMarkIcon from "../icons/xMarkIcon";
-import { MagnifyingGlassIcon, UserPlusIcon } from "@heroicons/react/24/outline";
 
 interface Props {
   links: LinkProps[];
@@ -20,8 +20,9 @@ function MobileView(props: Props) {
   return (
     <>
       <footer className="flex justify-between z-[50] md:hidden fixed bottom-12 border-2 border-inverted h-fit w-1/2 backdrop-blur-xl bg-inverted/10 px-3 py-2 rounded-xl mx-auto right-0 left-0">
-        <ModeToggle variant="lg" buttonClassName="border-transparent" />
+        <ModeToggle variant="mobile" buttonClassName="border-transparent" />
         <SidebarBurger
+          mobile={true}
           callback={setToggleSidebar}
           className="stroke-inverted h-10 w-10 hover:stroke-neutral-600 "
         />

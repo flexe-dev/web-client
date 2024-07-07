@@ -1,9 +1,9 @@
-import React from "react";
-import { cn } from "@/lib/utils";
-import { SidebarButtonProps } from "@/lib/interface";
 import { Button } from "@/components/ui/button";
+import { SidebarButtonProps } from "@/lib/interface";
+import { cn } from "@/lib/utils";
+
 export const SidebarBurger = (props: SidebarButtonProps) => {
-  const { className, callback } = props;
+  const { className, callback, mobile } = props;
   return (
     <Button
       variant={"ghost"}
@@ -11,16 +11,16 @@ export const SidebarBurger = (props: SidebarButtonProps) => {
       onClick={() => {
         callback((prev) => !prev);
       }}
+      className={cn(mobile && "hover:bg-background/30")}
     >
       <svg
-        xmlns="http://www.w3.org/2000/svg"
         fill="none"
         viewBox="0 0 24 24"
         strokeWidth={1.5}
         stroke="currentColor"
         width="100%"
         height="100%"
-        className={cn("w-6 h-6", className)}
+        className={cn("w-6 h-6", className, mobile && "hover:stroke-primary")}
       >
         <path
           strokeLinecap="round"

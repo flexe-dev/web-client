@@ -1,11 +1,11 @@
 import { saveTextPost } from "@/controllers/PostController";
 import { UserTextPost } from "@/lib/interface";
+import { GetNameInitials } from "@/lib/utils";
 import { PhotoIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import React, { SetStateAction, useState } from "react";
 import { toast } from "sonner";
 import { useAccount } from "../context/AccountProvider";
-import { GetNameInitials } from "../ui/User/UserAvatar";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Button } from "../ui/button";
 import {
@@ -71,9 +71,7 @@ const PostCreateDialog = ({ dispatch }: DialogProps) => {
                 src={user?.image ?? process.env.NEXT_PUBLIC_DEFAULT_PHOTO}
                 alt={user.name ?? ""}
               />
-              <AvatarFallback>
-                {GetNameInitials(user.name ?? "")}
-              </AvatarFallback>
+              <AvatarFallback>{GetNameInitials(user.name)}</AvatarFallback>
             </Avatar>
             <Textarea
               placeholder="What's on your mind?"
