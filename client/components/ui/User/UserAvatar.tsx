@@ -1,16 +1,9 @@
 "use client";
 
+import { GetNameInitials } from "@/lib/utils";
 import { useAccount } from "../../context/AccountProvider";
 import { Avatar, AvatarFallback, AvatarImage } from "../avatar";
 import { UserDropdown } from "./UserDropdown";
-
-export const GetNameInitials = (name?: string) => {
-  if (!name) return "";
-  return name
-    ?.split(" ")
-    .map((n) => n[0])
-    .join("");
-};
 
 function UserAvatar() {
   const { user, profile } = useAccount();
@@ -25,7 +18,7 @@ function UserAvatar() {
               className="object-cover"
               src={user.image ?? process.env.NEXT_PUBLIC_FALLBACK_PHOTO}
             />
-            <AvatarFallback>{GetNameInitials(user.name ?? "")}</AvatarFallback>
+            <AvatarFallback>{GetNameInitials(user.name)}</AvatarFallback>
           </Avatar>
         </UserDropdown>
       </div>

@@ -1,6 +1,7 @@
 "use client";
 
 import { UserPost } from "@/lib/interface";
+import { motion } from "framer-motion";
 import ErrorPage from "../../../Error";
 import DisplayPost from "./DisplayPost";
 
@@ -12,12 +13,9 @@ const PostDisplayWrapper = ({ post }: Props) => {
   if (!post.id) return <ErrorPage />;
 
   return (
-    <>
-      {/* <CommentPanel postId={post.id} /> */}
-      <div className="w-full h-full flex-col">
-        <DisplayPost post={post} />
-      </div>
-    </>
+    <motion.div key={"post-wrapper"} layout className="w-full h-full flex-col">
+      <DisplayPost post={post} />
+    </motion.div>
   );
 };
 
