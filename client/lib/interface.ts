@@ -20,6 +20,7 @@ export interface ModalProps {
 
 export interface SidebarButtonProps extends ClassNameProp {
   callback: React.Dispatch<React.SetStateAction<boolean>>;
+  mobile?: boolean;
 }
 
 export interface ChildNodeProps {
@@ -201,9 +202,6 @@ export interface Comment {
 
 export interface CommentNode {
   comment: Comment;
+  user: UserAccount;
   children: CommentNode[];
-}
-
-export interface CommentTree {
-  root: CommentNode;
 }

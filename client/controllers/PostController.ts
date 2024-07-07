@@ -1,4 +1,6 @@
 import {
+  Comment,
+  CommentNode,
   Document,
   PostExternalData,
   PostType,
@@ -298,4 +300,88 @@ export const FavouritePost = async (userID: string, postID: string) => {};
 
 export const LikePost = (userID: string, postID: string) => {};
 
-export const GetPostComments = async (postID: string) => {};
+//Controller Logic
+
+export const GetPostComments = async (
+  postID: string
+): Promise<CommentNode[]> => {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_CORE_BACKEND_API_URL}post/comment/get/post/${postID}`
+    );
+    return await response.json();
+  } catch (e) {
+    console.error(e);
+    return [];
+  }
+};
+
+export const AddComment = async (
+  comment: Comment
+): Promise<CommentNode | undefined> => {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_CORE_BACKEND_API_URL}post/comment/add`,
+      {
+        method: `POST`,
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(comment),
+      }
+    );
+    return await response.json();
+  } catch (e) {
+    console.error(e);
+    return;
+  }
+};
+
+export const DeleteComment = async (comment: CommentNode): Promise<boolean> => {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_CORE_BACKEND_API_URL}post/comment/delete/${comment.comment.id}`,
+      {
+        method: `DELETE`,
+      }
+    );
+    return response.ok;
+  } catch (e) {
+    console.error(e);
+    return false;
+  }
+};
+
+export const LikeComment = async (commentID: string): Promise<boolean> => {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_CORE_BACKEND_API_URL}post/comment/like/${commentID}`,
+      {
+        method: `POST`,
+      }
+    );
+
+    return response.ok;
+  } catch (e) {
+    console.error(e);
+    return false;
+  }
+};
+
+export const DislikeComment = async (commentID: string): Promise<boolean> => {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_CORE_BACKEND_API_URL}post/comment/dislike/${commentID}`,
+      {
+        method: `POST`,
+      }
+    );
+
+    return response.ok;
+  } catch (e) {
+    console.error(e);
+    return false;
+  }
+};
+
+export const EditComment = (comment: Comment) => {};

@@ -23,6 +23,14 @@ export function copyToClipboard(value: string) {
   navigator.clipboard.writeText(value);
 }
 
+export const GetNameInitials = (name?: string | null) => {
+  if (!name) return "";
+  return name
+    ?.split(" ")
+    .map((n) => n[0])
+    .join("");
+};
+
 export async function resizeImage(
   url: string,
   width: number,
