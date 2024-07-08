@@ -1,10 +1,17 @@
 "use client";
 
-import { ChildNodeProps, Comment, CommentNode } from "@/lib/interface";
-import { createContext, useContext, useState } from "react";
+import { ChildNodeProps, Comment, CommentNode, Reply } from "@/lib/interface";
+import {
+  createContext,
+  Dispatch,
+  SetStateAction,
+  useContext,
+  useState,
+} from "react";
 
 interface PostCommentState {
   comments: CommentNode[];
+  replyTarget?: Reply;
   postID: string;
   addComment: (
     comment: Comment,
@@ -26,6 +33,7 @@ interface PostCommentState {
     rootNode?: CommentNode,
     depth?: number
   ) => void;
+  setReplyTarget: Dispatch<SetStateAction<Reply | undefined>>;
 }
 
 interface ContextProps extends ChildNodeProps {
@@ -36,10 +44,12 @@ interface ContextProps extends ChildNodeProps {
 const initialState: PostCommentState = {
   comments: [],
   postID: "",
+  replyTarget: undefined,
   addComment: () => {},
   deleteComment: () => {},
   likeComment: () => {},
   editComment: () => {},
+  setReplyTarget: () => {},
 };
 
 export const PostCommentContext = createContext<PostCommentState>(initialState);
@@ -50,6 +60,7 @@ export const PostCommentProvider = ({
   postID,
 }: ContextProps) => {
   const [comments, setComments] = useState<CommentNode[]>(fetchedComments);
+  const [replyTarget, setReplyTarget] = useState<Reply | undefined>();
 
   const addComment = (
     comment: Comment,
@@ -79,11 +90,13 @@ export const PostCommentProvider = ({
     <PostCommentContext.Provider
       value={{
         comments,
+        replyTarget,
         postID,
         addComment,
         deleteComment,
         likeComment,
         editComment,
+        setReplyTarget,
       }}
     >
       {children}

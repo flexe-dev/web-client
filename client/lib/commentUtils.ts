@@ -1,4 +1,4 @@
-import { Comment } from "./interface";
+import { Comment, CommentNode } from "./interface";
 
 export const GenerateCommentObject = (
   postID: string,
@@ -19,3 +19,14 @@ export const GenerateCommentObject = (
 };
 
 export const TraverseCommentTree = () => {};
+
+export const getTotalChildren = (comment: CommentNode): number => {
+  return getTotalChildrenAux(comment) - 1;
+};
+
+export const getTotalChildrenAux = (comment: CommentNode): number => {
+  return comment.children.reduce(
+    (acc, child) => acc + getTotalChildrenAux(child),
+    1
+  );
+};

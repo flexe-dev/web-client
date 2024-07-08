@@ -18,30 +18,21 @@ const CommentPanel = ({ children }: Props) => {
   return (
     <motion.aside
       className={cn(
-        "border-r h-screen fixed xl:sticky duration-300 ease-in-out z-[40] bg-background top-[5rem] left-0 transition-all",
+        "border-r h-screen-without-header fixed xl:sticky duration-300 ease-in-out z-[40] bg-background h-screen-without-header top-[5rem] left-0 transition-all",
         panelOpen ? "w-5/6 md:w-1/2 xl:w-2/5 " : "w-0 md:w-[4rem]"
       )}
     >
       <AnimatePresence mode="wait">
         {panelOpen && (
           <motion.div
-            className="w-full"
+            className="flex flex-col h-full truncate"
             initial={{ opacity: 0 }}
-            animate={{ opacity: 1, transition: { duration: 0.5 } }}
+            animate={{ opacity: 1, transition: { duration: 0.75 } }}
             exit={{ opacity: 0, transition: { duration: 0.1 } }}
           >
-            <motion.div
-              initial={{ opacity: 0, width: "50%" }}
-              animate={{
-                opacity: 1,
-                width: "100%",
-                transition: { duration: 0.5 },
-              }}
-              exit={{ opacity: 0, transition: { duration: 0.1 } }}
-              className="h-screen truncate"
-            >
+            <div className="h-auto flex-grow overflow-y-auto overflow-x-hidden overscroll-contain pb-4">
               {children}
-            </motion.div>
+            </div>
             <CommentInput />
           </motion.div>
         )}

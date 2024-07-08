@@ -9,7 +9,7 @@ import { useState } from "react";
 
 const CommentInput = () => {
   const { user } = useAccount();
-  const { addComment, postID } = usePostComments();
+  const { addComment, postID, replyTarget } = usePostComments();
   const [comment, setComment] = useState<string>("");
   const [style, setStyle] = useState<React.CSSProperties>({});
 
@@ -30,20 +30,23 @@ const CommentInput = () => {
   };
 
   return (
-    <div className="sticky bottom-0 flex items-center border-t ">
-      <Textarea
-        onChange={handleValueChange}
-        style={style}
-        className="rounded-none border-0 resize-none min-h-[4rem] max-h-[14rem] overflow-y-auto focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0"
-        placeholder="Add a comment"
-      />
-      <Button
-        onClick={onSubmit}
-        className="rounded-none border-0 h-full border-l"
-        variant={"outline"}
-      >
-        Post
-      </Button>
+    <div className="border-t h-[8rem]">
+      <div className="border-b w-full h-[2rem]"></div>
+      <div className="flex items-center">
+        <Textarea
+          onChange={handleValueChange}
+          style={style}
+          className="rounded-none border-0 resize-none h-[6rem] overflow-y-auto focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0"
+          placeholder="Add a comment"
+        />
+        <Button
+          onClick={onSubmit}
+          className="rounded-none border-0 h-full border-l"
+          variant={"outline"}
+        >
+          Post
+        </Button>
+      </div>
     </div>
   );
 };

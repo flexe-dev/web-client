@@ -6,13 +6,13 @@ interface Props {
 
 import { PostCommentProvider } from "@/components/context/PostCommentContext";
 import { GetPostComments } from "@/controllers/PostController";
-import { CommentDisplay } from "./CommentDisplay";
+import { CommentTree } from "./CommentTree";
 
 const PostComments = async ({ postId }: Props) => {
   const comments = await GetPostComments(postId);
   return (
     <PostCommentProvider comments={comments} postID={postId}>
-      <CommentDisplay />
+      <CommentTree />
     </PostCommentProvider>
   );
 };

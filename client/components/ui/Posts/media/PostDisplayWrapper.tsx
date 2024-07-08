@@ -13,8 +13,8 @@ const PostDisplayWrapper = ({ post }: Props) => {
   if (!post.id) return <ErrorPage />;
 
   return (
-    <motion.div key={"post-wrapper"} layout className="w-full h-full flex-col">
-      <DisplayPost post={post} />
+    <motion.div key={"post-wrapper"} layout>
+        <DisplayPost post={post} />
     </motion.div>
   );
 };

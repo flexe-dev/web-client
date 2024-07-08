@@ -205,3 +205,5 @@ export interface CommentNode {
   user: UserAccount;
   children: CommentNode[];
 }
+
+export type Reply = Omit<CommentNode, "children">;
