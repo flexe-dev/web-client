@@ -21,11 +21,12 @@ interface DialogProps {
 }
 
 const PostCreateDialog = ({ dispatch }: DialogProps) => {
-  const { user, textPosts, setTextPosts } = useAccount();
+  const { account, setAccount } = useAccount();
 
   const [newTextPost, setNewTextPost] = useState<string>("");
 
-  if (!user) return null;
+  if (!account) return null;
+  const { user } = account;
 
   const publishTextPost = async () => {
     const response = await handleTextPostPublish();
@@ -45,7 +46,10 @@ const PostCreateDialog = ({ dispatch }: DialogProps) => {
         loading: `Posting...`,
         success: (data) => {
           if (!data) return;
-          setTextPosts([...textPosts, data]);
+          setAccount({
+            ...account,
+            textPosts: [...account.textPosts, data],
+          });
           resolve(true);
           return `Your message has been posted`;
         },

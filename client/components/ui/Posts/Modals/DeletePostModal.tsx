@@ -14,16 +14,26 @@ import { toast } from "sonner";
 
 const DeletePostModal = (props: ToolModalProp) => {
   const { callback, postId, postType } = props;
-  const { setTextPosts, setMediaPosts } = useAccount();
+  const { account, setAccount } = useAccount();
+
+  if (!account) return;
 
   const onDelete = async () => {
     toast.promise(DeletePost(postId, postType), {
       loading: "Deleting post...",
       success: () => {
-        postType === "MEDIA"
-          ? setMediaPosts((prev) => prev.filter((post) => post.id !== postId))
-          : setTextPosts((prev) => prev.filter((post) => post.id !== postId));
-          
+        setAccount({
+          ...account,
+          mediaPosts:
+            postType === "MEDIA"
+              ? account.mediaPosts.filter((post) => post.id !== postId)
+              : account.mediaPosts,
+          textPosts:
+            postType === "TEXT"
+              ? account.textPosts.filter((post) => post.id !== postId)
+              : account.textPosts,
+        });
+
         callback();
         return "Post Deleted successfully!";
       },

@@ -17,13 +17,15 @@ interface Props {
 const PostDisplayModal = (props: Props) => {
   const { selectedPost, callback } = props;
   const { isOwnProfile } = useProfileViewer();
-  const { mediaPosts } = useAccount();
+  const { account } = useAccount();
 
   useEffect(() => {
-    if (!mediaPosts.map((post) => post.id).includes(selectedPost?.id)) {
+    if (
+      !account?.mediaPosts.map((post) => post.id).includes(selectedPost?.id)
+    ) {
       callback();
     }
-  }, [mediaPosts]);
+  }, [account]);
 
   if (!selectedPost || !selectedPost.id) return null;
   return (

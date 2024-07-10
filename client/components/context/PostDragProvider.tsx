@@ -372,7 +372,7 @@ export const PostDragProvider = ({
 export const useBlockDrag = () => {
   const context = React.useContext(PostDragContext);
   if (context === undefined) {
-    throw new Error("useAccount must be used within an AccountProvider");
+    throw new Error("useBlockDrag must be used within an AccountProvider");
   }
   return context;
 };
