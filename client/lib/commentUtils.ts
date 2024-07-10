@@ -1,20 +1,24 @@
-import { Comment, CommentNode } from "./interface";
+import { CommentNode, UserAccount } from "./interface";
 
 export const GenerateCommentObject = (
   postID: string,
-  userId: string,
+  account: UserAccount,
   content: string,
   parentId?: string
-): Comment => {
+): CommentNode => {
   return {
-    id: "",
-    postId: postID,
-    userId: userId,
-    content: content,
-    parentId: parentId,
-    dateCreated: new Date(),
-    likes: 0,
-    dislikes: 0,
+    children: [],
+    user: account,
+    comment: {
+      id: "",
+      postId: postID,
+      userId: account.user.id,
+      content: content,
+      parentId: parentId,
+      dateCreated: new Date(),
+      likes: 0,
+      dislikes: 0,
+    },
   };
 };
 

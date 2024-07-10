@@ -25,25 +25,28 @@ import { CommentActions } from "./CommentActions";
 
 interface Props {
   commentNode: CommentNode;
-  hasParent: boolean;
+  root: CommentNode;
+  reply: boolean;
 }
 
 interface CommentProps {
   comment: Comment;
   user: UserAccount;
   reply: boolean;
+  root: CommentNode;
 }
 
 export const CommentTree = () => {
   const { comments } = usePostComments();
   return (
-    <div className="w-full flex-grow">
+    <div className="h-auto flex-grow overflow-y-auto overflow-x-hidden overscroll-contain pb-4">
       {comments.map((comment, index) => {
         return (
           <CommentThread
             key={`comment-thread-${index}`}
             commentNode={comment}
-            hasParent={false}
+            root={comment}
+            reply={false}
           />
         );
       })}
@@ -51,7 +54,7 @@ export const CommentTree = () => {
   );
 };
 
-const CommentThread = ({ commentNode, hasParent }: Props) => {
+const CommentThread = ({ commentNode, root, reply }: Props) => {
   const { comment, children, user } = commentNode;
   const childTotal = getTotalChildren(commentNode);
   const [collapse, setCollapse] = useState<boolean>(false);
@@ -60,7 +63,7 @@ const CommentThread = ({ commentNode, hasParent }: Props) => {
   return (
     <TooltipProvider>
       <div>
-        <CommentBlock comment={comment} reply={hasParent} user={user} />
+        <CommentBlock comment={comment} reply={reply} user={user} root={root} />
         {children.length > 0 &&
           (!collapse ? (
             <div className="ml-6 border-l-2 relative">
@@ -86,7 +89,8 @@ const CommentThread = ({ commentNode, hasParent }: Props) => {
                     <CommentThread
                       key={`comment-thread-${index}`}
                       commentNode={child}
-                      hasParent={true}
+                      root={root}
+                      reply={true}
                     />
                   );
                 })}
@@ -155,7 +159,7 @@ const ReplyThread = () => {
   );
 };
 
-const CommentFooter = ({ comment, user }: CommentProps) => {
+const CommentFooter = ({ comment, user, root }: CommentProps) => {
   const { setReplyTarget } = usePostComments();
   return (
     <div className="flex items-center relative pt-2 ml-4">
@@ -171,7 +175,7 @@ const CommentFooter = ({ comment, user }: CommentProps) => {
         </Button>
       </div>
       <Button
-        onClick={() => setReplyTarget({ comment, user })}
+        onClick={() => setReplyTarget({ comment, user, root })}
         variant={"ghost"}
         className="ml-6 px-2 w-fit h-7 font-bold"
       >

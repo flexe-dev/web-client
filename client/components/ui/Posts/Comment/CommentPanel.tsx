@@ -9,7 +9,6 @@ import {
 } from "@heroicons/react/24/outline";
 import { AnimatePresence, motion } from "framer-motion";
 import { useState } from "react";
-import CommentInput from "./CommentInput";
 
 interface Props extends ChildNodeProps {}
 
@@ -30,10 +29,7 @@ const CommentPanel = ({ children }: Props) => {
             animate={{ opacity: 1, transition: { duration: 0.75 } }}
             exit={{ opacity: 0, transition: { duration: 0.1 } }}
           >
-            <div className="h-auto flex-grow overflow-y-auto overflow-x-hidden overscroll-contain pb-4">
-              {children}
-            </div>
-            <CommentInput />
+            {children}
           </motion.div>
         )}
       </AnimatePresence>

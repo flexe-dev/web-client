@@ -60,7 +60,7 @@ public class PostCommentService {
     }
 
     public Comment saveComment(Comment comment){
-        if(comment.getId() == null){
+        if(comment.getId().isEmpty()){
            comment.setId(new ObjectId().toHexString());
         }
         return repository.save(comment);

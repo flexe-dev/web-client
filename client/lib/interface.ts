@@ -206,4 +206,6 @@ export interface CommentNode {
   children: CommentNode[];
 }
 
-export type Reply = Omit<CommentNode, "children">;
+export interface Reply extends Omit<CommentNode, "children"> {
+  root: CommentNode;
+}
