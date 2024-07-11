@@ -3,7 +3,7 @@
 import { usePostComments } from "@/components/context/PostCommentContext";
 import { getTotalChildren } from "@/lib/commentUtils";
 import { timeAgo } from "@/lib/dateutils";
-import { Comment, CommentNode, UserAccount } from "@/lib/interface";
+import { CommentNode } from "@/lib/interface";
 import { cn, GetNameInitials } from "@/lib/utils";
 import {
   ArrowDownIcon,
@@ -29,13 +29,6 @@ interface Props {
   reply: boolean;
 }
 
-interface CommentProps {
-  comment: Comment;
-  user: UserAccount;
-  reply: boolean;
-  root: CommentNode;
-}
-
 export const CommentTree = () => {
   const { comments } = usePostComments();
   return (
@@ -54,7 +47,8 @@ export const CommentTree = () => {
   );
 };
 
-const CommentThread = ({ commentNode, root, reply }: Props) => {
+const CommentThread = (props: Props) => {
+  const { commentNode, root } = props;
   const { comment, children, user } = commentNode;
   const childTotal = getTotalChildren(commentNode);
   const [collapse, setCollapse] = useState<boolean>(false);
@@ -63,7 +57,7 @@ const CommentThread = ({ commentNode, root, reply }: Props) => {
   return (
     <TooltipProvider>
       <div>
-        <CommentBlock comment={comment} reply={reply} user={user} root={root} />
+        <CommentBlock {...props} />
         {children.length > 0 &&
           (!collapse ? (
             <div className="ml-6 border-l-2 relative">
@@ -129,10 +123,11 @@ const CommentThread = ({ commentNode, root, reply }: Props) => {
   );
 };
 
-const CommentBlock = (props: CommentProps) => {
-  const { user: account, reply, comment } = props;
+const CommentBlock = (props: Props) => {
+  const { commentNode, reply } = props;
+  const { comment, user: account } = commentNode;
   const { replyTarget } = usePostComments();
-  const { user } = account;
+
   return (
     <div className="flex h-full w-full">
       {reply && <ReplyThread />}
@@ -159,7 +154,8 @@ const ReplyThread = () => {
   );
 };
 
-const CommentFooter = ({ comment, user, root }: CommentProps) => {
+const CommentFooter = ({ commentNode, root }: Props) => {
+  const { comment, user } = commentNode;
   const { setReplyTarget } = usePostComments();
   return (
     <div className="flex items-center relative pt-2 ml-4">
@@ -181,12 +177,14 @@ const CommentFooter = ({ comment, user, root }: CommentProps) => {
       >
         Reply
       </Button>
-      <CommentActions />
+      <CommentActions node={commentNode} root={root} />
     </div>
   );
 };
 
-const CommentHeader = ({ user: account, comment }: CommentProps) => {
+const CommentHeader = (props: Props) => {
+  const { commentNode } = props;
+  const { user: account, comment } = commentNode;
   const { user } = account;
 
   if (!user) return;
@@ -220,6 +218,7 @@ const CommentHeader = ({ user: account, comment }: CommentProps) => {
   );
 };
 
-const CommentBody = ({ comment }: CommentProps) => {
+const CommentBody = ({ commentNode }: Props) => {
+  const { comment } = commentNode;
   return <div className="mt-2">{comment.content}</div>;
 };

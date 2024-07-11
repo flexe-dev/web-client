@@ -318,7 +318,7 @@ export const GetPostComments = async (
 
 export const AddComment = async (
   comment: Comment
-): Promise<CommentNode | undefined> => {
+): Promise<Comment | undefined> => {
   try {
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_CORE_BACKEND_API_URL}post/comment/add`,

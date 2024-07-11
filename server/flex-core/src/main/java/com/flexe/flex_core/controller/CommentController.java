@@ -25,13 +25,13 @@ public class CommentController {
 
     @PostMapping("/add")
     @ResponseBody
-    public ResponseEntity<CommentNode> addComment(@RequestBody Comment comment) {
+    public ResponseEntity<Comment> addComment(@RequestBody Comment comment) {
         try{
             Comment addedComment = service.saveComment(comment);
             if(addedComment == null){
                 throw new ResponseStatusException(org.springframework.http.HttpStatus.BAD_REQUEST, "Comment not added");
             }
-            return ResponseEntity.ok(new CommentNode(addedComment));
+            return ResponseEntity.ok(addedComment);
         }
         catch (Exception e){
             Sentry.captureException(e);

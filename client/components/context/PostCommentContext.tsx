@@ -13,26 +13,17 @@ import {
 interface PostCommentState {
   comments: CommentNode[];
   replyTarget?: Reply;
+  editTarget?: CommentNode;
   postID: string;
 
   addComment: (comment: CommentNode, rootNode?: CommentNode) => void;
+  deleteComment: (comment: CommentNode, rootNode?: CommentNode) => void;
+  likeComment: (comment: CommentNode, rootNode?: CommentNode) => void;
+  editComment: (comment: CommentNode, rootNode?: CommentNode) => void;
+  reportComment: (comment: CommentNode) => void;
 
-  deleteComment: (
-    comment: CommentNode,
-    rootNode?: CommentNode,
-    depth?: number
-  ) => void;
-  likeComment: (
-    comment: CommentNode,
-    rootNode?: CommentNode,
-    depth?: number
-  ) => void;
-  editComment: (
-    comment: CommentNode,
-    rootNode?: CommentNode,
-    depth?: number
-  ) => void;
   setReplyTarget: Dispatch<SetStateAction<Reply | undefined>>;
+  setEditTarget: Dispatch<SetStateAction<CommentNode | undefined>>;
 }
 
 interface ContextProps extends ChildNodeProps {
@@ -44,11 +35,14 @@ const initialState: PostCommentState = {
   comments: [],
   postID: "",
   replyTarget: undefined,
+  editTarget: undefined,
   addComment: () => {},
   deleteComment: () => {},
   likeComment: () => {},
   editComment: () => {},
+  reportComment: () => {},
   setReplyTarget: () => {},
+  setEditTarget: () => {},
 };
 
 export const PostCommentContext = createContext<PostCommentState>(initialState);
@@ -60,13 +54,19 @@ export const PostCommentProvider = ({
 }: ContextProps) => {
   const [comments, setComments] = useState<CommentNode[]>(fetchedComments);
   const [replyTarget, setReplyTarget] = useState<Reply | undefined>();
+  const [editTarget, setEditTarget] = useState<CommentNode | undefined>();
 
   const addComment = async (comment: CommentNode, rootNode?: CommentNode) => {
-    const newNode = await AddComment(comment.comment);
-    if (!newNode) return;
+    const uploadedComment = await AddComment(comment.comment);
+    if (!uploadedComment) return;
+
+    const newNode: CommentNode = {
+      ...comment,
+      comment: uploadedComment,
+    };
 
     if (!rootNode || !replyTarget) {
-      setComments([...comments, { ...newNode, user: comment.user }]);
+      setComments([...comments, newNode]);
       return;
     }
 
@@ -74,17 +74,15 @@ export const PostCommentProvider = ({
     const index = comments.findIndex(
       (node) => node.comment.id === rootNode.comment.id
     );
-    console.log(index);
+
     if (index === -1) return;
 
     const tr = traverseNodeTree(rootNode, replyTarget.comment, (node) => {
       return {
         ...node,
-        children: [...node.children, { ...newNode, user: comment.user }],
+        children: [...node.children, newNode],
       };
     });
-
-    console.log(tr);
 
     setComments([
       ...comments.slice(0, index),
@@ -101,7 +99,7 @@ export const PostCommentProvider = ({
     const response = await DeleteComment(comment);
     if (!response) return;
 
-    if (!rootNode || !replyTarget) {
+    if (!rootNode) {
       setComments(
         comments.filter((node) => node.comment.id !== comment.comment.id)
       );
@@ -111,46 +109,47 @@ export const PostCommentProvider = ({
     const index = comments.findIndex(
       (node) => node.comment.id === rootNode.comment.id
     );
-    if (index === -1) return;
-    console.log(index);
 
-    const tr = traverseNodeTree(
-      comments[index],
-      replyTarget.comment,
-      (node) => {
-        return {
-          ...node,
-          children: node.children.filter(
-            (child) => child.comment.id !== comment.comment.id
-          ),
-        };
-      }
-    );
+    if (index === -1) return;
+
+    const tr = traverseNodeTree(rootNode, comment.comment, (node) => {
+      return {
+        ...node,
+        children: node.children.filter(
+          (child) => child.comment.id !== comment.comment.id
+        ),
+      };
+    });
+
+    setComments([
+      ...comments.slice(0, index),
+      tr,
+      ...comments.slice(index + 1),
+    ]);
+
+    //traverse down root down and filter out instance of child
   };
 
-  const likeComment = (
-    comment: CommentNode,
-    rootNode?: CommentNode,
-    depth?: number
-  ) => {};
+  const likeComment = (comment: CommentNode, rootNode?: CommentNode) => {};
 
-  const editComment = (
-    comment: CommentNode,
-    rootNode?: CommentNode,
-    depth?: number
-  ) => {};
+  const editComment = (comment: CommentNode, rootNode?: CommentNode) => {};
+
+  const reportComment = (comment: CommentNode) => {};
 
   return (
     <PostCommentContext.Provider
       value={{
         comments,
-        replyTarget,
         postID,
+        replyTarget,
+        editTarget,
         addComment,
         deleteComment,
         likeComment,
         editComment,
+        reportComment,
         setReplyTarget,
+        setEditTarget,
       }}
     >
       {children}

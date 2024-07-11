@@ -16,7 +16,7 @@ const DeletePostModal = (props: ToolModalProp) => {
   const { callback, postId, postType } = props;
   const { account, setAccount } = useAccount();
 
-  if (!account) return;
+  if (!account) return <></>;
 
   const onDelete = async () => {
     toast.promise(DeletePost(postId, postType), {
