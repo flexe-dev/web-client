@@ -29,14 +29,14 @@ interface CommentPostAction {
   component?: React.ReactNode;
 }
 
-interface Props {
+export interface NodeTraversalProps {
   node: CommentNode;
   root: CommentNode;
 }
 
 export type CommentAction = "delete" | "report" | "pin";
 
-export const CommentActions = (props: Props) => {
+export const CommentActions = (props: NodeTraversalProps) => {
   const { account } = useAccount();
   const { deleteComment, reportComment } = usePostComments();
   const [modalOpen, setModalOpen] = useState<boolean>(false);
@@ -63,19 +63,19 @@ export const CommentActions = (props: Props) => {
       name: "Delete",
       icon: TrashIcon,
       access: ["creator", "poster"],
-      action: () => deleteComment(node, root),
+      action: () => setAction("delete"),
     },
     {
       name: "Report",
       icon: FlagIcon,
       access: ["viewer", "poster"],
-      action: () => reportComment(node),
+      action: () => setAction("report"),
     },
     {
       name: "Pin",
       icon: MapPinIcon,
       access: ["poster"],
-      action: () => console.log("Pin Comment"),
+      action: () => setAction("pin"),
     },
   ];
 
@@ -127,7 +127,11 @@ export const CommentActions = (props: Props) => {
           )}
         </DropdownMenuContent>
       </DropdownMenu>
-      <CommentActionConfirmModal callback={handleModalClose} type={action}/>
+      <CommentActionConfirmModal
+        {...props}
+        callback={handleModalClose}
+        type={action}
+      />
     </Dialog>
   );
 };

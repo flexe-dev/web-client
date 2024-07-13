@@ -340,9 +340,13 @@ export const AddComment = async (
 export const DeleteComment = async (comment: CommentNode): Promise<boolean> => {
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_CORE_BACKEND_API_URL}post/comment/delete/${comment.comment.id}`,
+      `${process.env.NEXT_PUBLIC_CORE_BACKEND_API_URL}post/comment/delete/comment`,
       {
         method: `DELETE`,
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(comment),
       }
     );
     return response.ok;

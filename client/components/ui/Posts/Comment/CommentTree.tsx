@@ -156,7 +156,7 @@ const ReplyThread = () => {
 
 const CommentFooter = ({ commentNode, root }: Props) => {
   const { comment, user } = commentNode;
-  const { setReplyTarget } = usePostComments();
+  const { setReplyTarget, likeComment } = usePostComments();
   return (
     <div className="flex items-center relative pt-2 ml-4">
       <div className="flex w-fit items-center">
@@ -166,7 +166,12 @@ const CommentFooter = ({ commentNode, root }: Props) => {
         <span className="w-5 text-secondary-header text-sm">
           {comment.likes - comment.dislikes}
         </span>
-        <Button className="h-7 w-7 ml-2" size={"icon"} variant={"ghost"}>
+        <Button
+          onClick={() => likeComment(commentNode, root)}
+          className="h-7 w-7 ml-2"
+          size={"icon"}
+          variant={"ghost"}
+        >
           <ArrowUpIcon className="h-5" />
         </Button>
       </div>

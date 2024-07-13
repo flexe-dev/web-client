@@ -209,3 +209,12 @@ export interface CommentNode {
 export interface Reply extends Omit<CommentNode, "children"> {
   root: CommentNode;
 }
+
+export type CommentReactType = "LIKE" | "DISLIKE";
+
+export interface CommentReact {
+  id: string;
+  commentId: string;
+  userId: string;
+  reactType: CommentReact;
+}

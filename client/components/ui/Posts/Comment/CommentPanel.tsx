@@ -18,7 +18,7 @@ const CommentPanel = ({ children }: Props) => {
     <motion.aside
       className={cn(
         "border-r h-screen-without-header fixed xl:sticky duration-300 ease-in-out z-[40] bg-background h-screen-without-header top-[5rem] left-0 transition-all",
-        panelOpen ? "w-5/6 md:w-1/2 xl:w-2/5 " : "w-0 md:w-[4rem]"
+        panelOpen ? "w-5/6 md:w-3/5 xl:min-w-[40rem] " : "w-0 md:w-[4rem]"
       )}
     >
       <AnimatePresence mode="wait">

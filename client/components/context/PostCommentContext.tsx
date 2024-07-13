@@ -1,6 +1,10 @@
 "use client";
 
-import { AddComment, DeleteComment } from "@/controllers/PostController";
+import {
+  AddComment,
+  DeleteComment,
+  LikeComment,
+} from "@/controllers/PostController";
 import { ChildNodeProps, Comment, CommentNode, Reply } from "@/lib/interface";
 import {
   createContext,
@@ -9,6 +13,7 @@ import {
   useContext,
   useState,
 } from "react";
+import { toast } from "sonner";
 
 interface PostCommentState {
   comments: CommentNode[];
@@ -84,11 +89,13 @@ export const PostCommentProvider = ({
       };
     });
 
+    if (!tr) return;
     setComments([
       ...comments.slice(0, index),
       tr,
       ...comments.slice(index + 1),
     ]);
+
     setReplyTarget(undefined);
   };
 
@@ -97,12 +104,18 @@ export const PostCommentProvider = ({
     rootNode?: CommentNode
   ) => {
     const response = await DeleteComment(comment);
-    if (!response) return;
+    if (!response) {
+      toast.error("Failed to delete comment");
+      return;
+    }
 
-    if (!rootNode) {
+    if (!rootNode) return;
+
+    if (rootNode?.comment.id === comment.comment.id) {
       setComments(
         comments.filter((node) => node.comment.id !== comment.comment.id)
       );
+      toast.success("Comment deleted successfully");
       return;
     }
 
@@ -113,13 +126,10 @@ export const PostCommentProvider = ({
     if (index === -1) return;
 
     const tr = traverseNodeTree(rootNode, comment.comment, (node) => {
-      return {
-        ...node,
-        children: node.children.filter(
-          (child) => child.comment.id !== comment.comment.id
-        ),
-      };
+      return null;
     });
+
+    if (!tr) return;
 
     setComments([
       ...comments.slice(0, index),
@@ -127,10 +137,58 @@ export const PostCommentProvider = ({
       ...comments.slice(index + 1),
     ]);
 
-    //traverse down root down and filter out instance of child
+    toast.success("Comment deleted successfully");
   };
 
-  const likeComment = (comment: CommentNode, rootNode?: CommentNode) => {};
+  const likeComment = (comment: CommentNode, rootNode?: CommentNode) => {
+    const response = LikeComment(comment.comment.id);
+    if (!response) {
+      toast.error("Failed to like comment");
+      return;
+    }
+
+    if (!rootNode) return;
+
+    const index = comments.findIndex(
+      (node) => node.comment.id === rootNode.comment.id
+    );
+
+    if (index === -1) return;
+
+    if (rootNode.comment.id === comment.comment.id) {
+      const tr = {
+        ...rootNode,
+        comment: {
+          ...rootNode.comment,
+          likes: rootNode.comment.likes + 1,
+        },
+      };
+      setComments([
+        ...comments.slice(0, index),
+        tr,
+        ...comments.slice(index + 1),
+      ]);
+      return;
+    }
+
+    const tr = traverseNodeTree(rootNode, comment.comment, (node) => {
+      return {
+        ...node,
+        comment: {
+          ...node.comment,
+          likes: node.comment.likes + 1,
+        },
+      };
+    });
+
+    if (!tr) return;
+
+    setComments([
+      ...comments.slice(0, index),
+      tr,
+      ...comments.slice(index + 1),
+    ]);
+  };
 
   const editComment = (comment: CommentNode, rootNode?: CommentNode) => {};
 
@@ -160,7 +218,7 @@ export const PostCommentProvider = ({
 const traverseNodeTree = (
   node: CommentNode,
   targetNode: Comment,
-  fn: (node: CommentNode) => CommentNode
+  fn: (node: CommentNode) => CommentNode | null
 ) => {
   if (node.comment.id === targetNode.id) {
     return fn(node);
@@ -168,9 +226,11 @@ const traverseNodeTree = (
 
   const newNode: CommentNode = {
     ...node,
-    children: node.children.map((child) => {
-      return traverseNodeTree(child, targetNode, fn);
-    }),
+    children: node.children
+      .map((child) => {
+        return traverseNodeTree(child, targetNode, fn);
+      })
+      .filter((node) => !!node),
   };
 
   return newNode;

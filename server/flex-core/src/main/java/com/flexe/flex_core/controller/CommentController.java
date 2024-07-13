@@ -80,10 +80,10 @@ public class CommentController {
         }
     }
 
-    @PostMapping("/like/{commentId}")
-    public ResponseEntity<String> likeComment(@PathVariable String commentId) {
+    @PostMapping("/like/{commentId}/{userId}")
+    public ResponseEntity<String> likeComment(@PathVariable String commentId, @PathVariable String userId) {
         try{
-            service.likeComment(commentId);
+            service.likeComment(commentId, userId);
             return ResponseEntity.ok("Comment liked");
         }
         catch (Exception e){
@@ -92,11 +92,23 @@ public class CommentController {
         }
     }
 
-    @PostMapping("/dislike/{commentId}")
-    public ResponseEntity<String> dislikeComment(@PathVariable String commentId){
+    @PostMapping("/dislike/{commentId}/{userId}")
+    public ResponseEntity<String> dislikeComment(@PathVariable String commentId, @PathVariable String userId){
         try{
-            service.dislikeComment(commentId);
+            service.dislikeComment(commentId, userId);
             return ResponseEntity.ok("Comment disliked");
+        }
+        catch (Exception e){
+            Sentry.captureException(e);
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    @PostMapping("/react/remove/{commentId}/{userId}")
+    public ResponseEntity<String> removeCommentReaction(@PathVariable String commentId, @PathVariable String userId){
+        try{
+            service.removeReaction(commentId, userId);
+            return ResponseEntity.ok("Comment reaction removed");
         }
         catch (Exception e){
             Sentry.captureException(e);

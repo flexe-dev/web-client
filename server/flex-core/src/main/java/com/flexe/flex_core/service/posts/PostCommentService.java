@@ -1,8 +1,10 @@
 package com.flexe.flex_core.service.posts;
 
 import com.flexe.flex_core.entity.posts.metrics.Comment;
+import com.flexe.flex_core.entity.posts.metrics.CommentReact;
 import com.flexe.flex_core.entity.user.User;
 import com.flexe.flex_core.entity.user.UserAccount;
+import com.flexe.flex_core.repository.post.CommentReactionRepository;
 import com.flexe.flex_core.repository.post.PostCommentRepository;
 import com.flexe.flex_core.service.user.UserService;
 import com.flexe.flex_core.structures.comments.CommentNode;
@@ -18,6 +20,8 @@ public class PostCommentService {
 
     @Autowired
     private PostCommentRepository repository;
+    @Autowired
+    private CommentReactionRepository reactionRepository;
     @Autowired
     private UserService userService;
 
@@ -83,17 +87,28 @@ public class PostCommentService {
         }
     }
 
-    public void likeComment(String commentId){
-        Optional<Comment> comment = repository.findById(commentId);
-        if(comment.isEmpty()) return;
-        Comment c = comment.get();
-        c.setLikes(c.getLikes() + 1);
-        repository.save(c);
+    public Optional<CommentReact> retrieveReaction(String commentId, String userId){
+        return reactionRepository.findByCommentIdAndUserId(commentId, userId);
     }
 
-    public void dislikeComment(String commentId) {
+    public void likeComment(String commentId, String userId){
         Optional<Comment> comment = repository.findById(commentId);
         if(comment.isEmpty()) return;
+
+        Optional<CommentReact> reaction = retrieveReaction(commentId, userId);
+        
+    }
+
+    public void removeReaction(String commentId, String userId){
+
+    }
+
+    public void dislikeComment(String commentId, String userId) {
+        Optional<Comment> comment = repository.findById(commentId);
+        if(comment.isEmpty()) return;
+
+        CommentReact react = new CommentReact(CommentReact.ReactType.DISLIKE, commentId, userId);
+        reactionRepository.save(react);
         Comment c = comment.get();
         c.setDislikes(c.getDislikes() + 1);
         repository.save(c);
