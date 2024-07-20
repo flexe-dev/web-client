@@ -131,7 +131,7 @@ export const AnimatedSidebar = ({ children }: AnimatedContainerProps) => {
       initial="initial"
       animate="animate"
       exit="exit"
-      className="origin-left z-[60] lg:z-0 fixed pt-4 lg:sticky h-screen bg-background top-[5rem] min-w-[20rem] w-[20rem] border-r-2 "
+      className="origin-left z-[60] lg:z-0 fixed pt-4 lg:sticky h-screen-without-header bg-background top-[5rem] min-w-[20rem] w-[20rem] border-r-2 "
     >
       <ScrollArea className="h-[95dvh]">
         <motion.div className="flex flex-col sticky top-[6rem] pt-12 ">

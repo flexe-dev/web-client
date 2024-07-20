@@ -16,6 +16,7 @@ public class TextPost {
     private String userID;
 
     private final Date createdAt;
+    private Date updatedAt;
     private final String textpost;
     private final PostExternalData externalData;
 
@@ -40,5 +41,13 @@ public class TextPost {
 
     public String getUserID() {
         return userID;
+    }
+
+    public Date getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(Date updatedAt) {
+        this.updatedAt = updatedAt;
     }
 }

@@ -1,65 +1,38 @@
 "use client";
 
 import { FindAccountByUserId } from "@/controllers/UserController";
-import {
-  ChildNodeProps,
-  UserPost,
-  UserProfile,
-  UserTextPost,
-} from "@/lib/interface";
-import { User } from "next-auth";
+import { ChildNodeProps, UserAccount } from "@/lib/interface";
 import { useSession } from "next-auth/react";
-import React, { createContext, useEffect } from "react";
+import React, {
+  createContext,
+  Dispatch,
+  SetStateAction,
+  useEffect,
+  useState,
+} from "react";
 
 interface AccountProviderState {
-  user: User | undefined;
-  profile: UserProfile | undefined;
-  mediaPosts: UserPost[];
-  textPosts: UserTextPost[];
-  setUser: React.Dispatch<React.SetStateAction<User | undefined>>;
-  setProfile: React.Dispatch<React.SetStateAction<UserProfile | undefined>>;
-  setMediaPosts: React.Dispatch<React.SetStateAction<UserPost[]>>;
-  setTextPosts: React.Dispatch<React.SetStateAction<UserTextPost[]>>;
+  account: UserAccount | null;
+  setAccount: Dispatch<SetStateAction<UserAccount | null>>;
 }
 
 const initialState: AccountProviderState = {
-  user: undefined,
-  profile: undefined,
-  mediaPosts: [],
-  textPosts: [],
-  setUser: () => {},
-  setProfile: () => {},
-  setMediaPosts: () => {},
-  setTextPosts: () => {},
+  account: null,
+  setAccount: () => {},
 };
 
 export const AccountContext = createContext<AccountProviderState>(initialState);
 
 export const AccountProvider = ({ children }: ChildNodeProps) => {
   const session = useSession();
-  const [user, setUser] = React.useState<User | undefined>(
-    session.data?.user as User
-  );
-  const [profile, setProfile] = React.useState<UserProfile | undefined>(
-    undefined
-  );
-
-  const [mediaPosts, setMediaPosts] = React.useState<UserPost[]>([]);
-  const [textPosts, setTextPosts] = React.useState<UserTextPost[]>([]);
+  const [account, setAccount] = useState<UserAccount | null>(null);
 
   const fetchProfile = async () => {
-    if (!user) return; // No user ID available
+    if (!session.data?.user) return; // No user ID available
 
     try {
-      const userData = session.data?.user;
-      if (userData) {
-        const account = await FindAccountByUserId(userData.id);
-        if (account) {
-          setProfile(account.profile);
-          setMediaPosts(account.mediaPosts ?? []);
-          setTextPosts(account.textPosts ?? []);
-        }
-      }
+      const account = await FindAccountByUserId(session.data.user.id);
+      setAccount(account);
     } catch (error) {
       console.error("Error fetching user profile:", error);
     }
@@ -72,14 +45,8 @@ export const AccountProvider = ({ children }: ChildNodeProps) => {
   return (
     <AccountContext.Provider
       value={{
-        user,
-        profile,
-        mediaPosts,
-        textPosts,
-        setUser,
-        setProfile,
-        setMediaPosts,
-        setTextPosts,
+        account,
+        setAccount,
       }}
     >
       {children}

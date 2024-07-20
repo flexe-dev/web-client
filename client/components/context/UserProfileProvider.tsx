@@ -27,7 +27,7 @@ export const ProfileViewerContext =
   createContext<ProfileViewerProviderState>(initialState);
 
 export const ProviderViewerProvider = ({ children }: ChildNodeProps) => {
-  const { user, profile, mediaPosts, textPosts } = useAccount();
+  const { account } = useAccount();
   const params = useParams<{ username: string; tag: string }>();
 
   const [isOwnProfile, setisOwnProfile] = useState(false);
@@ -49,31 +49,16 @@ export const ProviderViewerProvider = ({ children }: ChildNodeProps) => {
 
   useEffect(() => {
     const { username } = params;
+    if (!account) return;
     //Check whether or not the user name is the current user or if the user is visiting another profile
-    if (username === user?.username) {
-      setFetchedAccount({
-        user: user,
-        profile: profile,
-        mediaPosts: mediaPosts,
-        textPosts: textPosts,
-      });
+    if (username === account?.user.username) {
+      setFetchedAccount(account);
       setisOwnProfile(true);
       setLoading(false);
     } else {
       fetchProfileDetails(username);
     }
-  }, [user, profile]);
-
-  useEffect(() => {
-    if (!isOwnProfile || !user) return;
-
-    setFetchedAccount({
-      user: user,
-      profile: profile,
-      mediaPosts: mediaPosts,
-      textPosts: textPosts,
-    });
-  }, [textPosts, mediaPosts, profile, user]);
+  }, [account]);
 
   return (
     <ProfileViewerContext.Provider

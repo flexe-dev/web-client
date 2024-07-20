@@ -1,18 +1,18 @@
+import { OnboardModal } from "@/components/auth/OnboardModal";
+import { AccountProvider } from "@/components/context/AccountProvider";
+import DndContext from "@/components/context/DndProvider";
+import SessionProvider from "@/components/context/SessionProvider";
+import { Navbar } from "@/components/navbar";
+import { ThemeProvider } from "@/components/theme/theme-provider";
+import { Toaster } from "@/components/ui/sonner";
+import { baseAuthOptions } from "@/lib/authOptions";
+import { ChildNodeProps } from "@/lib/interface";
+import { cn } from "@/lib/utils";
 import type { Metadata } from "next";
+import { getServerSession } from "next-auth";
 import { Manrope } from "next/font/google";
 import "./globals.css";
-import { cn } from "@/lib/utils";
-import { ThemeProvider } from "@/components/theme/theme-provider";
-const manrope = Manrope({ subsets: ["latin"], weight: "600" });
-import { Toaster } from "@/components/ui/sonner";
-import SessionProvider from "@/components/context/SessionProvider";
-import { getServerSession } from "next-auth";
-import { baseAuthOptions } from "@/lib/authOptions";
-import { OnboardModal } from "@/components/auth/OnboardModal";
-import { Navbar } from "@/components/navbar";
-import { AccountProvider } from "@/components/context/AccountProvider";
-import { ChildNodeProps } from "@/lib/interface";
-import DndContext from "@/components/context/DndProvider";
+const manrope = Manrope({ subsets: ["latin"], weight: ["600", "700", "800"] });
 export const metadata: Metadata = {
   title: "FLEXE.dev",
   description:

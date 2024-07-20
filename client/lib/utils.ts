@@ -19,9 +19,21 @@ export function toTitleCase(value: string) {
   return value.charAt(0).toUpperCase() + value.slice(1).toLowerCase();
 }
 
-export function copyToClipboard(value: string) {
-  navigator.clipboard.writeText(value);
+export function getEntireURL(pathName: string) {
+  return `${process.env.NEXT_PUBLIC_URL}${pathName}`;
 }
+
+export function copyToClipboard(value: string) {
+  navigator.clipboard.writeText(getEntireURL(value));
+}
+
+export const GetNameInitials = (name?: string | null) => {
+  if (!name) return "";
+  return name
+    ?.split(" ")
+    .map((n) => n[0])
+    .join("");
+};
 
 export async function resizeImage(
   url: string,

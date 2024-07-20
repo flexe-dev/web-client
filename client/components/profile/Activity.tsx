@@ -8,7 +8,7 @@ export const Activity = () => {
   const { user, textPosts } = fetchedAccount;
 
   return (
-    <div className="w-full mt-4">
+    <div className="w-full mt-4 px-2">
       {textPosts
         .sort(
           (a, b) =>

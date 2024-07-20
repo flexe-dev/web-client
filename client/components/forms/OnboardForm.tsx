@@ -46,9 +46,10 @@ const formSchema = z.object({
 });
 
 export const OnboardForm = (props: Props) => {
-  const { user, setUser, profile, setProfile } = useAccount();
+  const { account, setAccount } = useAccount();
 
-  if (!user) return null;
+  if (!account) return null;
+  const { user, profile } = account;
 
   const [usernameValid, setUsernameValid] =
     useState<UsernameStatus>("checking");
@@ -76,14 +77,19 @@ export const OnboardForm = (props: Props) => {
       const profileResponse: UserProfile = await CreateUserProfile(user.id);
 
       // Update User Account Details
-      setUser({
-        ...user,
-        onboarded: true,
-        username: values.username,
-        name: values.name,
-        image: imageURL,
+
+      setAccount({
+        ...account,
+        user: {
+          ...user,
+          onboarded: true,
+          username: values.username,
+          name: values.name,
+          image: imageURL,
+        },
+        profile: profileResponse,
       });
-      setProfile(profileResponse);
+
       if (userDetailsResponse && profileResponse) {
         props.onSuccess(true);
         return true;

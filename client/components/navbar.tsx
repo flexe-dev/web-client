@@ -2,9 +2,9 @@
 
 import { LinkProps } from "@/lib/interface";
 import {
+  BellIcon,
   BriefcaseIcon,
   CodeBracketIcon,
-  InboxIcon,
   MagnifyingGlassIcon,
   UserGroupIcon,
 } from "@heroicons/react/24/outline";
@@ -20,9 +20,15 @@ import { NavSearch } from "./ui/Search/NavSearch";
 //Styling for the Navbar main logo
 
 export const Navbar = () => {
-  const { user } = useAccount();
+  const { account } = useAccount();
+
   const links: LinkProps[] = [
-    { href: "/feed", label: "Feed", icon: <InboxIcon />, restrict: true },
+    {
+      href: "/notifications",
+      label: "Notifications",
+      icon: <BellIcon />,
+      restrict: true,
+    },
     {
       href: "/network",
       label: "My Network",
@@ -30,7 +36,7 @@ export const Navbar = () => {
       icon: <UserGroupIcon />,
     },
     {
-      href: `/${user?.username}/posts`,
+      href: `/${account?.user?.username}/posts`,
       label: "My Work",
       restrict: true,
       icon: <BriefcaseIcon />,
@@ -51,7 +57,7 @@ export const Navbar = () => {
         <section className="flex flex-grow items-end h-full justify-end md:justify-end ">
           <NavSearch />
           <div className="flex items-center  space-x-3 h-full">
-            <DesktopLayout links={links} user={user} />
+            <DesktopLayout links={links} user={account?.user} />
             <AuthProfile />
             <ModeToggle className="hidden md:flex" variant="default" />
           </div>

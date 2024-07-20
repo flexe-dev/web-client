@@ -45,9 +45,12 @@ const formSchema = z.object({
 });
 
 export const ProfileDetailsForm = (props: Props) => {
-  const { user, setUser, profile, setProfile, mediaPosts, textPosts } =
-    useAccount();
-  if (!user || !profile) return null;
+  const { account, setAccount } = useAccount();
+  if (!account) return null;
+
+  const { user, profile } = account;
+
+  if (!profile) return null;
 
   const [avatarFile, setAvatarFile] = useState<File>();
   const [avatarURL, setAvatarURL] = useState<string>(
@@ -78,28 +81,27 @@ export const ProfileDetailsForm = (props: Props) => {
       };
 
       const response = await UpdateUserAccount({
+        ...account,
         user: updatedUser,
         profile: updatedProfile,
-        mediaPosts: mediaPosts,
-        textPosts: textPosts,
       });
 
-      // Update User Account Details
-      setUser({
-        ...user,
-        onboarded: true,
-        username: values.username,
-        name: values.name,
-        image: imageURL ?? user.image,
-      });
-
-      setProfile({
-        ...profile,
-        job: values.job,
-        company: values.company,
-        pronouns: values.pronouns,
-        location: values.location,
-        bio: values.bio,
+      setAccount({
+        ...account,
+        user: {
+          ...user,
+          username: values.username,
+          name: values.name,
+          image: imageURL ?? user.image,
+        },
+        profile: {
+          ...profile,
+          job: values.job,
+          company: values.company,
+          pronouns: values.pronouns,
+          location: values.location,
+          bio: values.bio,
+        },
       });
 
       if (response) {

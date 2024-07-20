@@ -19,9 +19,9 @@ import {
   PencilIcon,
   ShareIcon,
   TrashIcon,
-  ViewfinderCircleIcon,
 } from "@heroicons/react/24/outline";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { toast } from "sonner";
 
 interface Props extends ChildNodeProps {
@@ -40,6 +40,7 @@ interface PostOption {
 export const TextPostTools = ({ children, postId }: Props) => {
   const { isOwnProfile } = useProfileViewer();
   const { setTool, tool, type } = usePostTools();
+  const URLPath = usePathname();
   const actionOptions: PostOption[] = [
     {
       creatorOnly: true,
@@ -58,15 +59,6 @@ export const TextPostTools = ({ children, postId }: Props) => {
       creatorOnly: true,
     },
     {
-      icon: ViewfinderCircleIcon,
-      component: (
-        <Link className="flex" href={window.location.href}>
-          <ViewfinderCircleIcon className="w-5 h-5 mr-2" />
-          <span>View Post</span>
-        </Link>
-      ),
-    },
-    {
       name: "Report Post",
       icon: FlagIcon,
       action: () => setTool("report"),
@@ -81,16 +73,16 @@ export const TextPostTools = ({ children, postId }: Props) => {
       name: "Copy Link",
       icon: ClipboardIcon,
       action: () => {
-        copyToClipboard(window.location.href);
+        copyToClipboard(URLPath);
         toast.success("Link Copied to Clipboard");
       },
     },
   ];
 
   return (
-    <DropdownMenu>
+    <DropdownMenu modal={false}>
       <DropdownMenuTrigger asChild>{children}</DropdownMenuTrigger>
-      <DropdownMenuContent>
+      <DropdownMenuContent className="mr-2">
         <DropdownMenuGroup>
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
           <DropdownMenuSeparator />
@@ -104,7 +96,10 @@ export const TextPostTools = ({ children, postId }: Props) => {
             return (
               <DropdownMenuItem
                 key={`post-option-${index}`}
-                onClick={option.action}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  option.action?.();
+                }}
               >
                 {option.component ?? (
                   <>

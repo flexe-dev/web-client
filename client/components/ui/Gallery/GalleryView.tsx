@@ -1,14 +1,13 @@
 "use client";
 
-import React from "react";
-import { motion } from "framer-motion";
-import { GalleryTile } from "./GalleryTile";
 import { useAccount } from "@/components/context/AccountProvider";
 import { images } from "@/lib/placeholder";
+import { motion } from "framer-motion";
+import { GalleryTile } from "./GalleryTile";
 
 const GalleryView = () => {
-  const { user } = useAccount();
-  if (!user) return null;
+  const { account } = useAccount();
+  if (!account) return null;
   return (
     <motion.section
       layout={"position"}
@@ -34,7 +33,7 @@ const GalleryView = () => {
           <GalleryTile
             index={index}
             key={`gallery-tile-${index}`}
-            creator={user}
+            creator={account.user}
             title="Placeholder Title"
             link="/inspiration"
             image={images[index % images.length]}

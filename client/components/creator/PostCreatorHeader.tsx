@@ -16,8 +16,7 @@ import PostSubmit from "./PostSubmit";
 
 export const CreatorHeader = () => {
   const { document, setDocument } = useDocumentCreator();
-  const { setMediaPosts } = useAccount();
-  const { user } = useAccount();
+  const { account } = useAccount();
   const router = useRouter();
   const { scrollY } = useScroll();
   const { thumbnail, id, title, tags, tech, postStatus, setAuxData } =
@@ -31,6 +30,9 @@ export const CreatorHeader = () => {
   useMotionValueEvent(scrollY, "change", (latest) => {
     setScrollPosition(latest);
   });
+
+  if (!account) return null;
+  const { user } = account;
 
   const publishPost = async () => {
     const response = await handlePostSave("PUBLISHED");
@@ -64,7 +66,7 @@ export const CreatorHeader = () => {
 
           setDocument(data.document);
           setAuxData(data);
-          setMediaPosts((prev) => [...prev, data]);
+          
           resolve(true);
           return `Saved Post Successfully`;
         },

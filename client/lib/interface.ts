@@ -20,6 +20,7 @@ export interface ModalProps {
 
 export interface SidebarButtonProps extends ClassNameProp {
   callback: React.Dispatch<React.SetStateAction<boolean>>;
+  mobile?: boolean;
 }
 
 export interface ChildNodeProps {
@@ -166,6 +167,7 @@ export interface UserTextPost {
   userID: string;
   textpost: string;
   createdAt: Date;
+  updatedAt?: Date;
   externalData: PostExternalData;
 }
 
@@ -201,9 +203,26 @@ export interface Comment {
 
 export interface CommentNode {
   comment: Comment;
+  user: UserAccount;
   children: CommentNode[];
 }
 
-export interface CommentTree {
+export interface Reply extends Omit<CommentNode, "children"> {
   root: CommentNode;
+}
+
+export type CommentReactType = "LIKE" | "DISLIKE";
+export type NodeMetric = "likes" | "dislikes";
+
+export interface CommentReact {
+  id: string;
+  commentId: string;
+  postId: string;
+  userId: string;
+  reactType: CommentReactType;
+}
+
+export interface UserPostReactions {
+  reactions: Map<string, CommentReactType>;
+  loading: boolean;
 }

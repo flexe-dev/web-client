@@ -1,26 +1,25 @@
 "use client";
 import { useEffect, useState } from "react";
-import React from "react";
+import { useAccount } from "../context/AccountProvider";
+import { OnboardForm } from "../forms/OnboardForm";
 import {
   AlertDialog,
   AlertDialogContent,
-  AlertDialogHeader,
   AlertDialogDescription,
+  AlertDialogHeader,
 } from "../ui/alert-dialog";
-import { OnboardForm } from "../forms/OnboardForm";
-import { useAccount } from "../context/AccountProvider";
 
 export const OnboardModal = () => {
-  const { user, profile } = useAccount();
-
+  const { account } = useAccount();
   //Only performing state operations due to Hydration Issues
   const [modalOpen, setModalOpen] = useState<boolean>(false);
 
   useEffect(() => {
-    setModalOpen(!user?.onboarded);
-  }, []);
+    if (!account) return;
+    setModalOpen(!account?.user.onboarded);
+  }, [account]);
 
-  if (!user && !profile) return null;
+  if (!account) return null;
 
   const handleFinishOnboard = () => {
     setModalOpen(false);

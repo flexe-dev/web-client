@@ -1,7 +1,6 @@
-"use client";
-
 import { UserPost } from "@/lib/interface";
 import ErrorPage from "../../../Error";
+import { PostDisplayHeader } from "../Header/PostDisplayHeader";
 import DisplayPost from "./DisplayPost";
 
 interface Props {
@@ -12,12 +11,16 @@ const PostDisplayWrapper = ({ post }: Props) => {
   if (!post.id) return <ErrorPage />;
 
   return (
-    <>
-      {/* <CommentPanel postId={post.id} /> */}
-      <div className="w-full h-full flex-col">
-        <DisplayPost post={post} />
-      </div>
-    </>
+    <div className="relative w-full">
+      <PostDisplayHeader
+        postID={post.id}
+        userID={post.auxData.userID}
+        datePosted={post.auxData.dateCreated}
+        updatedDate={post.auxData.dateUpdated}
+        type="MEDIA"
+      />
+      <DisplayPost post={post} />
+    </div>
   );
 };
 

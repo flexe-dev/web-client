@@ -1,5 +1,6 @@
 package com.flexe.flex_core.entity.posts.metrics;
 
+import org.jetbrains.annotations.NotNull;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
@@ -7,7 +8,7 @@ import org.springframework.data.mongodb.core.mapping.FieldType;
 
 import java.util.Date;
 
-@Document(collection = "Comments")
+@Document(collection = "PostComment")
 public class Comment {
     @Id
     private  String id;
@@ -26,7 +27,7 @@ public class Comment {
     public Comment() {
     }
 
-    public Comment(String id, String postId, String userId, String parentId, String content, Integer likes, Integer dislikes, Date dateCreated, Date dateUpdated) {
+    public Comment(String id, String postId, String userId, String parentId, String content, Integer likes, Integer dislikes, Date dateCreated, Date dateUpdated, Integer level) {
         this.id = id;
         this.postId = postId;
         this.userId = userId;
