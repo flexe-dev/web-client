@@ -1,6 +1,7 @@
 "use server";
 
 import ErrorPage from "@/components/Error";
+import { CommentPanelLoading } from "@/components/ui/Posts/Comment/Loading/CommentPanelLoading";
 import PostComments from "@/components/ui/Posts/Comment/PostComments";
 import PostDisplayWrapper from "@/components/ui/Posts/media/PostDisplayWrapper";
 import { LoadingPost } from "@/components/ui/Posts/media/loading";
@@ -20,7 +21,7 @@ const page = async ({ params }: Props) => {
 
   return (
     <div className="relative flex">
-      <Suspense fallback={<>Loading...</>}>
+      <Suspense fallback={<CommentPanelLoading type="MEDIA" />}>
         <PostComments postId={postId} type="MEDIA" />
       </Suspense>
 

@@ -1,3 +1,5 @@
+import { Skeleton } from "../../skeleton";
+
 export const TextPostSkeleton = () => {
-  return <div>TextPostSkeleton</div>;
+  return <Skeleton className="w-full h-[10rem] rounded-t-none" />;
 };

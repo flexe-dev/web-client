@@ -2,7 +2,7 @@ import ErrorPage from "@/components/Error";
 import PostComments from "@/components/ui/Posts/Comment/PostComments";
 import { PostDisplayHeader } from "@/components/ui/Posts/Header/PostDisplayHeader";
 import { TextPostDisplay } from "@/components/ui/Posts/text/TextPostDisplay";
-import { TextPostSkeleton } from "@/components/ui/Posts/text/TextPostSkeleton";
+import { Skeleton } from "@/components/ui/skeleton";
 import { getPostById } from "@/controllers/PostController";
 import { UserTextPost } from "@/lib/interface";
 import { Suspense } from "react";
@@ -28,10 +28,10 @@ const page = async ({ params }: Props) => {
         postID={post.id!}
         type="TEXT"
       />
-      <Suspense fallback={<TextPostSkeleton />}>
+      <Suspense fallback={<Skeleton className="mt-4 h-[10rem]" />}>
         <TextPostDisplay post={post} />
       </Suspense>
-      <Suspense fallback={"Loading..."}>
+      <Suspense fallback={<Skeleton className="mt-4 h-[15rem]" />}>
         <PostComments postId={post.id} type="TEXT" />
       </Suspense>
     </div>

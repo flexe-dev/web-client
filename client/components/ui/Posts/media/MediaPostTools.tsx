@@ -121,7 +121,7 @@ export const MediaPostTools = ({ children, postId }: Props) => {
     },
   ];
   return (
-    <DropdownMenu>
+    <DropdownMenu modal={false}>
       <DropdownMenuTrigger asChild>{children}</DropdownMenuTrigger>
       <DropdownMenuContent className="mr-2">
         <DropdownMenuGroup>

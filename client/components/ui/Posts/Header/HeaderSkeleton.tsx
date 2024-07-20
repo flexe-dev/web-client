@@ -1,3 +1,5 @@
+import { Skeleton } from "../../skeleton";
+
 export const HeaderSkeleton = () => {
-  return <div>HeaderSkeleton</div>;
+  return <Skeleton className="rounded-none w-full h-[5rem]" />;
 };
