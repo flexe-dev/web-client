@@ -3,37 +3,70 @@
 import {
   AddComment,
   DeleteComment,
+  DislikeComment,
+  EditComment,
+  GetPostReactions,
   LikeComment,
+  RemoveCommentReaction,
 } from "@/controllers/PostController";
-import { ChildNodeProps, Comment, CommentNode, Reply } from "@/lib/interface";
+import {
+  ChildNodeProps,
+  Comment,
+  CommentNode,
+  CommentReactType,
+  NodeMetric,
+  PostType,
+  Reply,
+  UserPostReactions,
+} from "@/lib/interface";
 import {
   createContext,
   Dispatch,
   SetStateAction,
   useContext,
+  useEffect,
   useState,
 } from "react";
 import { toast } from "sonner";
+import { useAccount } from "./AccountProvider";
 
 interface PostCommentState {
   comments: CommentNode[];
+  commentReactions: UserPostReactions;
   replyTarget?: Reply;
-  editTarget?: CommentNode;
+  editTarget?: EditCommentTarget;
   postID: string;
+  type: PostType;
 
   addComment: (comment: CommentNode, rootNode?: CommentNode) => void;
-  deleteComment: (comment: CommentNode, rootNode?: CommentNode) => void;
-  likeComment: (comment: CommentNode, rootNode?: CommentNode) => void;
-  editComment: (comment: CommentNode, rootNode?: CommentNode) => void;
+  deleteComment: (comment: CommentNode, rootNode: CommentNode) => void;
+  likeComment: (
+    comment: CommentNode,
+    rootNode: CommentNode,
+    opposite: boolean
+  ) => void;
+  dislikeComment: (
+    comment: CommentNode,
+    rootNode: CommentNode,
+    opposite: boolean
+  ) => void;
+  editComment: (comment: CommentNode, rootNode: CommentNode) => void;
+  removeReaction: (comment: CommentNode, rootNode: CommentNode) => void;
   reportComment: (comment: CommentNode) => void;
 
   setReplyTarget: Dispatch<SetStateAction<Reply | undefined>>;
-  setEditTarget: Dispatch<SetStateAction<CommentNode | undefined>>;
+  setEditTarget: Dispatch<SetStateAction<EditCommentTarget | undefined>>;
 }
 
 interface ContextProps extends ChildNodeProps {
   comments: CommentNode[];
   postID: string;
+  type: PostType;
+}
+
+interface EditCommentTarget {
+  node: CommentNode;
+  root: CommentNode;
 }
 
 const initialState: PostCommentState = {
@@ -44,10 +77,17 @@ const initialState: PostCommentState = {
   addComment: () => {},
   deleteComment: () => {},
   likeComment: () => {},
+  dislikeComment: () => {},
+  removeReaction: () => {},
   editComment: () => {},
   reportComment: () => {},
   setReplyTarget: () => {},
   setEditTarget: () => {},
+  type: "MEDIA",
+  commentReactions: {
+    reactions: new Map<string, CommentReactType>(),
+    loading: true,
+  },
 };
 
 export const PostCommentContext = createContext<PostCommentState>(initialState);
@@ -56,10 +96,39 @@ export const PostCommentProvider = ({
   children,
   comments: fetchedComments,
   postID,
+  type,
 }: ContextProps) => {
   const [comments, setComments] = useState<CommentNode[]>(fetchedComments);
+  const { account } = useAccount();
   const [replyTarget, setReplyTarget] = useState<Reply | undefined>();
-  const [editTarget, setEditTarget] = useState<CommentNode | undefined>();
+  const [editTarget, setEditTarget] = useState<EditCommentTarget | undefined>();
+  const [commentReactions, setCommentReactions] = useState<UserPostReactions>({
+    reactions: new Map<string, CommentReactType>(),
+    loading: true,
+  });
+
+  useEffect(() => {
+    if (!account) return;
+
+    const fetchUserReactions = async () => {
+      const reactions = await GetPostReactions(postID, account.user.id);
+      if (!reactions) return;
+      setCommentReactions({
+        reactions: new Map(Object.entries(reactions)),
+        loading: false,
+      });
+    };
+
+    fetchUserReactions();
+  }, [account]);
+
+  const updateCommentTree = (node: CommentNode, index: number) => {
+    setComments([
+      ...comments.slice(0, index),
+      node,
+      ...comments.slice(index + 1),
+    ]);
+  };
 
   const addComment = async (comment: CommentNode, rootNode?: CommentNode) => {
     const uploadedComment = await AddComment(comment.comment);
@@ -70,8 +139,9 @@ export const PostCommentProvider = ({
       comment: uploadedComment,
     };
 
-    if (!rootNode || !replyTarget) {
+    if (!replyTarget || !rootNode) {
       setComments([...comments, newNode]);
+      toast.success("Comment added successfully");
       return;
     }
 
@@ -90,26 +160,17 @@ export const PostCommentProvider = ({
     });
 
     if (!tr) return;
-    setComments([
-      ...comments.slice(0, index),
-      tr,
-      ...comments.slice(index + 1),
-    ]);
-
+    updateCommentTree(tr, index);
+    toast.success("Comment added successfully");
     setReplyTarget(undefined);
   };
 
-  const deleteComment = async (
-    comment: CommentNode,
-    rootNode?: CommentNode
-  ) => {
+  const deleteComment = async (comment: CommentNode, rootNode: CommentNode) => {
     const response = await DeleteComment(comment);
     if (!response) {
       toast.error("Failed to delete comment");
       return;
     }
-
-    if (!rootNode) return;
 
     if (rootNode?.comment.id === comment.comment.id) {
       setComments(
@@ -130,24 +191,117 @@ export const PostCommentProvider = ({
     });
 
     if (!tr) return;
-
-    setComments([
-      ...comments.slice(0, index),
-      tr,
-      ...comments.slice(index + 1),
-    ]);
-
+    updateCommentTree(tr, index);
     toast.success("Comment deleted successfully");
   };
 
-  const likeComment = (comment: CommentNode, rootNode?: CommentNode) => {
-    const response = LikeComment(comment.comment.id);
+  const likeComment = async (
+    comment: CommentNode,
+    rootNode: CommentNode,
+    opposite: boolean
+  ) => {
+    if (!account) return;
+    const response = await LikeComment(
+      comment.comment.id,
+      account?.user.id,
+      postID,
+      opposite
+    );
+
     if (!response) {
       toast.error("Failed to like comment");
       return;
     }
 
+    //Increment the like counter on the node
     if (!rootNode) return;
+    updateCommentMetrics(comment, rootNode, "likes", opposite);
+    //Add to the Reaction Map
+    addReaction(comment.comment.id, "LIKE");
+  };
+
+  const dislikeComment = async (
+    comment: CommentNode,
+    rootNode: CommentNode,
+    opposite: boolean
+  ) => {
+    if (!account) return;
+    const response = await DislikeComment(
+      comment.comment.id,
+      account?.user.id,
+      postID,
+      opposite
+    );
+
+    if (!response) {
+      toast.error("Failed to dislike comment");
+      return;
+    }
+
+    //Increment the like counter on the node
+    if (!rootNode) return;
+    updateCommentMetrics(comment, rootNode, "dislikes", opposite);
+    //Add to the Reaction Map
+    addReaction(comment.comment.id, "DISLIKE");
+  };
+
+  const oppositeMetric: Record<NodeMetric, NodeMetric> = {
+    likes: "dislikes",
+    dislikes: "likes",
+  };
+
+  const updateCommentMetrics = (
+    node: CommentNode,
+    root: CommentNode,
+    metric: NodeMetric,
+    opposite: boolean,
+    increment: boolean = true
+  ) => {
+    const index = comments.findIndex(
+      (node) => node.comment.id === root.comment.id
+    );
+
+    if (index === -1) return;
+
+    if (root.comment.id === node.comment.id) {
+      updateCommentTree(
+        {
+          ...node,
+          comment: {
+            ...node.comment,
+            [metric]: node.comment[metric] + (increment ? 1 : -1),
+            [oppositeMetric[metric]]:
+              node.comment[oppositeMetric[metric]] - (opposite ? 1 : 0),
+          },
+        },
+        index
+      );
+      return;
+    }
+
+    const tr = traverseNodeTree(root, node.comment, (node) => {
+      return {
+        ...node,
+        comment: {
+          ...node.comment,
+          [metric]: node.comment[metric] + (increment ? 1 : -1),
+          [oppositeMetric[metric]]:
+            node.comment[oppositeMetric[metric]] - (opposite ? 1 : 0),
+        },
+      };
+    });
+
+    if (!tr) return;
+
+    updateCommentTree(tr, index);
+  };
+
+  const editComment = async (comment: CommentNode, rootNode: CommentNode) => {
+    const response = await EditComment(comment.comment);
+    if (!response) {
+      toast.error("Failed to edit comment");
+      return;
+    }
 
     const index = comments.findIndex(
       (node) => node.comment.id === rootNode.comment.id
@@ -156,41 +310,56 @@ export const PostCommentProvider = ({
     if (index === -1) return;
 
     if (rootNode.comment.id === comment.comment.id) {
-      const tr = {
-        ...rootNode,
-        comment: {
-          ...rootNode.comment,
-          likes: rootNode.comment.likes + 1,
-        },
-      };
-      setComments([
-        ...comments.slice(0, index),
-        tr,
-        ...comments.slice(index + 1),
-      ]);
+      updateCommentTree(comment, index);
       return;
     }
 
     const tr = traverseNodeTree(rootNode, comment.comment, (node) => {
       return {
         ...node,
-        comment: {
-          ...node.comment,
-          likes: node.comment.likes + 1,
-        },
+        comment: comment.comment,
       };
     });
 
     if (!tr) return;
 
-    setComments([
-      ...comments.slice(0, index),
-      tr,
-      ...comments.slice(index + 1),
-    ]);
+    updateCommentTree(tr, index);
   };
 
-  const editComment = (comment: CommentNode, rootNode?: CommentNode) => {};
+  const addReaction = (commentId: string, reaction: CommentReactType) => {
+    const newReactions = new Map(commentReactions.reactions);
+    newReactions.set(commentId, reaction);
+    setCommentReactions((prev) => ({
+      ...prev,
+      reactions: newReactions,
+    }));
+  };
+
+  const removeReaction = async (comment: CommentNode, root?: CommentNode) => {
+    if (!account) return;
+    const response = await RemoveCommentReaction(
+      comment.comment.id,
+      account.user.id
+    );
+    if (!response) return;
+    const reaction = commentReactions.reactions.get(comment.comment.id);
+    if (!root || !reaction) return;
+
+    const newReactions = new Map(commentReactions.reactions);
+    newReactions.delete(comment.comment.id);
+    setCommentReactions((prev) => ({
+      ...prev,
+      reactions: newReactions,
+    }));
+
+    updateCommentMetrics(
+      comment,
+      root,
+      reaction === "LIKE" ? "likes" : "dislikes",
+      false,
+      false
+    );
+  };
 
   const reportComment = (comment: CommentNode) => {};
 
@@ -204,10 +373,14 @@ export const PostCommentProvider = ({
         addComment,
         deleteComment,
         likeComment,
+        dislikeComment,
+        removeReaction,
         editComment,
         reportComment,
         setReplyTarget,
         setEditTarget,
+        commentReactions,
+        type,
       }}
     >
       {children}

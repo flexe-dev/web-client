@@ -1,3 +1,5 @@
+"use client";
+
 import { ChildNodeProps, PostType } from "@/lib/interface";
 import React, {
   JSX,
@@ -84,6 +86,7 @@ export const PostToolsProvider = ({ postId, postType, children }: Props) => {
   const [tool, setTool] = useState<PostToolOptionsType | undefined>(undefined);
   const [dialogOpen, setDialogOpen] = useState<boolean>(false);
   const Toolset = renderedToolSet[postType];
+
   const handleModalClose = () => {
     setDialogOpen(false);
     setTool(undefined);

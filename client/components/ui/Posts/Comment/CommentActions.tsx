@@ -38,7 +38,7 @@ export type CommentAction = "delete" | "report" | "pin";
 
 export const CommentActions = (props: NodeTraversalProps) => {
   const { account } = useAccount();
-  const { deleteComment, reportComment } = usePostComments();
+  const { setEditTarget } = usePostComments();
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [action, setAction] = useState<CommentAction | undefined>();
 
@@ -57,7 +57,7 @@ export const CommentActions = (props: NodeTraversalProps) => {
       name: "Edit",
       icon: PencilIcon,
       access: ["creator"],
-      action: () => console.log("Edit Comment"),
+      action: () => setEditTarget({ node, root }),
     },
     {
       name: "Delete",

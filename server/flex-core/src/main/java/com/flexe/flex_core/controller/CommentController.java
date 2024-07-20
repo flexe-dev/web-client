@@ -1,6 +1,7 @@
 package com.flexe.flex_core.controller;
 
 import com.flexe.flex_core.entity.posts.metrics.Comment;
+import com.flexe.flex_core.entity.posts.metrics.CommentReact;
 import com.flexe.flex_core.service.posts.PostCommentService;
 import com.flexe.flex_core.structures.comments.CommentNode;
 import io.sentry.Sentry;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Date;
+import java.util.Map;
 
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
@@ -63,7 +65,7 @@ public class CommentController {
         }
     }
 
-    @PostMapping("/edit")
+    @PutMapping("/edit")
     @ResponseBody
     public ResponseEntity<Comment> editComment(@RequestBody Comment comment) {
         try{
@@ -80,10 +82,21 @@ public class CommentController {
         }
     }
 
-    @PostMapping("/like/{commentId}/{userId}")
-    public ResponseEntity<String> likeComment(@PathVariable String commentId, @PathVariable String userId) {
+    @GetMapping("/reaction/{postId}/{userId}")
+    public ResponseEntity<Map<String, CommentReact.ReactType>> getUserReactionsForPost(@PathVariable String postId, @PathVariable String userId){
         try{
-            service.likeComment(commentId, userId);
+            return ResponseEntity.ok(service.getUserCommentReactions(userId, postId));
+        }
+        catch (Exception e){
+            Sentry.captureException(e);
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    @PostMapping("/like/{commentId}/{userId}/{postId}/{opposite}")
+    public ResponseEntity<String> likeComment(@PathVariable String commentId, @PathVariable String userId, @PathVariable String postId, @PathVariable boolean opposite) {
+        try{
+            service.likeComment(commentId, userId, postId, opposite);
             return ResponseEntity.ok("Comment liked");
         }
         catch (Exception e){
@@ -92,10 +105,10 @@ public class CommentController {
         }
     }
 
-    @PostMapping("/dislike/{commentId}/{userId}")
-    public ResponseEntity<String> dislikeComment(@PathVariable String commentId, @PathVariable String userId){
+    @PostMapping("/dislike/{commentId}/{userId}/{postId}/{opposite}")
+    public ResponseEntity<String> dislikeComment(@PathVariable String commentId, @PathVariable String userId, @PathVariable String postId, @PathVariable boolean opposite){
         try{
-            service.dislikeComment(commentId, userId);
+            service.dislikeComment(commentId, userId, postId, opposite);
             return ResponseEntity.ok("Comment disliked");
         }
         catch (Exception e){
@@ -104,7 +117,7 @@ public class CommentController {
         }
     }
 
-    @PostMapping("/react/remove/{commentId}/{userId}")
+    @DeleteMapping("/reaction/remove/{commentId}/{userId}")
     public ResponseEntity<String> removeCommentReaction(@PathVariable String commentId, @PathVariable String userId){
         try{
             service.removeReaction(commentId, userId);

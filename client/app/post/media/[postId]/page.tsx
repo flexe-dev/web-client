@@ -5,6 +5,7 @@ import PostComments from "@/components/ui/Posts/Comment/PostComments";
 import PostDisplayWrapper from "@/components/ui/Posts/media/PostDisplayWrapper";
 import { LoadingPost } from "@/components/ui/Posts/media/loading";
 import { getPostById } from "@/controllers/PostController";
+import { UserPost } from "@/lib/interface";
 import { Suspense } from "react";
 
 interface Props {
@@ -14,13 +15,13 @@ interface Props {
 }
 const page = async ({ params }: Props) => {
   const { postId } = params;
-  const post = await getPostById(postId as string);
+  const post = (await getPostById(postId, "MEDIA")) as UserPost | undefined;
   if (!post) return <ErrorPage />;
 
   return (
     <div className="relative flex">
       <Suspense fallback={<>Loading...</>}>
-        <PostComments postId={postId} />
+        <PostComments postId={postId} type="MEDIA" />
       </Suspense>
 
       <Suspense fallback={<LoadingPost />}>

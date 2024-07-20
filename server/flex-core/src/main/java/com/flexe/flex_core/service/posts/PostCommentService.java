@@ -2,6 +2,7 @@ package com.flexe.flex_core.service.posts;
 
 import com.flexe.flex_core.entity.posts.metrics.Comment;
 import com.flexe.flex_core.entity.posts.metrics.CommentReact;
+import com.flexe.flex_core.entity.posts.metrics.CommentReact.ReactType;
 import com.flexe.flex_core.entity.user.User;
 import com.flexe.flex_core.entity.user.UserAccount;
 import com.flexe.flex_core.repository.post.CommentReactionRepository;
@@ -80,6 +81,15 @@ public class PostCommentService {
         repository.deleteAllById(commentIds);
     }
 
+    public Map<String, ReactType> getUserCommentReactions(String userId, String postId){
+        CommentReact[] reactions =  reactionRepository.findByPostIdAndUserId(postId, userId);
+        Map<String, ReactType> reactionMap = new HashMap<>();
+        for(CommentReact reaction: reactions){
+            reactionMap.put(reaction.getCommentId(), reaction.getReactType());
+        }
+        return reactionMap;
+    }
+
     public void traverseCommentNode(CommentNode current, List<String> children){
         children.add(current.getComment().getId());
         for(CommentNode child: current.getChildren()){
@@ -91,27 +101,66 @@ public class PostCommentService {
         return reactionRepository.findByCommentIdAndUserId(commentId, userId);
     }
 
-    public void likeComment(String commentId, String userId){
+    public void likeComment(String commentId, String userId, String postId, boolean opposite){
         Optional<Comment> comment = repository.findById(commentId);
         if(comment.isEmpty()) return;
+        boolean reaction = handleCommentReaction(commentId, userId, postId, ReactType.LIKE);
+        if(!reaction) return;
 
-        Optional<CommentReact> reaction = retrieveReaction(commentId, userId);
-        
+        comment.get().setLikes(comment.get().getLikes() + 1);
+        if(opposite){
+            comment.get().setDislikes(comment.get().getDislikes() - 1);
+        }
+        repository.save(comment.get());
+
     }
 
     public void removeReaction(String commentId, String userId){
+        Optional<CommentReact> reaction = retrieveReaction(commentId, userId);
+        Optional<Comment> comment = repository.findById(commentId);
+        if(reaction.isEmpty() || comment.isEmpty()) return;
+        if(reaction.get().getReactType() == ReactType.LIKE){
+            comment.get().setLikes(comment.get().getLikes() - 1);
+        }
+        else{
+            comment.get().setDislikes(comment.get().getDislikes() - 1);
+        }
 
+        repository.save(comment.get());
+        reactionRepository.delete(reaction.get());
     }
 
-    public void dislikeComment(String commentId, String userId) {
+    public boolean handleCommentReaction(String commentId, String userId, String postId, ReactType reactionType){
+        Optional<CommentReact> reaction = retrieveReaction(commentId, userId);
+        if(reaction.isPresent()){
+            //Edit Current Reaction
+            CommentReact react = reaction.get();
+            if(react.getReactType() == reactionType){
+                return false;
+            }
+            react.setReactType(reactionType);
+            reactionRepository.save(react);
+
+        }
+        else{
+            //Add New Reaction
+            CommentReact react = new CommentReact(reactionType, userId, commentId, postId);
+            reactionRepository.save(react);
+        }
+        return true;
+    }
+
+    public void dislikeComment(String commentId, String userId, String postId, boolean opposite) {
         Optional<Comment> comment = repository.findById(commentId);
         if(comment.isEmpty()) return;
+        boolean reaction = handleCommentReaction(commentId, userId, postId, ReactType.DISLIKE);
+        if(!reaction) return;
 
-        CommentReact react = new CommentReact(CommentReact.ReactType.DISLIKE, commentId, userId);
-        reactionRepository.save(react);
-        Comment c = comment.get();
-        c.setDislikes(c.getDislikes() + 1);
-        repository.save(c);
+        comment.get().setDislikes(comment.get().getDislikes() + 1);
+        if(opposite){
+            comment.get().setLikes(comment.get().getLikes() - 1);
+        }
+        repository.save(comment.get());
     }
 
     public void reportComment(String commentId) {

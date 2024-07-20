@@ -1,6 +1,7 @@
 import {
   Comment,
   CommentNode,
+  CommentReactType,
   Document,
   PostExternalData,
   PostType,
@@ -127,11 +128,17 @@ export const GetAllUserPosts = async (
 };
 
 export const getPostById = async (
-  postID: string
-): Promise<UserPost | undefined> => {
+  postID: string,
+  type: PostType
+): Promise<UserPost | UserTextPost | undefined> => {
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_CORE_BACKEND_API_URL}post/media/${postID}`
+      `${
+        process.env.NEXT_PUBLIC_CORE_BACKEND_API_URL
+      }post/${type.toLowerCase()}/${postID}`,
+      {
+        method: "GET",
+      }
     );
 
     if (response.status === 404) {
@@ -307,7 +314,11 @@ export const GetPostComments = async (
 ): Promise<CommentNode[]> => {
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_CORE_BACKEND_API_URL}post/comment/get/post/${postID}`
+      `${process.env.NEXT_PUBLIC_CORE_BACKEND_API_URL}post/comment/get/post/${postID}`,
+      {
+        method: `GET`,
+        cache: "no-store",
+      }
     );
     return await response.json();
   } catch (e) {
@@ -356,10 +367,15 @@ export const DeleteComment = async (comment: CommentNode): Promise<boolean> => {
   }
 };
 
-export const LikeComment = async (commentID: string): Promise<boolean> => {
+export const LikeComment = async (
+  commentID: string,
+  userID: string,
+  postID: string,
+  opposite: boolean
+): Promise<boolean> => {
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_CORE_BACKEND_API_URL}post/comment/like/${commentID}`,
+      `${process.env.NEXT_PUBLIC_CORE_BACKEND_API_URL}post/comment/like/${commentID}/${userID}/${postID}/${opposite}`,
       {
         method: `POST`,
       }
@@ -372,10 +388,48 @@ export const LikeComment = async (commentID: string): Promise<boolean> => {
   }
 };
 
-export const DislikeComment = async (commentID: string): Promise<boolean> => {
+export const RemoveCommentReaction = async (
+  commentId: string,
+  userId: string
+): Promise<boolean> => {
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_CORE_BACKEND_API_URL}post/comment/dislike/${commentID}`,
+      `${process.env.NEXT_PUBLIC_CORE_BACKEND_API_URL}post/comment/reaction/remove/${commentId}/${userId}`,
+      {
+        method: `DELETE`,
+      }
+    );
+    return response.ok;
+  } catch (e) {
+    console.error(e);
+    return false;
+  }
+};
+
+export const GetPostReactions = async (
+  postID: string,
+  userId: string
+): Promise<Map<string, CommentReactType> | undefined> => {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_CORE_BACKEND_API_URL}post/comment/reaction/${postID}/${userId}`
+    );
+    return await response.json();
+  } catch (e) {
+    console.error(e);
+    return;
+  }
+};
+
+export const DislikeComment = async (
+  commentID: string,
+  userID: string,
+  postID: string,
+  opposite: boolean
+): Promise<boolean> => {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_CORE_BACKEND_API_URL}post/comment/dislike/${commentID}/${userID}/${postID}/${opposite}`,
       {
         method: `POST`,
       }
@@ -388,4 +442,28 @@ export const DislikeComment = async (commentID: string): Promise<boolean> => {
   }
 };
 
-export const EditComment = (comment: Comment) => {};
+export const EditComment = async (
+  comment: Comment
+): Promise<Comment | null> => {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_CORE_BACKEND_API_URL}post/comment/edit`,
+      {
+        method: `PUT`,
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(comment),
+      }
+    );
+
+    if (response.status !== 200) {
+      return null;
+    }
+
+    return response.json();
+  } catch (e) {
+    console.error(e);
+    return null;
+  }
+};

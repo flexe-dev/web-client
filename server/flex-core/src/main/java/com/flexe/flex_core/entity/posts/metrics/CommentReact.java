@@ -15,6 +15,8 @@ public class CommentReact {
     @Id
     private String id;
     @Field(targetType = FieldType.OBJECT_ID)
+    private String postId;
+    @Field(targetType = FieldType.OBJECT_ID)
     private String commentId;
     @Field(targetType = FieldType.OBJECT_ID)
     private String userId;
@@ -25,7 +27,8 @@ public class CommentReact {
         DISLIKE
     }
 
-    public CommentReact(ReactType reactType, String userId, String commentId) {
+    public CommentReact(ReactType reactType, String userId, String commentId, String postId) {
+        this.postId = postId;
         this.reactType = reactType;
         this.userId = userId;
         this.commentId = commentId;
@@ -37,6 +40,14 @@ public class CommentReact {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getPostId() {
+        return postId;
+    }
+
+    public void setPostId(String postId) {
+        this.postId = postId;
     }
 
     public String getCommentId() {

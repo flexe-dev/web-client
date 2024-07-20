@@ -13,12 +13,12 @@ import { useState } from "react";
 interface Props extends ChildNodeProps {}
 
 const CommentPanel = ({ children }: Props) => {
-  const [panelOpen, setPanelOpen] = useState(true);
+  const [panelOpen, setPanelOpen] = useState(false);
   return (
     <motion.aside
       className={cn(
         "border-r h-screen-without-header fixed xl:sticky duration-300 ease-in-out z-[40] bg-background h-screen-without-header top-[5rem] left-0 transition-all",
-        panelOpen ? "w-5/6 md:w-3/5 xl:min-w-[40rem] " : "w-0 md:w-[4rem]"
+        panelOpen ? "w-5/6 md:w-3/5 xl:w-1/2" : "w-0 md:w-[4rem]"
       )}
     >
       <AnimatePresence mode="wait">
