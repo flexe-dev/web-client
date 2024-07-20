@@ -5,6 +5,7 @@ import { SortableItem } from "@/components/dnd/Sortable";
 import { Textarea } from "@/components/ui/textarea";
 import { ContentBlockProp } from "@/lib/interface";
 import React from "react";
+import Linkify from "react-linkify";
 import ContentWrapper from "./ContentWrapper";
 
 //Editable Component
@@ -24,14 +25,16 @@ export const TextContent = (props: ContentBlockProp) => {
   return (
     <SortableItem id={id}>
       <ContentWrapper id={id} type="text">
-        <Textarea
-          style={style}
-          value={value?.contentValue as string}
-          rows={1}
-          onChange={(e) => handleValueChange(e)}
-          placeholder="Write a quick description about your post"
-          className="min-h-[50px] overflow-y-hidden text-primary border-none placeholder-muted bg-transparent py-2 px-4 resize-none "
-        />
+        <Linkify>
+          <Textarea
+            style={style}
+            value={value?.contentValue as string}
+            rows={1}
+            onChange={(e) => handleValueChange(e)}
+            placeholder="Write a quick description about your post"
+            className="min-h-[50px] overflow-y-hidden text-primary border-none placeholder-muted bg-transparent py-2 px-4 resize-none "
+          />
+        </Linkify>
       </ContentWrapper>
     </SortableItem>
   );
@@ -41,11 +44,13 @@ export const TextContent = (props: ContentBlockProp) => {
 export const TextView = (props: ContentBlockProp) => {
   const { value, style } = props;
   return (
-    <div
-      className="min-h-[50px] border-none bg-transparent py-2 px-4 overflow-hidden resize-none"
-      style={style}
-    >
-      {value?.contentValue as String}
-    </div>
+    <Linkify>
+      <div
+        className="min-h-[50px] border-none bg-transparent py-2 px-4 overflow-hidden resize-none"
+        style={style}
+      >
+        {value?.contentValue as String}
+      </div>
+    </Linkify>
   );
 };

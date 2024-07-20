@@ -2,9 +2,9 @@
 
 import { LinkProps } from "@/lib/interface";
 import {
+  BellIcon,
   BriefcaseIcon,
   CodeBracketIcon,
-  InboxIcon,
   MagnifyingGlassIcon,
   UserGroupIcon,
 } from "@heroicons/react/24/outline";
@@ -23,7 +23,12 @@ export const Navbar = () => {
   const { account } = useAccount();
 
   const links: LinkProps[] = [
-    { href: "/feed", label: "Feed", icon: <InboxIcon />, restrict: true },
+    {
+      href: "/notifications",
+      label: "Notifications",
+      icon: <BellIcon />,
+      restrict: true,
+    },
     {
       href: "/network",
       label: "My Network",

@@ -167,6 +167,7 @@ export interface UserTextPost {
   userID: string;
   textpost: string;
   createdAt: Date;
+  updatedAt?: Date;
   externalData: PostExternalData;
 }
 
@@ -211,10 +212,17 @@ export interface Reply extends Omit<CommentNode, "children"> {
 }
 
 export type CommentReactType = "LIKE" | "DISLIKE";
+export type NodeMetric = "likes" | "dislikes";
 
 export interface CommentReact {
   id: string;
   commentId: string;
+  postId: string;
   userId: string;
-  reactType: CommentReact;
+  reactType: CommentReactType;
+}
+
+export interface UserPostReactions {
+  reactions: Map<string, CommentReactType>;
+  loading: boolean;
 }

@@ -9,4 +9,7 @@ import java.util.Optional;
 public interface CommentReactionRepository extends MongoRepository<CommentReact, String> {
     @Query("{ 'commentId' : ?0, 'userId' : ?1 }")
     Optional<CommentReact> findByCommentIdAndUserId(String commentId, String userId);
+
+    @Query("{ 'postId' : ?0, 'userId' : ?1 }")
+    CommentReact[] findByPostIdAndUserId(String postId, String userId);
 }

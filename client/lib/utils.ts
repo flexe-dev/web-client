@@ -19,8 +19,12 @@ export function toTitleCase(value: string) {
   return value.charAt(0).toUpperCase() + value.slice(1).toLowerCase();
 }
 
+export function getEntireURL(pathName: string) {
+  return `${process.env.NEXT_PUBLIC_URL}${pathName}`;
+}
+
 export function copyToClipboard(value: string) {
-  navigator.clipboard.writeText(value);
+  navigator.clipboard.writeText(getEntireURL(value));
 }
 
 export const GetNameInitials = (name?: string | null) => {

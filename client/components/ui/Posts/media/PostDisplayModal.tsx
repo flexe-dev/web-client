@@ -30,10 +30,7 @@ const PostDisplayModal = (props: Props) => {
   if (!selectedPost || !selectedPost.id) return null;
   return (
     <Dialog open={!!selectedPost} onOpenChange={callback}>
-      <DialogContent
-        hasCloseButton={false}
-        className="px-4 py-1 min-w-[90%] max-w-[90%] md:min-w-[80%] md:max-w-[80%] lg:min-w-[70%] lg:max-w-[70%] md:h-[80dvh] flex flex-col overscroll-none"
-      >
+      <DialogContent className="px-4 py-1 min-w-[90%] max-w-[90%] md:min-w-[80%] md:max-w-[80%] lg:min-w-[70%] lg:max-w-[70%] h-[80dvh] flex flex-col overscroll-none">
         <div className="w-full flex justify-center items-center z-[80] min-h-[3rem] max-h-[3rem] bg-background border-b-2">
           <PostToolsProvider postId={selectedPost.id} postType="MEDIA">
             <Button

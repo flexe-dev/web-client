@@ -12,7 +12,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { ChildNodeProps, IconType } from "@/lib/interface";
-import { copyToClipboard } from "@/lib/utils";
+import { copyToClipboard, getEntireURL } from "@/lib/utils";
 import {
   ArrowUpTrayIcon,
   ChartBarIcon,
@@ -26,6 +26,7 @@ import {
 } from "@heroicons/react/24/outline";
 import { PinIcon } from "lucide-react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { toast } from "sonner";
 
 interface Props extends ChildNodeProps {
@@ -44,6 +45,7 @@ interface PostOption {
 export const MediaPostTools = ({ children, postId }: Props) => {
   const { isOwnProfile } = useProfileViewer();
   const { setTool, tool, type } = usePostTools();
+  const URLPath = usePathname();
   const actionOptions: PostOption[] = [
     {
       creatorOnly: true,
@@ -70,7 +72,7 @@ export const MediaPostTools = ({ children, postId }: Props) => {
     {
       icon: ViewfinderCircleIcon,
       component: (
-        <Link className="flex" href={window.location.href}>
+        <Link className="flex" href={getEntireURL(URLPath)}>
           <ViewfinderCircleIcon className="w-5 h-5 mr-2" />
           <span>View Post</span>
         </Link>
@@ -91,7 +93,7 @@ export const MediaPostTools = ({ children, postId }: Props) => {
       name: "Copy Link",
       icon: ClipboardIcon,
       action: () => {
-        copyToClipboard(window.location.href);
+        copyToClipboard(URLPath);
         toast.success("Link Copied to Clipboard");
       },
     },
@@ -121,7 +123,7 @@ export const MediaPostTools = ({ children, postId }: Props) => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>{children}</DropdownMenuTrigger>
-      <DropdownMenuContent>
+      <DropdownMenuContent className="mr-2">
         <DropdownMenuGroup>
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
           <DropdownMenuSeparator />
