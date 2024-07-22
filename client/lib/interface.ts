@@ -226,3 +226,7 @@ export interface UserPostReactions {
   reactions: Map<string, CommentReactType>;
   loading: boolean;
 }
+
+export const sortTypes = ["NEWEST", "OLDEST", "TOP"] as const;
+
+export type SortCriteria = (typeof sortTypes)[number];

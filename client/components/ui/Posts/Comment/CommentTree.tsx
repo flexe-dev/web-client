@@ -48,6 +48,7 @@ interface CommentReplyProps extends CommentThreadProps, CommentTreeProps {
 
 export const CommentTree = (props: CommentTreeProps) => {
   const { comments } = usePostComments();
+  const { sortType } = usePostComments();
   return comments.length > 0 ? (
     <div className="h-auto flex-grow overflow-y-auto overflow-x-hidden overscroll-contain w-full">
       {comments.map((comment, index) => {

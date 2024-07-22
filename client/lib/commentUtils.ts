@@ -1,4 +1,4 @@
-import { CommentNode, UserAccount } from "./interface";
+import { CommentNode, SortCriteria, UserAccount } from "./interface";
 
 export const GenerateCommentObject = (
   postID: string,
@@ -33,4 +33,29 @@ export const getTotalChildrenAux = (comment: CommentNode): number => {
     (acc, child) => acc + getTotalChildrenAux(child),
     1
   );
+};
+
+export const getCommentPerformance = (comment: CommentNode): number => {
+  return comment.comment.likes - comment.comment.dislikes;
+};
+
+export const CommentSortAlgorithm: Record<
+  SortCriteria,
+  (nodeA: CommentNode, nodeB: CommentNode) => number
+> = {
+  NEWEST: (nodeA, nodeB) => {
+    return (
+      new Date(nodeB.comment.dateCreated).getTime() -
+      new Date(nodeA.comment.dateCreated).getTime()
+    );
+  },
+  OLDEST: (nodeA, nodeB) => {
+    return (
+      new Date(nodeA.comment.dateCreated).getTime() -
+      new Date(nodeB.comment.dateCreated).getTime()
+    );
+  },
+  TOP: (nodeA, nodeB) => {
+    return getCommentPerformance(nodeB) - getCommentPerformance(nodeA);
+  },
 };
