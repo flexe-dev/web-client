@@ -9,6 +9,7 @@ import {
   LikeComment,
   RemoveCommentReaction,
 } from "@/controllers/PostController";
+import { CommentSortAlgorithm } from "@/lib/commentUtils";
 import {
   ChildNodeProps,
   Comment,
@@ -17,6 +18,7 @@ import {
   NodeMetric,
   PostType,
   Reply,
+  SortCriteria,
   UserPostReactions,
 } from "@/lib/interface";
 import {
@@ -37,6 +39,7 @@ interface PostCommentState {
   editTarget?: EditCommentTarget;
   postID: string;
   type: PostType;
+  sortType: SortCriteria;
 
   addComment: (comment: CommentNode, rootNode?: CommentNode) => void;
   deleteComment: (comment: CommentNode, rootNode: CommentNode) => void;
@@ -56,6 +59,7 @@ interface PostCommentState {
 
   setReplyTarget: Dispatch<SetStateAction<Reply | undefined>>;
   setEditTarget: Dispatch<SetStateAction<EditCommentTarget | undefined>>;
+  setSortType: Dispatch<SetStateAction<SortCriteria>>;
 }
 
 interface ContextProps extends ChildNodeProps {
@@ -83,7 +87,9 @@ const initialState: PostCommentState = {
   reportComment: () => {},
   setReplyTarget: () => {},
   setEditTarget: () => {},
+  setSortType: () => {},
   type: "MEDIA",
+  sortType: "NEWEST",
   commentReactions: {
     reactions: new Map<string, CommentReactType>(),
     loading: true,
@@ -106,6 +112,16 @@ export const PostCommentProvider = ({
     reactions: new Map<string, CommentReactType>(),
     loading: true,
   });
+  const [sortType, setSortType] = useState<SortCriteria>("NEWEST");
+
+  //Only Sort on Component Mount or when user selects a new sort type
+  //This is so comments aren't rearranged on every state change
+  useEffect(() => {
+    console.log("Sorting");
+    setComments((prev) =>
+      [...prev].sort((a, b) => CommentSortAlgorithm[sortType](a, b))
+    );
+  }, [sortType]);
 
   useEffect(() => {
     if (!account) return;
@@ -140,7 +156,7 @@ export const PostCommentProvider = ({
     };
 
     if (!replyTarget || !rootNode) {
-      setComments([...comments, newNode]);
+      setComments([newNode, ...comments]);
       toast.success("Comment added successfully");
       return;
     }
@@ -380,6 +396,8 @@ export const PostCommentProvider = ({
         setReplyTarget,
         setEditTarget,
         commentReactions,
+        sortType,
+        setSortType,
         type,
       }}
     >

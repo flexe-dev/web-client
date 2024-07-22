@@ -11,6 +11,7 @@ import { ChildNodeProps, PostType } from "@/lib/interface";
 import React, { Suspense } from "react";
 import CommentInput from "./CommentInput";
 import CommentPanel from "./CommentPanel";
+import { CommentSortControl } from "./CommentSortControl";
 import { CommentTree } from "./CommentTree";
 
 const PostComments = async ({ postId, type }: Props) => {
@@ -46,6 +47,9 @@ const PostComments = async ({ postId, type }: Props) => {
 const MediaCommentLayout = ({ children }: ChildNodeProps) => {
   return (
     <CommentPanel>
+      <div className="ml-4 mt-1">
+        <CommentSortControl />
+      </div>
       {children}
       <CommentInput />
     </CommentPanel>
@@ -58,6 +62,7 @@ const TextCommentLayout = ({ children }: ChildNodeProps) => {
       <div className="h-fit border w-full mt-4 rounded-md overflow-hidden">
         <CommentInput />
       </div>
+      <CommentSortControl />
       <div className="mt-4 rounded-md w-full border">{children}</div>
     </>
   );
