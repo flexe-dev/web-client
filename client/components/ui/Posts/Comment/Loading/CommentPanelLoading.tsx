@@ -15,7 +15,11 @@ export const CommentPanelLoading = ({ type }: Props) => {
 };
 
 const MediaCommentPanelSkeleton = () => {
-  return <Skeleton className="h-screen w-[4rem] rounded-t-none" />;
+  return (
+    <div className="relative h-screen w-[4rem] border-r rounded-t-none">
+      <div className="absolute h-16 w-16 rounded-full border md:top-[calc(50%-7.5rem)] bg-background -right-8 "></div>
+    </div>
+  );
 };
 
 const TextCommentPanelSkeleton = () => {
