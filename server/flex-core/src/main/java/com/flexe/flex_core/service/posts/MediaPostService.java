@@ -4,11 +4,13 @@ import com.flexe.flex_core.entity.nodes.posts.PostMetadata;
 import com.flexe.flex_core.entity.nodes.posts.PostNode;
 import com.flexe.flex_core.entity.nodes.user.UserNode;
 import com.flexe.flex_core.entity.posts.media.MediaPost;
+import com.flexe.flex_core.entity.relationship.PostCreationRelationship;
 import com.flexe.flex_core.repository.post.MediaPostRepository;
 import com.flexe.flex_core.repository.post.PostNodeRepository;
 import com.flexe.flex_core.service.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Mono;
 
 import java.util.ArrayList;
@@ -57,17 +59,14 @@ public class MediaPostService {
 
         //Save Post to Database
         PostNode savedNode = postNodeRepository.save(newNode);
-        if(savedNode == null){
-            return null;
-        }
-
         //Create a relationship between Poster and Post
         UserNode userNode = userService.findUserNodeById(post.getAuxData().getUserID());
         if(userNode == null){
             return null;
         }
 
-        userNode.addPost(savedNode);
+        PostCreationRelationship relationship = new PostCreationRelationship(savedNode, post);
+        userNode.addPost(relationship);
         userService.updateUserNode(userNode);
         return savedNode;
     }

@@ -18,7 +18,6 @@ public class PostNode {
     @Id
     private String postId;
     private PostType type;
-    private Date createdAt;
 
     //Metadata
     private List<String> tags;
@@ -43,7 +42,6 @@ public class PostNode {
     public PostNode(MediaPost post, List<String> keywords){
         this.postId = post.getId();
         this.type = PostType.MEDIA;
-        this.createdAt = post.getAuxData().getDateCreated();
         this.tags = post.getAuxData().getTags();
         this.tech = post.getAuxData().getTech();
         this.keywords = keywords;
@@ -56,7 +54,6 @@ public class PostNode {
     public PostNode(TextPost post, List<String> keywords){
         this.postId = post.getId();
         this.type = PostType.TEXT;
-        this.createdAt = post.getCreatedAt();
         this.tags = new ArrayList<>();
         this.tech = new ArrayList<>();
         this.keywords = keywords;
@@ -80,14 +77,6 @@ public class PostNode {
 
     public void setType(PostType type) {
         this.type = type;
-    }
-
-    public Date getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(Date createdAt) {
-        this.createdAt = createdAt;
     }
 
     public List<String> getTags() {

@@ -21,12 +21,12 @@ public class TextPost {
     private final String textpost;
     private final PostMetrics metrics;
 
-    public TextPost(String id, String textpost, String userID, Date createdAt, PostMetrics externalData) {
+    public TextPost(String id, String textpost, String userID, Date createdAt, PostMetrics metrics) {
         this.id = id;
         this.textpost = textpost;
         this.userID = userID;
         this.createdAt = createdAt;
-        this.metrics = externalData;
+        this.metrics = metrics;
     }
 
 
