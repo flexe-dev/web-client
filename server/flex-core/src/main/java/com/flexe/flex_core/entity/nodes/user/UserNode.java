@@ -1,6 +1,8 @@
 package com.flexe.flex_core.entity.nodes.user;
 
 import com.flexe.flex_core.entity.nodes.posts.PostNode;
+import com.flexe.flex_core.entity.relationship.PostCreationRelationship;
+import com.flexe.flex_core.entity.user.User;
 import org.springframework.data.neo4j.core.schema.*;
 
 import java.util.HashSet;
@@ -17,7 +19,7 @@ public class UserNode {
     private Integer postCount;
 
     @Relationship(type = "POSTED", direction = Relationship.Direction.OUTGOING)
-    private HashSet<PostNode> userPosts = new HashSet<>();
+    private HashSet<PostCreationRelationship> userPosts = new HashSet<>();
 
     @Relationship(type = "FOLLOWING", direction = Relationship.Direction.OUTGOING)
     private HashSet<UserNode> following = new HashSet<>();
@@ -34,29 +36,69 @@ public class UserNode {
     @Relationship(type = "SHARED", direction = Relationship.Direction.OUTGOING)
     private HashSet<PostNode> sharedPosts = new HashSet<>();
 
-    @Relationship(type = "COMMENTED", direction = Relationship.Direction.OUTGOING)
-    private HashSet<PostNode> commentedPosts = new HashSet<>();
+//    @Relationship(type = "COMMENTED", direction = Relationship.Direction.OUTGOING)
+//    private HashSet<PostNode> commentedPosts = new HashSet<>();
+
+    //Constructors
 
     public UserNode(){
     }
 
-    public UserNode(String userId, String name, String username){
-        this.userId = userId;
-        this.name = name;
-        this.username = username;
+    //Default Constructor
+    public UserNode(User user){
+        this.userId = user.getId();
+        this.name = user.getName();
+        this.username = user.getUsername();
         this.followCount = 0;
         this.followingCount = 0;
         this.postCount = 0;
     }
 
-    public UserNode(String userId, String name, String username, Integer followCount, Integer followingCount, Integer postCount) {
-        this.userId = userId;
-        this.name = name;
-        this.username = username;
-        this.followCount = followCount;
-        this.followingCount = followingCount;
-        this.postCount = postCount;
+    //Node Relationships
+
+    public void deletePost (PostCreationRelationship post) {
+        userPosts.remove(post);
     }
+
+    public void addPost (PostCreationRelationship post) {
+        userPosts.add(post);
+    }
+
+    public void follow (UserNode user) {
+        following.add(user);
+        user.followers.add(this);
+    }
+
+    public void unfollow (UserNode user) {
+        following.remove(user);
+        user.followers.remove(this);
+    }
+
+    public void likePost (PostNode post) {
+        likedPosts.add(post);
+    }
+
+    public void unlikePost (PostNode post) {
+        likedPosts.remove(post);
+    }
+
+    public void savePost (PostNode post) {
+        savedPosts.add(post);
+    }
+
+    public void unsavePost (PostNode post) {
+        savedPosts.remove(post);
+    }
+    public void sharePost (PostNode post) {
+        sharedPosts.add(post);
+    }
+
+    public void unsharePost (PostNode post) {
+        sharedPosts.remove(post);
+    }
+
+
+    //Getters and Setters
 
     public String getName() {
         return name;
@@ -106,26 +148,16 @@ public class UserNode {
         this.postCount = postCount;
     }
 
-    public HashSet<PostNode> getUserPosts() {
+    public HashSet<PostCreationRelationship> getUserPosts() {
         return userPosts;
     }
 
-    public void setUserPosts(HashSet<PostNode> userPosts) {
+    public void setUserPosts(HashSet<PostCreationRelationship> userPosts) {
         this.userPosts = userPosts;
     }
 
     public HashSet<UserNode> getFollowing() {
         return following;
-    }
-
-    public void follow (UserNode user) {
-        following.add(user);
-        user.followers.add(this);
-    }
-
-    public void unfollow (UserNode user) {
-        following.remove(user);
-        user.followers.remove(this);
     }
 
     public HashSet<UserNode> getFollowers() {
@@ -136,57 +168,29 @@ public class UserNode {
         return likedPosts;
     }
 
-    public void likePost (PostNode post) {
-        likedPosts.add(post);
-    }
-
-    public void unlikePost (PostNode post) {
-        likedPosts.remove(post);
-    }
-
     public HashSet<PostNode> getSavedPosts() {
         return savedPosts;
     }
 
-    public void savePost (PostNode post) {
-        savedPosts.add(post);
-    }
-
-    public void unsavePost (PostNode post) {
-        savedPosts.remove(post);
-    }
 
     public HashSet<PostNode> getSharedPosts() {
         return sharedPosts;
     }
 
-    public void sharePost (PostNode post) {
-        sharedPosts.add(post);
-    }
 
-    public void unsharePost (PostNode post) {
-        sharedPosts.remove(post);
-    }
+//    public HashSet<PostNode> getCommentedPosts() {
+//        return commentedPosts;
+//    }
+//
+//    public void commentOnPost (PostNode post) {
+//        commentedPosts.add(post);
+//    }
+//
+//    public void deleteCommentOnPost (PostNode post) {
+//        commentedPosts.remove(post);
+//    }
 
-    public HashSet<PostNode> getCommentedPosts() {
-        return commentedPosts;
-    }
 
-    public void commentOnPost (PostNode post) {
-        commentedPosts.add(post);
-    }
-
-    public void deleteCommentOnPost (PostNode post) {
-        commentedPosts.remove(post);
-    }
-
-    public void deletePost (PostNode post) {
-        userPosts.remove(post);
-    }
-
-    public void addPost (PostNode post) {
-        userPosts.add(post);
-    }
 
 
 
