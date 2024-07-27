@@ -1,5 +1,6 @@
 package com.flexe.flex_core.controller;
 
+import com.flexe.flex_core.entity.nodes.posts.PostNode;
 import com.flexe.flex_core.entity.posts.media.MediaPost;
 import com.flexe.flex_core.entity.posts.text.TextPost;
 import com.flexe.flex_core.service.posts.MediaPostService;
@@ -28,6 +29,22 @@ public class TextPostController {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Unable to save post");
             }
             return ResponseEntity.ok(savedPost);
+        }
+        catch (Exception e){
+            Sentry.captureException(e);
+            return null;
+        }
+    }
+
+    @PostMapping("/node/create")
+    @ResponseBody
+    public ResponseEntity<PostNode> generatePostNode(@RequestBody TextPost post){
+        try{
+            PostNode savedNode = service.generatePostNode(post);
+            if(savedNode == null){
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Node not saved");
+            }
+            return ResponseEntity.ok(savedNode);
         }
         catch (Exception e){
             Sentry.captureException(e);

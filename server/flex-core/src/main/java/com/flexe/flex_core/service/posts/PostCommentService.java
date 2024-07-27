@@ -3,11 +3,10 @@ package com.flexe.flex_core.service.posts;
 import com.flexe.flex_core.entity.posts.metrics.Comment;
 import com.flexe.flex_core.entity.posts.metrics.CommentReact;
 import com.flexe.flex_core.entity.posts.metrics.CommentReact.ReactType;
-import com.flexe.flex_core.entity.user.User;
 import com.flexe.flex_core.entity.user.UserAccount;
 import com.flexe.flex_core.repository.post.CommentReactionRepository;
 import com.flexe.flex_core.repository.post.PostCommentRepository;
-import com.flexe.flex_core.service.user.UserService;
+import com.flexe.flex_core.service.user.AccountService;
 import com.flexe.flex_core.structures.comments.CommentNode;
 import org.bson.types.ObjectId;
 import org.jetbrains.annotations.NotNull;
@@ -24,7 +23,8 @@ public class PostCommentService {
     @Autowired
     private CommentReactionRepository reactionRepository;
     @Autowired
-    private UserService userService;
+    private AccountService userAccountService;
+
 
     public CommentNode[] getPostComments(String postId) {
         Comment[] comments = repository.findAllByPostId(postId);
@@ -42,7 +42,7 @@ public class PostCommentService {
         for(Comment comment: comments){
             CommentNode node = new CommentNode(comment);
             if(!userCommentMap.containsKey(comment.getUserId())){
-                UserAccount user = userService.findUserAccount(comment.getUserId());
+                UserAccount user = userAccountService.findUserAccount(comment.getUserId());
                 userCommentMap.put(comment.getUserId(), user);
             }
             node.setUser(userCommentMap.get(comment.getUserId()));
