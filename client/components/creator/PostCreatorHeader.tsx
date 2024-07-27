@@ -45,7 +45,7 @@ export const CreatorHeader = () => {
   const handlePostSave = async (type: PostStatus): Promise<boolean> => {
     if (!user) return false;
     return new Promise<boolean>((resolve, reject) => {
-      const post: Omit<UserPost, "externalData"> = {
+      const post: Omit<UserPost, "metrics"> = {
         id,
         document,
         auxData: {
@@ -66,7 +66,7 @@ export const CreatorHeader = () => {
 
           setDocument(data.document);
           setAuxData(data);
-          
+
           resolve(true);
           return `Saved Post Successfully`;
         },

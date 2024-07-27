@@ -148,7 +148,7 @@ export interface PostAuxilliaryData {
   thumbnail: string;
 }
 
-export interface PostExternalData {
+export interface PostMetrics {
   likeCount: number;
   commentCount: number;
   viewCount: number;
@@ -159,7 +159,7 @@ export interface UserPost {
   id: string | undefined;
   document: Document;
   auxData: PostAuxilliaryData;
-  externalData: PostExternalData;
+  metrics: PostMetrics;
 }
 
 export interface UserTextPost {
@@ -168,7 +168,7 @@ export interface UserTextPost {
   textpost: string;
   createdAt: Date;
   updatedAt?: Date;
-  externalData: PostExternalData;
+  metrics: PostMetrics;
 }
 
 export enum PostContentType {

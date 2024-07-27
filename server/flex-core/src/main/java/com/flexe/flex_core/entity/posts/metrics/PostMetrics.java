@@ -1,8 +1,6 @@
-package com.flexe.flex_core.entity.posts.media;
+package com.flexe.flex_core.entity.posts.metrics;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
-public class PostExternalData {
+public class PostMetrics {
     private Integer likeCount;
     private Integer commentCount;
     private Integer viewCount;

@@ -23,7 +23,7 @@ const PostMetrics = ({ post }: Props) => {
         variant={"ghost"}
       >
         <HandThumbUpIcon className="w-4 h-4" />
-        <span className="ml-1">{post.externalData.likeCount}</span>
+        <span className="ml-1">{post.metrics.likeCount}</span>
       </Button>
       <Button
         onClick={() => {
@@ -33,14 +33,14 @@ const PostMetrics = ({ post }: Props) => {
         className="flex items-center rounded-none w-full"
       >
         <ChatBubbleOvalLeftEllipsisIcon className="w-4 h-4" />
-        <span className="ml-1">{post.externalData.commentCount}</span>
+        <span className="ml-1">{post.metrics.commentCount}</span>
       </Button>
       <Button
         variant={"ghost"}
         className="flex items-center rounded-none w-full"
       >
         <BookmarkIcon className="w-4 h-4" />
-        <span className="ml-1">{post.externalData.saveCount}</span>
+        <span className="ml-1">{post.metrics.saveCount}</span>
       </Button>
     </div>
   );
