@@ -8,6 +8,8 @@ import com.flexe.flex_core.repository.post.TextPostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+
 @Service
 public class TextPostService {
 
@@ -38,7 +40,7 @@ public class TextPostService {
 
     public PostNode generatePostNode(TextPost post){
         //Will Generate Metadata based on Post later once infrastructure is set up
-        PostNode newNode = new PostNode(post.getId(), PostNode.PostType.TEXT, post.getCreatedAt());
+        PostNode newNode = new PostNode(post, new ArrayList<String>());
         return postNodeRepository.save(newNode);
     }
 }

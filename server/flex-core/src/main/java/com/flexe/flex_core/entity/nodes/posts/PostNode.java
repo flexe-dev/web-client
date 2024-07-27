@@ -1,6 +1,8 @@
 package com.flexe.flex_core.entity.nodes.posts;
 
+import com.flexe.flex_core.entity.posts.media.MediaPost;
 import com.flexe.flex_core.entity.posts.metrics.PostMetrics;
+import com.flexe.flex_core.entity.posts.text.TextPost;
 import org.springframework.data.neo4j.core.schema.GeneratedValue;
 import org.springframework.data.neo4j.core.schema.Id;
 import org.springframework.data.neo4j.core.schema.Node;
@@ -38,30 +40,30 @@ public class PostNode {
 
     }
 
-    public PostNode(String postId, PostType type, Date createdAt){
-        this.postId = postId;
-        this.type = type;
-        this.createdAt = createdAt;
-        this.tags = new ArrayList<>();
-        this.tech = new ArrayList<>();
-        this.keywords = new ArrayList<>();
-        this.likeCount = 0;
-        this.commentCount = 0;
-        this.viewCount = 0;
-        this.saveCount = 0;
+    public PostNode(MediaPost post, List<String> keywords){
+        this.postId = post.getId();
+        this.type = PostType.MEDIA;
+        this.createdAt = post.getAuxData().getDateCreated();
+        this.tags = post.getAuxData().getTags();
+        this.tech = post.getAuxData().getTech();
+        this.keywords = keywords;
+        this.likeCount = post.getMetrics().getLikeCount();
+        this.commentCount = post.getMetrics().getCommentCount();
+        this.viewCount = post.getMetrics().getViewCount();
+        this.saveCount = post.getMetrics().getSaveCount();
     }
 
-    public PostNode(String postId, PostType type, Date createdAt, List<String> tags, List<String> tech, List<String> keywords, Integer likeCount, Integer commentCount, Integer viewCount, Integer saveCount) {
-        this.postId = postId;
-        this.type = type;
-        this.createdAt = createdAt;
-        this.tags = tags;
-        this.tech = tech;
+    public PostNode(TextPost post, List<String> keywords){
+        this.postId = post.getId();
+        this.type = PostType.TEXT;
+        this.createdAt = post.getCreatedAt();
+        this.tags = new ArrayList<>();
+        this.tech = new ArrayList<>();
         this.keywords = keywords;
-        this.likeCount = likeCount;
-        this.commentCount = commentCount;
-        this.viewCount = viewCount;
-        this.saveCount = saveCount;
+        this.likeCount = post.getMetrics().getLikeCount();
+        this.commentCount = post.getMetrics().getCommentCount();
+        this.viewCount = post.getMetrics().getViewCount();
+        this.saveCount = post.getMetrics().getSaveCount();
     }
 
     public String getPostId() {

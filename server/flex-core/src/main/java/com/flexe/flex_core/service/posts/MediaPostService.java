@@ -53,7 +53,7 @@ public class MediaPostService {
 
     public PostNode generatePostNode(MediaPost post){
         //Will Generate Metadata based on Post later once infrastructure is set up
-        PostNode newNode = new PostNode(post.getId(), PostNode.PostType.MEDIA, post.getAuxData().getDateCreated());
+        PostNode newNode = new PostNode(post, new ArrayList<String>());
 
         //Save Post to Database
         PostNode savedNode = postNodeRepository.save(newNode);
