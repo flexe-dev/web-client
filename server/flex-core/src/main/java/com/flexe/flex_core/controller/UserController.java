@@ -1,7 +1,6 @@
 package com.flexe.flex_core.controller;
 
 import com.flexe.flex_core.entity.nodes.user.UserNode;
-import com.flexe.flex_core.entity.response.ErrorMessageResponse;
 import com.flexe.flex_core.entity.user.UserAccount;
 import com.flexe.flex_core.entity.user.UserProfile;
 import com.flexe.flex_core.entity.user.User;
@@ -13,8 +12,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
 
 
 @RestController
@@ -46,7 +43,7 @@ public class UserController {
 
         UserProfile profile = userService.findProfile(userId);
         if(profile == null){
-            UserProfile newProfile = userService.createProfile(userId);
+            UserProfile newProfile = userService.initialiseUser(userId);
             return ResponseEntity.ok(newProfile);
         }
         return ResponseEntity.ok(profile);

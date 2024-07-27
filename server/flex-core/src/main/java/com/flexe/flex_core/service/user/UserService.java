@@ -10,6 +10,8 @@ import com.flexe.flex_core.repository.user.UserProfileRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class UserService {
 
@@ -44,13 +46,20 @@ public class UserService {
 
     //User Creation
 
-    public UserProfile createProfile(String userId){
-        UserProfile profile = new UserProfile(userId);
+    public UserProfile initialiseUser(String userId){
+        Optional<User> user = userRepository.findById(userId);
+        if(user.isEmpty()) return null;
+
+        UserProfile profile = new UserProfile(user.get().getId());
+        UserNode newUserNode = createUserNode(user.get());
+
+        if(newUserNode == null) return null;
         return userProfileRepository.save(profile);
+
     }
 
     public UserNode createUserNode(User user){
-        UserNode newNode = new UserNode(user.getId(), user.getName(), user.getUsername());
+        UserNode newNode = new UserNode(user);
         return userNodeRepository.save(newNode);
     }
 
