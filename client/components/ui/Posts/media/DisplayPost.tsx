@@ -1,9 +1,9 @@
-import { ContentBlockType, ContentComponent, UserPost } from "@/lib/interface";
 import { PreviewView } from "@/components/creator/blocks/BlockPreview";
 import { CarouselView } from "@/components/creator/content/CarouselContent";
 import { ImageView } from "@/components/creator/content/ImageContent";
 import { TextView } from "@/components/creator/content/TextContent";
 import { VideoView } from "@/components/creator/content/VideoContent";
+import { ContentBlockType, ContentComponent, UserPost } from "@/lib/interface";
 
 interface Props {
   post: UserPost;
@@ -23,7 +23,7 @@ export const RenderContentComponent: Record<
 const DisplayPost = ({ post }: Props) => {
   const { document } = post;
   return (
-    <div className="flex flex-col items-center py-4">
+    <div className="flex flex-col py-4">
       {document.map((content) => {
         if (!content.type) return;
         const Component = RenderContentComponent[content.type];

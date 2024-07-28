@@ -16,7 +16,7 @@ import PostSubmit from "./PostSubmit";
 
 export const CreatorHeader = () => {
   const { document, setDocument } = useDocumentCreator();
-  const { account } = useAccount();
+  const { account, setAccount } = useAccount();
   const router = useRouter();
   const { scrollY } = useScroll();
   const { thumbnail, id, title, tags, tech, postStatus, setAuxData } =
@@ -66,7 +66,10 @@ export const CreatorHeader = () => {
 
           setDocument(data.document);
           setAuxData(data);
-
+          setAccount({
+            ...account,
+            mediaPosts: [data, ...account.mediaPosts],
+          });
           resolve(true);
           return `Saved Post Successfully`;
         },
