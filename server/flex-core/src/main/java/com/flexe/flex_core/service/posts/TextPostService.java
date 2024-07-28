@@ -40,7 +40,9 @@ public class TextPostService {
         return repository.findAllTextPostByUserId(userId);
     }
 
-    public void deletePost(String postId) {
+public void deletePost(String postId) {
+
+        postNodeRepository.deleteById(postId);
         repository.deleteById(postId);
     }
 

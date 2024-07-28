@@ -3,6 +3,7 @@ package com.flexe.flex_core.controller;
 import com.flexe.flex_core.entity.nodes.posts.PostNode;
 import com.flexe.flex_core.entity.posts.media.MediaPost;
 import com.flexe.flex_core.service.posts.MediaPostService;
+import com.flexe.flex_core.service.posts.PostCommentService;
 import io.sentry.Sentry;
 import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,9 @@ public class MediaPostController {
     @Autowired
     private
     MediaPostService service;
+
+    @Autowired
+    private PostCommentService commentService;
 
     @PostMapping("/upload")
     @ResponseBody
@@ -87,6 +91,7 @@ public class MediaPostController {
     public ResponseEntity<String> deletePost(@PathVariable String postId) {
         try{
             service.deletePost(postId);
+            commentService.deletePostComments(postId);
             return ResponseEntity.ok("Post deleted");
         }
         catch (Exception e){

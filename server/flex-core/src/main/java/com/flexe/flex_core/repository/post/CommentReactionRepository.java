@@ -12,4 +12,7 @@ public interface CommentReactionRepository extends MongoRepository<CommentReact,
 
     @Query("{ 'postId' : ?0, 'userId' : ?1 }")
     CommentReact[] findByPostIdAndUserId(String postId, String userId);
+
+    @Query("{ 'postId' : ?0 }")
+    void deleteAllByPostId(String postId);
 }

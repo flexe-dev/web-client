@@ -72,6 +72,7 @@ public class PostCommentService {
     }
 
     public void deletePostComments(String postId){
+        reactionRepository.deleteAllByPostId(postId);
         repository.deleteAllByPostId(postId);
     }
 

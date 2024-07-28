@@ -4,6 +4,7 @@ import com.flexe.flex_core.entity.nodes.posts.PostNode;
 import com.flexe.flex_core.entity.posts.media.MediaPost;
 import com.flexe.flex_core.entity.posts.text.TextPost;
 import com.flexe.flex_core.service.posts.MediaPostService;
+import com.flexe.flex_core.service.posts.PostCommentService;
 import com.flexe.flex_core.service.posts.TextPostService;
 import io.sentry.Sentry;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,9 @@ public class TextPostController {
     @Autowired
     private
     TextPostService service;
+
+    @Autowired
+    private PostCommentService commentService;
 
     @PostMapping("/upload")
     public ResponseEntity<TextPost> savePost(@RequestBody TextPost post) {
@@ -74,6 +78,7 @@ public class TextPostController {
     public ResponseEntity<String> deletePost(@PathVariable String postId) {
         try{
             service.deletePost(postId);
+            commentService.deletePostComments(postId);
             return ResponseEntity.ok("Post deleted");
         }
         catch (Exception e){

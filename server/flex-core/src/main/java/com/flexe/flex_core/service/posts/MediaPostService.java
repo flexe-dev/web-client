@@ -46,6 +46,7 @@ public class MediaPostService {
     }
 
     public void deletePost(String postId) {
+        postNodeRepository.deleteById(postId);
         repository.deleteById(postId);
     }
 
