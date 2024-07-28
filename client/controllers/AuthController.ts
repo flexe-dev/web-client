@@ -21,7 +21,7 @@ const CreateEmailUser = async (credentials: EmailUser) => {
 
 const FindUserByEmail = async (email: string): Promise<User | null> => {
   const response = await fetch(
-    `${process.env.NEXT_PUBLIC_CORE_BACKEND_API_URL}/user/find/email/${email}`,
+    `${process.env.NEXT_PUBLIC_CORE_BACKEND_API_URL}user/find/email/${email}`,
     {
       method: "GET",
       headers: {

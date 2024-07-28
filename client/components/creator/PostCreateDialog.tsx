@@ -36,7 +36,7 @@ const PostCreateDialog = ({ dispatch }: DialogProps) => {
 
   const handleTextPostPublish = async (): Promise<boolean> => {
     return new Promise<boolean>((resolve, reject) => {
-      const textPost: Omit<UserTextPost, "externalData"> = {
+      const textPost: Omit<UserTextPost, "metrics"> = {
         id: undefined,
         userID: user?.id,
         createdAt: new Date(),

@@ -1,5 +1,6 @@
 package com.flexe.flex_core.entity.posts.text;
 
+import com.flexe.flex_core.entity.posts.metrics.PostMetrics;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
@@ -18,14 +19,14 @@ public class TextPost {
     private final Date createdAt;
     private Date updatedAt;
     private final String textpost;
-    private final PostExternalData externalData;
+    private final PostMetrics metrics;
 
-    public TextPost(String id, String textpost, String userID, Date createdAt, PostExternalData externalData) {
+    public TextPost(String id, String textpost, String userID, Date createdAt, PostMetrics metrics) {
         this.id = id;
         this.textpost = textpost;
         this.userID = userID;
         this.createdAt = createdAt;
-        this.externalData = externalData;
+        this.metrics = metrics;
     }
 
 
@@ -33,7 +34,7 @@ public class TextPost {
 
     public String getTextpost() {return textpost;}
 
-    public PostExternalData getExternalData() { return externalData;}
+    public PostMetrics getMetrics() { return metrics;}
 
     public String getId() {
         return id;

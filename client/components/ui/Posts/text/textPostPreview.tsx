@@ -49,11 +49,11 @@ const TextPostPreview = (props: TextPostPreviewProps) => {
           <section className="ml-14">{post.textpost}</section>
           <CardFooter className="py-3 ml-8 justify-left space-x-4">
             <div className="flex space-x-2 items-center">
-              <span>{post.externalData.likeCount}</span>
+              <span>{post.metrics.likeCount}</span>
               <HandThumbUpIcon className="w-4 h-4" />
             </div>
             <div className="flex space-x-2 items-center">
-              <span>{post.externalData.commentCount}</span>
+              <span>{post.metrics.commentCount}</span>
               <ChatBubbleOvalLeftIcon className="w-4 h-4" />
             </div>
           </CardFooter>

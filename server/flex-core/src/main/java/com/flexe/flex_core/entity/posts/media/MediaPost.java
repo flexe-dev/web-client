@@ -1,6 +1,6 @@
 package com.flexe.flex_core.entity.posts.media;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.flexe.flex_core.entity.posts.metrics.PostMetrics;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -11,16 +11,16 @@ public class MediaPost {
     @Id
     private String id;
     private PostAuxData auxData;
-    private PostExternalData externalData;
+    private PostMetrics metrics;
     private List<PostContent> document;
 
     public MediaPost() {
     }
 
-    public MediaPost(String id, PostAuxData auxData, PostExternalData externalData, List<PostContent> document) {
+    public MediaPost(String id, PostAuxData auxData, PostMetrics metrics, List<PostContent> document) {
         this.id = id;
         this.auxData = auxData;
-        this.externalData = externalData;
+        this.metrics = metrics;
         this.document = document;
     }
 
@@ -40,12 +40,12 @@ public class MediaPost {
         this.auxData = auxData;
     }
 
-    public PostExternalData getExternalData() {
-        return externalData;
+    public PostMetrics getMetrics() {
+        return metrics;
     }
 
-    public void setExternalData(PostExternalData externalData) {
-        this.externalData = externalData;
+    public void setMetrics(PostMetrics metrics) {
+        this.metrics = metrics;
     }
 
     public List<PostContent> getDocument() {

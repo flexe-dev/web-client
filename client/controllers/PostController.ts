@@ -3,7 +3,7 @@ import {
   CommentNode,
   CommentReactType,
   Document,
-  PostExternalData,
+  PostMetrics,
   PostType,
   PostUserMedia,
   UserPost,
@@ -22,7 +22,7 @@ import {
   Post Uploading/Manipulation
 */
 
-const defaultExternalData: PostExternalData = {
+const defaultPostMetrics: PostMetrics = {
   likeCount: 0,
   commentCount: 0,
   viewCount: 0,
@@ -30,7 +30,7 @@ const defaultExternalData: PostExternalData = {
 };
 
 export const saveTextPost = async (
-  textPost: Omit<UserTextPost, "externalData">
+  textPost: Omit<UserTextPost, "metrics">
 ): Promise<UserTextPost | undefined> => {
   const textPostID = textPost.id ?? (await generateMongoID());
   if (!textPostID) return;
@@ -40,7 +40,7 @@ export const saveTextPost = async (
     userID: textPost.userID,
     createdAt: textPost.createdAt,
     textpost: textPost.textpost,
-    externalData: defaultExternalData,
+    metrics: defaultPostMetrics,
   };
 
   try {
@@ -61,7 +61,7 @@ export const saveTextPost = async (
 };
 
 export const savePost = async (
-  post: Omit<UserPost, "externalData">
+  post: Omit<UserPost, "metrics">
 ): Promise<UserPost | undefined> => {
   const postID = post.id ?? (await generateMongoID());
   if (!postID) return;
@@ -82,7 +82,7 @@ export const savePost = async (
       thumbnail: thumbnail,
     },
     document: uploadedDocument,
-    externalData: defaultExternalData,
+    metrics: defaultPostMetrics,
   };
   // Send Data to Proxy Server
   try {
