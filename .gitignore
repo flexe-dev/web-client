@@ -1,5 +1,5 @@
 #Enviroment Variables
-client/.env
+.env
 
 # Logs
 logs
