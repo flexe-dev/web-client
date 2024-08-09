@@ -48,6 +48,11 @@ export interface UserProfile {
   external: ProfileExternalLinks;
 }
 
+export interface UserDisplay {
+  user: User;
+  profile: UserProfile;
+}
+
 export interface ProfileExternalLinks {
   website?: string;
   github?: string;

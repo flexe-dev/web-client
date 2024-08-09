@@ -45,7 +45,7 @@ export const saveTextPost = async (
 
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_CORE_BACKEND_API_URL}post/text/upload`,
+      `${process.env.NEXT_PUBLIC_POST_SERVICE_URL}post/text/upload`,
       {
         method: `POST`,
         headers: {
@@ -87,7 +87,7 @@ export const savePost = async (
   // Send Data to Proxy Server
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_CORE_BACKEND_API_URL}post/media/upload`,
+      `${process.env.NEXT_PUBLIC_POST_SERVICE_URL}post/media/upload`,
       {
         method: `POST`,
         headers: {
@@ -113,7 +113,7 @@ export const GetAllUserPosts = async (
 ): Promise<UserPost[] | undefined> => {
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_CORE_BACKEND_API_URL}post/media/user/${userID}`
+      `${process.env.NEXT_PUBLIC_POST_SERVICE_URL}post/media/user/${userID}`
     );
 
     if (response.status === 404) {
@@ -134,7 +134,7 @@ export const getPostById = async (
   try {
     const response = await fetch(
       `${
-        process.env.NEXT_PUBLIC_CORE_BACKEND_API_URL
+        process.env.NEXT_PUBLIC_POST_SERVICE_URL
       }post/${type.toLowerCase()}/${postID}`,
       {
         method: "GET",
@@ -290,7 +290,7 @@ export const DeletePost = async (
   try {
     const response = await fetch(
       `${
-        process.env.NEXT_PUBLIC_CORE_BACKEND_API_URL
+        process.env.NEXT_PUBLIC_POST_SERVICE_URL
       }post/${postType.toLowerCase()}/delete/${postID}`,
       {
         method: `DELETE`,
@@ -303,18 +303,14 @@ export const DeletePost = async (
   }
 };
 
-export const FavouritePost = async (userID: string, postID: string) => {};
-
-export const LikePost = (userID: string, postID: string) => {};
-
-//Controller Logic
+//Comment Logic
 
 export const GetPostComments = async (
   postID: string
 ): Promise<CommentNode[]> => {
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_CORE_BACKEND_API_URL}post/comment/get/post/${postID}`,
+      `${process.env.NEXT_PUBLIC_POST_SERVICE_URL}post/comment/get/post/${postID}`,
       {
         method: `GET`,
         cache: "no-store",
@@ -332,7 +328,7 @@ export const AddComment = async (
 ): Promise<Comment | undefined> => {
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_CORE_BACKEND_API_URL}post/comment/add`,
+      `${process.env.NEXT_PUBLIC_POST_SERVICE_URL}post/comment/add`,
       {
         method: `POST`,
         headers: {
@@ -351,7 +347,7 @@ export const AddComment = async (
 export const DeleteComment = async (comment: CommentNode): Promise<boolean> => {
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_CORE_BACKEND_API_URL}post/comment/delete/comment`,
+      `${process.env.NEXT_PUBLIC_POST_SERVICE_URL}post/comment/delete/comment`,
       {
         method: `DELETE`,
         headers: {
@@ -375,7 +371,7 @@ export const LikeComment = async (
 ): Promise<boolean> => {
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_CORE_BACKEND_API_URL}post/comment/like/${commentID}/${userID}/${postID}/${opposite}`,
+      `${process.env.NEXT_PUBLIC_POST_SERVICE_URL}post/comment/like/${commentID}/${userID}/${postID}/${opposite}`,
       {
         method: `POST`,
       }
@@ -394,7 +390,7 @@ export const RemoveCommentReaction = async (
 ): Promise<boolean> => {
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_CORE_BACKEND_API_URL}post/comment/reaction/remove/${commentId}/${userId}`,
+      `${process.env.NEXT_PUBLIC_POST_SERVICE_URL}post/comment/reaction/remove/${commentId}/${userId}`,
       {
         method: `DELETE`,
       }
@@ -412,7 +408,7 @@ export const GetPostReactions = async (
 ): Promise<Map<string, CommentReactType> | undefined> => {
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_CORE_BACKEND_API_URL}post/comment/reaction/${postID}/${userId}`
+      `${process.env.NEXT_PUBLIC_POST_SERVICE_URL}post/comment/reaction/${postID}/${userId}`
     );
     return await response.json();
   } catch (e) {
@@ -429,7 +425,7 @@ export const DislikeComment = async (
 ): Promise<boolean> => {
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_CORE_BACKEND_API_URL}post/comment/dislike/${commentID}/${userID}/${postID}/${opposite}`,
+      `${process.env.NEXT_PUBLIC_POST_SERVICE_URL}post/comment/dislike/${commentID}/${userID}/${postID}/${opposite}`,
       {
         method: `POST`,
       }
@@ -447,7 +443,7 @@ export const EditComment = async (
 ): Promise<Comment | null> => {
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_CORE_BACKEND_API_URL}post/comment/edit`,
+      `${process.env.NEXT_PUBLIC_POST_SERVICE_URL}post/comment/edit`,
       {
         method: `PUT`,
         headers: {

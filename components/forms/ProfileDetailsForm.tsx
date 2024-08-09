@@ -1,6 +1,6 @@
 "use client";
 
-import { UpdateUserAccount } from "@/controllers/UserController";
+import { updateUser } from "@/controllers/UserController";
 import { zodResolver } from "@hookform/resolvers/zod";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -80,28 +80,15 @@ export const ProfileDetailsForm = (props: Props) => {
         bio: values.bio,
       };
 
-      const response = await UpdateUserAccount({
-        ...account,
+      const response = await updateUser({
         user: updatedUser,
         profile: updatedProfile,
       });
 
       setAccount({
         ...account,
-        user: {
-          ...user,
-          username: values.username,
-          name: values.name,
-          image: imageURL ?? user.image,
-        },
-        profile: {
-          ...profile,
-          job: values.job,
-          company: values.company,
-          pronouns: values.pronouns,
-          location: values.location,
-          bio: values.bio,
-        },
+        user: updatedUser,
+        profile: updatedProfile,
       });
 
       if (response) {

@@ -1,15 +1,16 @@
 "use client";
 
 import {
-  CreateUserProfile,
+  DefaultProfile,
   FindAccountByUsername,
-  UpdateUserDetails,
+  OnboardUser,
 } from "@/controllers/UserController";
 import { UserProfile } from "@/lib/interface";
 import { supabase } from "@/lib/supabase";
 import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { debounce } from "lodash";
+import { User } from "next-auth";
 import Image from "next/image";
 import React, { useCallback, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -67,34 +68,36 @@ export const OnboardForm = (props: Props) => {
 
       if (usernameValid !== "available" || !imageURL) return false;
 
-      const userDetailsResponse = await UpdateUserDetails({
+      const updatedUser: User = {
         ...user,
         username: values.username,
         name: values.name,
-        onboarded: true,
         image: imageURL,
-      });
-      const profileResponse: UserProfile = await CreateUserProfile(user.id);
+        onboarded: true,
+      };
 
-      // Update User Account Details
+      const newProfile: UserProfile = {
+        ...DefaultProfile,
+        userId: user.id,
+        //More Shit when I expand user profile in the future
+      };
+
+      //Update User Objects
+      const response = await OnboardUser({
+        user: updatedUser,
+        profile: newProfile,
+      });
+
+      if (!response) return false;
 
       setAccount({
         ...account,
-        user: {
-          ...user,
-          onboarded: true,
-          username: values.username,
-          name: values.name,
-          image: imageURL,
-        },
-        profile: profileResponse,
+        user: response.user,
+        profile: response.profile,
       });
 
-      if (userDetailsResponse && profileResponse) {
-        props.onSuccess(true);
-        return true;
-      }
-      return false;
+      props.onSuccess(true);
+      return true;
     };
 
     toast.promise(saveData(values), {

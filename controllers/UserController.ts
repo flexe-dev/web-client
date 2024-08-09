@@ -1,24 +1,15 @@
-import { UserAccount, UserProfile } from "@/lib/interface";
-import { User } from "next-auth";
-
-const CreateUserProfile = async (userId: string): Promise<UserProfile> => {
-  const response = await fetch(
-    `${process.env.NEXT_PUBLIC_CORE_BACKEND_API_URL}user/profile/create/${userId}`,
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    }
-  );
-  return response.json();
-};
+import {
+  ProfileExternalLinks,
+  UserAccount,
+  UserDisplay,
+  UserProfile,
+} from "@/lib/interface";
 
 const FindProfileByUserId = async (
   userId: string
 ): Promise<UserProfile | null> => {
   const response = await fetch(
-    `${process.env.NEXT_PUBLIC_CORE_BACKEND_API_URL}user/profile/find/${userId}`,
+    `${process.env.NEXT_PUBLIC_USER_SERVICE_URL}user/profile/find/${userId}`,
     {
       method: "GET",
       headers: {
@@ -36,7 +27,7 @@ const FindAccountByUserId = async (
   userId: string
 ): Promise<UserAccount | null> => {
   const response = await fetch(
-    `${process.env.NEXT_PUBLIC_CORE_BACKEND_API_URL}user/account/find/${userId}`,
+    `${process.env.NEXT_PUBLIC_USER_SERVICE_URL}user/account/find/${userId}`,
     {
       method: "GET",
       headers: {
@@ -55,7 +46,7 @@ const FindAccountByUsername = async (
 ): Promise<UserAccount | null> => {
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_CORE_BACKEND_API_URL}user/account/find/username/${username}`,
+      `${process.env.NEXT_PUBLIC_USER_SERVICE_URL}user/account/find/username/${username}`,
       {
         method: "GET",
         headers: {
@@ -80,9 +71,23 @@ const FindAccountByUsername = async (
   }
 };
 
-const UpdateUserDetails = async (user: User): Promise<User> => {
+const OnboardUser = async (user: UserDisplay): Promise<UserDisplay> => {
   const response = await fetch(
-    `${process.env.NEXT_PUBLIC_CORE_BACKEND_API_URL}user/details/update`,
+    `${process.env.NEXT_PUBLIC_USER_SERVICE_URL}user/onboard`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(user),
+    }
+  );
+  return response.json();
+};
+
+const updateUser = async (user: UserDisplay): Promise<UserDisplay> => {
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_USER_SERVICE_URL}user/update`,
     {
       method: "PUT",
       headers: {
@@ -94,27 +99,36 @@ const UpdateUserDetails = async (user: User): Promise<User> => {
   return response.json();
 };
 
-const UpdateUserAccount = async (
-  userAccount: UserAccount
-): Promise<UserAccount> => {
+const deleteUser = async (user: UserAccount): Promise<boolean> => {
   const response = await fetch(
-    `${process.env.NEXT_PUBLIC_CORE_BACKEND_API_URL}user/account/update`,
+    `${process.env.NEXT_PUBLIC_USER_SERVICE_URL}user/delete`,
     {
-      method: "PUT",
+      method: "DELETE",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(userAccount),
+      body: JSON.stringify(user),
     }
   );
-  return response.json();
+  return response.ok;
+};
+
+const DefaultExternal: ProfileExternalLinks = {};
+
+const DefaultProfile: UserProfile = {
+  id: "",
+  userId: "",
+  followers: 0,
+  following: 0,
+  external: DefaultExternal,
 };
 
 export {
-  CreateUserProfile,
+  DefaultExternal,
+  DefaultProfile,
   FindAccountByUserId,
   FindAccountByUsername,
   FindProfileByUserId,
-  UpdateUserAccount,
-  UpdateUserDetails,
+  OnboardUser,
+  updateUser,
 };
