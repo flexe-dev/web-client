@@ -6,7 +6,7 @@ interface Props {
 }
 
 import { PostCommentProvider } from "@/components/context/PostCommentContext";
-import { GetPostComments } from "@/controllers/PostController";
+import { GetPostComments } from "@/controllers/CommentController";
 import { ChildNodeProps, PostType } from "@/lib/interface";
 import React, { Suspense } from "react";
 import CommentInput from "./CommentInput";

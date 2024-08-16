@@ -2,6 +2,7 @@ import {
   ProfileExternalLinks,
   UserAccount,
   UserDisplay,
+  UserNode,
   UserProfile,
 } from "@/lib/interface";
 
@@ -71,6 +72,24 @@ const FindAccountByUsername = async (
   }
 };
 
+const FindUserNode = async (userId: string): Promise<UserNode | undefined> => {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_INTERACTIONS_SERVICE_URL}node/user/${userId}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    return response.json();
+  } catch (err) {
+    console.error("Fetch error:", err);
+    return;
+  }
+};
+
 const OnboardUser = async (user: UserDisplay): Promise<UserDisplay> => {
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_USER_SERVICE_URL}user/onboard`,
@@ -129,6 +148,7 @@ export {
   FindAccountByUserId,
   FindAccountByUsername,
   FindProfileByUserId,
+  FindUserNode,
   OnboardUser,
   updateUser,
 };

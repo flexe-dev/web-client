@@ -40,7 +40,7 @@ export const AccountProvider = ({ children }: ChildNodeProps) => {
 
   useEffect(() => {
     fetchProfile();
-  }, [session.data?.user]);
+  }, [session.data?.user.id]);
 
   return (
     <AccountContext.Provider

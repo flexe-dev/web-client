@@ -1,5 +1,6 @@
+"use server";
+
 import ErrorPage from "@/components/Error";
-import PostComments from "@/components/ui/Posts/Comment/PostComments";
 import { PostDisplayHeader } from "@/components/ui/Posts/Header/PostDisplayHeader";
 import { TextPostDisplay } from "@/components/ui/Posts/text/TextPostDisplay";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -30,9 +31,6 @@ const page = async ({ params }: Props) => {
       />
       <Suspense fallback={<Skeleton className="mt-4 h-[10rem]" />}>
         <TextPostDisplay post={post} />
-      </Suspense>
-      <Suspense fallback={<Skeleton className="mt-4 h-[15rem]" />}>
-        <PostComments postId={post.id} type="TEXT" />
       </Suspense>
     </div>
   );
