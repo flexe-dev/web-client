@@ -8,7 +8,7 @@ import {
   GetPostReactions,
   LikeComment,
   RemoveCommentReaction,
-} from "@/controllers/PostController";
+} from "@/controllers/CommentController";
 import { CommentSortAlgorithm } from "@/lib/commentUtils";
 import {
   ChildNodeProps,
@@ -31,6 +31,7 @@ import {
 } from "react";
 import { toast } from "sonner";
 import { useAccount } from "./AccountProvider";
+import { usePostMetrics } from "./PostInteractionContext";
 
 interface PostCommentState {
   comments: CommentNode[];
@@ -106,6 +107,10 @@ export const PostCommentProvider = ({
 }: ContextProps) => {
   const [comments, setComments] = useState<CommentNode[]>(fetchedComments);
   const { account } = useAccount();
+  const {
+    addComment: metricsIncrementComment,
+    removeComment: metricsDecrementComment,
+  } = usePostMetrics();
   const [replyTarget, setReplyTarget] = useState<Reply | undefined>();
   const [editTarget, setEditTarget] = useState<EditCommentTarget | undefined>();
   const [commentReactions, setCommentReactions] = useState<UserPostReactions>({
@@ -117,7 +122,6 @@ export const PostCommentProvider = ({
   //Only Sort on Component Mount or when user selects a new sort type
   //This is so comments aren't rearranged on every state change
   useEffect(() => {
-    console.log("Sorting");
     setComments((prev) =>
       [...prev].sort((a, b) => CommentSortAlgorithm[sortType](a, b))
     );
@@ -147,14 +151,17 @@ export const PostCommentProvider = ({
   };
 
   const addComment = async (comment: CommentNode, rootNode?: CommentNode) => {
-    const uploadedComment = await AddComment(comment.comment);
-    if (!uploadedComment) return;
+    const uploadedComment = await AddComment(comment.comment, type);
+    if (!uploadedComment) {
+      toast.error("Failed to add comment");
+      return;
+    }
 
     const newNode: CommentNode = {
       ...comment,
       comment: uploadedComment,
     };
-
+    metricsIncrementComment(1);
     if (!replyTarget || !rootNode) {
       setComments([newNode, ...comments]);
       toast.success("Comment added successfully");
@@ -178,16 +185,18 @@ export const PostCommentProvider = ({
     if (!tr) return;
     updateCommentTree(tr, index);
     toast.success("Comment added successfully");
+
     setReplyTarget(undefined);
   };
 
   const deleteComment = async (comment: CommentNode, rootNode: CommentNode) => {
-    const response = await DeleteComment(comment);
+    const response = await DeleteComment(comment, type);
     if (!response) {
       toast.error("Failed to delete comment");
       return;
     }
 
+    metricsDecrementComment(response);
     if (rootNode?.comment.id === comment.comment.id) {
       setComments(
         comments.filter((node) => node.comment.id !== comment.comment.id)

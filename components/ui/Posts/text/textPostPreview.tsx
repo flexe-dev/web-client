@@ -1,18 +1,16 @@
 "use client";
 
+import { PostInteractionProvider } from "@/components/context/PostInteractionContext";
 import { PostToolsProvider } from "@/components/context/PostOptionToolProvider";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
-import { Card, CardFooter } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import { UserTextPost } from "@/lib/interface";
-import {
-  ChatBubbleOvalLeftIcon,
-  EllipsisHorizontalIcon,
-  HandThumbUpIcon,
-} from "@heroicons/react/24/outline";
+import { EllipsisHorizontalIcon } from "@heroicons/react/24/outline";
 import { User } from "next-auth";
 import Link from "next/link";
 import { timeAgo } from "../../../../lib/dateutils";
 import { Button } from "../../button";
+import { TextPostMetricsDisplay } from "./TextPostMetricsDisplay";
 
 interface TextPostPreviewProps {
   user: User;
@@ -24,9 +22,9 @@ const TextPostPreview = (props: TextPostPreviewProps) => {
   if (!post.id || !user) return null;
 
   return (
-    <Card className="relative w-full my-4 hover:bg-secondary transition-colors">
+    <Card className="relative w-full my-4 hover:bg-secondary/30 transition-colors overflow-hidden">
       <Link href={`/post/status/${post.id}`}>
-        <main className="p-4">
+        <main className="p-4 pb-0">
           <section className="flex space-x-1 items-center p-2 justify-between">
             <div className="flex">
               <Avatar className="w-10 h-10 mr-2">
@@ -46,19 +44,18 @@ const TextPostPreview = (props: TextPostPreviewProps) => {
             </div>
           </section>
 
-          <section className="ml-14">{post.textpost}</section>
-          <CardFooter className="py-3 ml-8 justify-left space-x-4">
-            <div className="flex space-x-2 items-center">
-              <span>{post.metrics.likeCount}</span>
-              <HandThumbUpIcon className="w-4 h-4" />
-            </div>
-            <div className="flex space-x-2 items-center">
-              <span>{post.metrics.commentCount}</span>
-              <ChatBubbleOvalLeftIcon className="w-4 h-4" />
-            </div>
-          </CardFooter>
+          <section className="ml-14 mb-8">{post.textpost}</section>
         </main>
       </Link>
+      <div className="w-full overflow-hidden">
+        <PostInteractionProvider
+          postType="TEXT"
+          postId={post.id}
+          postMetrics={post.metrics}
+        >
+          <TextPostMetricsDisplay />
+        </PostInteractionProvider>
+      </div>
       <PostToolsProvider postId={post.id} postType="TEXT">
         <Button
           size={"icon"}

@@ -2,6 +2,7 @@ import { OnboardModal } from "@/components/auth/OnboardModal";
 import { AccountProvider } from "@/components/context/AccountProvider";
 import DndContext from "@/components/context/DndProvider";
 import SessionProvider from "@/components/context/SessionProvider";
+import { UserInteractionsProvider } from "@/components/context/UserInteractionsProvider";
 import { Navbar } from "@/components/navbar";
 import { ThemeProvider } from "@/components/theme/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
@@ -37,19 +38,21 @@ export default async function RootLayout({
       >
         <SessionProvider session={session}>
           <AccountProvider>
-            <DndContext>
-              <ThemeProvider
-                attribute="class"
-                defaultTheme="system"
-                enableSystem
-                disableTransitionOnChange
-              >
-                <Navbar />
-                <main className="w-[100dvw]">{children}</main>
-                <Toaster />
-                <OnboardModal />
-              </ThemeProvider>
-            </DndContext>
+            <UserInteractionsProvider>
+              <DndContext>
+                <ThemeProvider
+                  attribute="class"
+                  defaultTheme="system"
+                  enableSystem
+                  disableTransitionOnChange
+                >
+                  <Navbar />
+                  <main className="w-[100dvw]">{children}</main>
+                  <Toaster />
+                  <OnboardModal />
+                </ThemeProvider>
+              </DndContext>
+            </UserInteractionsProvider>
           </AccountProvider>
         </SessionProvider>
       </body>

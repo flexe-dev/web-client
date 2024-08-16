@@ -236,7 +236,7 @@ const CommentFooter = ({ commentNode, root }: CommentProps) => {
   };
 
   return (
-    <div className="flex items-center relative pt-2 ml-4">
+    <div className="flex items-center relative pt-2 ml-4 mr-3">
       <div className="flex w-fit items-center">
         <Button
           onClick={() => handleButtonState("DISLIKE", commentNode, root)}

@@ -27,6 +27,10 @@ export function copyToClipboard(value: string) {
   navigator.clipboard.writeText(getEntireURL(value));
 }
 
+export function renderMetric(value: number) {
+  return value > 1000 ? `${(value / 1000).toFixed(1)}k` : value;
+}
+
 export const GetNameInitials = (name?: string | null) => {
   if (!name) return "";
   return name

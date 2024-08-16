@@ -235,3 +235,58 @@ export interface UserPostReactions {
 export const sortTypes = ["NEWEST", "OLDEST", "TOP"] as const;
 
 export type SortCriteria = (typeof sortTypes)[number];
+
+const postInteractionValue = [
+  "LIKE",
+  "UNLIKE",
+  "SAVE",
+  "UNSAVE",
+  "VIEW",
+  "SHARE",
+] as const;
+export type PostInteractionType = (typeof postInteractionValue)[number];
+
+export interface PostInteraction {
+  postId: string;
+  userId: string;
+  postType: PostType;
+  targetId?: string;
+}
+
+export interface UserNode {
+  userId: string;
+  following: UserFollowRelationship[];
+  followers: UserFollowRelationship[];
+  likedPosts: PostInteractionRelationship[];
+  savedPosts: PostInteractionRelationship[];
+}
+
+export interface PostNode {
+  postId: string;
+  userId: string;
+  type: PostType;
+  tags: string[];
+  tech: string[];
+  keywords: string[];
+}
+
+export interface PostInteractionRelationship {
+  timestamp: Date;
+  post: PostNode;
+}
+
+export interface PostShareRelationship {
+  timestamp: Date;
+  post: PostNode;
+  receiver: UserNode;
+}
+
+export interface UserFollowRelationship {
+  timestamp: Date;
+  user: UserNode;
+}
+
+export interface PostInteractionLookup {
+  postId: string;
+  timeStamp: Date;
+}
