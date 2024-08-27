@@ -2,7 +2,7 @@
 
 import {
   DefaultProfile,
-  FindAccountByUsername,
+  FindUserByUsername,
   OnboardUser,
 } from "@/controllers/UserController";
 import { UserProfile } from "@/lib/interface";
@@ -11,12 +11,13 @@ import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { debounce } from "lodash";
 import { User } from "next-auth";
+import { useSession } from "next-auth/react";
 import Image from "next/image";
 import React, { useCallback, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
-import { useAccount } from "../context/AccountProvider";
+import { useAccountUser } from "../context/AccountUserProvider";
 import { Button } from "../ui/button";
 import {
   Form,
@@ -47,10 +48,11 @@ const formSchema = z.object({
 });
 
 export const OnboardForm = (props: Props) => {
-  const { account, setAccount } = useAccount();
+  const { account, setAccount } = useAccountUser();
+  const { data } = useSession();
 
   if (!account) return null;
-  const { user, profile } = account;
+  const { user } = account;
 
   const [usernameValid, setUsernameValid] =
     useState<UsernameStatus>("checking");
@@ -83,15 +85,17 @@ export const OnboardForm = (props: Props) => {
       };
 
       //Update User Objects
-      const response = await OnboardUser({
-        user: updatedUser,
-        profile: newProfile,
-      });
+      const response = await OnboardUser(
+        {
+          user: updatedUser,
+          profile: newProfile,
+        },
+        data?.token
+      );
 
       if (!response) return false;
 
       setAccount({
-        ...account,
         user: response.user,
         profile: response.profile,
       });
@@ -156,7 +160,7 @@ export const OnboardForm = (props: Props) => {
 
   const checkUsername = async (username: string) => {
     if (username.length < 2) return;
-    const isTaken = await FindAccountByUsername(username);
+    const isTaken = await FindUserByUsername(username);
     // If a user object returns, this indicates that the username is taken
     setUsernameValid(isTaken ? "taken" : "available");
   };

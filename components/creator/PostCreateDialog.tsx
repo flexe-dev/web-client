@@ -1,11 +1,12 @@
 import { saveTextPost } from "@/controllers/PostController";
-import { UserTextPost } from "@/lib/interface";
+import { TextPost } from "@/lib/interface";
 import { GetNameInitials } from "@/lib/utils";
 import { PhotoIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import React, { SetStateAction, useState } from "react";
 import { toast } from "sonner";
-import { useAccount } from "../context/AccountProvider";
+import { useAccountPost } from "../context/AccountPostProvider";
+import { useAccountUser } from "../context/AccountUserProvider";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Button } from "../ui/button";
 import {
@@ -21,11 +22,12 @@ interface DialogProps {
 }
 
 const PostCreateDialog = ({ dispatch }: DialogProps) => {
-  const { account, setAccount } = useAccount();
+  const { account } = useAccountUser();
+  const { userPosts, setUserPosts } = useAccountPost();
 
   const [newTextPost, setNewTextPost] = useState<string>("");
 
-  if (!account) return null;
+  if (!account || !userPosts) return null;
   const { user } = account;
 
   const publishTextPost = async () => {
@@ -36,7 +38,7 @@ const PostCreateDialog = ({ dispatch }: DialogProps) => {
 
   const handleTextPostPublish = async (): Promise<boolean> => {
     return new Promise<boolean>((resolve, reject) => {
-      const textPost: Omit<UserTextPost, "metrics"> = {
+      const textPost: Omit<TextPost, "metrics"> = {
         id: undefined,
         userID: user?.id,
         createdAt: new Date(),
@@ -46,16 +48,16 @@ const PostCreateDialog = ({ dispatch }: DialogProps) => {
         loading: `Posting...`,
         success: (data) => {
           if (!data) return;
-          setAccount({
-            ...account,
-            textPosts: [...account.textPosts, data],
+          setUserPosts({
+            ...userPosts,
+            textPosts: [...userPosts.textPosts, data],
           });
           resolve(true);
           return `Your message has been posted`;
         },
         error: () => {
           reject(false);
-          return "Opps! something went wrong";
+          return "Oops! something went wrong";
         },
       });
     });
@@ -73,9 +75,9 @@ const PostCreateDialog = ({ dispatch }: DialogProps) => {
             <Avatar>
               <AvatarImage
                 src={user?.image ?? process.env.NEXT_PUBLIC_DEFAULT_PHOTO}
-                alt={user.name ?? ""}
+                alt={user?.name ?? ""}
               />
-              <AvatarFallback>{GetNameInitials(user.name)}</AvatarFallback>
+              <AvatarFallback>{GetNameInitials(user?.name)}</AvatarFallback>
             </Avatar>
             <Textarea
               placeholder="What's on your mind?"

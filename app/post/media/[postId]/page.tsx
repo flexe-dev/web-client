@@ -4,7 +4,7 @@ import ErrorPage from "@/components/Error";
 import PostDisplayWrapper from "@/components/ui/Posts/media/PostDisplayWrapper";
 import { LoadingPost } from "@/components/ui/Posts/media/loading";
 import { getPostById } from "@/controllers/PostController";
-import { UserPost } from "@/lib/interface";
+import { MediaPost } from "@/lib/interface";
 import { Suspense } from "react";
 
 interface Props {
@@ -14,7 +14,7 @@ interface Props {
 }
 const page = async ({ params }: Props) => {
   const { postId } = params;
-  const post = (await getPostById(postId, "MEDIA")) as UserPost | undefined;
+  const post = (await getPostById(postId, "MEDIA")) as MediaPost | undefined;
   if (!post) return <ErrorPage />;
 
   return (

@@ -16,7 +16,7 @@ import { CommentTree } from "./CommentTree";
 
 const PostComments = async ({ postId, type }: Props) => {
   const comments = await GetPostComments(postId);
-
+  console.log(comments);
   const RenderedLayout: Record<PostType, React.FC<ChildNodeProps>> = {
     TEXT: ({ children }) => <TextCommentLayout>{children}</TextCommentLayout>,
     MEDIA: ({ children }) => (

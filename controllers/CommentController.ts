@@ -12,10 +12,10 @@ export const GetPostComments = async (
 ): Promise<CommentNode[]> => {
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_POST_SERVICE_URL}post/comment/get/post/${postID}`,
+      `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}comment/p/get/post/${postID}`,
       {
         method: `GET`,
-        cache: "no-store",
+        cache: "no-cache",
       }
     );
     return await response.json();
@@ -27,15 +27,17 @@ export const GetPostComments = async (
 
 export const AddComment = async (
   comment: Comment,
-  type: PostType
+  type: PostType,
+  token?: string
 ): Promise<Comment | undefined> => {
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_POST_SERVICE_URL}post/comment/add/${type}`,
+      `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}comment/add/${type}`,
       {
         method: `POST`,
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(comment),
       }
@@ -49,15 +51,17 @@ export const AddComment = async (
 
 export const DeleteComment = async (
   comment: CommentNode,
-  type: PostType
+  type: PostType,
+  token?: string
 ): Promise<number | null> => {
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_POST_SERVICE_URL}post/comment/delete/comment/${type}`,
+      `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}comment/delete/comment/${type}`,
       {
         method: `DELETE`,
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(comment),
       }
@@ -71,15 +75,18 @@ export const DeleteComment = async (
 
 export const LikeComment = async (
   commentID: string,
-  userID: string,
   postID: string,
-  opposite: boolean
+  opposite: boolean,
+  token?: string
 ): Promise<boolean> => {
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_POST_SERVICE_URL}post/comment/like/${commentID}/${userID}/${postID}/${opposite}`,
+      `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}comment/like/${commentID}/${postID}/${opposite}`,
       {
         method: `POST`,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       }
     );
 
@@ -92,13 +99,16 @@ export const LikeComment = async (
 
 export const RemoveCommentReaction = async (
   commentId: string,
-  userId: string
+  token?: string
 ): Promise<boolean> => {
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_POST_SERVICE_URL}post/comment/reaction/remove/${commentId}/${userId}`,
+      `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}comment/reaction/remove/${commentId}`,
       {
         method: `DELETE`,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       }
     );
     return response.ok;
@@ -110,11 +120,17 @@ export const RemoveCommentReaction = async (
 
 export const GetPostReactions = async (
   postID: string,
-  userId: string
+  token?: string
 ): Promise<Map<string, CommentReactType> | undefined> => {
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_POST_SERVICE_URL}post/comment/reaction/${postID}/${userId}`
+      `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}comment/reaction/${postID}`,
+      {
+        method: `GET`,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
     );
     return await response.json();
   } catch (e) {
@@ -125,15 +141,18 @@ export const GetPostReactions = async (
 
 export const DislikeComment = async (
   commentID: string,
-  userID: string,
   postID: string,
-  opposite: boolean
+  opposite: boolean,
+  token?: string
 ): Promise<boolean> => {
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_POST_SERVICE_URL}post/comment/dislike/${commentID}/${userID}/${postID}/${opposite}`,
+      `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}comment/dislike/${commentID}/${postID}/${opposite}`,
       {
         method: `POST`,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       }
     );
 
@@ -145,15 +164,17 @@ export const DislikeComment = async (
 };
 
 export const EditComment = async (
-  comment: Comment
+  comment: Comment,
+  token?: string
 ): Promise<Comment | null> => {
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_POST_SERVICE_URL}post/comment/edit`,
+      `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}comment/edit`,
       {
         method: `PUT`,
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(comment),
       }

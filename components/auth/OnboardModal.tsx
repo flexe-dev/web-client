@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import { useAccount } from "../context/AccountProvider";
+import { useAccountUser } from "../context/AccountUserProvider";
 import { OnboardForm } from "../forms/OnboardForm";
 import {
   AlertDialog,
@@ -10,7 +10,7 @@ import {
 } from "../ui/alert-dialog";
 
 export const OnboardModal = () => {
-  const { account } = useAccount();
+  const { account } = useAccountUser();
   //Only performing state operations due to Hydration Issues
   const [modalOpen, setModalOpen] = useState<boolean>(false);
 

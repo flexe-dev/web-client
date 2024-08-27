@@ -1,4 +1,5 @@
-import { useAccount } from "@/components/context/AccountProvider";
+import { useAccountPost } from "@/components/context/AccountPostProvider";
+import { useAccountUser } from "@/components/context/AccountUserProvider";
 import { usePostComments } from "@/components/context/PostCommentContext";
 import { CommentNode, IconType } from "@/lib/interface";
 import {
@@ -37,7 +38,8 @@ export interface NodeTraversalProps {
 export type CommentAction = "delete" | "report" | "pin";
 
 export const CommentActions = (props: NodeTraversalProps) => {
-  const { account } = useAccount();
+  const { account } = useAccountUser();
+  const { userPosts } = useAccountPost();
   const { setEditTarget } = usePostComments();
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [action, setAction] = useState<CommentAction | undefined>();
@@ -47,10 +49,11 @@ export const CommentActions = (props: NodeTraversalProps) => {
     setModalOpen(true);
   }, [action]);
 
-  if (!account) return null;
+  if (!account || !userPosts) return null;
 
+  const { user } = account;
+  const { textPosts, mediaPosts } = userPosts;
   const { node, root } = props;
-  const { user, textPosts, mediaPosts } = account;
 
   const actionOptions: CommentPostAction[] = [
     {

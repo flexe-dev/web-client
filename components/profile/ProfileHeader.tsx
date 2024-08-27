@@ -4,16 +4,17 @@ import { Button } from "@/components/ui/button";
 import { defaultPicture } from "@/lib/utils";
 import Image from "next/image";
 import { useState } from "react";
-import { useProfileViewer } from "../context/UserProfileProvider";
+import { useProfileUserViewer } from "../context/ProfileViewUserProvider";
 import { Skeleton } from "../ui/skeleton";
 import { EditProfileModal } from "./EditProfileModal";
 import ProfileDetails from "./ProfileDetails";
 import ProfileFollowers from "./ProfileFollowers";
+import { ProfileNetworkButton } from "./ProfileNetworkButton";
 
 function ProfileHeader() {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const { fetchedAccount: account, isOwnProfile, loading } = useProfileViewer();
-  if (!account && !loading) return null;
+  const { fetchedUser, loading, isOwnProfile } = useProfileUserViewer();
+  if (!fetchedUser && !loading) return null;
 
   //Find Profile and User object based on username string
 
@@ -33,7 +34,7 @@ function ProfileHeader() {
                 alt="User Profile Picture"
                 className="rounded-full"
                 priority
-                src={account?.user?.image ?? defaultPicture}
+                src={fetchedUser?.user?.image ?? defaultPicture}
                 fill
                 style={{
                   objectFit: "cover",
@@ -55,27 +56,25 @@ function ProfileHeader() {
           ) : (
             <>
               <h1 className="text-2xl font-semibold text-secondary-foreground">
-                {account?.user?.name}
+                {fetchedUser?.user?.name}
               </h1>
 
               <p className="text-secondary-header my-2">
-                @{account?.user?.username}
+                @{fetchedUser?.user?.username}
               </p>
               <ProfileFollowers
-                followers={account?.profile?.followers ?? 0}
-                following={account?.profile?.following ?? 0}
+                followers={fetchedUser?.profile?.followers ?? 0}
+                following={fetchedUser?.profile?.following ?? 0}
               />
-              {isOwnProfile ? (
-                <Button
-                  className="mt-6"
-                  variant={"outline"}
-                  onClick={toggleEditModal}
-                >
-                  Edit Profile
-                </Button>
-              ) : (
-                <Button className="mt-6">Follow</Button>
-              )}
+              <div className="mt-4">
+                {isOwnProfile ? (
+                  <Button variant={"outline"} onClick={toggleEditModal}>
+                    Edit Profile
+                  </Button>
+                ) : (
+                  <ProfileNetworkButton />
+                )}
+              </div>
             </>
           )}
         </div>

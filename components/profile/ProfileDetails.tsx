@@ -3,12 +3,12 @@
 import { nullIfEmpty } from "@/lib/utils";
 import { BriefcaseIcon } from "@heroicons/react/24/outline";
 import { Building, CircleDashed, MapPinIcon } from "lucide-react";
-import { useProfileViewer } from "../context/UserProfileProvider";
+import { useProfileUserViewer } from "../context/ProfileViewUserProvider";
 import { Separator } from "../ui/separator";
 import { Skeleton } from "../ui/skeleton";
 
 const ProfileDetails = () => {
-  const { fetchedAccount: account, loading } = useProfileViewer();
+  const { fetchedUser: account, loading } = useProfileUserViewer();
   const profileDetails = [
     {
       detail: account?.profile?.job,

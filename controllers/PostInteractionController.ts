@@ -5,60 +5,69 @@ import {
 } from "@/lib/interface";
 
 export const LikePost = async (
-  interaction: PostInteraction
+  interaction: PostInteraction,
+  token?: string
 ): Promise<boolean> => {
-  const { postId, userId, postType } = interaction;
-  return await handlePostInteraction(postId, userId, postType, `LIKE`);
+  const { postId, postType } = interaction;
+  return await handlePostInteraction(postId, postType, `LIKE`, token);
 };
 
 export const UnlikePost = async (
-  interaction: PostInteraction
+  interaction: PostInteraction,
+  token?: string
 ): Promise<boolean> => {
-  const { postId, userId, postType } = interaction;
-  return await handlePostInteraction(postId, userId, postType, `UNLIKE`);
+  const { postId, postType } = interaction;
+  return await handlePostInteraction(postId, postType, `UNLIKE`, token);
 };
 
 export const SavePost = async (
-  interaction: PostInteraction
+  interaction: PostInteraction,
+  token?: string
 ): Promise<boolean> => {
-  const { postId, userId, postType } = interaction;
-  return await handlePostInteraction(postId, userId, postType, `SAVE`);
+  const { postId, postType } = interaction;
+  return await handlePostInteraction(postId, postType, `SAVE`, token);
 };
 
 export const UnsavePost = async (
-  interaction: PostInteraction
+  interaction: PostInteraction,
+  token?: string
 ): Promise<boolean> => {
-  const { postId, userId, postType } = interaction;
-  return await handlePostInteraction(postId, userId, postType, `UNSAVE`);
+  const { postId, postType } = interaction;
+  return await handlePostInteraction(postId, postType, `UNSAVE`, token);
 };
 
 export const ViewPost = async (
-  interaction: PostInteraction
+  interaction: PostInteraction,
+  token?: string
 ): Promise<boolean> => {
-  const { postId, userId, postType } = interaction;
-  return await handlePostInteraction(postId, userId, postType, `VIEW`);
+  const { postId, postType } = interaction;
+  return await handlePostInteraction(postId, postType, `VIEW`, token);
 };
 
 // export const sharePost = async (
 //   interaction: PostInteraction
 // ): Promise<boolean> => {
-//   const { postId, userId, postType } = interaction;
-//   return await handlePostInteraction(postId, userId, postType, `SHARE`);
+//   const { postId, postType } = interaction;
+//   return await handlePostInteraction(postId, postType, `SHARE`);
 // };
 
 const handlePostInteraction = async (
   postID: String,
-  userID: string,
   postType: PostType,
-  interaction: PostInteractionType
+  interaction: PostInteractionType,
+  token?: string
 ): Promise<boolean> => {
   try {
     const response = await fetch(
       `${
-        process.env.NEXT_PUBLIC_POST_SERVICE_URL
-      }post/${postType.toLowerCase()}/${interaction.toLowerCase()}/${postID}/${userID}`,
+        process.env.NEXT_PUBLIC_API_GATEWAY_URL
+      }${postType.toLowerCase()}/${interaction.toLowerCase()}/${postID}`,
       {
         method: `POST`,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
       }
     );
     return response.ok;

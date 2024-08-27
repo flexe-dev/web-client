@@ -9,8 +9,8 @@ import {
   UserGroupIcon,
 } from "@heroicons/react/24/outline";
 import { User } from "next-auth";
+import { useSession } from "next-auth/react";
 import Link from "next/link";
-import { useAccount } from "./context/AccountProvider";
 import { AppLogo } from "./logo";
 import { ModeToggle } from "./theme/theme-toggle";
 import AuthProfile from "./ui/AuthProfile";
@@ -20,7 +20,7 @@ import { NavSearch } from "./ui/Search/NavSearch";
 //Styling for the Navbar main logo
 
 export const Navbar = () => {
-  const { account } = useAccount();
+  const { data } = useSession();
 
   const links: LinkProps[] = [
     {
@@ -36,7 +36,7 @@ export const Navbar = () => {
       icon: <UserGroupIcon />,
     },
     {
-      href: `/${account?.user?.username}/posts`,
+      href: `/${data?.user?.username}/posts`,
       label: "My Work",
       restrict: true,
       icon: <BriefcaseIcon />,
@@ -57,7 +57,7 @@ export const Navbar = () => {
         <section className="flex flex-grow items-end h-full justify-end md:justify-end ">
           <NavSearch />
           <div className="flex items-center  space-x-3 h-full">
-            <DesktopLayout links={links} user={account?.user} />
+            <DesktopLayout links={links} user={data?.user} />
             <AuthProfile />
             <ModeToggle className="hidden md:flex" variant="default" />
           </div>

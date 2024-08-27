@@ -10,13 +10,15 @@ import {
   ChildNodeProps,
   PostMetrics,
   PostType,
-  UserAccount,
+  postTypeMap,
+  UserPosts,
 } from "@/lib/interface";
+import { useSession } from "next-auth/react";
 import { createContext, useContext, useEffect, useState } from "react";
 import { toast } from "sonner";
-import { useAccount } from "./AccountProvider";
+import { useAccountPost } from "./AccountPostProvider";
+import { useProfilePostViewer } from "./ProfileViewPostProvider";
 import { useUserInteractions } from "./UserInteractionsProvider";
-import { useProfileViewer } from "./UserProfileProvider";
 
 interface PostInteractionState {
   metrics: PostMetrics;
@@ -53,14 +55,6 @@ const initialState: PostInteractionState = {
   unsavePost: () => {},
 };
 
-const postTypeMap: Record<
-  PostType,
-  keyof Pick<UserAccount, "textPosts" | "mediaPosts">
-> = {
-  MEDIA: "mediaPosts",
-  TEXT: "textPosts",
-};
-
 const PostInteractionContext =
   createContext<PostInteractionState>(initialState);
 
@@ -71,13 +65,21 @@ export const PostInteractionProvider = ({
   postMetrics,
 }: ContextProps) => {
   const [metrics, setMetrics] = useState<PostMetrics>(postMetrics);
-  const { userNode, setLikedPosts, setSavedPosts } = useUserInteractions();
-  const { setAccount, account } = useAccount();
-  const { setFetchedAccount } = useProfileViewer();
+  const {
+    userNode,
+    likePost: addToUserLikedPosts,
+    savePost: addToUserSavedPosts,
+    removeLikedPost,
+    removeSavedPost,
+  } = useUserInteractions();
+
+  const { data } = useSession();
+  const { userPosts, setUserPosts } = useAccountPost();
+  const { setFetchedPosts } = useProfilePostViewer();
 
   useEffect(() => {
-    if (!account) return;
-    const isOwnPost: boolean = account[postTypeMap[postType]].some(
+    if (!userPosts) return;
+    const isOwnPost: boolean = userPosts[postTypeMap[postType]].some(
       (post) => post.id === postId
     );
 
@@ -89,73 +91,89 @@ export const PostInteractionProvider = ({
       : handleProfileViewMetricUpdate(postTypeMap[postType]);
   }, [metrics]);
 
-  if (!userNode || !account) return;
-
   const likePost = async () => {
-    const response = await LikePost({
-      postId,
-      userId: userNode.userId,
-      postType,
-    });
+    if (!userNode) return;
+
+    const response = await LikePost(
+      {
+        postId,
+        postType,
+      },
+      data?.token
+    );
 
     if (!response) {
       toast.error("Failed to like post. Please try again.");
       return;
     }
 
-    setLikedPosts((prev) => [...prev, { postId, timeStamp: new Date() }]);
+    addToUserLikedPosts(postId);
     setMetrics((prev) => ({ ...prev, likeCount: prev.likeCount + 1 }));
   };
 
   const unlikePost = async () => {
-    const response = await UnlikePost({
-      postId,
-      userId: userNode.userId,
-      postType,
-    });
+    if (!userNode) return;
+
+    const response = await UnlikePost(
+      {
+        postId,
+        postType,
+      },
+      data?.token
+    );
 
     if (!response) {
       toast.error("Failed to unlike post. Please try again.");
       return;
     }
 
-    setLikedPosts((prev) => prev.filter((post) => post.postId !== postId));
+    removeLikedPost(postId);
     setMetrics((prev) => ({ ...prev, likeCount: prev.likeCount - 1 }));
   };
 
   const savePost = async () => {
-    const response = await SavePost({
-      postId,
-      userId: userNode.userId,
-      postType,
-    });
+    if (!userNode) return;
+
+    const response = await SavePost(
+      {
+        postId,
+        postType,
+      },
+      data?.token
+    );
 
     if (!response) {
       toast.error("Failed to save post. Please try again.");
       return;
     }
 
-    setSavedPosts((prev) => [...prev, { postId, timeStamp: new Date() }]);
+    addToUserSavedPosts(postId);
     setMetrics((prev) => ({ ...prev, saveCount: prev.saveCount + 1 }));
   };
 
   const unsavePost = async () => {
-    const response = await UnsavePost({
-      postId,
-      userId: userNode.userId,
-      postType,
-    });
+    if (!userNode) return;
+
+    const response = await UnsavePost(
+      {
+        postId,
+        postType,
+      },
+      data?.token
+    );
 
     if (!response) {
       toast.error("Failed to unsave post. Please try again.");
       return;
     }
 
-    setSavedPosts((prev) => prev.filter((post) => post.postId !== postId));
+    removeSavedPost(postId);
     setMetrics((prev) => ({ ...prev, saveCount: prev.saveCount - 1 }));
   };
 
   const addComment = (count: number) => {
+    if (!userNode) return;
+
     setMetrics((prev) => ({
       ...prev,
       commentCount: prev.commentCount + count,
@@ -163,6 +181,8 @@ export const PostInteractionProvider = ({
   };
 
   const removeComment = (count: number) => {
+    if (!userNode) return;
+
     setMetrics((prev) => ({
       ...prev,
       commentCount: prev.commentCount - count,
@@ -170,34 +190,30 @@ export const PostInteractionProvider = ({
   };
 
   function updatePostMetric(
-    account: UserAccount,
-    postType: keyof Pick<UserAccount, "textPosts" | "mediaPosts">
-  ): UserAccount {
-    const posts = account[postType];
+    userPosts: UserPosts,
+    postType: keyof UserPosts
+  ): UserPosts {
+    const posts = userPosts[postType];
     const postIndex = posts.findIndex((post) => post.id === postId);
 
-    if (postIndex === -1) return account;
+    if (postIndex === -1) return userPosts;
     posts[postIndex] = {
       ...posts[postIndex],
       metrics: metrics,
     };
 
-    return account;
+    return userPosts;
   }
 
-  function handleProfileViewMetricUpdate(
-    postType: keyof Pick<UserAccount, "textPosts" | "mediaPosts">
-  ) {
-    setFetchedAccount((prev) => {
+  function handleProfileViewMetricUpdate(postType: keyof UserPosts) {
+    setFetchedPosts((prev) => {
       if (!prev) return prev;
       return updatePostMetric(prev, postType);
     });
   }
 
-  function handleUserAccountMetricUpdate(
-    postType: keyof Pick<UserAccount, "textPosts" | "mediaPosts">
-  ) {
-    setAccount((prev) => {
+  function handleUserAccountMetricUpdate(postType: keyof UserPosts) {
+    setUserPosts((prev) => {
       if (!prev) return prev;
       return updatePostMetric(prev, postType);
     });

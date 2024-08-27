@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { UserPost } from "@/lib/interface";
+import { MediaPost } from "@/lib/interface";
 import {
   BookmarkIcon,
   ChatBubbleOvalLeftEllipsisIcon,
@@ -10,7 +10,7 @@ import {
 import { useRouter } from "next/navigation";
 
 interface Props {
-  post: UserPost;
+  post: MediaPost;
 }
 
 const PostMetrics = ({ post }: Props) => {

@@ -3,10 +3,10 @@ import { CarouselView } from "@/components/creator/content/CarouselContent";
 import { ImageView } from "@/components/creator/content/ImageContent";
 import { TextView } from "@/components/creator/content/TextContent";
 import { VideoView } from "@/components/creator/content/VideoContent";
-import { ContentBlockType, ContentComponent, UserPost } from "@/lib/interface";
+import { ContentBlockType, ContentComponent, MediaPost } from "@/lib/interface";
 
 interface Props {
-  post: UserPost;
+  post: MediaPost;
 }
 
 export const RenderContentComponent: Record<

@@ -15,9 +15,7 @@ declare global {
       MONGODB_DB_NAME: string;
       NEXT_PUBLIC_URL: string;
       NEXT_PUBLIC_API_URL: string;
-      NEXT_PUBLIC_POST_SERVICE_URL: string;
-      NEXT_PUBLIC_USER_SERVICE_URL: string;
-      NEXT_PUBLIC_INTERACTIONS_SERVICE_URL: string;
+      NEXT_PUBLIC_API_GATEWAY_URL: string;
       NEXT_PUBLIC_SUPABASE_URL: string;
       NEXT_PUBLIC_SUPABASE_IMAGE_RETRIEVAL_URL: string;
       NEXT_PUBLIC_SUPABASE_ANON_KEY: string;

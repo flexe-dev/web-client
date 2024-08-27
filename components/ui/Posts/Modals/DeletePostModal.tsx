@@ -1,4 +1,4 @@
-import { useAccount } from "@/components/context/AccountProvider";
+import { useAccountPost } from "@/components/context/AccountPostProvider";
 import { ToolModalProp } from "@/components/context/PostOptionToolProvider";
 import { Button } from "@/components/ui/button";
 import {
@@ -9,29 +9,25 @@ import {
   DialogPortal,
 } from "@/components/ui/dialog";
 import { DeletePost } from "@/controllers/PostController";
+import { postTypeMap } from "@/lib/interface";
 import { DialogDescription } from "@radix-ui/react-dialog";
 import { toast } from "sonner";
 
 const DeletePostModal = (props: ToolModalProp) => {
   const { callback, postId, postType } = props;
-  const { account, setAccount } = useAccount();
+  const { userPosts, setUserPosts } = useAccountPost();
 
-  if (!account) return <></>;
+  if (!userPosts) return null;
 
   const onDelete = async () => {
     toast.promise(DeletePost(postId, postType), {
       loading: "Deleting post...",
       success: () => {
-        setAccount({
-          ...account,
-          mediaPosts:
-            postType === "MEDIA"
-              ? account.mediaPosts.filter((post) => post.id !== postId)
-              : account.mediaPosts,
-          textPosts:
-            postType === "TEXT"
-              ? account.textPosts.filter((post) => post.id !== postId)
-              : account.textPosts,
+        setUserPosts({
+          ...userPosts,
+          [postTypeMap[postType]]: userPosts[postTypeMap[postType]].filter(
+            (post) => post.id !== postId
+          ),
         });
 
         callback();

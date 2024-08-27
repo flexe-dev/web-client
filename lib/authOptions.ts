@@ -1,17 +1,18 @@
-import GoogleProvider, { GoogleProfile } from "next-auth/providers/google";
-import GitHubProvider, { GithubProfile } from "next-auth/providers/github";
-import CredentialsProvider from "next-auth/providers/credentials";
-import { CheckUserPassword } from "@/controllers/AuthController";
+import { AuthoriseUser } from "@/controllers/AuthController";
 import { UUID } from "mongodb";
-import { FindUserByEmail } from "@/controllers/AuthController";
-import { Session } from "next-auth";
-import { adapter } from "@/lib/prismadb";
-import {AdapterUser } from "next-auth/adapters";
-import { AuthOptions } from "next-auth";
+import { AuthOptions, Session } from "next-auth";
+import { AdapterUser } from "next-auth/adapters";
+import { JWT } from "next-auth/jwt";
+import CredentialsProvider from "next-auth/providers/credentials";
+import GitHubProvider, { GithubProfile } from "next-auth/providers/github";
+import GoogleProvider, { GoogleProfile } from "next-auth/providers/google";
+import { cookies } from "next/headers";
+import { adapter } from "./prismadb";
 
 interface SessionUser {
   session: Session;
   user: AdapterUser;
+  token: JWT;
 }
 
 export const baseAuthOptions: AuthOptions = {
@@ -63,21 +64,16 @@ export const baseAuthOptions: AuthOptions = {
       },
       async authorize(credentials, req) {
         if (credentials) {
-          const user = await FindUserByEmail(credentials.email);
-          if (!user) {
-            return null;
-          }
-          if (await CheckUserPassword(user.id, credentials.password)) {
-            return user;
-          }
+          const { email, password } = credentials;
+          return await AuthoriseUser({ email, password });
         }
         return null;
       },
     }),
   ],
   callbacks: {
-    async session(sessionUser: SessionUser) {
-      const { session, user } = sessionUser;
+    async session({ session, token, user }) {
+      session.token = cookies().get("next-auth.session-token")?.value;
       session.user.id = user.id;
       session.user.username = user.username;
       session.user.onboarded = user.onboarded;
@@ -89,6 +85,14 @@ export const baseAuthOptions: AuthOptions = {
       // Allows callback URLs on the same origin
       else if (new URL(url).origin === baseUrl) return url;
       return baseUrl;
+    },
+    async jwt({ token, user }) {
+      if (user) {
+        token.id = user.id;
+        token.username = user.username;
+        token.onboarded = user.onboarded;
+      }
+      return token;
     },
   },
 };

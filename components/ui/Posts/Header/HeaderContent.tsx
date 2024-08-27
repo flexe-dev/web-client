@@ -2,7 +2,7 @@
 
 import { PostToolsProvider } from "@/components/context/PostOptionToolProvider";
 import { timeAgo } from "@/lib/dateutils";
-import { PostType, UserAccount } from "@/lib/interface";
+import { PostType, UserDisplay } from "@/lib/interface";
 import { cn, GetNameInitials } from "@/lib/utils";
 import {
   ArrowLeftIcon,
@@ -20,7 +20,7 @@ import {
 import { UserHoverCard } from "../../UserHoverCard";
 
 interface Props {
-  account: UserAccount;
+  account: UserDisplay;
   datePosted: Date;
   updatedDate?: Date;
   postID: string;

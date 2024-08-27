@@ -1,10 +1,11 @@
 "use client";
 
+import { UseLoginModal } from "@/components/context/LoginModalProvider";
 import { usePostComments } from "@/components/context/PostCommentContext";
 import { getTotalChildren } from "@/lib/commentUtils";
 import { timeAgo } from "@/lib/dateutils";
 import { CommentNode, CommentReactType } from "@/lib/interface";
-import { cn, GetNameInitials } from "@/lib/utils";
+import { cn, GetNameInitials, isAuthenticated } from "@/lib/utils";
 import {
   ArrowDownIcon,
   ArrowRightCircleIcon,
@@ -13,10 +14,10 @@ import {
   MinusCircleIcon,
   PlusCircleIcon,
 } from "@heroicons/react/24/outline";
+import { useSession } from "next-auth/react";
 import { useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "../../avatar";
 import { Button } from "../../button";
-import { Skeleton } from "../../skeleton";
 import {
   Tooltip,
   TooltipContent,
@@ -212,10 +213,12 @@ const CommentFooter = ({ commentNode, root }: CommentProps) => {
     commentReactions,
     removeReaction,
   } = usePostComments();
-  const { reactions, loading } = commentReactions;
-  // const userReact = reactions.get(comment.id);
+  const { reactions } = commentReactions;
+
+  const { status } = useSession();
+  const { setOpen } = UseLoginModal();
+
   const userReact = reactions.get(comment.id);
-  if (loading) return <Skeleton className="h-6 w-full mx-4" />;
 
   const reactFunction: Record<
     CommentReactType,
@@ -230,9 +233,23 @@ const CommentFooter = ({ commentNode, root }: CommentProps) => {
     node: CommentNode,
     root: CommentNode
   ): void => {
+    if (!isAuthenticated(status)) {
+      setOpen(true);
+      return;
+    }
+
     userReact === type
       ? removeReaction(node, root)
       : reactFunction[type](node, root, !!userReact);
+  };
+
+  const handleReplyCallback = () => {
+    if (!isAuthenticated(status)) {
+      setOpen(true);
+      return;
+    }
+
+    setReplyTarget({ comment, user, root });
   };
 
   return (
@@ -270,7 +287,7 @@ const CommentFooter = ({ commentNode, root }: CommentProps) => {
         </Button>
       </div>
       <Button
-        onClick={() => setReplyTarget({ comment, user, root })}
+        onClick={handleReplyCallback}
         variant={"ghost"}
         className="ml-6 px-2 w-fit h-7 font-bold"
       >

@@ -1,7 +1,7 @@
 "use client";
 
-import { FindAccountByUserId } from "@/controllers/UserController";
-import { ChildNodeProps, UserAccount } from "@/lib/interface";
+import { GetUserPosts } from "@/controllers/PostController";
+import { ChildNodeProps, UserPosts } from "@/lib/interface";
 import { useSession } from "next-auth/react";
 import React, {
   createContext,
@@ -12,41 +12,40 @@ import React, {
 } from "react";
 
 interface AccountProviderState {
-  account: UserAccount | null;
-  setAccount: Dispatch<SetStateAction<UserAccount | null>>;
+  userPosts?: UserPosts;
+  setUserPosts: Dispatch<SetStateAction<UserPosts | undefined>>;
 }
 
 const initialState: AccountProviderState = {
-  account: null,
-  setAccount: () => {},
+  userPosts: undefined,
+  setUserPosts: () => {},
 };
 
 export const AccountContext = createContext<AccountProviderState>(initialState);
 
-export const AccountProvider = ({ children }: ChildNodeProps) => {
+export const AccountPostProvider = ({ children }: ChildNodeProps) => {
   const session = useSession();
-  const [account, setAccount] = useState<UserAccount | null>(null);
+  const [userPosts, setUserPosts] = useState<UserPosts>();
 
-  const fetchProfile = async () => {
+  const fetchPosts = async () => {
     if (!session.data?.user) return; // No user ID available
-
     try {
-      const account = await FindAccountByUserId(session.data.user.id);
-      setAccount(account);
+      const userPosts = await GetUserPosts(session.data.user.id);
+      setUserPosts(userPosts);
     } catch (error) {
       console.error("Error fetching user profile:", error);
     }
   };
 
   useEffect(() => {
-    fetchProfile();
+    fetchPosts();
   }, [session.data?.user.id]);
 
   return (
     <AccountContext.Provider
       value={{
-        account,
-        setAccount,
+        userPosts,
+        setUserPosts,
       }}
     >
       {children}
@@ -54,10 +53,10 @@ export const AccountProvider = ({ children }: ChildNodeProps) => {
   );
 };
 
-export const useAccount = () => {
+export const useAccountPost = () => {
   const context = React.useContext(AccountContext);
   if (context === undefined) {
-    throw new Error("useAccount must be used within an AccountProvider");
+    throw new Error("useAccountPost must be used within an AccountProvider");
   }
   return context;
 };
