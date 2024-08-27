@@ -27,12 +27,7 @@ export interface ChildNodeProps {
   children?: React.ReactNode;
 }
 
-export interface UserAccount {
-  user: User;
-  profile?: UserProfile;
-  mediaPosts: UserPost[];
-  textPosts: UserTextPost[];
-}
+export interface UserAccount extends UserDisplay, UserPosts {}
 
 //User Profile Object
 export interface UserProfile {
@@ -50,7 +45,12 @@ export interface UserProfile {
 
 export interface UserDisplay {
   user: User;
-  profile: UserProfile;
+  profile?: UserProfile;
+}
+
+export interface UserPosts {
+  mediaPosts: MediaPost[];
+  textPosts: TextPost[];
 }
 
 export interface ProfileExternalLinks {
@@ -78,7 +78,7 @@ export interface ProfileObject extends LoadingProps {
 }
 
 export interface PostObject extends LoadingProps {
-  userPosts: UserPost[];
+  userPosts: MediaPost[];
 }
 
 export interface PostUserMedia {
@@ -160,14 +160,19 @@ export interface PostMetrics {
   saveCount: number;
 }
 
-export interface UserPost {
+export const postTypeMap: Record<PostType, keyof UserPosts> = {
+  MEDIA: "mediaPosts",
+  TEXT: "textPosts",
+};
+
+export interface MediaPost {
   id: string | undefined;
   document: Document;
   auxData: PostAuxilliaryData;
   metrics: PostMetrics;
 }
 
-export interface UserTextPost {
+export interface TextPost {
   id: string | undefined;
   userID: string;
   textpost: string;
@@ -208,7 +213,7 @@ export interface Comment {
 
 export interface CommentNode {
   comment: Comment;
-  user: UserAccount;
+  user: UserDisplay;
   children: CommentNode[];
 }
 
@@ -246,17 +251,30 @@ const postInteractionValue = [
 ] as const;
 export type PostInteractionType = (typeof postInteractionValue)[number];
 
+const userInteractionValue = ["FOLLOW", "UNFOLLOW", "BLOCK"] as const;
+export type UserInteractionType = (typeof userInteractionValue)[number];
+
 export interface PostInteraction {
   postId: string;
-  userId: string;
   postType: PostType;
   targetId?: string;
 }
 
-export interface UserNode {
+export interface UserDetails {
   userId: string;
-  following: UserFollowRelationship[];
-  followers: UserFollowRelationship[];
+  name: string;
+  image: string;
+  username: string;
+  job?: string;
+}
+
+export interface UserNetwork extends UserDetails {
+  following: UserInteractionRelationship[];
+  followers: UserInteractionRelationship[];
+}
+
+export interface UserNode extends UserNetwork {
+  blockedUsers: UserInteractionRelationship[];
   likedPosts: PostInteractionRelationship[];
   savedPosts: PostInteractionRelationship[];
 }
@@ -281,12 +299,20 @@ export interface PostShareRelationship {
   receiver: UserNode;
 }
 
-export interface UserFollowRelationship {
+export interface UserInteractionRelationship {
   timestamp: Date;
-  user: UserNode;
+  user: UserDetails;
 }
 
 export interface PostInteractionLookup {
   postId: string;
   timeStamp: Date;
 }
+
+export interface UserInteractionLookup {
+  userId: string;
+  timeStamp: Date;
+}
+
+const networkStatus = ["friends", "following", "followed", "none"] as const;
+export type NetworkStatus = (typeof networkStatus)[number];

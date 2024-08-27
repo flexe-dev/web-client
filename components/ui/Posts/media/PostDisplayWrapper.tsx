@@ -1,12 +1,12 @@
 import { PostInteractionProvider } from "@/components/context/PostInteractionContext";
 import PostComments from "@/components/ui/Posts/Comment/PostComments";
-import { UserPost } from "@/lib/interface";
+import { MediaPost } from "@/lib/interface";
 import ErrorPage from "../../../Error";
 import { PostDisplayHeader } from "../Header/PostDisplayHeader";
 import DisplayPost from "./DisplayPost";
 
 interface Props {
-  post: UserPost;
+  post: MediaPost;
 }
 
 const PostDisplayWrapper = ({ post }: Props) => {

@@ -1,9 +1,9 @@
-import { ChildNodeProps, UserAccount } from "@/lib/interface";
+import { ChildNodeProps, UserDisplay } from "@/lib/interface";
 import Link from "next/link";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "./hover-card";
 
 interface Props extends ChildNodeProps {
-  account: UserAccount;
+  account: UserDisplay;
 }
 
 export const UserHoverCard = ({ children, account }: Props) => {

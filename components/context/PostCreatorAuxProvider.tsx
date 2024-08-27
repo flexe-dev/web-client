@@ -2,9 +2,9 @@
 
 import {
   ChildNodeProps,
+  MediaPost,
   PostAuxilliaryData,
   PostStatus,
-  UserPost,
 } from "@/lib/interface";
 import { createContext, useContext, useState } from "react";
 interface PostCreatorAuxProviderState
@@ -17,7 +17,7 @@ interface PostCreatorAuxProviderState
   setTags: React.Dispatch<React.SetStateAction<string[]>>;
   setTech: React.Dispatch<React.SetStateAction<string[]>>;
   setID: React.Dispatch<React.SetStateAction<string | undefined>>;
-  setAuxData: (post: UserPost) => void;
+  setAuxData: (post: MediaPost) => void;
 }
 
 const initialState: PostCreatorAuxProviderState = {
@@ -41,7 +41,7 @@ export const PostCreatorAuxContext =
   createContext<PostCreatorAuxProviderState>(initialState);
 
 interface Props extends ChildNodeProps {
-  post?: UserPost;
+  post?: MediaPost;
 }
 
 export const PostCreatorAuxProvider = ({ children, post }: Props) => {
@@ -64,7 +64,7 @@ export const PostCreatorAuxProvider = ({ children, post }: Props) => {
     setTech(tech.filter((t) => t !== deletedNode));
   };
 
-  const setAuxData = (post: UserPost) => {
+  const setAuxData = (post: MediaPost) => {
     setID(post.id);
     setTitle(post.auxData.title);
     setTags(post.auxData.tags);

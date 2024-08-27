@@ -22,7 +22,7 @@ import { supabase } from "@/lib/supabase";
 import { User } from "next-auth";
 import Image from "next/image";
 import { toast } from "sonner";
-import { useAccount } from "../context/AccountProvider";
+import { useAccountUser } from "../context/AccountUserProvider";
 import { Textarea } from "../ui/textarea";
 
 interface Props {
@@ -39,13 +39,14 @@ const formSchema = z.object({
   image: z.string().url().optional(),
   job: z.string(),
   company: z.string(),
-  pronouns: z.string(),
   location: z.string(),
-  bio: z.string(),
+  bio: z
+    .string()
+    .max(200, { message: "Bio must be less than 200 characters." }),
 });
 
 export const ProfileDetailsForm = (props: Props) => {
-  const { account, setAccount } = useAccount();
+  const { account, setAccount } = useAccountUser();
   if (!account) return null;
 
   const { user, profile } = account;
@@ -75,7 +76,6 @@ export const ProfileDetailsForm = (props: Props) => {
         ...profile,
         job: values.job,
         company: values.company,
-        pronouns: values.pronouns,
         location: values.location,
         bio: values.bio,
       };
@@ -113,7 +113,6 @@ export const ProfileDetailsForm = (props: Props) => {
       image: user.image ?? process.env.NEXT_PUBLIC_DEFAULT_PHOTO,
       job: profile.job ?? "",
       company: profile.company ?? "",
-      pronouns: profile.pronouns ?? "",
       location: profile.location ?? "",
       bio: profile.bio ?? "",
     },
@@ -248,18 +247,6 @@ export const ProfileDetailsForm = (props: Props) => {
             )}
           />
           <div className="flex space-x-4  md:flex-row">
-            <FormField
-              control={form.control}
-              name="pronouns"
-              render={({ field }) => (
-                <FormItem className="mt-2 w-1/2">
-                  <FormLabel>Pronouns</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Your preferred pronouns" {...field} />
-                  </FormControl>
-                </FormItem>
-              )}
-            />
             <FormField
               control={form.control}
               name="location"

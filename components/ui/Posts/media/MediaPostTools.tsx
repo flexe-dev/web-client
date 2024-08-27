@@ -1,7 +1,7 @@
 "use client";
 
 import { usePostTools } from "@/components/context/PostOptionToolProvider";
-import { useProfileViewer } from "@/components/context/UserProfileProvider";
+import { useProfileUserViewer } from "@/components/context/ProfileViewUserProvider";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -43,7 +43,7 @@ interface PostOption {
 }
 
 export const MediaPostTools = ({ children, postId }: Props) => {
-  const { isOwnProfile } = useProfileViewer();
+  const { isOwnProfile } = useProfileUserViewer();
   const { setTool, tool, type } = usePostTools();
   const URLPath = usePathname();
   const actionOptions: PostOption[] = [

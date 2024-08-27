@@ -1,53 +1,18 @@
 import {
   ProfileExternalLinks,
-  UserAccount,
   UserDisplay,
+  UserInteractionType,
   UserNode,
   UserProfile,
 } from "@/lib/interface";
+import { User } from "next-auth";
 
-const FindProfileByUserId = async (
-  userId: string
-): Promise<UserProfile | null> => {
-  const response = await fetch(
-    `${process.env.NEXT_PUBLIC_USER_SERVICE_URL}user/profile/find/${userId}`,
-    {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    }
-  );
-  if (response.status === 404) {
-    return null;
-  }
-  return response.json();
-};
-
-const FindAccountByUserId = async (
-  userId: string
-): Promise<UserAccount | null> => {
-  const response = await fetch(
-    `${process.env.NEXT_PUBLIC_USER_SERVICE_URL}user/account/find/${userId}`,
-    {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    }
-  );
-  if (response.status === 404) {
-    return null;
-  }
-  return response.json();
-};
-
-const FindAccountByUsername = async (
+const FindUserByUsername = async (
   username: string
-): Promise<UserAccount | null> => {
+): Promise<User | undefined> => {
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_USER_SERVICE_URL}user/account/find/username/${username}`,
+      `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}user/p/find/username/${username}`,
       {
         method: "GET",
         headers: {
@@ -56,26 +21,44 @@ const FindAccountByUsername = async (
       }
     );
 
-    if (response.status === 404) {
-      return null;
-    }
+    if (response.status === 404) return;
 
-    if (!response.ok) {
-      console.error(`Error: ${response.status} - ${response.statusText}`);
-      return null;
-    }
-
-    return await response.json();
+    return response.json();
   } catch (err) {
     console.error("Fetch error:", err);
-    return null;
+    return;
   }
 };
 
-const FindUserNode = async (userId: string): Promise<UserNode | undefined> => {
+const FindUserDisplayByUserId = async (
+  userId: string
+): Promise<UserDisplay | undefined> => {
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_INTERACTIONS_SERVICE_URL}node/user/${userId}`,
+      `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}user/p/display/find/${userId}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    if (response.status === 404) return;
+
+    return response.json();
+  } catch (err) {
+    console.error("Fetch error:", err);
+    return;
+  }
+};
+
+const FindUserDisplayByUsername = async (
+  username: string
+): Promise<UserDisplay | undefined> => {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}user/p/display/find/username/${username}`,
       {
         method: "GET",
         headers: {
@@ -90,13 +73,62 @@ const FindUserNode = async (userId: string): Promise<UserNode | undefined> => {
   }
 };
 
-const OnboardUser = async (user: UserDisplay): Promise<UserDisplay> => {
+const FindUserNode = async (
+  userId: string,
+  sessionToken?: string
+): Promise<UserNode | undefined> => {
+  if (!sessionToken) return;
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}node/user`,
+      {
+        method: "GET",
+        credentials: "same-origin",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${sessionToken}`,
+        },
+      }
+    );
+
+    if (response.status === 404) return;
+
+    return response.json();
+  } catch (err) {
+    console.error("Fetch error:", err);
+    return;
+  }
+};
+
+const FindUserByEmail = async (email: string): Promise<User | undefined> => {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}user/p/find/email/${email}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    return response.json();
+  } catch (err) {
+    console.error("Fetch error:", err);
+    return;
+  }
+};
+
+const OnboardUser = async (
+  user: UserDisplay,
+  token?: string
+): Promise<UserDisplay> => {
   const response = await fetch(
-    `${process.env.NEXT_PUBLIC_USER_SERVICE_URL}user/onboard`,
+    `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}user/onboard`,
     {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify(user),
     }
@@ -104,9 +136,12 @@ const OnboardUser = async (user: UserDisplay): Promise<UserDisplay> => {
   return response.json();
 };
 
-const updateUser = async (user: UserDisplay): Promise<UserDisplay> => {
+const updateUser = async (
+  user: UserDisplay,
+  token?: string
+): Promise<UserDisplay> => {
   const response = await fetch(
-    `${process.env.NEXT_PUBLIC_USER_SERVICE_URL}user/update`,
+    `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}user/update`,
     {
       method: "PUT",
       headers: {
@@ -118,18 +153,57 @@ const updateUser = async (user: UserDisplay): Promise<UserDisplay> => {
   return response.json();
 };
 
-const deleteUser = async (user: UserAccount): Promise<boolean> => {
+const deleteUser = async (userId: string): Promise<boolean> => {
   const response = await fetch(
-    `${process.env.NEXT_PUBLIC_USER_SERVICE_URL}user/delete`,
+    `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}user/delete/${userId}`,
     {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(user),
     }
   );
   return response.ok;
+};
+
+const FollowUser = async (
+  targetId: string,
+  token?: string
+): Promise<boolean> => {
+  return UserInteractionRequest(targetId, "FOLLOW", token);
+};
+
+const UnfollowUser = async (
+  targetId: string,
+  token?: string
+): Promise<boolean> => {
+  return UserInteractionRequest(targetId, "UNFOLLOW", token);
+};
+
+const UserInteractionRequest = async (
+  targetId: string,
+  type: UserInteractionType,
+  token?: string
+): Promise<boolean> => {
+  try {
+    const response = await fetch(
+      `${
+        process.env.NEXT_PUBLIC_API_GATEWAY_URL
+      }user/${type.toLowerCase()}/${targetId}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    return response.ok;
+  } catch (err) {
+    console.error(err);
+    return false;
+  }
 };
 
 const DefaultExternal: ProfileExternalLinks = {};
@@ -145,10 +219,13 @@ const DefaultProfile: UserProfile = {
 export {
   DefaultExternal,
   DefaultProfile,
-  FindAccountByUserId,
-  FindAccountByUsername,
-  FindProfileByUserId,
+  FindUserByEmail,
+  FindUserByUsername,
+  FindUserDisplayByUserId,
+  FindUserDisplayByUsername,
   FindUserNode,
+  FollowUser,
   OnboardUser,
+  UnfollowUser,
   updateUser,
 };

@@ -16,6 +16,7 @@ function LoginForm() {
     e.preventDefault();
     const email = e.currentTarget.email.value;
     const password = e.currentTarget.password.value;
+    console.log(email, password);
     signIn("credentials", { email, password, callbackUrl: "/" });
   };
 
@@ -76,7 +77,7 @@ function LoginForm() {
           Log In
         </Button>
       </form>
-      <ThirdParty />
+      <ThirdParty className="my-6" />
       <section className="my-4 text-sm mx-2 text-neutral-700 dark:text-neutral-400">
         <span>Not with us already?</span>
         <Link

@@ -7,7 +7,7 @@ interface EmailUser {
 
 const CreateEmailUser = async (credentials: EmailUser) => {
   const response = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}auth/createUser`,
+    `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/auth/p/create`,
     {
       method: "POST",
       headers: {
@@ -19,35 +19,26 @@ const CreateEmailUser = async (credentials: EmailUser) => {
   return response.ok;
 };
 
-const FindUserByEmail = async (email: string): Promise<User | null> => {
-  const response = await fetch(
-    `${process.env.NEXT_PUBLIC_CORE_BACKEND_API_URL}user/find/email/${email}`,
-    {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    }
-  );
-  if (response.status === 404) {
+const AuthoriseUser = async (credentials: EmailUser): Promise<User | null> => {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/auth/p/authenticate`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(credentials),
+      }
+    );
+
+    if (response.status === 401) return null;
+
+    return await response.json();
+  } catch (err) {
+    console.log(err);
     return null;
   }
-  const user: User = await response.json();
-  return user;
 };
 
-const CheckUserPassword = async (userID: string, password: string) => {
-  const response = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}auth/checkPassword`,
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ userID, password }),
-    }
-  );
-  return response.ok;
-};
-
-export { CheckUserPassword, CreateEmailUser, FindUserByEmail };
+export { AuthoriseUser, CreateEmailUser };

@@ -1,3 +1,4 @@
+import { UseLoginModal } from "@/components/context/LoginModalProvider";
 import { usePostMetrics } from "@/components/context/PostInteractionContext";
 import { useUserInteractions } from "@/components/context/UserInteractionsProvider";
 import { IconType, PostInteractionLookup } from "@/lib/interface";
@@ -9,6 +10,7 @@ import {
   ShareIcon,
 } from "@heroicons/react/24/outline";
 import { Tooltip } from "@radix-ui/react-tooltip";
+import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import React from "react";
 import { toast } from "sonner";
@@ -16,6 +18,8 @@ import { Button } from "../../button";
 import { TooltipContent, TooltipProvider, TooltipTrigger } from "../../tooltip";
 
 export const TextPostMetricsDisplay = () => {
+  const { status } = useSession();
+
   const { metrics, likePost, unlikePost, postId, savePost, unsavePost } =
     usePostMetrics();
   const { likedPosts, savedPosts } = useUserInteractions();
@@ -26,13 +30,15 @@ export const TextPostMetricsDisplay = () => {
   const hasPriorInteraction = (
     interactions: PostInteractionLookup[]
   ): boolean => {
+    if (!status) return false;
+
     return interactions.some((post) => post.postId === postId);
   };
 
   const existingLike = hasPriorInteraction(likedPosts);
   const existingSave = hasPriorInteraction(savedPosts);
 
-  const InteractionButtons: MetricButtonProps[] = [
+  const InteractionButtons: Omit<MetricButtonProps, "status">[] = [
     {
       onClick: existingLike ? unlikePost : likePost,
       value: likeCount,
@@ -49,6 +55,7 @@ export const TextPostMetricsDisplay = () => {
       Icon: ChatBubbleLeftEllipsisIcon,
       tooltipText: "Comment",
       hoverTheme: "blue",
+      isComment: true,
     },
     {
       onClick: existingSave ? unsavePost : savePost,
@@ -73,7 +80,7 @@ export const TextPostMetricsDisplay = () => {
     <TooltipProvider>
       <div className="flex w-full items-center overflow-hidden">
         {InteractionButtons.map((button, index) => (
-          <MetricsActionButton key={index} {...button} />
+          <MetricsActionButton status={status} key={index} {...button} />
         ))}
       </div>
     </TooltipProvider>
@@ -128,19 +135,30 @@ export interface MetricButtonProps {
   tooltipText?: string;
   Icon: IconType;
   active?: boolean;
+  isComment?: boolean;
+  status: "authenticated" | "unauthenticated" | "loading";
 }
 
 const MetricsActionButton: React.FC<MetricButtonProps> = ({
+  hoverTheme,
   onClick,
   value,
   Icon,
-  tooltipText,
-  hoverTheme,
   active,
+  isComment,
+  ...props
 }) => {
+  const { tooltipText, status } = props;
+  const { setOpen } = UseLoginModal();
   const handleButtonClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
-    onClick();
+
+    if (status === "authenticated" || isComment) {
+      onClick();
+      return;
+    }
+
+    setOpen(true);
   };
 
   const {
@@ -150,7 +168,6 @@ const MetricsActionButton: React.FC<MetricButtonProps> = ({
     border,
     active: activeBackground,
   } = HoverStyling[hoverTheme];
-
   return (
     <Tooltip>
       <TooltipContent side="bottom">{tooltipText}</TooltipContent>

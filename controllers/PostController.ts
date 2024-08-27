@@ -1,10 +1,11 @@
 import {
   Document,
+  MediaPost,
   PostMetrics,
   PostType,
   PostUserMedia,
-  UserPost,
-  UserTextPost,
+  TextPost,
+  UserPosts,
 } from "@/lib/interface";
 import { supabase } from "@/lib/supabase";
 import {
@@ -27,12 +28,13 @@ const defaultPostMetrics: PostMetrics = {
 };
 
 export const saveTextPost = async (
-  textPost: Omit<UserTextPost, "metrics">
-): Promise<UserTextPost | undefined> => {
+  textPost: Omit<TextPost, "metrics">,
+  token?: string
+): Promise<TextPost | undefined> => {
   const textPostID = textPost.id ?? (await generateMongoID());
   if (!textPostID) return;
 
-  const textPostToUpload: UserTextPost = {
+  const textPostToUpload: TextPost = {
     id: textPostID,
     userID: textPost.userID,
     createdAt: textPost.createdAt,
@@ -42,11 +44,12 @@ export const saveTextPost = async (
 
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_POST_SERVICE_URL}post/text/upload`,
+      `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}text/upload`,
       {
         method: `POST`,
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(textPostToUpload),
       }
@@ -58,8 +61,9 @@ export const saveTextPost = async (
 };
 
 export const savePost = async (
-  post: Omit<UserPost, "metrics">
-): Promise<UserPost | undefined> => {
+  post: Omit<MediaPost, "metrics">,
+  token?: string
+): Promise<MediaPost | undefined> => {
   const postID = post.id ?? (await generateMongoID());
   if (!postID) return;
 
@@ -72,7 +76,7 @@ export const savePost = async (
     nullIfEmpty(post.auxData.thumbnail) ??
     (await handlePostThumbnail(uploadedDocument, postID, post.auxData.userID));
 
-  const postToUpload: UserPost = {
+  const postToUpload: MediaPost = {
     id: postID,
     auxData: {
       ...post.auxData,
@@ -84,11 +88,12 @@ export const savePost = async (
 
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_POST_SERVICE_URL}post/media/upload`,
+      `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}media/upload`,
       {
         method: `POST`,
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(postToUpload),
       }
@@ -99,24 +104,48 @@ export const savePost = async (
   }
 };
 
+export const DeletePost = async (
+  postID: string,
+  postType: PostType,
+  token?: string
+): Promise<boolean> => {
+  try {
+    const response = await fetch(
+      `${
+        process.env.NEXT_PUBLIC_API_GATEWAY_URL
+      }post/${postType.toLowerCase()}/delete/${postID}`,
+      {
+        method: `DELETE`,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return response.ok;
+  } catch (e) {
+    console.error(e);
+    return false;
+  }
+};
+
 export const archiveDocument = async (postID: string) => {};
 
 /*
   Post Retrieval
 */
 
-export const GetAllUserPosts = async (
-  userID: string
-): Promise<UserPost[] | undefined> => {
+export const GetUserPosts = async (
+  userId: string
+): Promise<UserPosts | undefined> => {
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_POST_SERVICE_URL}post/media/user/${userID}`
+      `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}post/p/user/${userId}`,
+      {
+        method: "GET",
+        cache: "no-cache",
+      }
     );
-
-    if (response.status === 404) {
-      return;
-    }
-
     return response.json();
   } catch (e) {
     console.error(e);
@@ -127,12 +156,12 @@ export const GetAllUserPosts = async (
 export const getPostById = async (
   postID: string,
   type: PostType
-): Promise<UserPost | UserTextPost | undefined> => {
+): Promise<MediaPost | TextPost | undefined> => {
   try {
     const response = await fetch(
       `${
-        process.env.NEXT_PUBLIC_POST_SERVICE_URL
-      }post/${type.toLowerCase()}/${postID}`,
+        process.env.NEXT_PUBLIC_API_GATEWAY_URL
+      }${type.toLowerCase()}/p/find/${postID}`,
       {
         method: "GET",
         cache: "no-cache",
@@ -279,24 +308,4 @@ const uploadThumbnailToSupabase = async (
     return process.env.NEXT_PUBLIC_FALLBACK_PHOTO; //Fallback Photo
   }
   return `${process.env.NEXT_PUBLIC_SUPABASE_IMAGE_RETRIEVAL_URL}post-content/${userID}/${postID}/thumbnail.jpg`;
-};
-
-export const DeletePost = async (
-  postID: string,
-  postType: PostType
-): Promise<boolean> => {
-  try {
-    const response = await fetch(
-      `${
-        process.env.NEXT_PUBLIC_POST_SERVICE_URL
-      }post/${postType.toLowerCase()}/delete/${postID}`,
-      {
-        method: `DELETE`,
-      }
-    );
-    return response.ok;
-  } catch (e) {
-    console.error(e);
-    return false;
-  }
 };

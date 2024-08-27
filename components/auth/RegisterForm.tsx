@@ -1,16 +1,15 @@
 "use client";
-import { z } from "zod";
-import React, { useEffect, useState } from "react";
+import { CreateEmailUser } from "@/controllers/AuthController";
+import { FindUserByEmail } from "@/controllers/UserController";
+import { signIn } from "next-auth/react";
+import Link from "next/link";
+import React, { useState } from "react";
+import { toast } from "sonner";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
-import { toast } from "sonner";
-import ThirdParty from "./ThirdPartyAuth";
-import Link from "next/link";
 import PasswordValidation from "./PasswordValidation";
-import { useSearchParams } from "next/navigation";
-import { signIn } from "next-auth/react";
-import { CreateEmailUser, FindUserByEmail } from "@/controllers/AuthController";
+import ThirdParty from "./ThirdPartyAuth";
 function RegisterForm() {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
@@ -90,7 +89,7 @@ function RegisterForm() {
           Sign Up
         </Button>
       </form>
-      <ThirdParty />
+      <ThirdParty className="my-6" />
       <section className="my-4 text-sm mx-2 text-neutral-700 dark:text-neutral-400">
         <span>Already have an account?</span>
         <Link

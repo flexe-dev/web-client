@@ -1,12 +1,15 @@
-import { useProfileViewer } from "@/components/context/UserProfileProvider";
 import TextPostPreview from "@/components/ui/Posts/text/textPostPreview";
+import { useProfilePostViewer } from "../context/ProfileViewPostProvider";
+import { useProfileUserViewer } from "../context/ProfileViewUserProvider";
 
 export const Activity = () => {
-  const { fetchedAccount } = useProfileViewer();
+  const { fetchedUser } = useProfileUserViewer();
+  const { fetchedPosts } = useProfilePostViewer();
 
-  if (!fetchedAccount) return null;
-  const { user, textPosts } = fetchedAccount;
-
+  if (!fetchedUser || !fetchedPosts) return null;
+  const { user } = fetchedUser;
+  const { textPosts } = fetchedPosts;
+  
   return (
     <div className="w-full mt-4 px-2">
       {textPosts

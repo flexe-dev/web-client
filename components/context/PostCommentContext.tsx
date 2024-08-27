@@ -21,6 +21,7 @@ import {
   SortCriteria,
   UserPostReactions,
 } from "@/lib/interface";
+import { useSession } from "next-auth/react";
 import {
   createContext,
   Dispatch,
@@ -30,7 +31,6 @@ import {
   useState,
 } from "react";
 import { toast } from "sonner";
-import { useAccount } from "./AccountProvider";
 import { usePostMetrics } from "./PostInteractionContext";
 
 interface PostCommentState {
@@ -106,7 +106,7 @@ export const PostCommentProvider = ({
   type,
 }: ContextProps) => {
   const [comments, setComments] = useState<CommentNode[]>(fetchedComments);
-  const { account } = useAccount();
+  const { data: session } = useSession();
   const {
     addComment: metricsIncrementComment,
     removeComment: metricsDecrementComment,
@@ -128,10 +128,10 @@ export const PostCommentProvider = ({
   }, [sortType]);
 
   useEffect(() => {
-    if (!account) return;
+    if (!session) return;
 
     const fetchUserReactions = async () => {
-      const reactions = await GetPostReactions(postID, account.user.id);
+      const reactions = await GetPostReactions(postID, session?.token);
       if (!reactions) return;
       setCommentReactions({
         reactions: new Map(Object.entries(reactions)),
@@ -140,7 +140,7 @@ export const PostCommentProvider = ({
     };
 
     fetchUserReactions();
-  }, [account]);
+  }, [session]);
 
   const updateCommentTree = (node: CommentNode, index: number) => {
     setComments([
@@ -151,7 +151,11 @@ export const PostCommentProvider = ({
   };
 
   const addComment = async (comment: CommentNode, rootNode?: CommentNode) => {
-    const uploadedComment = await AddComment(comment.comment, type);
+    const uploadedComment = await AddComment(
+      comment.comment,
+      type,
+      session?.token
+    );
     if (!uploadedComment) {
       toast.error("Failed to add comment");
       return;
@@ -190,7 +194,7 @@ export const PostCommentProvider = ({
   };
 
   const deleteComment = async (comment: CommentNode, rootNode: CommentNode) => {
-    const response = await DeleteComment(comment, type);
+    const response = await DeleteComment(comment, type, session?.token);
     if (!response) {
       toast.error("Failed to delete comment");
       return;
@@ -225,12 +229,12 @@ export const PostCommentProvider = ({
     rootNode: CommentNode,
     opposite: boolean
   ) => {
-    if (!account) return;
+    if (!session) return;
     const response = await LikeComment(
       comment.comment.id,
-      account?.user.id,
       postID,
-      opposite
+      opposite,
+      session?.token
     );
 
     if (!response) {
@@ -250,12 +254,12 @@ export const PostCommentProvider = ({
     rootNode: CommentNode,
     opposite: boolean
   ) => {
-    if (!account) return;
+    if (!session) return;
     const response = await DislikeComment(
       comment.comment.id,
-      account?.user.id,
       postID,
-      opposite
+      opposite,
+      session?.token
     );
 
     if (!response) {
@@ -322,7 +326,7 @@ export const PostCommentProvider = ({
   };
 
   const editComment = async (comment: CommentNode, rootNode: CommentNode) => {
-    const response = await EditComment(comment.comment);
+    const response = await EditComment(comment.comment, session?.token);
     if (!response) {
       toast.error("Failed to edit comment");
       return;
@@ -361,10 +365,10 @@ export const PostCommentProvider = ({
   };
 
   const removeReaction = async (comment: CommentNode, root?: CommentNode) => {
-    if (!account) return;
+    if (!session) return;
     const response = await RemoveCommentReaction(
       comment.comment.id,
-      account.user.id
+      session?.token
     );
     if (!response) return;
     const reaction = commentReactions.reactions.get(comment.comment.id);

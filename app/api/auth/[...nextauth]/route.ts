@@ -1,10 +1,10 @@
+import { baseAuthOptions } from "@/lib/authOptions";
+import { adapter } from "@/lib/prismadb";
 import NextAuth, { AuthOptions } from "next-auth";
 import { decode, encode } from "next-auth/jwt";
 import { cookies } from "next/headers";
-import { randomUUID } from "node:crypto";
-import { baseAuthOptions } from "@/lib/authOptions";
 import { NextRequest } from "next/server";
-import { adapter } from "@/lib/prismadb";
+import { randomUUID } from "node:crypto";
 
 interface Context {
   params: { nextauth: string[] };
@@ -58,6 +58,9 @@ const authOptionsWrapper = (request: NextRequest, context: Context) => {
           }
           cookies().set("__Secure-next-auth.session-token", sessionToken, {
             expires: sessionExpiry,
+            sameSite: "none",
+            secure: true,
+            httpOnly: true,
           });
         }
         return true;

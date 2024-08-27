@@ -1,6 +1,6 @@
 "use server";
 
-import { FindAccountByUserId } from "@/controllers/UserController";
+import { FindUserDisplayByUserId } from "@/controllers/UserController";
 import { PostType } from "@/lib/interface";
 import { Suspense } from "react";
 import { HeaderContent } from "./HeaderContent";
@@ -16,13 +16,13 @@ interface Props {
 
 export const PostDisplayHeader = async (props: Props) => {
   const { userID } = props;
-  const account = await FindAccountByUserId(userID);
+  const user = await FindUserDisplayByUserId(userID);
 
-  if (!account) return null;
+  if (!user) return null;
 
   return (
     <Suspense fallback={<HeaderSkeleton />}>
-      <HeaderContent {...props} account={account} />
+      <HeaderContent {...props} account={user} />
     </Suspense>
   );
 };

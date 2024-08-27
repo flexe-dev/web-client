@@ -1,6 +1,6 @@
 "use client";
 
-import { useAccount } from "@/components/context/AccountProvider";
+import { useAccountUser } from "@/components/context/AccountUserProvider";
 import { usePostComments } from "@/components/context/PostCommentContext";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -11,7 +11,7 @@ import { KeyboardEvent, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 
 const CommentInput = () => {
-  const { account } = useAccount();
+  const { account } = useAccountUser();
   const { addComment, postID, replyTarget, setReplyTarget, type } =
     usePostComments();
   const [comment, setComment] = useState<string>("");

@@ -1,12 +1,12 @@
 "use client";
 
-import { UserPost } from "@/lib/interface";
+import { MediaPost } from "@/lib/interface";
 import CommentInput from "./Comment/CommentInput";
 import ModalComments from "./Comment/ModalComment";
 import PostMetrics from "./PostMetrics";
 
 interface Props {
-  selectedPost: UserPost;
+  selectedPost: MediaPost;
 }
 
 const PostAuxData = (props: Props) => {

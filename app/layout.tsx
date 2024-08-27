@@ -1,6 +1,9 @@
 import { OnboardModal } from "@/components/auth/OnboardModal";
-import { AccountProvider } from "@/components/context/AccountProvider";
+
+import { AccountPostProvider } from "@/components/context/AccountPostProvider";
+import { AccountUserProvider } from "@/components/context/AccountUserProvider";
 import DndContext from "@/components/context/DndProvider";
+import { LoginModalProvider } from "@/components/context/LoginModalProvider";
 import SessionProvider from "@/components/context/SessionProvider";
 import { UserInteractionsProvider } from "@/components/context/UserInteractionsProvider";
 import { Navbar } from "@/components/navbar";
@@ -37,23 +40,27 @@ export default async function RootLayout({
         )}
       >
         <SessionProvider session={session}>
-          <AccountProvider>
-            <UserInteractionsProvider>
-              <DndContext>
-                <ThemeProvider
-                  attribute="class"
-                  defaultTheme="system"
-                  enableSystem
-                  disableTransitionOnChange
-                >
-                  <Navbar />
-                  <main className="w-[100dvw]">{children}</main>
-                  <Toaster />
-                  <OnboardModal />
-                </ThemeProvider>
-              </DndContext>
-            </UserInteractionsProvider>
-          </AccountProvider>
+          <UserInteractionsProvider>
+            <AccountUserProvider>
+              <AccountPostProvider>
+                <DndContext>
+                  <LoginModalProvider>
+                    <ThemeProvider
+                      attribute="class"
+                      defaultTheme="system"
+                      enableSystem
+                      disableTransitionOnChange
+                    >
+                      <Navbar />
+                      <main className="w-[100dvw]">{children}</main>
+                      <Toaster />
+                      <OnboardModal />
+                    </ThemeProvider>
+                  </LoginModalProvider>
+                </DndContext>
+              </AccountPostProvider>
+            </AccountUserProvider>
+          </UserInteractionsProvider>
         </SessionProvider>
       </body>
     </html>

@@ -1,5 +1,5 @@
 import { ChildNodeProps, UserAccount, UserNode } from "@/lib/interface";
-import { ProfileViewerProvider } from "../context/UserProfileProvider";
+import { ProfileViewerProvider } from "../context/ProfileViewUserProvider";
 import ProfileContent from "./ProfileContent";
 import ProfileHeader from "./ProfileHeader";
 

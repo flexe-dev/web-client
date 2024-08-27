@@ -1,23 +1,28 @@
 "use client";
 
 import PostDisplayModal from "@/components/ui/Posts/media/PostDisplayModal";
-import { ChildNodeProps, ClassNameProp, UserPost } from "@/lib/interface";
+import { ChildNodeProps, ClassNameProp, MediaPost } from "@/lib/interface";
 import { cn } from "@/lib/utils";
 import { ArrowUpTrayIcon, PlusCircleIcon } from "@heroicons/react/24/outline";
 import Image from "next/image";
 import React, { Dispatch, SetStateAction, useState } from "react";
-import { useProfileViewer } from "../context/UserProfileProvider";
+import { useProfilePostViewer } from "../context/ProfileViewPostProvider";
+import { useProfileUserViewer } from "../context/ProfileViewUserProvider";
 import PostCreateDialog from "../creator/PostCreateDialog";
 import { Button } from "../ui/button";
 import { Dialog, DialogTrigger } from "../ui/dialog";
 
 const Posts = () => {
   const [openDialog, setOpenDialog] = useState<boolean>(false);
-  const [selectedPost, setSelectedPost] = useState<UserPost | undefined>();
+  const [selectedPost, setSelectedPost] = useState<MediaPost | undefined>();
 
-  const { fetchedAccount, loading } = useProfileViewer();
-  if (!fetchedAccount) return null;
-  const { user, mediaPosts: posts } = fetchedAccount;
+  const { fetchedPosts } = useProfilePostViewer();
+  const { fetchedUser, loading } = useProfileUserViewer();
+
+  if (!fetchedUser || !fetchedPosts) return null;
+
+  const { user } = fetchedUser;
+  const { mediaPosts: posts } = fetchedPosts;
 
   const closePostModal = () => {
     setSelectedPost(undefined);
@@ -44,7 +49,7 @@ const Posts = () => {
           {posts.length === 0 ? (
             <EmptyPostTemplate dispatch={setOpenDialog} />
           ) : (
-            <UserPosts onSelect={setSelectedPost} />
+            <UserPosts posts={posts} onSelect={setSelectedPost} />
           )}
         </div>
         <PostCreateDialog dispatch={setOpenDialog} />
@@ -77,13 +82,12 @@ const opacityTransition = [
 ];
 
 interface UserPostProps {
-  onSelect: Dispatch<SetStateAction<UserPost | undefined>>;
+  onSelect: Dispatch<SetStateAction<MediaPost | undefined>>;
+  posts: MediaPost[];
 }
 
-const UserPosts = ({ onSelect }: UserPostProps) => {
-  const { fetchedAccount } = useProfileViewer();
-
-  const openPost = (post: UserPost) => {
+const UserPosts = ({ onSelect, posts }: UserPostProps) => {
+  const openPost = (post: MediaPost) => {
     onSelect(post);
     window.history.pushState(null, "", `/post/media/${post.id}`);
   };
@@ -91,7 +95,7 @@ const UserPosts = ({ onSelect }: UserPostProps) => {
   return (
     <>
       <div className="grid p-8 md:p-2 grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-x-2 justify-center relative my-4 w-full ">
-        {fetchedAccount?.mediaPosts
+        {posts
           .filter((post) => post.auxData.postStatus === "PUBLISHED")
           .sort(
             (a, b) =>

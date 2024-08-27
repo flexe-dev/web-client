@@ -1,34 +1,31 @@
-import { useAccount } from "@/components/context/AccountProvider";
+import { useAccountPost } from "@/components/context/AccountPostProvider";
 import { PostInteractionProvider } from "@/components/context/PostInteractionContext";
 import { PostToolsProvider } from "@/components/context/PostOptionToolProvider";
-import { useProfileViewer } from "@/components/context/UserProfileProvider";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
-import { UserPost } from "@/lib/interface";
+import { MediaPost } from "@/lib/interface";
 import { EllipsisHorizontalIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 import DisplayPost from "./DisplayPost";
 import { PostPreviewDisplayMetrics } from "./PostPreviewDisplayMetrics";
 
 interface Props {
   callback: () => void;
-  selectedPost?: UserPost;
+  selectedPost?: MediaPost;
 }
 
 const PostDisplayModal = (props: Props) => {
   const { selectedPost, callback } = props;
-  const { isOwnProfile } = useProfileViewer();
-  const dialogRef = useRef<HTMLDivElement>(null);
-  const { account } = useAccount();
+  const { userPosts } = useAccountPost();
 
   useEffect(() => {
     if (
-      !account?.mediaPosts.map((post) => post.id).includes(selectedPost?.id)
+      !userPosts?.mediaPosts.map((post) => post.id).includes(selectedPost?.id)
     ) {
       callback();
     }
-  }, [account]);
+  }, [userPosts]);
 
   if (!selectedPost || !selectedPost.id) return null;
   return (
@@ -38,10 +35,7 @@ const PostDisplayModal = (props: Props) => {
       postType="MEDIA"
     >
       <Dialog open={!!selectedPost} onOpenChange={callback}>
-        <DialogContent
-          ref={dialogRef}
-          className="px-4 py-1 min-w-[90%] max-w-[90%] lg:min-w-[80%] lg:max-w-[80%] xl:max-w-[70%] h-[80dvh] flex flex-col overscroll-none"
-        >
+        <DialogContent className="px-4 py-1 min-w-[90%] max-w-[90%] lg:min-w-[80%] lg:max-w-[80%] xl:max-w-[70%] h-[80dvh] flex flex-col overscroll-none">
           <PostPreviewDisplayMetrics />
           <div className="w-full flex justify-center items-center z-[80] min-h-[3rem] max-h-[3rem] bg-background border-b-2">
             <PostToolsProvider postId={selectedPost.id} postType="MEDIA">

@@ -1,14 +1,15 @@
 "use client";
 
 import { savePost } from "@/controllers/PostController";
-import { PostStatus, UserPost } from "@/lib/interface";
+import { MediaPost, PostStatus } from "@/lib/interface";
 import { cn } from "@/lib/utils";
 import { useMotionValueEvent, useScroll } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
 import CancelWarn from "../CancelWarn";
-import { useAccount } from "../context/AccountProvider";
+import { useAccountPost } from "../context/AccountPostProvider";
+import { useAccountUser } from "../context/AccountUserProvider";
 import { useDocumentCreator } from "../context/DocumentCreatorProvider";
 import { usePostAuxData } from "../context/PostCreatorAuxProvider";
 import { Button } from "../ui/button";
@@ -16,7 +17,8 @@ import PostSubmit from "./PostSubmit";
 
 export const CreatorHeader = () => {
   const { document, setDocument } = useDocumentCreator();
-  const { account, setAccount } = useAccount();
+  const { account } = useAccountUser();
+  const { userPosts, setUserPosts } = useAccountPost();
   const router = useRouter();
   const { scrollY } = useScroll();
   const { thumbnail, id, title, tags, tech, postStatus, setAuxData } =
@@ -31,9 +33,8 @@ export const CreatorHeader = () => {
     setScrollPosition(latest);
   });
 
-  if (!account) return null;
+  if (!account || !userPosts) return null;
   const { user } = account;
-
   const publishPost = async () => {
     const response = await handlePostSave("PUBLISHED");
     if (!response) return;
@@ -45,7 +46,7 @@ export const CreatorHeader = () => {
   const handlePostSave = async (type: PostStatus): Promise<boolean> => {
     if (!user) return false;
     return new Promise<boolean>((resolve, reject) => {
-      const post: Omit<UserPost, "metrics"> = {
+      const post: Omit<MediaPost, "metrics"> = {
         id,
         document,
         auxData: {
@@ -66,9 +67,9 @@ export const CreatorHeader = () => {
 
           setDocument(data.document);
           setAuxData(data);
-          setAccount({
-            ...account,
-            mediaPosts: [data, ...account.mediaPosts],
+          setUserPosts({
+            ...userPosts,
+            mediaPosts: [data, ...userPosts.mediaPosts],
           });
           resolve(true);
           return `Saved Post Successfully`;

@@ -4,7 +4,7 @@ import { PostInteractionProvider } from "@/components/context/PostInteractionCon
 import { PostToolsProvider } from "@/components/context/PostOptionToolProvider";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { Card } from "@/components/ui/card";
-import { UserTextPost } from "@/lib/interface";
+import { TextPost } from "@/lib/interface";
 import { EllipsisHorizontalIcon } from "@heroicons/react/24/outline";
 import { User } from "next-auth";
 import Link from "next/link";
@@ -14,7 +14,7 @@ import { TextPostMetricsDisplay } from "./TextPostMetricsDisplay";
 
 interface TextPostPreviewProps {
   user: User;
-  post: UserTextPost;
+  post: TextPost;
 }
 
 const TextPostPreview = (props: TextPostPreviewProps) => {

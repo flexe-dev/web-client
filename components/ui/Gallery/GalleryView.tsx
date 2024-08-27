@@ -1,12 +1,12 @@
 "use client";
 
-import { useAccount } from "@/components/context/AccountProvider";
+import { useAccountUser } from "@/components/context/AccountUserProvider";
 import { images } from "@/lib/placeholder";
 import { motion } from "framer-motion";
 import { GalleryTile } from "./GalleryTile";
 
 const GalleryView = () => {
-  const { account } = useAccount();
+  const { account } = useAccountUser();
   if (!account) return null;
   return (
     <motion.section

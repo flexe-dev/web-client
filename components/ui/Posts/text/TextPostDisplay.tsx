@@ -1,13 +1,14 @@
 import { PostInteractionProvider } from "@/components/context/PostInteractionContext";
-import { UserTextPost } from "@/lib/interface";
+import { TextPost } from "@/lib/interface";
 import PostComments from "../Comment/PostComments";
 import { TextDisplayContent } from "./TextDisplayContext";
 
 interface Props {
-  post: UserTextPost;
+  post: TextPost;
 }
 
 export const TextPostDisplay = ({ post }: Props) => {
+  console.log("yuh");
   return (
     <PostInteractionProvider
       postId={post.id!}
