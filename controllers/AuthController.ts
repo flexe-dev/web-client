@@ -7,7 +7,7 @@ interface EmailUser {
 
 const CreateEmailUser = async (credentials: EmailUser) => {
   const response = await fetch(
-    `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/auth/p/create`,
+    `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}auth/p/create`,
     {
       method: "POST",
       headers: {
@@ -22,7 +22,7 @@ const CreateEmailUser = async (credentials: EmailUser) => {
 const AuthoriseUser = async (credentials: EmailUser): Promise<User | null> => {
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/auth/p/authenticate`,
+      `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}auth/p/authenticate`,
       {
         method: "POST",
         headers: {
@@ -36,7 +36,6 @@ const AuthoriseUser = async (credentials: EmailUser): Promise<User | null> => {
 
     return await response.json();
   } catch (err) {
-    console.log(err);
     return null;
   }
 };

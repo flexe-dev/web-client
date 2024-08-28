@@ -65,7 +65,8 @@ export const baseAuthOptions: AuthOptions = {
       async authorize(credentials, req) {
         if (credentials) {
           const { email, password } = credentials;
-          return await AuthoriseUser({ email, password });
+          const response = await AuthoriseUser({ email, password });
+          return response;
         }
         return null;
       },

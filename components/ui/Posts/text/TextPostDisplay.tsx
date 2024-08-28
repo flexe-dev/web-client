@@ -8,7 +8,6 @@ interface Props {
 }
 
 export const TextPostDisplay = ({ post }: Props) => {
-  console.log("yuh");
   return (
     <PostInteractionProvider
       postId={post.id!}

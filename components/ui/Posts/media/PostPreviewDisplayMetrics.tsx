@@ -7,6 +7,7 @@ import { cn } from "@/lib/utils";
 import { ChatBubbleLeftEllipsisIcon } from "@heroicons/react/24/outline";
 import { TooltipProvider } from "@radix-ui/react-tooltip";
 import { BookmarkIcon, HeartIcon, ShareIcon } from "lucide-react";
+import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { MetricButtonProps } from "../text/TextPostMetricsDisplay";
@@ -17,7 +18,7 @@ export const PostPreviewDisplayMetrics = () => {
   const { metrics, likePost, unlikePost, postId, savePost, unsavePost } =
     usePostMetrics();
   const { likeCount, commentCount, saveCount } = metrics;
-
+  const { status } = useSession();
   const hasPriorInteraction = (
     interactions: PostInteractionLookup[]
   ): boolean => {
@@ -27,7 +28,7 @@ export const PostPreviewDisplayMetrics = () => {
   const existingLike = hasPriorInteraction(likedPosts);
   const existingSave = hasPriorInteraction(savedPosts);
 
-  const InteractionButtons: MetricButtonProps[] = [
+  const InteractionButtons: Omit<MetricButtonProps, "status">[] = [
     {
       onClick: existingLike ? unlikePost : likePost,
       value: likeCount,
@@ -42,6 +43,7 @@ export const PostPreviewDisplayMetrics = () => {
       value: commentCount,
       Icon: ChatBubbleLeftEllipsisIcon,
       hoverTheme: "blue",
+      isComment: true,
     },
     {
       onClick: existingSave ? unsavePost : savePost,
@@ -68,7 +70,11 @@ export const PostPreviewDisplayMetrics = () => {
         )}
       >
         {InteractionButtons.map((button, index) => (
-          <MetricButton {...button} key={`metric-button-${index}`}>
+          <MetricButton
+            status={status}
+            {...button}
+            key={`metric-button-${index}`}
+          >
             <div className="hidden md:block">
               <MetricContent {...button} />
             </div>
