@@ -16,7 +16,11 @@ function LoginForm() {
     e.preventDefault();
     const email = e.currentTarget.email.value;
     const password = e.currentTarget.password.value;
-    console.log(email, password);
+
+    if (!email || !password) {
+      toast.error("Please fill in all fields", { position: "top-right" });
+      return;
+    }
     signIn("credentials", { email, password, callbackUrl: "/" });
   };
 

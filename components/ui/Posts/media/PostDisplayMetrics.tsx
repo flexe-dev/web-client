@@ -1,17 +1,19 @@
 "use client";
 
 import { ChildNodeProps, PostInteractionLookup } from "@/lib/interface";
-import { cn, renderMetric } from "@/lib/utils";
+import { cn, isAuthenticated, renderMetric } from "@/lib/utils";
 import {
   BookmarkIcon,
   ChatBubbleOvalLeftEllipsisIcon,
   ShareIcon,
 } from "@heroicons/react/24/outline";
 
+import { UseLoginModal } from "@/components/context/LoginModalProvider";
 import { usePostMetrics } from "@/components/context/PostInteractionContext";
 import { useUserInteractions } from "@/components/context/UserInteractionsProvider";
 import { AnimatePresence, motion } from "framer-motion";
 import { ChevronLeftIcon, HeartIcon } from "lucide-react";
+import { useSession } from "next-auth/react";
 import { toast } from "sonner";
 import { Button } from "../../button";
 import {
@@ -35,6 +37,7 @@ export const PostDisplayMetrics: React.FC<Props> = ({
   commentPanelOpen,
 }) => {
   const { likedPosts, savedPosts } = useUserInteractions();
+  const { status } = useSession();
   const { metrics, likePost, unlikePost, postId, savePost, unsavePost } =
     usePostMetrics();
   const { likeCount, commentCount, saveCount } = metrics;
@@ -56,6 +59,7 @@ export const PostDisplayMetrics: React.FC<Props> = ({
         )}
       >
         <MetricButton
+          status={status}
           active={existingLike}
           onClick={existingLike ? unlikePost : likePost}
           hoverTheme="red"
@@ -75,6 +79,7 @@ export const PostDisplayMetrics: React.FC<Props> = ({
           commentPanelOpen={commentPanelOpen}
         />
         <MetricButton
+          status={status}
           onClick={existingSave ? unsavePost : savePost}
           active={existingSave}
           hoverTheme="yellow"
@@ -88,6 +93,7 @@ export const PostDisplayMetrics: React.FC<Props> = ({
           />
         </MetricButton>
         <MetricButton
+          status={status}
           onClick={() => {
             toast("Cry about it");
           }}
@@ -139,8 +145,20 @@ export const MetricButton: React.FC<MediaMetricButtonProps> = ({
   hoverTheme,
   tooltipText,
   children,
+  status,
+  isComment,
 }) => {
   const { border, activeBorder } = HoverStyling[hoverTheme];
+  const { setOpen } = UseLoginModal();
+
+  const handleOnClick = () => {
+    if (!isAuthenticated(status) && !isComment) {
+      setOpen(true);
+      return;
+    }
+
+    onClick();
+  };
 
   return (
     <Tooltip>
@@ -163,7 +181,7 @@ export const MetricButton: React.FC<MediaMetricButtonProps> = ({
           )}
           variant={"outline"}
           size={"icon"}
-          onClick={onClick}
+          onClick={handleOnClick}
         >
           {children}
         </Button>
@@ -172,7 +190,10 @@ export const MetricButton: React.FC<MediaMetricButtonProps> = ({
   );
 };
 
-type MetricContentProps = Omit<MetricButtonProps, "tooltipText" | "onClick">;
+type MetricContentProps = Omit<
+  MetricButtonProps,
+  "tooltipText" | "onClick" | "status"
+>;
 interface ContentProps extends MetricContentProps {
   preview?: true;
 }
@@ -214,8 +235,11 @@ const CommentMetricButton: React.FC<CommentMetricButton> = ({
   hoverTheme,
 }) => {
   const { border } = HoverStyling[hoverTheme];
+  const { status } = useSession();
   return (
     <MetricButton
+      status={status}
+      isComment={true}
       onClick={commentOnClick}
       hoverTheme="blue"
       tooltipText="Comment"
