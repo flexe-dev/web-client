@@ -13,6 +13,7 @@ import { usePostMetrics } from "@/components/context/PostInteractionContext";
 import { useUserInteractions } from "@/components/context/UserInteractionsProvider";
 import { AnimatePresence, motion } from "framer-motion";
 import { ChevronLeftIcon, HeartIcon } from "lucide-react";
+import { nanoid } from "nanoid";
 import { useSession } from "next-auth/react";
 import { toast } from "sonner";
 import { Button } from "../../button";
@@ -164,16 +165,25 @@ export const MetricButton: React.FC<MediaMetricButtonProps> = ({
     <Tooltip>
       {tooltipText && (
         <>
-          <TooltipContent className="ml-8 mt-2 hidden md:block" side="right">
+          <TooltipContent
+            key={"tooltip-md"}
+            className="ml-8 mt-2 hidden md:block"
+            side="right"
+          >
             {tooltipText}
           </TooltipContent>
-          <TooltipContent className="ml-8 mt-2 block md:hidden" side={"left"}>
+          <TooltipContent
+            key={"tooltip-sm"}
+            className="ml-8 mt-2 block md:hidden"
+            side={"left"}
+          >
             {tooltipText}
           </TooltipContent>
         </>
       )}
       <TooltipTrigger asChild>
         <Button
+          key={nanoid()}
           className={cn(
             "flex shadow-lg my-1 transition-colors relative flex-col items-center justify-center h-14 w-14 backdrop-blur-xl bg-background/40 hover:bg-background/50 md:bg-background border-[2.5px] rounded-full group",
             border,

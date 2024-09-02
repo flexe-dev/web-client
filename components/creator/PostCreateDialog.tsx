@@ -2,6 +2,7 @@ import { saveTextPost } from "@/controllers/PostController";
 import { TextPost } from "@/lib/interface";
 import { GetNameInitials } from "@/lib/utils";
 import { PhotoIcon } from "@heroicons/react/24/outline";
+import { useSession } from "next-auth/react";
 import Link from "next/link";
 import React, { SetStateAction, useState } from "react";
 import { toast } from "sonner";
@@ -23,6 +24,7 @@ interface DialogProps {
 
 const PostCreateDialog = ({ dispatch }: DialogProps) => {
   const { account } = useAccountUser();
+  const { data } = useSession();
   const { userPosts, setUserPosts } = useAccountPost();
 
   const [newTextPost, setNewTextPost] = useState<string>("");
@@ -37,6 +39,11 @@ const PostCreateDialog = ({ dispatch }: DialogProps) => {
   };
 
   const handleTextPostPublish = async (): Promise<boolean> => {
+    if (!data?.token) {
+      toast.error("You need to be logged in to post");
+      return false;
+    }
+
     return new Promise<boolean>((resolve, reject) => {
       const textPost: Omit<TextPost, "metrics"> = {
         id: undefined,
@@ -44,7 +51,7 @@ const PostCreateDialog = ({ dispatch }: DialogProps) => {
         createdAt: new Date(),
         textpost: newTextPost,
       };
-      toast.promise(saveTextPost(textPost), {
+      toast.promise(saveTextPost(textPost, data.token), {
         loading: `Posting...`,
         success: (data) => {
           if (!data) return;

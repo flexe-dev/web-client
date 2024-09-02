@@ -63,7 +63,7 @@ const PostDisplayModal = (props: Props) => {
             </Button>
           </div>
 
-          <div className="flex flex-col overflow-y-auto -mt-4 relative">
+          <div className="flex flex-col overflow-x-hidden overflow-y-auto -mt-4 relative">
             <DisplayPost post={selectedPost} />
           </div>
         </DialogContent>

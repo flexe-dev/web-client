@@ -9,6 +9,7 @@ import {
   ChildNodeProps,
   PostInteractionLookup,
   PostInteractionRelationship,
+  UserDetails,
   UserDisplay,
   UserInteractionRelationship,
   UserNode,
@@ -32,7 +33,7 @@ interface UserInteractionState {
   removeLikedPost: (postId: string) => void;
   removeSavedPost: (postId: string) => void;
 
-  followUser: (user: UserDisplay) => void;
+  followUser: (user: UserDetails) => void;
   unfollowUser: (userId: string) => void;
   removeFollowedUser: (userId: string) => void;
 }
@@ -89,18 +90,11 @@ export const UserInteractionsProvider: React.FC<ChildNodeProps> = ({
   };
 
   const generateUserLookup = (
-    userInfo: UserDisplay
+    userInfo: UserDetails
   ): UserInteractionRelationship => {
-    const { user, profile } = userInfo;
     return {
       timestamp: new Date(),
-      user: {
-        userId: user.id,
-        name: user.name!,
-        image: user.image ?? process.env.NEXT_PUBLIC_DEFAULT_USER_IMAGE!,
-        username: user.username,
-        job: profile?.job,
-      },
+      user: userInfo,
     };
   };
 
@@ -131,9 +125,10 @@ export const UserInteractionsProvider: React.FC<ChildNodeProps> = ({
     });
   };
 
-  const followUser = (user: UserDisplay) => {
+  const followUser = (user: UserDetails) => {
     if (!userNode) return;
-    const response = FollowUser(user.user.id, session.data?.token);
+
+    const response = FollowUser(user.userId, session.data?.token);
     if (!response) {
       toast.error("Unable to follow user, please try again later");
       return;
@@ -144,6 +139,7 @@ export const UserInteractionsProvider: React.FC<ChildNodeProps> = ({
       return [generateUserLookup(user), ...prev];
     });
   };
+
   const unfollowUser = (userId: string) => {
     if (!userNode) return;
 

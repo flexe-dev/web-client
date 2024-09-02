@@ -2,6 +2,7 @@ import {
   ProfileExternalLinks,
   UserDisplay,
   UserInteractionType,
+  UserNetwork,
   UserNode,
   UserProfile,
 } from "@/lib/interface";
@@ -198,11 +199,31 @@ const UserInteractionRequest = async (
         },
       }
     );
-
+    ``;
     return response.ok;
   } catch (err) {
     console.error(err);
     return false;
+  }
+};
+
+const GetUserNetwork = async (
+  username: string
+): Promise<UserNetwork | undefined> => {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}node/p/network/${username}`,
+      {
+        method: "GET",
+        cache: "no-store",
+      }
+    );
+    if (response.status === 404) return;
+
+    return response.json();
+  } catch (err) {
+    console.error(err);
+    return;
   }
 };
 
@@ -225,6 +246,7 @@ export {
   FindUserDisplayByUsername,
   FindUserNode,
   FollowUser,
+  GetUserNetwork,
   OnboardUser,
   UnfollowUser,
   updateUser,

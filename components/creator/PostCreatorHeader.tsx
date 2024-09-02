@@ -4,6 +4,7 @@ import { savePost } from "@/controllers/PostController";
 import { MediaPost, PostStatus } from "@/lib/interface";
 import { cn } from "@/lib/utils";
 import { useMotionValueEvent, useScroll } from "framer-motion";
+import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -18,6 +19,7 @@ import PostSubmit from "./PostSubmit";
 export const CreatorHeader = () => {
   const { document, setDocument } = useDocumentCreator();
   const { account } = useAccountUser();
+  const { data } = useSession();
   const { userPosts, setUserPosts } = useAccountPost();
   const router = useRouter();
   const { scrollY } = useScroll();
@@ -44,6 +46,11 @@ export const CreatorHeader = () => {
   };
 
   const handlePostSave = async (type: PostStatus): Promise<boolean> => {
+    if (!data?.token) {
+      toast.error("You need to be logged in to post");
+      return false;
+    }
+
     if (!user) return false;
     return new Promise<boolean>((resolve, reject) => {
       const post: Omit<MediaPost, "metrics"> = {
@@ -60,7 +67,7 @@ export const CreatorHeader = () => {
         },
       };
 
-      toast.promise(savePost(post), {
+      toast.promise(savePost(post, data.token), {
         loading: `Saving Post...`,
         success: (data) => {
           if (!data) return;
