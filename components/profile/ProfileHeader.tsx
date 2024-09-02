@@ -63,8 +63,9 @@ function ProfileHeader() {
                 @{fetchedUser?.user?.username}
               </p>
               <ProfileFollowers
-                followers={fetchedUser?.profile?.followers ?? 0}
-                following={fetchedUser?.profile?.following ?? 0}
+                followers={fetchedUser?.profile?.followers}
+                following={fetchedUser?.profile?.following}
+                username={fetchedUser?.user?.username}
               />
               <div className="mt-4">
                 {isOwnProfile ? (

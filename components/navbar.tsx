@@ -30,7 +30,7 @@ export const Navbar = () => {
       restrict: true,
     },
     {
-      href: "/network",
+      href: `/network`,
       label: "My Network",
       restrict: true,
       icon: <UserGroupIcon />,

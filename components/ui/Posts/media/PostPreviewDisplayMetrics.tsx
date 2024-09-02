@@ -71,9 +71,9 @@ export const PostPreviewDisplayMetrics = () => {
       >
         {InteractionButtons.map((button, index) => (
           <MetricButton
+            key={`metric-button-${index}`}
             status={status}
             {...button}
-            key={`metric-button-${index}`}
           >
             <div className="hidden md:block">
               <MetricContent {...button} />

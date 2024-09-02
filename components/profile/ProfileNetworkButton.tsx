@@ -1,7 +1,7 @@
 "use client";
 
-import { NetworkStatus } from "@/lib/interface";
-import { getNetworkStatus } from "@/lib/networkUtils";
+import { NetworkStatus, UserDetails } from "@/lib/interface";
+import { generateUserDetailNode, getNetworkStatus } from "@/lib/networkUtils";
 import { ChevronDownIcon } from "@heroicons/react/24/outline";
 import { useSession } from "next-auth/react";
 import { UseLoginModal } from "../context/LoginModalProvider";
@@ -16,6 +16,13 @@ import {
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 import { Skeleton } from "../ui/skeleton";
+
+export const networkStatusRenderMap: Record<NetworkStatus, string> = {
+  friends: "Friends",
+  following: "Following",
+  followed: "Follow Back",
+  none: "Follow",
+};
 
 export const ProfileNetworkButton = () => {
   const { status } = useSession();
@@ -42,17 +49,10 @@ export const ProfileNetworkButton = () => {
     followedByUsers
   );
 
-  const networkStatusRenderMap: Record<NetworkStatus, string> = {
-    friends: "Friends",
-    following: "Following",
-    followed: "Follow Back",
-    none: "Follow",
-  };
-
   const handleFollow = () => {
     if (!fetchedUser.profile) return;
-
-    followUser(fetchedUser);
+    const user: UserDetails = generateUserDetailNode(fetchedUser);
+    followUser(user);
     setFetchedUser({
       ...fetchedUser,
       profile: {
