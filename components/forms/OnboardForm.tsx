@@ -49,7 +49,7 @@ const formSchema = z.object({
 
 export const OnboardForm = (props: Props) => {
   const { account, setAccount } = useAccountUser();
-  const { data } = useSession();
+  const { data, update } = useSession();
 
   if (!account) return null;
   const { user } = account;
@@ -100,6 +100,7 @@ export const OnboardForm = (props: Props) => {
         profile: response.profile,
       });
 
+      update();
       props.onSuccess(true);
       return true;
     };

@@ -51,6 +51,12 @@ export const ProfileViewerPostProvider: React.FC<ChildNodeProps> = ({
     fetchProfilePosts(fetchedUser.user.id);
   }, [fetchedUser]);
 
+  useEffect(() => {
+    if (!isOwnProfile) return;
+
+    setFetchedPosts(userPosts);
+  }, [userPosts]);
+
   return (
     <ProfileViewerPostContext.Provider
       value={{

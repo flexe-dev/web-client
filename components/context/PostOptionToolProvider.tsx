@@ -1,6 +1,7 @@
 "use client";
 
 import { ChildNodeProps, PostType } from "@/lib/interface";
+import { useSession } from "next-auth/react";
 import React, {
   JSX,
   createContext,
@@ -26,6 +27,7 @@ interface Props extends ChildNodeProps {
 export interface ToolModalProp {
   postId: string;
   postType: PostType;
+  userToken?: string;
   open: boolean;
   callback: () => void;
 }
@@ -84,6 +86,7 @@ export const PostOptionToolContext =
 
 export const PostToolsProvider = ({ postId, postType, children }: Props) => {
   const [tool, setTool] = useState<PostToolOptionsType | undefined>(undefined);
+  const { data } = useSession();
   const [dialogOpen, setDialogOpen] = useState<boolean>(false);
   const Toolset = renderedToolSet[postType];
 
@@ -109,14 +112,17 @@ export const PostToolsProvider = ({ postId, postType, children }: Props) => {
     >
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
         <Toolset postId={postId}>{children}</Toolset>
-        {tool
-          ? renderedDialog[tool]({
-              postId,
-              postType,
-              open: dialogOpen,
-              callback: handleModalClose,
-            })
-          : null}
+        {tool ? (
+          renderedDialog[tool]({
+            postId,
+            postType,
+            open: dialogOpen,
+            userToken: data?.token,
+            callback: handleModalClose,
+          })
+        ) : (
+          <></>
+        )}
       </Dialog>
     </PostOptionToolContext.Provider>
   );

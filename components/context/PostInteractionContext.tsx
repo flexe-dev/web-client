@@ -73,8 +73,8 @@ export const PostInteractionProvider = ({
     removeSavedPost,
   } = useUserInteractions();
 
-  const { data } = useSession();
   const { userPosts, setUserPosts } = useAccountPost();
+  const { data } = useSession();
   const { setFetchedPosts } = useProfilePostViewer();
 
   useEffect(() => {
@@ -197,10 +197,14 @@ export const PostInteractionProvider = ({
     const postIndex = posts.findIndex((post) => post.id === postId);
 
     if (postIndex === -1) return userPosts;
-    posts[postIndex] = {
-      ...posts[postIndex],
-      metrics: metrics,
-    };
+    setUserPosts({
+      ...userPosts,
+      [postType]: [
+        ...userPosts[postType].slice(0, postIndex),
+        { ...posts[postIndex], metrics: metrics },
+        ...userPosts[postType].slice(postIndex + 1),
+      ],
+    });
 
     return userPosts;
   }

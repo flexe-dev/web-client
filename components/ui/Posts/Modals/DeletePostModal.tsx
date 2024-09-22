@@ -1,3 +1,5 @@
+"use client";
+
 import { useAccountPost } from "@/components/context/AccountPostProvider";
 import { ToolModalProp } from "@/components/context/PostOptionToolProvider";
 import { Button } from "@/components/ui/button";
@@ -14,13 +16,13 @@ import { DialogDescription } from "@radix-ui/react-dialog";
 import { toast } from "sonner";
 
 const DeletePostModal = (props: ToolModalProp) => {
-  const { callback, postId, postType } = props;
+  const { callback, postId, postType, userToken } = props;
   const { userPosts, setUserPosts } = useAccountPost();
 
-  if (!userPosts) return null;
-
   const onDelete = async () => {
-    toast.promise(DeletePost(postId, postType), {
+    if (!userPosts) return;
+
+    toast.promise(DeletePost(postId, postType, userToken), {
       loading: "Deleting post...",
       success: () => {
         setUserPosts({

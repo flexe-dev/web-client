@@ -19,7 +19,7 @@ export const NetworkSidebar = () => {
   const { status } = useSession();
 
   return (
-    <aside className="w-1/4 h-screen-without-header sticky top-[5rem] p-12">
+    <aside className="w-5/6 md:w-1/3 lg:w-1/4 md:h-screen-without-header md:sticky top-[5rem] pt-6 md:py-12 px-6 lg:px-8 mx-auto md:ml-6">
       {isAuthenticated(status) ? (
         <UserNetworkContent />
       ) : (
@@ -84,7 +84,7 @@ export const UserNetworkContent = () => {
       tab: "groups",
     },
     {
-      title: "Message Requests",
+      title: "Messages",
       icon: ChatBubbleLeftEllipsisIcon,
       link: "/",
       value: 3,
@@ -114,7 +114,7 @@ export const UserNetworkContent = () => {
 
             <h2
               className={cn(
-                "font-semibold text-secondary-header group-hover:text-inherit transition-all",
+                "font-semibold text-secondary-header group-hover:text-inherit transition-all mr-6",
                 content.tab === tab && isUser && "text-primary font-bold"
               )}
             >

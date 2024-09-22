@@ -113,7 +113,7 @@ export const DeletePost = async (
     const response = await fetch(
       `${
         process.env.NEXT_PUBLIC_API_GATEWAY_URL
-      }post/${postType.toLowerCase()}/delete/${postID}`,
+      }${postType.toLowerCase()}/delete/${postID}`,
       {
         method: `DELETE`,
         headers: {

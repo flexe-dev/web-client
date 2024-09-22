@@ -112,6 +112,9 @@ const FindUserByEmail = async (email: string): Promise<User | undefined> => {
         },
       }
     );
+
+    if (response.status === 404) return;
+
     return response.json();
   } catch (err) {
     console.error("Fetch error:", err);
@@ -215,7 +218,7 @@ const GetUserNetwork = async (
       `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}node/p/network/${username}`,
       {
         method: "GET",
-        cache: "no-store",
+        cache: "no-cache",
       }
     );
     if (response.status === 404) return;

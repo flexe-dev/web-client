@@ -31,7 +31,7 @@ export const NetworkConnectButton: React.FC<Props> = ({
     followedByUsers
   );
 
-  if (networkStatus === "followed") {
+  if (networkStatus === "followed" || networkStatus === "none") {
     return (
       <Button
         onClick={() => {

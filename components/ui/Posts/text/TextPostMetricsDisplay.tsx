@@ -22,6 +22,7 @@ export const TextPostMetricsDisplay = () => {
 
   const { metrics, likePost, unlikePost, postId, savePost, unsavePost } =
     usePostMetrics();
+
   const { likedPosts, savedPosts } = useUserInteractions();
   const router = useRouter();
 

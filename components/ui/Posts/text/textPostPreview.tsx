@@ -1,6 +1,5 @@
 "use client";
 
-import { PostInteractionProvider } from "@/components/context/PostInteractionContext";
 import { PostToolsProvider } from "@/components/context/PostOptionToolProvider";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { Card } from "@/components/ui/card";
@@ -19,6 +18,7 @@ interface TextPostPreviewProps {
 
 const TextPostPreview = (props: TextPostPreviewProps) => {
   const { post, user } = props;
+
   if (!post.id || !user) return null;
 
   return (
@@ -48,13 +48,7 @@ const TextPostPreview = (props: TextPostPreviewProps) => {
         </main>
       </Link>
       <div className="w-full overflow-hidden">
-        <PostInteractionProvider
-          postType="TEXT"
-          postId={post.id}
-          postMetrics={post.metrics}
-        >
-          <TextPostMetricsDisplay />
-        </PostInteractionProvider>
+        <TextPostMetricsDisplay />
       </div>
       <PostToolsProvider postId={post.id} postType="TEXT">
         <Button

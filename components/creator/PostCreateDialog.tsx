@@ -57,7 +57,7 @@ const PostCreateDialog = ({ dispatch }: DialogProps) => {
           if (!data) return;
           setUserPosts({
             ...userPosts,
-            textPosts: [...userPosts.textPosts, data],
+            textPosts: [data, ...userPosts.textPosts],
           });
           resolve(true);
           return `Your message has been posted`;
