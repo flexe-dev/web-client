@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { defaultPicture } from "@/lib/utils";
+import { defaultPicture } from "@/lib/util/utils";
 import Image from "next/image";
 import { useState } from "react";
 import { useProfileUserViewer } from "../context/ProfileViewUserProvider";

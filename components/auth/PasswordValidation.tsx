@@ -1,6 +1,5 @@
-import React from "react";
+import { cn } from "@/lib/util/utils";
 import { CheckCircleIcon, XCircleIcon } from "@heroicons/react/24/outline";
-import { cn } from "@/lib/utils";
 interface Props {
   validation: {
     length: boolean;

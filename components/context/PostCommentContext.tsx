@@ -9,7 +9,7 @@ import {
   LikeComment,
   RemoveCommentReaction,
 } from "@/controllers/CommentController";
-import { CommentSortAlgorithm } from "@/lib/commentUtils";
+import { CommentSortAlgorithm } from "@/lib/util/commentUtils";
 import {
   ChildNodeProps,
   Comment,

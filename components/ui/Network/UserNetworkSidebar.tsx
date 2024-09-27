@@ -2,8 +2,8 @@
 
 import { useUserInteractions } from "@/components/context/UserInteractionsProvider";
 import { IconType } from "@/lib/interface";
-import { getUserFriends } from "@/lib/networkUtils";
-import { cn, isAuthenticated } from "@/lib/utils";
+import { getUserFriends } from "@/lib/util/networkUtils";
+import { cn, isAuthenticated } from "@/lib/util/utils";
 import {
   ChatBubbleLeftEllipsisIcon,
   CodeBracketIcon,

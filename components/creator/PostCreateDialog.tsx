@@ -1,6 +1,6 @@
 import { saveTextPost } from "@/controllers/PostController";
 import { TextPost } from "@/lib/interface";
-import { GetNameInitials } from "@/lib/utils";
+import { GetNameInitials } from "@/lib/util/utils";
 import { PhotoIcon } from "@heroicons/react/24/outline";
 import { useSession } from "next-auth/react";
 import Link from "next/link";

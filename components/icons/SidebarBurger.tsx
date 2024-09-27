@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { SidebarButtonProps } from "@/lib/interface";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/util/utils";
 
 export const SidebarBurger = (props: SidebarButtonProps) => {
   const { className, callback, mobile } = props;

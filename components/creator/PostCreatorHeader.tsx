@@ -2,7 +2,7 @@
 
 import { savePost } from "@/controllers/PostController";
 import { MediaPost, PostStatus } from "@/lib/interface";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/util/utils";
 import { useMotionValueEvent, useScroll } from "framer-motion";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";

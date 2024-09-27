@@ -1,6 +1,5 @@
-import React from "react";
-import { cn } from "@/lib/utils";
 import { ClassNameProp } from "@/lib/interface";
+import { cn } from "@/lib/util/utils";
 
 function XMarkIcon(props: ClassNameProp) {
   return (

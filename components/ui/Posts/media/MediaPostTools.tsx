@@ -12,7 +12,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { ChildNodeProps, IconType } from "@/lib/interface";
-import { copyToClipboard, getEntireURL } from "@/lib/utils";
+import { copyToClipboard, getEntireURL } from "@/lib/util/utils";
 import {
   ArrowUpTrayIcon,
   ChartBarIcon,

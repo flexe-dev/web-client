@@ -1,5 +1,5 @@
 import { ModalProps } from "@/lib/interface";
-import { nullIfEmpty } from "@/lib/utils";
+import { nullIfEmpty } from "@/lib/util/utils";
 import { motion } from "framer-motion";
 import { useState } from "react";
 import { useDocumentCreator } from "../context/DocumentCreatorProvider";

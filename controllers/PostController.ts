@@ -14,7 +14,7 @@ import {
   getVideoThumbnail,
   nullIfEmpty,
   resizeImage,
-} from "@/lib/utils";
+} from "@/lib/util/utils";
 
 /*
   Post Uploading/Manipulation

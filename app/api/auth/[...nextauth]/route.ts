@@ -1,4 +1,4 @@
-import { baseAuthOptions } from "@/lib/authOptions";
+import { baseAuthOptions } from "@/lib/auth/authOptions";
 import { adapter } from "@/lib/prismadb";
 import NextAuth, { AuthOptions } from "next-auth";
 import { decode, encode } from "next-auth/jwt";

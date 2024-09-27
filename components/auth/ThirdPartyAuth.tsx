@@ -5,7 +5,7 @@ import { FaGithub, FaGoogle } from "react-icons/fa";
 import { Button } from "../ui/button";
 
 import { ClassNameProp } from "@/lib/interface";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/util/utils";
 import { signIn } from "next-auth/react";
 
 interface ThirdPartyProps extends ClassNameProp {

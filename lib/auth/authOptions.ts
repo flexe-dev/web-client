@@ -7,7 +7,7 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import GitHubProvider, { GithubProfile } from "next-auth/providers/github";
 import GoogleProvider, { GoogleProfile } from "next-auth/providers/google";
 import { cookies } from "next/headers";
-import { adapter } from "./prismadb";
+import { adapter } from "../prismadb";
 
 interface SessionUser {
   session: Session;

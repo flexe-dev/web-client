@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/popover";
 import { Colour, ColourType, colours } from "@/lib/colours";
 import { ContentBlockProp } from "@/lib/interface";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/util/utils";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import { omit } from "lodash";
 import { ChevronsUpDown } from "lucide-react";

@@ -2,7 +2,7 @@
 
 import PostDisplayModal from "@/components/ui/Posts/media/PostDisplayModal";
 import { ChildNodeProps, ClassNameProp, MediaPost } from "@/lib/interface";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/util/utils";
 import { ArrowUpTrayIcon, PlusCircleIcon } from "@heroicons/react/24/outline";
 import Image from "next/image";
 import React, { Dispatch, SetStateAction, useState } from "react";

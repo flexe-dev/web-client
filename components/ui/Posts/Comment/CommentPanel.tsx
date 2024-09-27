@@ -1,7 +1,7 @@
 "use client";
 
 import { ChildNodeProps } from "@/lib/interface";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/util/utils";
 import { AnimatePresence, motion } from "framer-motion";
 import { useSearchParams } from "next/navigation";
 import { useState } from "react";

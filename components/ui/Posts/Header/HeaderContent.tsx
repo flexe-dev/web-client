@@ -3,7 +3,7 @@
 import { PostToolsProvider } from "@/components/context/PostOptionToolProvider";
 import { timeAgo } from "@/lib/dateutils";
 import { PostType, UserDisplay } from "@/lib/interface";
-import { cn, GetNameInitials } from "@/lib/utils";
+import { cn, GetNameInitials } from "@/lib/util/utils";
 import {
   ArrowLeftIcon,
   EllipsisHorizontalIcon,

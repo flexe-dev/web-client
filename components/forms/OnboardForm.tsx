@@ -7,7 +7,7 @@ import {
 } from "@/controllers/UserController";
 import { UserProfile } from "@/lib/interface";
 import { supabase } from "@/lib/supabase";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/util/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { debounce } from "lodash";
 import { User } from "next-auth";

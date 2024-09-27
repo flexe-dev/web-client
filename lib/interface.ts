@@ -61,6 +61,8 @@ export interface ProfileExternalLinks {
   instagram?: string;
 }
 
+export type Authentication = "authenticated" | "unauthenticated" | "loading";
+
 //Post Interfaces
 export type PostType = "TEXT" | "MEDIA";
 
@@ -282,6 +284,7 @@ export interface UserNode extends UserNetwork {
 export interface PostNode {
   postId: string;
   userId: string;
+  postDate: Date;
   type: PostType;
   tags: string[];
   tech: string[];
@@ -316,3 +319,51 @@ export interface UserInteractionLookup {
 
 const networkStatus = ["friends", "following", "followed", "none"] as const;
 export type NetworkStatus = (typeof networkStatus)[number];
+
+export enum RecipientType {
+  NETWORK = 0,
+  LIKE = 1,
+  REPOST = 2,
+  COMENT = 3,
+  GROUP = 4,
+  SUGGESTED = 5,
+  PROMOTED = 6,
+  AUTHOR = 7,
+}
+
+export interface UserFeedKey {
+  userId: string;
+  postDate: Date;
+  postId: string;
+}
+
+export interface UserFeed {
+  key: UserFeedKey;
+  readStatus: boolean;
+  postType: PostType;
+  groupId: string;
+}
+
+export interface PostReferenceKey {
+  originatorUserId: string;
+  postId: string;
+}
+
+export interface PostFeedReference {
+  key: PostReferenceKey;
+  userId: string;
+  postReferenceType: RecipientType;
+  postDate: Date;
+}
+
+export interface FeedDisplayReference {
+  userFeed: UserFeed;
+  recipientReferences: Map<RecipientType, PostFeedReference[]>;
+}
+
+export interface FeedPost extends FeedDisplayReference{
+  type: PostType;
+  post: MediaPost | TextPost;
+  users: Map<String, UserDetails>
+}
+

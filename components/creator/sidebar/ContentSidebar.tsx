@@ -1,24 +1,24 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import { cn, getVideoThumbnail, resizeImage } from "@/lib/utils";
-import {
-  PhotoIcon,
-  DocumentIcon,
-  ChevronDoubleRightIcon,
-} from "@heroicons/react/24/outline";
-import { Button } from "../../ui/button";
-import { DropAnimation, defaultDropAnimationSideEffects } from "@dnd-kit/core";
-import { AnimatePresence, motion } from "framer-motion";
-import { useDocumentCreator } from "../../context/DocumentCreatorProvider";
 import {
   PostContentType,
   PostUserMedia,
   PostUserMediaThumbnail,
 } from "@/lib/interface";
+import { cn, getVideoThumbnail, resizeImage } from "@/lib/util/utils";
+import { DropAnimation, defaultDropAnimationSideEffects } from "@dnd-kit/core";
+import {
+  ChevronDoubleRightIcon,
+  DocumentIcon,
+  PhotoIcon,
+} from "@heroicons/react/24/outline";
+import { AnimatePresence, motion } from "framer-motion";
+import React, { useEffect, useState } from "react";
+import { useDocumentCreator } from "../../context/DocumentCreatorProvider";
+import { Button } from "../../ui/button";
+import StylingTab from "./StylingTab";
 import DocumentTab from "./TextTab";
 import ContentTab from "./VisualTab";
-import StylingTab from "./StylingTab";
 
 type SidebarTab = "document" | "photo" | "styling";
 

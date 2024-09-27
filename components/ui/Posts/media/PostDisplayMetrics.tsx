@@ -1,7 +1,7 @@
 "use client";
 
 import { ChildNodeProps, PostInteractionLookup } from "@/lib/interface";
-import { cn, isAuthenticated, renderMetric } from "@/lib/utils";
+import { cn, isAuthenticated, renderMetric } from "@/lib/util/utils";
 import {
   BookmarkIcon,
   ChatBubbleOvalLeftEllipsisIcon,

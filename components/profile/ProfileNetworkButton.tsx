@@ -1,7 +1,7 @@
 "use client";
 
 import { NetworkStatus, UserDetails } from "@/lib/interface";
-import { generateUserDetailNode, getNetworkStatus } from "@/lib/networkUtils";
+import { generateUserDetailNode, getNetworkStatus } from "@/lib/util/networkUtils";
 import { ChevronDownIcon } from "@heroicons/react/24/outline";
 import { useSession } from "next-auth/react";
 import { UseLoginModal } from "../context/LoginModalProvider";

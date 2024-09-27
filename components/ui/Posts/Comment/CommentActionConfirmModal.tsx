@@ -1,5 +1,5 @@
 import { usePostComments } from "@/components/context/PostCommentContext";
-import { toTitleCase } from "@/lib/utils";
+import { toTitleCase } from "@/lib/util/utils";
 import { DialogDescription } from "@radix-ui/react-dialog";
 import { Button } from "../../button";
 import {

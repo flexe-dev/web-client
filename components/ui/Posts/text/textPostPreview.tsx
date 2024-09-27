@@ -7,7 +7,7 @@ import { TextPost } from "@/lib/interface";
 import { EllipsisHorizontalIcon } from "@heroicons/react/24/outline";
 import { User } from "next-auth";
 import Link from "next/link";
-import { timeAgo } from "../../../../lib/dateutils";
+import { timeAgo } from "../../../../lib/util/dateutils";
 import { Button } from "../../button";
 import { TextPostMetricsDisplay } from "./TextPostMetricsDisplay";
 

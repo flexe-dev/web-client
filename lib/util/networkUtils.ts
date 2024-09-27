@@ -2,7 +2,7 @@ import {
   NetworkStatus,
   UserDisplay,
   UserInteractionRelationship,
-} from "./interface";
+} from "../interface";
 
 export const getNetworkStatus = (
   targetID: string,

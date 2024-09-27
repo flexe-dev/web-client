@@ -1,9 +1,7 @@
 import { Draggable } from "@/components/dnd/Draggable";
-import React, { useEffect } from "react";
-import Image from "next/image";
 import { PostUserMedia } from "@/lib/interface";
 import { VideoCameraIcon } from "@heroicons/react/24/outline";
-import { getVideoThumbnail } from "@/lib/utils";
+import Image from "next/image";
 
 interface Props {
   thumbnail?: string;

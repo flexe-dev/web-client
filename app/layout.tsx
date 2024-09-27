@@ -9,9 +9,9 @@ import { UserInteractionsProvider } from "@/components/context/UserInteractionsP
 import { Navbar } from "@/components/navbar";
 import { ThemeProvider } from "@/components/theme/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
-import { baseAuthOptions } from "@/lib/authOptions";
+import { baseAuthOptions } from "@/lib/auth/authOptions";
 import { ChildNodeProps } from "@/lib/interface";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/util/utils";
 import type { Metadata } from "next";
 import { getServerSession } from "next-auth";
 import { Manrope } from "next/font/google";

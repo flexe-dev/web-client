@@ -1,6 +1,7 @@
 import bcrypt from "bcryptjs";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
+import { Authentication } from "../interface";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -39,9 +40,7 @@ export const GetNameInitials = (name?: string | null) => {
     .join("");
 };
 
-export const isAuthenticated = (
-  status: "authenticated" | "unauthenticated" | "loading"
-): boolean => {
+export const isAuthenticated = (status: Authentication): boolean => {
   return status === "authenticated";
 };
 

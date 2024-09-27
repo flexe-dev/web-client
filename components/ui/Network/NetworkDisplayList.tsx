@@ -1,6 +1,6 @@
 import { UserInteractionRelationship, UserNetwork } from "@/lib/interface";
-import { getUserFriends } from "@/lib/networkUtils";
-import { GetNameInitials } from "@/lib/utils";
+import { getUserFriends } from "@/lib/util/networkUtils";
+import { GetNameInitials } from "@/lib/util/utils";
 import { BriefcaseIcon, UsersIcon } from "@heroicons/react/24/outline";
 import { useSession } from "next-auth/react";
 import Link from "next/link";

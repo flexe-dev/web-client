@@ -12,7 +12,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { ChildNodeProps, IconType } from "@/lib/interface";
-import { copyToClipboard } from "@/lib/utils";
+import { copyToClipboard } from "@/lib/util/utils";
 import {
   ClipboardIcon,
   FlagIcon,
