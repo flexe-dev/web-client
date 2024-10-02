@@ -2,8 +2,8 @@ import { ModalProps } from "@/lib/interface";
 import { nullIfEmpty } from "@/lib/util/utils";
 import { motion } from "framer-motion";
 import { useState } from "react";
-import { useDocumentCreator } from "../context/DocumentCreatorProvider";
-import { usePostAuxData } from "../context/PostCreatorAuxProvider";
+import { useDocumentCreator } from "../context/PostCreation/DocumentCreatorProvider";
+import { usePostAuxData } from "../context/PostCreation/MediaPostMetaDataProvider";
 import { InputChips } from "../ui/Gallery/InputChips";
 import { Button } from "../ui/button";
 import { Dialog, DialogContent } from "../ui/dialog";
@@ -16,14 +16,7 @@ interface Props extends ModalProps {
 const PostSubmit = ({ open, callback, onSubmit }: Props) => {
   const { document } = useDocumentCreator();
   const [validationError, setValidationError] = useState<boolean>(false);
-  const {
-    tags: postTags,
-    setTags,
-    title,
-    setTitle,
-    tech: postTech,
-    setTech,
-  } = usePostAuxData();
+  const { tags: postTags, setTags, title, setTitle } = usePostAuxData();
 
   const handleSubmit = async () => {
     if (!nullIfEmpty(title.trim())) {
@@ -47,12 +40,6 @@ const PostSubmit = ({ open, callback, onSubmit }: Props) => {
             setContent={setTags}
             title="Post Tags"
             sectionID="input-tags"
-          />
-          <InputChips
-            content={postTech}
-            setContent={setTech}
-            title="Tech Stack"
-            sectionID="input-tech"
           />
         </motion.div>
         <motion.div className="flex justify-center">

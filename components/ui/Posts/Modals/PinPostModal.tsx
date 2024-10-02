@@ -1,6 +1,6 @@
 "use client";
 
-import { ToolModalProp } from "@/components/context/PostOptionToolProvider";
+import { ToolModalProp } from "@/components/context/User/PostOptionToolProvider";
 import {
   DialogContent,
   DialogHeader,

@@ -1,7 +1,7 @@
 "use client";
 
-import { useAccountPost } from "@/components/context/AccountPostProvider";
-import { ToolModalProp } from "@/components/context/PostOptionToolProvider";
+import { useAccountPost } from "@/components/context/User/AccountPostProvider";
+import { ToolModalProp } from "@/components/context/User/PostOptionToolProvider";
 import { Button } from "@/components/ui/button";
 import {
   DialogContent,

@@ -1,5 +1,5 @@
-import { UseLoginModal } from "@/components/context/LoginModalProvider";
-import { useUserInteractions } from "@/components/context/UserInteractionsProvider";
+import { UseLoginModal } from "@/components/context/User/LoginModalProvider";
+import { useUserInteractions } from "@/components/context/UserInteraction/UserInteractionsProvider";
 import { networkStatusRenderMap } from "@/components/profile/ProfileNetworkButton";
 import { UserDetails } from "@/lib/interface";
 import { getNetworkStatus } from "@/lib/util/networkUtils";

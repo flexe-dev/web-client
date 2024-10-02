@@ -1,8 +1,8 @@
 "use client";
 
 import { MediaPost } from "@/lib/interface";
-import CommentInput from "./Comment/CommentInput";
-import ModalComments from "./Comment/ModalComment";
+import CommentInput from "../Comment/CommentInput";
+import ModalComments from "../Comment/ModalComment";
 import PostMetrics from "./PostMetrics";
 
 interface Props {

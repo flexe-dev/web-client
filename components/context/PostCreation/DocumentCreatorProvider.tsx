@@ -11,7 +11,7 @@ import {
 } from "@/lib/interface";
 import { nanoid } from "nanoid";
 import React, { CSSProperties, createContext, useState } from "react";
-import { DefaultTitle } from "../creator/content/DefaultStyling";
+import { DefaultTitle } from "../../creator/content/DefaultStyling";
 
 interface DocumentCreatorProviderState {
   //Context States

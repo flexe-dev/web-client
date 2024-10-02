@@ -20,13 +20,13 @@ import { arrayMove, sortableKeyboardCoordinates } from "@dnd-kit/sortable";
 import { nanoid } from "nanoid";
 import React, { createContext, useState } from "react";
 import { useMediaQuery } from "react-responsive";
-import { BlockID } from "../creator/blocks/Blocks";
+import { BlockID } from "../../creator/blocks/Blocks";
 import {
   DefaultMedia,
   DefaultSubtitle,
   DefaultText,
   DefaultTitle,
-} from "../creator/content/DefaultStyling";
+} from "../../creator/content/DefaultStyling";
 import { useDocumentCreator } from "./DocumentCreatorProvider";
 
 interface PostDragProviderState {

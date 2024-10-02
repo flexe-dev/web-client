@@ -10,7 +10,7 @@ import React, {
   useEffect,
   useState,
 } from "react";
-import { useUserInteractions } from "./UserInteractionsProvider";
+import { useUserInteractions } from "../UserInteraction/UserInteractionsProvider";
 
 interface AccountProviderState {
   account?: UserDisplay;

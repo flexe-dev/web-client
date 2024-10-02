@@ -1,4 +1,4 @@
-import { useUserFeed } from "@/components/context/UserFeedProvider";
+import { useUserFeed } from "@/components/context/User/UserFeedProvider";
 import { FeedPost } from "@/lib/interface";
 import { useState } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";

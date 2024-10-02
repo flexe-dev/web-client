@@ -16,9 +16,9 @@ import {
 import { useSession } from "next-auth/react";
 import { createContext, useContext, useEffect, useState } from "react";
 import { toast } from "sonner";
+import { useProfilePostViewer } from "../UserInteraction/ProfileViewPostProvider";
+import { useUserInteractions } from "../UserInteraction/UserInteractionsProvider";
 import { useAccountPost } from "./AccountPostProvider";
-import { useProfilePostViewer } from "./ProfileViewPostProvider";
-import { useUserInteractions } from "./UserInteractionsProvider";
 
 interface PostInteractionState {
   metrics: PostMetrics;

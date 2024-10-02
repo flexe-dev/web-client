@@ -1,7 +1,7 @@
 "use client";
 
-import { useAccountUser } from "@/components/context/AccountUserProvider";
-import { usePostComments } from "@/components/context/PostCommentContext";
+import { useAccountUser } from "@/components/context/User/AccountUserProvider";
+import { usePostComments } from "@/components/context/User/PostCommentContext";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { GenerateCommentObject } from "@/lib/util/commentUtils";

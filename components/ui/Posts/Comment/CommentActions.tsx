@@ -1,6 +1,6 @@
-import { useAccountPost } from "@/components/context/AccountPostProvider";
-import { useAccountUser } from "@/components/context/AccountUserProvider";
-import { usePostComments } from "@/components/context/PostCommentContext";
+import { useAccountPost } from "@/components/context/User/AccountPostProvider";
+import { useAccountUser } from "@/components/context/User/AccountUserProvider";
+import { usePostComments } from "@/components/context/User/PostCommentContext";
 import { CommentNode, IconType } from "@/lib/interface";
 import {
   EllipsisHorizontalIcon,

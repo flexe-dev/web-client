@@ -148,11 +148,7 @@ export interface PostAuxilliaryData {
   userID: string;
   dateCreated: Date;
   dateUpdated?: Date;
-  postStatus: PostStatus;
-  title: string;
   tags: string[];
-  tech: string[];
-  thumbnail: string;
 }
 
 export interface PostMetrics {
@@ -167,20 +163,36 @@ export const postTypeMap: Record<PostType, keyof UserPosts> = {
   TEXT: "textPosts",
 };
 
-export interface MediaPost {
-  id: string | undefined;
-  document: Document;
+export interface Post {
+  id?: string;
   auxData: PostAuxilliaryData;
   metrics: PostMetrics;
+  postType: PostType;
 }
 
-export interface TextPost {
-  id: string | undefined;
-  userID: string;
-  textpost: string;
-  createdAt: Date;
-  updatedAt?: Date;
-  metrics: PostMetrics;
+export interface PostReferences {
+  postId?: string;
+  userId: string;
+}
+
+export interface MediaDocument extends PostReferences {
+  document: Document;
+  title: string;
+  postStatus: PostStatus;
+  thumbnail: string;
+}
+
+export interface TextContent extends PostReferences {
+  content: string;
+  media: PostContent[];
+}
+
+export interface MediaPost extends Post {
+  document: MediaDocument;
+}
+
+export interface TextPost extends Post {
+  textContent: TextContent;
 }
 
 export enum PostContentType {
@@ -361,9 +373,8 @@ export interface FeedDisplayReference {
   recipientReferences: Map<RecipientType, PostFeedReference[]>;
 }
 
-export interface FeedPost extends FeedDisplayReference{
+export interface FeedPost extends FeedDisplayReference {
   type: PostType;
   post: MediaPost | TextPost;
-  users: Map<String, UserDetails>
+  users: Map<String, UserDisplay>;
 }
-

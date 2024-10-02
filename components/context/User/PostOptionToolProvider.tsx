@@ -1,5 +1,14 @@
 "use client";
 
+import ArchivePostModal from "@/components/ui/Posts/Modals/ArchivePostModal";
+import BoostPostModal from "@/components/ui/Posts/Modals/BoostPostModal";
+import DeletePostModal from "@/components/ui/Posts/Modals/DeletePostModal";
+import PinPostModal from "@/components/ui/Posts/Modals/PinPostModal";
+import ReportPostModal from "@/components/ui/Posts/Modals/ReportPostModal";
+import SharePostModal from "@/components/ui/Posts/Modals/SharePostModal";
+import { MediaPostTools } from "@/components/ui/Posts/media/MediaPostTools";
+import { TextPostTools } from "@/components/ui/Posts/text/TextPostTools";
+import { Dialog } from "@/components/ui/dialog";
 import { ChildNodeProps, PostType } from "@/lib/interface";
 import { useSession } from "next-auth/react";
 import React, {
@@ -9,15 +18,6 @@ import React, {
   useEffect,
   useState,
 } from "react";
-import ArchivePostModal from "../ui/Posts/Modals/ArchivePostModal";
-import BoostPostModal from "../ui/Posts/Modals/BoostPostModal";
-import DeletePostModal from "../ui/Posts/Modals/DeletePostModal";
-import PinPostModal from "../ui/Posts/Modals/PinPostModal";
-import ReportPostModal from "../ui/Posts/Modals/ReportPostModal";
-import SharePostModal from "../ui/Posts/Modals/SharePostModal";
-import { MediaPostTools } from "../ui/Posts/media/MediaPostTools";
-import { TextPostTools } from "../ui/Posts/text/TextPostTools";
-import { Dialog } from "../ui/dialog";
 
 interface Props extends ChildNodeProps {
   postId: string;

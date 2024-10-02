@@ -2,39 +2,43 @@
 
 import {
   ChildNodeProps,
+  MediaDocument,
   MediaPost,
   PostAuxilliaryData,
   PostStatus,
 } from "@/lib/interface";
-import { createContext, useContext, useState } from "react";
+import {
+  createContext,
+  Dispatch,
+  SetStateAction,
+  useContext,
+  useState,
+} from "react";
+
 interface PostCreatorAuxProviderState
-  extends Omit<PostAuxilliaryData, "userID" | "dateCreated" | "dateUpdated"> {
+  extends Pick<MediaDocument, "thumbnail" | "title" | "postStatus">,
+    Pick<PostAuxilliaryData, "tags"> {
   id: string | undefined;
   onTagDelete: (tag: string) => void;
-  onTechDelete: (tech: string) => void;
-  setThumbnail: React.Dispatch<React.SetStateAction<string>>;
-  setTitle: React.Dispatch<React.SetStateAction<string>>;
-  setTags: React.Dispatch<React.SetStateAction<string[]>>;
-  setTech: React.Dispatch<React.SetStateAction<string[]>>;
-  setID: React.Dispatch<React.SetStateAction<string | undefined>>;
-  setAuxData: (post: MediaPost) => void;
+  setThumbnail: Dispatch<SetStateAction<string>>;
+  setTitle: Dispatch<SetStateAction<string>>;
+  setTags: Dispatch<SetStateAction<string[]>>;
+  setID: Dispatch<SetStateAction<string | undefined>>;
+  setDocumentMetadata: (post: MediaPost) => void;
 }
 
 const initialState: PostCreatorAuxProviderState = {
   id: undefined,
-  title: "",
   tags: [],
-  tech: [],
   thumbnail: "",
+  title: "",
   postStatus: "DRAFT",
   onTagDelete: () => {},
-  onTechDelete: () => {},
   setID: () => {},
   setThumbnail: () => {},
   setTitle: () => {},
   setTags: () => {},
-  setTech: () => {},
-  setAuxData: () => {},
+  setDocumentMetadata: () => {},
 };
 
 export const PostCreatorAuxContext =
@@ -45,32 +49,27 @@ interface Props extends ChildNodeProps {
 }
 
 export const PostCreatorAuxProvider = ({ children, post }: Props) => {
-  const [id, setID] = useState<string | undefined>(post?.id ?? undefined);
-  const [title, setTitle] = useState<string>(post?.auxData?.title ?? "");
+  const [id, setID] = useState<string | undefined>(post?.id);
+  const [title, setTitle] = useState<string>(post?.document.title ?? "");
   const [tags, setTags] = useState<string[]>(post?.auxData?.tags ?? []);
   const [postStatus, setPostStatus] = useState<PostStatus>(
-    post?.auxData?.postStatus ?? "DRAFT"
+    post?.document.postStatus ?? "DRAFT"
   );
-  const [tech, setTech] = useState<string[]>(post?.auxData?.tech ?? []);
+
   const [thumbnail, setThumbnail] = useState<string>(
-    post?.auxData?.thumbnail ?? ""
+    post?.document?.thumbnail ?? ""
   );
 
   const onTagDelete = (deleteNode: string) => {
     setTags(tags.filter((t) => t !== deleteNode));
   };
 
-  const onTechDelete = (deletedNode: string) => {
-    setTech(tech.filter((t) => t !== deletedNode));
-  };
-
-  const setAuxData = (post: MediaPost) => {
+  const setDocumentMetadata = (post: MediaPost) => {
     setID(post.id);
-    setTitle(post.auxData.title);
+    setTitle(post.document.title);
     setTags(post.auxData.tags);
-    setTech(post.auxData.tech);
-    setThumbnail(post.auxData.thumbnail);
-    setPostStatus(post.auxData.postStatus);
+    setThumbnail(post.document.thumbnail);
+    setPostStatus(post.document.postStatus);
   };
 
   return (
@@ -79,17 +78,14 @@ export const PostCreatorAuxProvider = ({ children, post }: Props) => {
         id,
         title,
         tags,
-        tech,
         thumbnail,
         postStatus,
         setID,
         setTitle,
         setTags,
-        setTech,
         setThumbnail,
         onTagDelete,
-        onTechDelete,
-        setAuxData,
+        setDocumentMetadata,
       }}
     >
       {children}

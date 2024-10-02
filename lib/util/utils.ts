@@ -1,7 +1,8 @@
+import { defaultPostMetrics } from "@/controllers/PostController";
 import bcrypt from "bcryptjs";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
-import { Authentication } from "../interface";
+import { Authentication, Post, TextContent, TextPost } from "../interface";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -18,6 +19,15 @@ export function nullIfEmpty(value: string) {
 
 export function toTitleCase(value: string) {
   return value.charAt(0).toUpperCase() + value.slice(1).toLowerCase();
+}
+
+export function sortPostsByDate<T extends Post>(posts: T[]): T[] {
+  return posts.sort((a, b) => {
+    return (
+      new Date(b.auxData.dateCreated).getTime() -
+      new Date(a.auxData.dateCreated).getTime()
+    );
+  });
 }
 
 export function getEntireURL(pathName: string) {
@@ -49,6 +59,23 @@ export const getCookie = (name: string) => {
   const parts = value.split(`; ${name}=`);
 
   if (parts.length === 2) return parts.pop()?.split(";").shift();
+};
+
+export const GenerateTextPost = (
+  content: TextContent,
+  userId: string
+): TextPost => {
+  return {
+    id: undefined,
+    auxData: {
+      userID: userId,
+      dateCreated: new Date(),
+      tags: [],
+    },
+    textContent: content,
+    metrics: defaultPostMetrics,
+    postType: "TEXT",
+  };
 };
 
 export async function resizeImage(

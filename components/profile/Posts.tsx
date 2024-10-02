@@ -2,12 +2,12 @@
 
 import PostDisplayModal from "@/components/ui/Posts/media/PostDisplayModal";
 import { ChildNodeProps, ClassNameProp, MediaPost } from "@/lib/interface";
-import { cn } from "@/lib/util/utils";
+import { cn, sortPostsByDate } from "@/lib/util/utils";
 import { ArrowUpTrayIcon, PlusCircleIcon } from "@heroicons/react/24/outline";
 import Image from "next/image";
 import React, { Dispatch, SetStateAction, useState } from "react";
-import { useProfilePostViewer } from "../context/ProfileViewPostProvider";
-import { useProfileUserViewer } from "../context/ProfileViewUserProvider";
+import { useProfilePostViewer } from "../context/UserInteraction/ProfileViewPostProvider";
+import { useProfileUserViewer } from "../context/UserInteraction/ProfileViewUserProvider";
 import PostCreateDialog from "../creator/PostCreateDialog";
 import { Button } from "../ui/button";
 import { Dialog, DialogTrigger } from "../ui/dialog";
@@ -95,30 +95,25 @@ const UserPosts = ({ onSelect, posts }: UserPostProps) => {
   return (
     <>
       <div className="grid p-8 md:p-2 grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-x-2 justify-center relative my-4 w-full ">
-        {posts
-          .filter((post) => post.auxData.postStatus === "PUBLISHED")
-          .sort(
-            (a, b) =>
-              new Date(b.auxData.dateCreated).getTime() -
-              new Date(a.auxData.dateCreated).getTime()
-          )
-          .map((post) => (
-            <PostTile key={post.id}>
-              <div className="w-full h-full" onClick={() => openPost(post)}>
-                <div className="relative w-full h-full">
-                  <Image
-                    src={
-                      post.auxData.thumbnail ??
-                      process.env.NEXT_PUBLIC_DEFAULT_IMAGE
-                    }
-                    fill
-                    alt={`Post ${post.auxData.title} cover image`}
-                    objectFit="cover"
-                  />
-                </div>
+        {sortPostsByDate(
+          posts.filter((post) => post.document.postStatus === "PUBLISHED")
+        ).map((post) => (
+          <PostTile key={post.id}>
+            <div className="w-full h-full" onClick={() => openPost(post)}>
+              <div className="relative w-full h-full">
+                <Image
+                  src={
+                    post.document.thumbnail ??
+                    process.env.NEXT_PUBLIC_DEFAULT_IMAGE
+                  }
+                  fill
+                  alt={`Post ${post.document.title} cover image`}
+                  objectFit="cover"
+                />
               </div>
-            </PostTile>
-          ))}
+            </div>
+          </PostTile>
+        ))}
       </div>
     </>
   );

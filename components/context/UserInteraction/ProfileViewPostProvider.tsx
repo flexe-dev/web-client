@@ -3,7 +3,7 @@
 import { GetUserPosts } from "@/controllers/PostController";
 import { ChildNodeProps, UserPosts } from "@/lib/interface";
 import React, { createContext, useEffect, useState } from "react";
-import { useAccountPost } from "./AccountPostProvider";
+import { useAccountPost } from "../User/AccountPostProvider";
 import { useProfileUserViewer } from "./ProfileViewUserProvider";
 
 interface ProfileViewerProviderState {

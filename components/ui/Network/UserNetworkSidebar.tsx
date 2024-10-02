@@ -1,6 +1,6 @@
 "use client";
 
-import { useUserInteractions } from "@/components/context/UserInteractionsProvider";
+import { useUserInteractions } from "@/components/context/UserInteraction/UserInteractionsProvider";
 import { IconType } from "@/lib/interface";
 import { getUserFriends } from "@/lib/util/networkUtils";
 import { cn, isAuthenticated } from "@/lib/util/utils";

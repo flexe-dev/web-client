@@ -1,6 +1,6 @@
-import { useAccountPost } from "@/components/context/AccountPostProvider";
-import { PostInteractionProvider } from "@/components/context/PostInteractionContext";
-import { PostToolsProvider } from "@/components/context/PostOptionToolProvider";
+import { useAccountPost } from "@/components/context/User/AccountPostProvider";
+import { PostInteractionProvider } from "@/components/context/User/PostInteractionContext";
+import { PostToolsProvider } from "@/components/context/User/PostOptionToolProvider";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { MediaPost } from "@/lib/interface";
@@ -20,6 +20,7 @@ const PostDisplayModal = (props: Props) => {
   const { userPosts } = useAccountPost();
 
   useEffect(() => {
+    //If the selected post is not in the user's posts, close the modal (ie. Post has been deleted)
     if (
       !userPosts?.mediaPosts.map((post) => post.id).includes(selectedPost?.id)
     ) {
@@ -49,7 +50,7 @@ const PostDisplayModal = (props: Props) => {
             </PostToolsProvider>
             <Link href={`/post/media/${selectedPost.id}`}>
               <h2 className="w-[15rem] truncate text-xl font-bold hover:underline">
-                {selectedPost.auxData.title}{" "}
+                {selectedPost.document.title}{" "}
               </h2>
             </Link>
 

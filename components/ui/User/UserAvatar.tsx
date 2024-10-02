@@ -1,6 +1,6 @@
 "use client";
 
-import { useAccountUser } from "@/components/context/AccountUserProvider";
+import { useAccountUser } from "@/components/context/User/AccountUserProvider";
 import { GetNameInitials } from "@/lib/util/utils";
 import { useSession } from "next-auth/react";
 import { Avatar, AvatarFallback, AvatarImage } from "../avatar";

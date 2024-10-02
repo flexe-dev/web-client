@@ -1,6 +1,9 @@
 "use client";
 
-import { savePost } from "@/controllers/PostController";
+import {
+  defaultPostMetrics,
+  saveMediaPost,
+} from "@/controllers/PostController";
 import { MediaPost, PostStatus } from "@/lib/interface";
 import { cn } from "@/lib/util/utils";
 import { useMotionValueEvent, useScroll } from "framer-motion";
@@ -9,10 +12,10 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
 import CancelWarn from "../CancelWarn";
-import { useAccountPost } from "../context/AccountPostProvider";
-import { useAccountUser } from "../context/AccountUserProvider";
-import { useDocumentCreator } from "../context/DocumentCreatorProvider";
-import { usePostAuxData } from "../context/PostCreatorAuxProvider";
+import { useDocumentCreator } from "../context/PostCreation/DocumentCreatorProvider";
+import { usePostAuxData } from "../context/PostCreation/MediaPostMetaDataProvider";
+import { useAccountPost } from "../context/User/AccountPostProvider";
+import { useAccountUser } from "../context/User/AccountUserProvider";
 import { Button } from "../ui/button";
 import PostSubmit from "./PostSubmit";
 
@@ -23,7 +26,7 @@ export const CreatorHeader = () => {
   const { userPosts, setUserPosts } = useAccountPost();
   const router = useRouter();
   const { scrollY } = useScroll();
-  const { thumbnail, id, title, tags, tech, postStatus, setAuxData } =
+  const { thumbnail, id, title, tags, postStatus, setDocumentMetadata } =
     usePostAuxData();
 
   const [showCancelModal, setShowCancelModal] = useState(false);
@@ -53,27 +56,32 @@ export const CreatorHeader = () => {
 
     if (!user) return false;
     return new Promise<boolean>((resolve, reject) => {
-      const post: Omit<MediaPost, "metrics"> = {
+      const post: MediaPost = {
         id,
-        document,
-        auxData: {
-          userID: user.id,
+        postType: "MEDIA",
+        document: {
+          userId: user.id,
+          postId: id,
+          document,
           title,
-          tags,
-          tech,
-          dateCreated: new Date(),
           thumbnail,
           postStatus: type,
         },
+        auxData: {
+          userID: user.id,
+          tags,
+          dateCreated: new Date(),
+        },
+        metrics: defaultPostMetrics,
       };
 
-      toast.promise(savePost(post, data.token), {
+      toast.promise(saveMediaPost(post, data.token), {
         loading: `Saving Post...`,
         success: (data) => {
           if (!data) return;
 
-          setDocument(data.document);
-          setAuxData(data);
+          setDocument(data.document.document);
+          setDocumentMetadata(data);
           setUserPosts({
             ...userPosts,
             mediaPosts: [data, ...userPosts.mediaPosts],

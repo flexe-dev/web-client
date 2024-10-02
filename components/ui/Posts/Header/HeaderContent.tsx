@@ -1,8 +1,8 @@
 "use client";
 
-import { PostToolsProvider } from "@/components/context/PostOptionToolProvider";
-import { timeAgo } from "@/lib/dateutils";
+import { PostToolsProvider } from "@/components/context/User/PostOptionToolProvider";
 import { PostType, UserDisplay } from "@/lib/interface";
+import { timeAgo } from "@/lib/util/dateutils";
 import { cn, GetNameInitials } from "@/lib/util/utils";
 import {
   ArrowLeftIcon,

@@ -1,6 +1,6 @@
 "use client";
 
-import { useDocumentCreator } from "@/components/context/DocumentCreatorProvider";
+import { useDocumentCreator } from "@/components/context/PostCreation/DocumentCreatorProvider";
 import { Button } from "@/components/ui/button";
 import {
   Select,

@@ -2,7 +2,7 @@
 
 import { ChildNodeProps } from "@/lib/interface";
 import { createContext, useContext, useState } from "react";
-import { LoginModal } from "../auth/LoginModal";
+import { LoginModal } from "../../auth/LoginModal";
 
 interface LoginModalProviderState {
   isOpen: boolean;

@@ -1,4 +1,4 @@
-import { PostInteractionProvider } from "@/components/context/PostInteractionContext";
+import { PostInteractionProvider } from "@/components/context/User/PostInteractionContext";
 import PostComments from "@/components/ui/Posts/Comment/PostComments";
 import { MediaPost } from "@/lib/interface";
 import ErrorPage from "../../../Error";

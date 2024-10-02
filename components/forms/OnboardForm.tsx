@@ -17,7 +17,7 @@ import React, { useCallback, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
-import { useAccountUser } from "../context/AccountUserProvider";
+import { useAccountUser } from "../context/User/AccountUserProvider";
 import { Button } from "../ui/button";
 import {
   Form,

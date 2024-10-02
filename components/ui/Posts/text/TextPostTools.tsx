@@ -1,7 +1,7 @@
 "use client";
 
-import { usePostTools } from "@/components/context/PostOptionToolProvider";
-import { useProfileUserViewer } from "@/components/context/ProfileViewUserProvider";
+import { usePostTools } from "@/components/context/User/PostOptionToolProvider";
+import { useProfileUserViewer } from "@/components/context/UserInteraction/ProfileViewUserProvider";
 import {
   DropdownMenu,
   DropdownMenuContent,

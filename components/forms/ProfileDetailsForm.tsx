@@ -22,7 +22,7 @@ import { supabase } from "@/lib/supabase";
 import { User } from "next-auth";
 import Image from "next/image";
 import { toast } from "sonner";
-import { useAccountUser } from "../context/AccountUserProvider";
+import { useAccountUser } from "../context/User/AccountUserProvider";
 import { Textarea } from "../ui/textarea";
 
 interface Props {
