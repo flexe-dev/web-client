@@ -1,12 +1,15 @@
 "use client";
 
 import { NetworkStatus, UserDetails } from "@/lib/interface";
-import { generateUserDetailNode, getNetworkStatus } from "@/lib/networkUtils";
+import {
+  generateUserDetailNode,
+  getNetworkStatus,
+} from "@/lib/util/networkUtils";
 import { ChevronDownIcon } from "@heroicons/react/24/outline";
 import { useSession } from "next-auth/react";
-import { UseLoginModal } from "../context/LoginModalProvider";
-import { useProfileUserViewer } from "../context/ProfileViewUserProvider";
-import { useUserInteractions } from "../context/UserInteractionsProvider";
+import { UseLoginModal } from "../context/User/LoginModalProvider";
+import { useProfileUserViewer } from "../context/UserInteraction/ProfileViewUserProvider";
+import { useUserInteractions } from "../context/UserInteraction/UserInteractionsProvider";
 import { Button } from "../ui/button";
 import { Dialog } from "../ui/dialog";
 import {

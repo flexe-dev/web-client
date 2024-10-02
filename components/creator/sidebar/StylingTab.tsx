@@ -1,6 +1,6 @@
 "use client";
 
-import { useDocumentCreator } from "@/components/context/DocumentCreatorProvider";
+import { useDocumentCreator } from "@/components/context/PostCreation/DocumentCreatorProvider";
 import { Button } from "@/components/ui/button";
 import {
   Select,
@@ -48,7 +48,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/util/utils";
 import { Property } from "csstype";
 import { divide } from "lodash";
 import React from "react";

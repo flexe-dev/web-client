@@ -1,13 +1,13 @@
 "use client";
 
-import { PostToolsProvider } from "@/components/context/PostOptionToolProvider";
+import { PostToolsProvider } from "@/components/context/User/PostOptionToolProvider";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { Card } from "@/components/ui/card";
 import { TextPost } from "@/lib/interface";
 import { EllipsisHorizontalIcon } from "@heroicons/react/24/outline";
 import { User } from "next-auth";
 import Link from "next/link";
-import { timeAgo } from "../../../../lib/dateutils";
+import { timeAgo } from "../../../../lib/util/dateutils";
 import { Button } from "../../button";
 import { TextPostMetricsDisplay } from "./TextPostMetricsDisplay";
 
@@ -15,6 +15,8 @@ interface TextPostPreviewProps {
   user: User;
   post: TextPost;
 }
+
+//todo: Incorporate Post Media Into Display
 
 const TextPostPreview = (props: TextPostPreviewProps) => {
   const { post, user } = props;
@@ -38,13 +40,13 @@ const TextPostPreview = (props: TextPostPreviewProps) => {
               </div>
               <div className="flex items-center ml-2 space-x-2">
                 <div className="text-secondary-header">
-                  {timeAgo(post.createdAt)}
+                  {timeAgo(post.auxData.dateCreated)}
                 </div>
               </div>
             </div>
           </section>
 
-          <section className="ml-14 mb-8">{post.textpost}</section>
+          <section className="ml-14 mb-8">{post.textContent.content}</section>
         </main>
       </Link>
       <div className="w-full overflow-hidden">

@@ -1,6 +1,6 @@
 "use client";
 import { ChildNodeProps, ClassNameProp } from "@/lib/interface";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/util/utils";
 
 interface Props extends ChildNodeProps, ClassNameProp {}
 export const BlockWrapper = ({ className, children }: Props) => {

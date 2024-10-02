@@ -1,7 +1,7 @@
 "use client";
 
-import { ProfileViewerPostProvider } from "@/components/context/ProfileViewPostProvider";
-import { ProfileViewerUserProvider } from "@/components/context/ProfileViewUserProvider";
+import { ProfileViewerUserProvider } from "@/components/context/UserInteraction/ProfileViewUserProvider";
+import { ProfileViewerPostProvider } from "@/components/context/UserInteraction/ProfileViewPostProvider";
 import ProfileContent from "@/components/profile/ProfileContent";
 import { Footer } from "@/components/ui/Footer";
 import { ChildNodeProps } from "@/lib/interface";

@@ -2,7 +2,7 @@
 
 import { usePostComments } from "@/components/context/PostCommentContext";
 import { SortCriteria, sortTypes } from "@/lib/interface";
-import { toTitleCase } from "@/lib/utils";
+import { toTitleCase } from "@/lib/util/utils";
 import {
   ArrowDownIcon,
   ArrowTrendingUpIcon,

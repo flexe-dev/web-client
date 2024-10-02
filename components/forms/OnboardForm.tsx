@@ -7,7 +7,7 @@ import {
 } from "@/controllers/UserController";
 import { UserProfile } from "@/lib/interface";
 import { supabase } from "@/lib/supabase";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/util/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { debounce } from "lodash";
 import { User } from "next-auth";
@@ -17,7 +17,7 @@ import React, { useCallback, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
-import { useAccountUser } from "../context/AccountUserProvider";
+import { useAccountUser } from "../context/User/AccountUserProvider";
 import { Button } from "../ui/button";
 import {
   Form,

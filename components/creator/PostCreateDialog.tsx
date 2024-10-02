@@ -1,13 +1,13 @@
 import { saveTextPost } from "@/controllers/PostController";
-import { TextPost } from "@/lib/interface";
-import { GetNameInitials } from "@/lib/utils";
+import { TextContent } from "@/lib/interface";
+import { GenerateTextPost, GetNameInitials } from "@/lib/util/utils";
 import { PhotoIcon } from "@heroicons/react/24/outline";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import React, { SetStateAction, useState } from "react";
 import { toast } from "sonner";
-import { useAccountPost } from "../context/AccountPostProvider";
-import { useAccountUser } from "../context/AccountUserProvider";
+import { useAccountPost } from "../context/User/AccountPostProvider";
+import { useAccountUser } from "../context/User/AccountUserProvider";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Button } from "../ui/button";
 import {
@@ -45,13 +45,15 @@ const PostCreateDialog = ({ dispatch }: DialogProps) => {
     }
 
     return new Promise<boolean>((resolve, reject) => {
-      const textPost: Omit<TextPost, "metrics"> = {
-        id: undefined,
-        userID: user?.id,
-        createdAt: new Date(),
-        textpost: newTextPost,
+      const content: TextContent = {
+        content: newTextPost,
+        media: [],
+        userId: data.user.id,
       };
-      toast.promise(saveTextPost(textPost, data.token), {
+
+      const post = GenerateTextPost(content, data.user.id);
+
+      toast.promise(saveTextPost(post, data.token), {
         loading: `Posting...`,
         success: (data) => {
           if (!data) return;

@@ -1,9 +1,9 @@
 "use client";
 
-import { usePostMetrics } from "@/components/context/PostInteractionContext";
-import { useUserInteractions } from "@/components/context/UserInteractionsProvider";
+import { usePostMetrics } from "@/components/context/User/PostInteractionContext";
+import { useUserInteractions } from "@/components/context/UserInteraction/UserInteractionsProvider";
 import { PostInteractionLookup } from "@/lib/interface";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/util/utils";
 import { ChatBubbleLeftEllipsisIcon } from "@heroicons/react/24/outline";
 import { TooltipProvider } from "@radix-ui/react-tooltip";
 import { BookmarkIcon, HeartIcon, ShareIcon } from "lucide-react";

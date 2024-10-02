@@ -1,11 +1,11 @@
 "use client";
 
-import { useAccountUser } from "@/components/context/AccountUserProvider";
-import { usePostComments } from "@/components/context/PostCommentContext";
+import { useAccountUser } from "@/components/context/User/AccountUserProvider";
+import { usePostComments } from "@/components/context/User/PostCommentContext";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { GenerateCommentObject } from "@/lib/commentUtils";
-import { cn, nullIfEmpty } from "@/lib/utils";
+import { GenerateCommentObject } from "@/lib/util/commentUtils";
+import { cn, nullIfEmpty } from "@/lib/util/utils";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import { KeyboardEvent, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";

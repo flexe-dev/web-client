@@ -14,13 +14,13 @@ import {
   getVideoThumbnail,
   nullIfEmpty,
   resizeImage,
-} from "@/lib/utils";
+} from "@/lib/util/utils";
 
 /*
   Post Uploading/Manipulation
 */
 
-const defaultPostMetrics: PostMetrics = {
+export const defaultPostMetrics: PostMetrics = {
   likeCount: 0,
   commentCount: 0,
   viewCount: 0,
@@ -28,18 +28,19 @@ const defaultPostMetrics: PostMetrics = {
 };
 
 export const saveTextPost = async (
-  textPost: Omit<TextPost, "metrics">,
+  textPost: TextPost,
   token?: string
 ): Promise<TextPost | undefined> => {
   const textPostID = textPost.id ?? (await generateMongoID());
   if (!textPostID) return;
 
-  const textPostToUpload: TextPost = {
+  const postToUpload: TextPost = {
+    ...textPost,
     id: textPostID,
-    userID: textPost.userID,
-    createdAt: textPost.createdAt,
-    textpost: textPost.textpost,
-    metrics: defaultPostMetrics,
+    textContent: {
+      ...textPost.textContent,
+      postId: textPostID,
+    },
   };
 
   try {
@@ -51,7 +52,7 @@ export const saveTextPost = async (
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify(textPostToUpload),
+        body: JSON.stringify(postToUpload),
       }
     );
     return await response.json();
@@ -60,29 +61,33 @@ export const saveTextPost = async (
   }
 };
 
-export const savePost = async (
-  post: Omit<MediaPost, "metrics">,
+export const saveMediaPost = async (
+  post: MediaPost,
   token?: string
 ): Promise<MediaPost | undefined> => {
   const postID = post.id ?? (await generateMongoID());
   if (!postID) return;
 
   const uploadedDocument = await generateNewContentFromUpload(
-    post.document,
+    post.document.document,
     postID,
     post.auxData.userID
   );
   const thumbnail =
-    nullIfEmpty(post.auxData.thumbnail) ??
+    nullIfEmpty(post.document.thumbnail) ??
     (await handlePostThumbnail(uploadedDocument, postID, post.auxData.userID));
 
   const postToUpload: MediaPost = {
     id: postID,
+    postType: "MEDIA",
     auxData: {
       ...post.auxData,
-      thumbnail: thumbnail,
     },
-    document: uploadedDocument,
+    document: {
+      ...post.document,
+      document: uploadedDocument,
+      thumbnail,
+    },
     metrics: defaultPostMetrics,
   };
 

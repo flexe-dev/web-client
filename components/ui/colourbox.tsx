@@ -16,13 +16,13 @@ import {
 } from "@/components/ui/popover";
 import { Colour, ColourType, colours } from "@/lib/colours";
 import { ContentBlockProp } from "@/lib/interface";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/util/utils";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import { omit } from "lodash";
 import { ChevronsUpDown } from "lucide-react";
 import { useTheme } from "next-themes";
 import React, { useEffect, useState } from "react";
-import { useDocumentCreator } from "../context/DocumentCreatorProvider";
+import { useDocumentCreator } from "../context/PostCreation/DocumentCreatorProvider";
 import { ScrollArea } from "./scroll-area";
 import { Separator } from "./separator";
 import {

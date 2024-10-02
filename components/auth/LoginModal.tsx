@@ -2,7 +2,7 @@ import { UserIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React from "react";
-import { UseLoginModal } from "../context/LoginModalProvider";
+import { UseLoginModal } from "../context/User/LoginModalProvider";
 import { Button } from "../ui/button";
 import { Dialog, DialogContent } from "../ui/dialog";
 import ThirdParty from "./ThirdPartyAuth";

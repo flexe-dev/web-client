@@ -7,7 +7,7 @@ import {
   mobileLinkVars,
 } from "@/app/gallery/animationValues";
 import { ChildNodeProps, ClassNameProp } from "@/lib/interface";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/util/utils";
 import { Bars3CenterLeftIcon } from "@heroicons/react/24/outline";
 import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useState } from "react";

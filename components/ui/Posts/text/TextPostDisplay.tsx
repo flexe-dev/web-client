@@ -1,4 +1,4 @@
-import { PostInteractionProvider } from "@/components/context/PostInteractionContext";
+import { PostInteractionProvider } from "@/components/context/User/PostInteractionContext";
 import { TextPost } from "@/lib/interface";
 import PostComments from "../Comment/PostComments";
 import { TextDisplayContent } from "./TextDisplayContext";

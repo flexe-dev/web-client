@@ -6,7 +6,7 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import ErrorPage from "../Error";
-import { useProfileUserViewer } from "../context/ProfileViewUserProvider";
+import { useProfileUserViewer } from "../context/UserInteraction/ProfileViewUserProvider";
 
 export const profileTabs = ["readme", "posts", "activity"] as const;
 export type Tabs = (typeof profileTabs)[number];

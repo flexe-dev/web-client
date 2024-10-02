@@ -1,6 +1,6 @@
 "use client";
 
-import { useAccountUser } from "@/components/context/AccountUserProvider";
+import { useAccountUser } from "@/components/context/User/AccountUserProvider";
 import { images } from "@/lib/placeholder";
 import { motion } from "framer-motion";
 import { GalleryTile } from "./GalleryTile";

@@ -1,7 +1,8 @@
 import TextPostPreview from "@/components/ui/Posts/text/textPostPreview";
-import { PostInteractionProvider } from "../context/PostInteractionContext";
-import { useProfilePostViewer } from "../context/ProfileViewPostProvider";
-import { useProfileUserViewer } from "../context/ProfileViewUserProvider";
+import { sortPostsByDate } from "@/lib/util/utils";
+import { PostInteractionProvider } from "../context/User/PostInteractionContext";
+import { useProfilePostViewer } from "../context/UserInteraction/ProfileViewPostProvider";
+import { useProfileUserViewer } from "../context/UserInteraction/ProfileViewUserProvider";
 
 export const Activity = () => {
   const { fetchedUser } = useProfileUserViewer();
@@ -13,21 +14,16 @@ export const Activity = () => {
 
   return (
     <div className="w-full mt-4 px-2">
-      {textPosts
-        .sort(
-          (a, b) =>
-            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-        )
-        .map((post) => (
-          <PostInteractionProvider
-            key={post.id}
-            postId={post.id!}
-            postMetrics={post.metrics}
-            postType="TEXT"
-          >
-            <TextPostPreview user={user} post={post} />
-          </PostInteractionProvider>
-        ))}
+      {sortPostsByDate(textPosts).map((post) => (
+        <PostInteractionProvider
+          key={post.id}
+          postId={post.id!}
+          postMetrics={post.metrics}
+          postType="TEXT"
+        >
+          <TextPostPreview user={user} post={post} />
+        </PostInteractionProvider>
+      ))}
     </div>
   );
 };

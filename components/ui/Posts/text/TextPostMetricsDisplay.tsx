@@ -1,8 +1,8 @@
-import { UseLoginModal } from "@/components/context/LoginModalProvider";
-import { usePostMetrics } from "@/components/context/PostInteractionContext";
-import { useUserInteractions } from "@/components/context/UserInteractionsProvider";
+import { UseLoginModal } from "@/components/context/User/LoginModalProvider";
+import { usePostMetrics } from "@/components/context/User/PostInteractionContext";
+import { useUserInteractions } from "@/components/context/UserInteraction/UserInteractionsProvider";
 import { IconType, PostInteractionLookup } from "@/lib/interface";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/util/utils";
 import {
   BookmarkIcon,
   ChatBubbleLeftEllipsisIcon,

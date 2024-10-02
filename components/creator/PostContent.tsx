@@ -7,8 +7,8 @@ import {
 } from "@dnd-kit/sortable";
 import { AnimatePresence } from "framer-motion";
 import React from "react";
-import { useDocumentCreator } from "../context/DocumentCreatorProvider";
-import { useBlockDrag } from "../context/PostDragProvider";
+import { useDocumentCreator } from "../context/PostCreation/DocumentCreatorProvider";
+import { useBlockDrag } from "../context/PostCreation/PostDragProvider";
 import { Switch } from "../ui/switch";
 import { CreatorHeader } from "./PostCreatorHeader";
 import BlockPreview from "./blocks/BlockPreview";

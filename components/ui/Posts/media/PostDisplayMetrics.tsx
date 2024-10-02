@@ -1,16 +1,16 @@
 "use client";
 
 import { ChildNodeProps, PostInteractionLookup } from "@/lib/interface";
-import { cn, isAuthenticated, renderMetric } from "@/lib/utils";
+import { cn, isAuthenticated, renderMetric } from "@/lib/util/utils";
 import {
   BookmarkIcon,
   ChatBubbleOvalLeftEllipsisIcon,
   ShareIcon,
 } from "@heroicons/react/24/outline";
 
-import { UseLoginModal } from "@/components/context/LoginModalProvider";
-import { usePostMetrics } from "@/components/context/PostInteractionContext";
-import { useUserInteractions } from "@/components/context/UserInteractionsProvider";
+import { UseLoginModal } from "@/components/context/User/LoginModalProvider";
+import { usePostMetrics } from "@/components/context/User/PostInteractionContext";
+import { useUserInteractions } from "@/components/context/UserInteraction/UserInteractionsProvider";
 import { AnimatePresence, motion } from "framer-motion";
 import { ChevronLeftIcon, HeartIcon } from "lucide-react";
 import { nanoid } from "nanoid";

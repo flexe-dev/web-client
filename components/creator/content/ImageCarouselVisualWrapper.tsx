@@ -1,7 +1,7 @@
 import { ChildNodeProps } from "@/lib/interface";
-import { useState, useEffect } from "react";
+import { cn } from "@/lib/util/utils";
 import { useDroppable } from "@dnd-kit/core";
-import { cn } from "@/lib/utils";
+import { useEffect, useState } from "react";
 
 interface Props extends ChildNodeProps {
   id: string;

@@ -1,18 +1,18 @@
-import { useDocumentCreator } from "@/components/context/DocumentCreatorProvider";
+import { useDocumentCreator } from "@/components/context/PostCreation/DocumentCreatorProvider";
 import { DragHandle } from "@/components/dnd/Sortable";
-import { ChildNodeProps, ClassNameProp, ContentType } from "@/lib/interface";
-import React from "react";
-import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
-import { XMarkIcon } from "@heroicons/react/24/outline";
-import { toast } from "sonner";
 import {
   AlertDialog,
   AlertDialogContent,
   AlertDialogFooter,
   AlertDialogHeader,
 } from "@/components/ui/alert-dialog";
+import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
+import { ChildNodeProps, ClassNameProp, ContentType } from "@/lib/interface";
+import { cn } from "@/lib/util/utils";
+import { XMarkIcon } from "@heroicons/react/24/outline";
+import React from "react";
+import { toast } from "sonner";
 
 interface Props extends ChildNodeProps, ClassNameProp {
   noDrag?: true;

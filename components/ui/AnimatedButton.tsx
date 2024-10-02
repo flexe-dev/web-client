@@ -1,7 +1,6 @@
-import React from "react";
-import { Button } from "./button";
-import { cn } from "@/lib/utils";
 import { ChildNodeProps, ClassNameProp } from "@/lib/interface";
+import { cn } from "@/lib/util/utils";
+import { Button } from "./button";
 interface ButtonWrapperProps extends ClassNameProp, ChildNodeProps {}
 
 export const BgTransitionButton = (props: ButtonWrapperProps) => {

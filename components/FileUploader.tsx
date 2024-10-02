@@ -1,8 +1,7 @@
-import { cn } from "@/lib/utils";
+import { ChildNodeProps } from "@/lib/interface";
+import { cn } from "@/lib/util/utils";
 import React, { useState } from "react";
 import { Input } from "./ui/input";
-import { toast } from "sonner";
-import { ChildNodeProps } from "@/lib/interface";
 
 interface Props extends ChildNodeProps {
   fileSizeLimit?: number;
@@ -12,11 +11,7 @@ interface Props extends ChildNodeProps {
 }
 
 export const FileUploader = (props: Props) => {
-  const {
-    onFileUpload,
-    className,
-    children,
-  } = props;
+  const { onFileUpload, className, children } = props;
 
   const [isDragging, setIsDragging] = useState(false);
 

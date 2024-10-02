@@ -1,6 +1,6 @@
-import React from "react";
-import { cn } from "@/lib/utils";
 import { ClassNameProp } from "@/lib/interface";
+import { cn } from "@/lib/util/utils";
+import React from "react";
 
 export const AppLogo = (props: ClassNameProp): React.ReactNode => {
   return (

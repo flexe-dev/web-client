@@ -1,11 +1,11 @@
 "use client";
 
-import { UseLoginModal } from "@/components/context/LoginModalProvider";
-import { usePostComments } from "@/components/context/PostCommentContext";
-import { getTotalChildren } from "@/lib/commentUtils";
-import { timeAgo } from "@/lib/dateutils";
+import { UseLoginModal } from "@/components/context/User/LoginModalProvider";
+import { usePostComments } from "@/components/context/User/PostCommentContext";
 import { CommentNode, CommentReactType } from "@/lib/interface";
-import { cn, GetNameInitials, isAuthenticated } from "@/lib/utils";
+import { getTotalChildren } from "@/lib/util/commentUtils";
+import { timeAgo } from "@/lib/util/dateutils";
+import { cn, GetNameInitials, isAuthenticated } from "@/lib/util/utils";
 import {
   ArrowDownIcon,
   ArrowRightCircleIcon,

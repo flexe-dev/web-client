@@ -1,17 +1,17 @@
 import { OnboardModal } from "@/components/auth/OnboardModal";
 
-import { AccountPostProvider } from "@/components/context/AccountPostProvider";
-import { AccountUserProvider } from "@/components/context/AccountUserProvider";
-import DndContext from "@/components/context/DndProvider";
-import { LoginModalProvider } from "@/components/context/LoginModalProvider";
-import SessionProvider from "@/components/context/SessionProvider";
-import { UserInteractionsProvider } from "@/components/context/UserInteractionsProvider";
+import DndContext from "@/components/context/PostCreation/DndProvider";
+import { AccountPostProvider } from "@/components/context/User/AccountPostProvider";
+import { AccountUserProvider } from "@/components/context/User/AccountUserProvider";
+import { LoginModalProvider } from "@/components/context/User/LoginModalProvider";
+import SessionProvider from "@/components/context/User/SessionProvider";
+import { UserInteractionsProvider } from "@/components/context/UserInteraction/UserInteractionsProvider";
 import { Navbar } from "@/components/navbar";
 import { ThemeProvider } from "@/components/theme/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
-import { baseAuthOptions } from "@/lib/authOptions";
+import { baseAuthOptions } from "@/lib/auth/authOptions";
 import { ChildNodeProps } from "@/lib/interface";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/util/utils";
 import type { Metadata } from "next";
 import { getServerSession } from "next-auth";
 import { Manrope } from "next/font/google";

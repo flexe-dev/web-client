@@ -1,7 +1,7 @@
 "use client";
 
-import { usePostTools } from "@/components/context/PostOptionToolProvider";
-import { useProfileUserViewer } from "@/components/context/ProfileViewUserProvider";
+import { usePostTools } from "@/components/context/User/PostOptionToolProvider";
+import { useProfileUserViewer } from "@/components/context/UserInteraction/ProfileViewUserProvider";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -12,7 +12,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { ChildNodeProps, IconType } from "@/lib/interface";
-import { copyToClipboard } from "@/lib/utils";
+import { copyToClipboard } from "@/lib/util/utils";
 import {
   ClipboardIcon,
   FlagIcon,

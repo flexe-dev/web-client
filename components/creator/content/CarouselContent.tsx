@@ -8,7 +8,7 @@ todo:
   - Fix Resizing Issue from Image to Carousel On Mac 
 */
 
-import { useDocumentCreator } from "@/components/context/DocumentCreatorProvider";
+import { useDocumentCreator } from "@/components/context/PostCreation/DocumentCreatorProvider";
 import { SortableItem } from "@/components/dnd/Sortable";
 import { Button } from "@/components/ui/button";
 import {
