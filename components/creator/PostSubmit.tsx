@@ -5,9 +5,9 @@ import { useState } from "react";
 import { useDocumentCreator } from "../context/PostCreation/DocumentCreatorProvider";
 import { usePostAuxData } from "../context/PostCreation/MediaPostMetaDataProvider";
 import { InputChips } from "../ui/Gallery/InputChips";
-import { Button } from "../ui/button";
-import { Dialog, DialogContent } from "../ui/dialog";
-import { Input } from "../ui/input";
+import { Button } from "../ui/Shared/button";
+import { Dialog, DialogContent } from "../ui/Shared/dialog";
+import { Input } from "../ui/Shared/input";
 
 interface Props extends ModalProps {
   onSubmit: () => void;

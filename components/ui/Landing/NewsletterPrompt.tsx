@@ -1,9 +1,9 @@
 "use client";
 
 import React, { useState } from "react";
-import { Input } from "../input";
-import { Button } from "../button";
 import { toast } from "sonner";
+import { Button } from "../Shared/button";
+import { Input } from "../Shared/input";
 const NewsletterPrompt = () => {
   const [email, setEmail] = useState<string>("");
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;

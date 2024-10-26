@@ -1,14 +1,12 @@
-import React from "react";
 import {
   Select,
   SelectContent,
   SelectGroup,
   SelectItem,
+  SelectLabel,
   SelectTrigger,
   SelectValue,
-  SelectLabel,
-  SelectSeparator,
-} from "@/components/ui/select";
+} from "@/components/ui/Shared/select";
 
 interface SelectProps {
   options: string[];

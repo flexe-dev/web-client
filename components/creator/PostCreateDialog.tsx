@@ -8,15 +8,15 @@ import React, { SetStateAction, useState } from "react";
 import { toast } from "sonner";
 import { useAccountPost } from "../context/User/AccountPostProvider";
 import { useAccountUser } from "../context/User/AccountUserProvider";
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
-import { Button } from "../ui/button";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/Shared/avatar";
+import { Button } from "../ui/Shared/button";
 import {
   DialogContent,
   DialogHeader,
   DialogOverlay,
   DialogPortal,
-} from "../ui/dialog";
-import { Textarea } from "../ui/textarea";
+} from "../ui/Shared/dialog";
+import { Textarea } from "../ui/Shared/textarea";
 
 interface DialogProps {
   dispatch: React.Dispatch<SetStateAction<boolean>>;

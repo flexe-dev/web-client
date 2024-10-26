@@ -16,7 +16,7 @@ import { useDocumentCreator } from "../context/PostCreation/DocumentCreatorProvi
 import { usePostAuxData } from "../context/PostCreation/MediaPostMetaDataProvider";
 import { useAccountPost } from "../context/User/AccountPostProvider";
 import { useAccountUser } from "../context/User/AccountUserProvider";
-import { Button } from "../ui/button";
+import { Button } from "../ui/Shared/button";
 import PostSubmit from "./PostSubmit";
 
 export const CreatorHeader = () => {

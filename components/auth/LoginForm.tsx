@@ -4,9 +4,9 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import React, { useEffect } from "react";
 import { toast } from "sonner";
-import { Button } from "../ui/button";
-import { Input } from "../ui/input";
-import { Label } from "../ui/label";
+import { Button } from "../ui/Shared/button";
+import { Input } from "../ui/Shared/input";
+import { Label } from "../ui/Shared/label";
 import ThirdParty from "./ThirdPartyAuth";
 function LoginForm() {
   const searchParams = useSearchParams();

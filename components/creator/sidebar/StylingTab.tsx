@@ -1,14 +1,14 @@
 "use client";
 
 import { useDocumentCreator } from "@/components/context/PostCreation/DocumentCreatorProvider";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/Shared/button";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from "@/components/ui/Shared/select";
 import {
   ChildNodeProps,
   ClassNameProp,
@@ -39,15 +39,15 @@ import {
   TbBorderCornerSquare,
 } from "react-icons/tb";
 
-import { ColourBox } from "@/components/ui/colourbox";
-import { Input } from "@/components/ui/input";
-import { Switch } from "@/components/ui/switch";
+import { ColourBox } from "@/components/ui/Shared/colourbox";
+import { Input } from "@/components/ui/Shared/input";
+import { Switch } from "@/components/ui/Shared/switch";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "@/components/ui/tooltip";
+} from "@/components/ui/Shared/tooltip";
 import { cn } from "@/lib/util/utils";
 import { Property } from "csstype";
 import { divide } from "lodash";

@@ -1,7 +1,7 @@
 "use client";
 
 import { SortableItem } from "@/components/dnd/Sortable";
-import { Skeleton } from "@/components/ui/skeleton";
+import { Skeleton } from "@/components/ui/Shared/skeleton";
 import { ContentBlockProp, PostUserMedia } from "@/lib/interface";
 import { cn, getVideoThumbnail } from "@/lib/util/utils";
 import { VideoCameraIcon } from "@heroicons/react/24/outline";

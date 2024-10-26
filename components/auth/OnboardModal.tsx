@@ -7,7 +7,7 @@ import {
   AlertDialogContent,
   AlertDialogDescription,
   AlertDialogHeader,
-} from "../ui/alert-dialog";
+} from "../ui/Shared/alert-dialog";
 
 export const OnboardModal = () => {
   const { account } = useAccountUser();

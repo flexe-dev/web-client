@@ -9,7 +9,7 @@ import { AnimatePresence } from "framer-motion";
 import React from "react";
 import { useDocumentCreator } from "../context/PostCreation/DocumentCreatorProvider";
 import { useBlockDrag } from "../context/PostCreation/PostDragProvider";
-import { Switch } from "../ui/switch";
+import { Switch } from "../ui/Shared/switch";
 import { CreatorHeader } from "./PostCreatorHeader";
 import BlockPreview from "./blocks/BlockPreview";
 import Blocks, { BlockID } from "./blocks/Blocks";

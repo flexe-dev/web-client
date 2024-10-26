@@ -2,7 +2,7 @@
 
 import { useDocumentCreator } from "@/components/context/PostCreation/DocumentCreatorProvider";
 import { SortableItem } from "@/components/dnd/Sortable";
-import { Textarea } from "@/components/ui/textarea";
+import { Textarea } from "@/components/ui/Shared/textarea";
 import { ContentBlockProp } from "@/lib/interface";
 import React from "react";
 import Linkify from "react-linkify";

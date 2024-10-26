@@ -1,11 +1,11 @@
 "use client";
 
-import React, { useState } from "react";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
-import { Input } from "../input";
-import Link from "next/link";
-import { SearchResults } from "./SearchResults";
 import { AnimatePresence } from "framer-motion";
+import Link from "next/link";
+import { useState } from "react";
+import { Input } from "../Shared/input";
+import { SearchResults } from "./SearchResults";
 export const NavSearch = () => {
   const [inFocus, setInFocus] = useState(false);
   const [search, setSearch] = useState("");

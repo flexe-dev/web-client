@@ -1,11 +1,11 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/Shared/button";
 import { defaultPicture } from "@/lib/util/utils";
 import Image from "next/image";
 import { useState } from "react";
 import { useProfileUserViewer } from "../context/UserInteraction/ProfileViewUserProvider";
-import { Skeleton } from "../ui/skeleton";
+import { Skeleton } from "../ui/Shared/skeleton";
 import { EditProfileModal } from "./EditProfileModal";
 import ProfileDetails from "./ProfileDetails";
 import ProfileFollowers from "./ProfileFollowers";

@@ -1,5 +1,5 @@
-import { Footer } from "../Footer";
-import BackgroundGrid from "../GridBackground";
+import { Footer } from "../Shared/Footer";
+import BackgroundGrid from "../Shared/GridBackground";
 import FeaturedSnippets from "./FeaturedSnippets";
 import NewsletterPrompt from "./NewsletterPrompt";
 

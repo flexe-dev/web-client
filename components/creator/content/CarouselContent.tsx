@@ -10,13 +10,13 @@ todo:
 
 import { useDocumentCreator } from "@/components/context/PostCreation/DocumentCreatorProvider";
 import { SortableItem } from "@/components/dnd/Sortable";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/Shared/button";
 import {
   Carousel,
   CarouselApi,
   CarouselContent,
   CarouselItem,
-} from "@/components/ui/carousel";
+} from "@/components/ui/Shared/carousel";
 import {
   ContentBlockOptions,
   ContentBlockProp,

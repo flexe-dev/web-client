@@ -12,9 +12,9 @@ import { Bars3CenterLeftIcon } from "@heroicons/react/24/outline";
 import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import { useMediaQuery } from "react-responsive";
-import { BgTransitionButton } from "../AnimatedButton";
-import { Button } from "../button";
-import { ScrollArea } from "../scroll-area";
+import { BgTransitionButton } from "../Shared/AnimatedButton";
+import { Button } from "../Shared/button";
+import { ScrollArea } from "../Shared/scroll-area";
 import { InputChips } from "./InputChips";
 interface AnimatedContainerProps extends ChildNodeProps, ClassNameProp {}
 

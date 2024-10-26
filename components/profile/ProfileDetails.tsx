@@ -4,8 +4,8 @@ import { nullIfEmpty } from "@/lib/util/utils";
 import { BriefcaseIcon } from "@heroicons/react/24/outline";
 import { Building, CircleDashed, MapPinIcon } from "lucide-react";
 import { useProfileUserViewer } from "../context/UserInteraction/ProfileViewUserProvider";
-import { Separator } from "../ui/separator";
-import { Skeleton } from "../ui/skeleton";
+import { Separator } from "../ui/Shared/separator";
+import { Skeleton } from "../ui/Shared/skeleton";
 
 const ProfileDetails = () => {
   const { fetchedUser: account, loading } = useProfileUserViewer();

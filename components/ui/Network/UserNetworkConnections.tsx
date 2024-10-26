@@ -5,7 +5,7 @@ import { cn } from "@/lib/util/utils";
 import { useSession } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import React, { useEffect } from "react";
-import { Button } from "../button";
+import { Button } from "../Shared/button";
 import { NetworkDisplayList } from "./NetworkDisplayList";
 
 interface Props {
@@ -30,12 +30,13 @@ export const UserNetworkConnections: React.FC<Props> = ({ network }) => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const tab = searchParams.get("tab") as NetworkTabs | null;
-
   useEffect(() => {
     if (!tab || !networkTabs.includes(tab)) {
       router.replace(`/network/${network.username}?tab=followers`);
     }
   }, [tab, router, network.username]);
+
+  if (!tab) return null;
 
   return (
     <div className="flex flex-col w-full px-8 py-4">

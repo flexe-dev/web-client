@@ -10,15 +10,15 @@ import { useSession } from "next-auth/react";
 import { UseLoginModal } from "../context/User/LoginModalProvider";
 import { useProfileUserViewer } from "../context/UserInteraction/ProfileViewUserProvider";
 import { useUserInteractions } from "../context/UserInteraction/UserInteractionsProvider";
-import { Button } from "../ui/button";
-import { Dialog } from "../ui/dialog";
+import { Button } from "../ui/Shared/button";
+import { Dialog } from "../ui/Shared/dialog";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "../ui/dropdown-menu";
-import { Skeleton } from "../ui/skeleton";
+} from "../ui/Shared/dropdown-menu";
+import { Skeleton } from "../ui/Shared/skeleton";
 
 export const networkStatusRenderMap: Record<NetworkStatus, string> = {
   friends: "Friends",

@@ -3,7 +3,7 @@
 import { useAccountUser } from "@/components/context/User/AccountUserProvider";
 import { GetNameInitials } from "@/lib/util/utils";
 import { useSession } from "next-auth/react";
-import { Avatar, AvatarFallback, AvatarImage } from "../avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "../Shared/avatar";
 import { UserDropdown } from "./UserDropdown";
 
 function UserAvatar() {

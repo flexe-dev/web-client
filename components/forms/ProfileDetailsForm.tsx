@@ -5,7 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { Button } from "../ui/button";
+import { Button } from "../ui/Shared/button";
 import {
   Form,
   FormControl,
@@ -13,17 +13,18 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "../ui/form";
-import { Input } from "../ui/input";
-import { Label } from "../ui/label";
+} from "../ui/Shared/form";
+import { Input } from "../ui/Shared/input";
+import { Label } from "../ui/Shared/label";
 
 import { UserProfile } from "@/lib/interface";
 import { supabase } from "@/lib/supabase";
 import { User } from "next-auth";
+import { useSession } from "next-auth/react";
 import Image from "next/image";
 import { toast } from "sonner";
 import { useAccountUser } from "../context/User/AccountUserProvider";
-import { Textarea } from "../ui/textarea";
+import { Textarea } from "../ui/Shared/textarea";
 
 interface Props {
   onSuccess: React.Dispatch<React.SetStateAction<boolean>>;
@@ -47,6 +48,7 @@ const formSchema = z.object({
 
 export const ProfileDetailsForm = (props: Props) => {
   const { account, setAccount } = useAccountUser();
+  const { data } = useSession();
   if (!account) return null;
 
   const { user, profile } = account;
@@ -80,10 +82,13 @@ export const ProfileDetailsForm = (props: Props) => {
         bio: values.bio,
       };
 
-      const response = await updateUser({
-        user: updatedUser,
-        profile: updatedProfile,
-      });
+      const response = await updateUser(
+        {
+          user: updatedUser,
+          profile: updatedProfile,
+        },
+        data?.token
+      );
 
       setAccount({
         ...account,

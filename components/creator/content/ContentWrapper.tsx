@@ -5,9 +5,9 @@ import {
   AlertDialogContent,
   AlertDialogFooter,
   AlertDialogHeader,
-} from "@/components/ui/alert-dialog";
-import { Button } from "@/components/ui/button";
-import { Switch } from "@/components/ui/switch";
+} from "@/components/ui/Shared/alert-dialog";
+import { Button } from "@/components/ui/Shared/button";
+import { Switch } from "@/components/ui/Shared/switch";
 import { ChildNodeProps, ClassNameProp, ContentType } from "@/lib/interface";
 import { cn } from "@/lib/util/utils";
 import { XMarkIcon } from "@heroicons/react/24/outline";

@@ -6,18 +6,18 @@ import { PostInteractionLookup } from "@/lib/interface";
 import { cn } from "@/lib/util/utils";
 import { ChatBubbleLeftEllipsisIcon } from "@heroicons/react/24/outline";
 import { TooltipProvider } from "@radix-ui/react-tooltip";
-import { BookmarkIcon, HeartIcon, ShareIcon } from "lucide-react";
+import { ForwardIcon, HeartIcon, MergeIcon } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { MetricButtonProps } from "../text/TextPostMetricsDisplay";
+import { MetricButtonProps } from "../Text/TextPostMetricsDisplay";
 import { MetricButton, MetricContent } from "./PostDisplayMetrics";
 
 export const PostPreviewDisplayMetrics = () => {
-  const { likedPosts, savedPosts } = useUserInteractions();
-  const { metrics, likePost, unlikePost, postId, savePost, unsavePost } =
+  const { likedPosts, repostedPosts } = useUserInteractions();
+  const { metrics, likePost, unlikePost, postId, repostPost, removeRepost } =
     usePostMetrics();
-  const { likeCount, commentCount, saveCount } = metrics;
+  const { likeCount, commentCount, repostCount } = metrics;
   const { status } = useSession();
   const hasPriorInteraction = (
     interactions: PostInteractionLookup[]
@@ -26,7 +26,7 @@ export const PostPreviewDisplayMetrics = () => {
   };
   const router = useRouter();
   const existingLike = hasPriorInteraction(likedPosts);
-  const existingSave = hasPriorInteraction(savedPosts);
+  const existingRepost = hasPriorInteraction(repostedPosts);
 
   const InteractionButtons: Omit<MetricButtonProps, "status">[] = [
     {
@@ -46,18 +46,18 @@ export const PostPreviewDisplayMetrics = () => {
       isComment: true,
     },
     {
-      onClick: existingSave ? unsavePost : savePost,
-      value: saveCount,
-      Icon: BookmarkIcon,
+      onClick: existingRepost ? removeRepost : repostPost,
+      value: repostCount,
+      Icon: MergeIcon,
       hoverTheme: "yellow",
-      active: existingSave,
+      active: existingRepost,
     },
     {
       onClick: () => {
         toast("Not Implemented (Cry about it)");
       },
       value: 0,
-      Icon: ShareIcon,
+      Icon: ForwardIcon,
       hoverTheme: "green",
     },
   ];

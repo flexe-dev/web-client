@@ -1,12 +1,12 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/Shared/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+} from "@/components/ui/Shared/dropdown-menu";
 import { ClassNameProp } from "@/lib/interface";
 import { cn } from "@/lib/util/utils";
 import { Moon, Sun } from "lucide-react";
