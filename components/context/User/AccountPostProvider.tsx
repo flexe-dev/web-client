@@ -38,7 +38,9 @@ export const AccountPostProvider = ({ children }: ChildNodeProps) => {
   };
 
   useEffect(() => {
-    fetchPosts();
+    if (session.data?.user.id) {
+      fetchPosts();
+    }
   }, [session.data?.user.id]);
 
   return (

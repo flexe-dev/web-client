@@ -1,15 +1,14 @@
 "use client";
 
-import ArchivePostModal from "@/components/ui/Posts/Modals/ArchivePostModal";
-import BoostPostModal from "@/components/ui/Posts/Modals/BoostPostModal";
-import DeletePostModal from "@/components/ui/Posts/Modals/DeletePostModal";
-import PinPostModal from "@/components/ui/Posts/Modals/PinPostModal";
-import ReportPostModal from "@/components/ui/Posts/Modals/ReportPostModal";
-import SharePostModal from "@/components/ui/Posts/Modals/SharePostModal";
-import { MediaPostTools } from "@/components/ui/Posts/media/MediaPostTools";
-import { TextPostTools } from "@/components/ui/Posts/text/TextPostTools";
-import { Dialog } from "@/components/ui/dialog";
-import { ChildNodeProps, PostType } from "@/lib/interface";
+import ArchivePostModal from "@/components/ui/Posts/Shared/Modals/ArchivePostModal";
+import BoostPostModal from "@/components/ui/Posts/Shared/Modals/BoostPostModal";
+import DeletePostModal from "@/components/ui/Posts/Shared/Modals/DeletePostModal";
+import PinPostModal from "@/components/ui/Posts/Shared/Modals/PinPostModal";
+import ReportPostModal from "@/components/ui/Posts/Shared/Modals/ReportPostModal";
+import SharePostModal from "@/components/ui/Posts/Shared/Modals/SharePostModal";
+import { PostTools } from "@/components/ui/Posts/Shared/PostTools";
+import { Dialog } from "@/components/ui/Shared/dialog";
+import { ChildNodeProps, Post, PostType } from "@/lib/interface";
 import { useSession } from "next-auth/react";
 import React, {
   JSX,
@@ -19,19 +18,6 @@ import React, {
   useState,
 } from "react";
 
-interface Props extends ChildNodeProps {
-  postId: string;
-  postType: PostType;
-}
-
-export interface ToolModalProp {
-  postId: string;
-  postType: PostType;
-  userToken?: string;
-  open: boolean;
-  callback: () => void;
-}
-
 const PostToolOptions = [
   "delete",
   "archive",
@@ -40,6 +26,24 @@ const PostToolOptions = [
   "boost",
   "pin",
 ] as const;
+
+// Optional Callback Functions passed for each action
+export type ModalToolCallback = {
+  [tool in PostToolOptionsType]?: () => void;
+};
+
+interface Props extends ChildNodeProps {
+  post: Post;
+  callbacks?: ModalToolCallback;
+}
+
+export interface ToolModalProp {
+  post: Post;
+  userToken?: string;
+  open: boolean;
+  modalCloseCallback: () => void;
+  parentOptionalCallback?: () => void;
+}
 
 type PostToolOptionsType = (typeof PostToolOptions)[number];
 
@@ -53,14 +57,6 @@ const renderedDialog: Record<
   share: SharePostModal,
   boost: BoostPostModal,
   pin: PinPostModal,
-};
-
-const renderedToolSet: Record<
-  PostType,
-  (props: Omit<Props, "postType">) => JSX.Element
-> = {
-  MEDIA: MediaPostTools,
-  TEXT: TextPostTools,
 };
 
 interface PostOptionToolState {
@@ -84,11 +80,10 @@ const initialState: PostOptionToolState = {
 export const PostOptionToolContext =
   createContext<PostOptionToolState>(initialState);
 
-export const PostToolsProvider = ({ postId, postType, children }: Props) => {
+export const PostToolsProvider = ({ post, callbacks, children }: Props) => {
   const [tool, setTool] = useState<PostToolOptionsType | undefined>(undefined);
   const { data } = useSession();
   const [dialogOpen, setDialogOpen] = useState<boolean>(false);
-  const Toolset = renderedToolSet[postType];
 
   const handleModalClose = () => {
     setDialogOpen(false);
@@ -103,22 +98,22 @@ export const PostToolsProvider = ({ postId, postType, children }: Props) => {
   return (
     <PostOptionToolContext.Provider
       value={{
+        type: post.postType,
         tool,
         setTool,
         dialogOpen,
         setDialogOpen,
-        type: postType,
       }}
     >
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-        <Toolset postId={postId}>{children}</Toolset>
+        <PostTools post={post}>{children}</PostTools>
         {tool ? (
           renderedDialog[tool]({
-            postId,
-            postType,
+            post,
             open: dialogOpen,
             userToken: data?.token,
-            callback: handleModalClose,
+            modalCloseCallback: handleModalClose,
+            parentOptionalCallback: callbacks ? callbacks[tool] : undefined,
           })
         ) : (
           <></>

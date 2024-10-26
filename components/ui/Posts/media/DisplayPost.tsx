@@ -24,7 +24,7 @@ const DisplayPost = ({ post }: Props) => {
   const { document } = post;
   return (
     <div className="flex flex-col py-4">
-      {document.map((content) => {
+      {document.document.map((content) => {
         if (!content.type) return;
         const Component = RenderContentComponent[content.type];
         return <Component key={content.id} {...content} />;

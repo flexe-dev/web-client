@@ -1,31 +1,27 @@
 "use client";
 
+import { defaultPostMetrics } from "@/controllers/PostController";
 import {
   LikePost,
+  RemoveRepost,
+  RepostPost,
   SavePost,
   UnlikePost,
   UnsavePost,
 } from "@/controllers/PostInteractionController";
-import {
-  ChildNodeProps,
-  PostMetrics,
-  PostType,
-  postTypeMap,
-  UserPosts,
-} from "@/lib/interface";
+import { ChildNodeProps, Post, PostMetrics } from "@/lib/interface";
 import { useSession } from "next-auth/react";
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useState } from "react";
 import { toast } from "sonner";
-import { useProfilePostViewer } from "../UserInteraction/ProfileViewPostProvider";
 import { useUserInteractions } from "../UserInteraction/UserInteractionsProvider";
-import { useAccountPost } from "./AccountPostProvider";
 
 interface PostInteractionState {
   metrics: PostMetrics;
-  postType: PostType;
   postId: string;
   likePost: () => void;
   unlikePost: () => void;
+  repostPost: () => void;
+  removeRepost: () => void;
   savePost: () => void;
   unsavePost: () => void;
   addComment: (count: number) => void;
@@ -33,24 +29,19 @@ interface PostInteractionState {
 }
 
 interface ContextProps extends ChildNodeProps {
-  postType: PostType;
-  postId: string;
-  postMetrics: PostMetrics;
+  post: Post;
+  callback?: (post: Post) => void;
 }
 
 const initialState: PostInteractionState = {
-  metrics: {
-    likeCount: 0,
-    commentCount: 0,
-    viewCount: 0,
-    saveCount: 0,
-  },
+  metrics: defaultPostMetrics,
   postId: "",
-  postType: "MEDIA",
   addComment: () => {},
   removeComment: () => {},
   likePost: () => {},
   unlikePost: () => {},
+  repostPost: () => {},
+  removeRepost: () => {},
   savePost: () => {},
   unsavePost: () => {},
 };
@@ -60,44 +51,43 @@ const PostInteractionContext =
 
 export const PostInteractionProvider = ({
   children,
-  postType,
-  postId,
-  postMetrics,
+  post,
+  callback,
 }: ContextProps) => {
-  const [metrics, setMetrics] = useState<PostMetrics>(postMetrics);
+  const [metrics, setMetrics] = useState<PostMetrics>(post.metrics);
   const {
     userNode,
     likePost: addToUserLikedPosts,
     savePost: addToUserSavedPosts,
+    repostPost: addToUserRepostedPosts,
+    removeRepostedPost,
     removeLikedPost,
     removeSavedPost,
   } = useUserInteractions();
 
-  const { userPosts, setUserPosts } = useAccountPost();
+  const { id: postId, postType } = post;
+
   const { data } = useSession();
-  const { setFetchedPosts } = useProfilePostViewer();
 
-  useEffect(() => {
-    if (!userPosts) return;
-    const isOwnPost: boolean = userPosts[postTypeMap[postType]].some(
-      (post) => post.id === postId
-    );
+  const updatePostObject = (updatedMetrics: PostMetrics) => {
+    if (!callback) return;
 
-    /*
-    Updating Post Metrics within local metric store
-    */
-    isOwnPost
-      ? handleUserAccountMetricUpdate(postTypeMap[postType])
-      : handleProfileViewMetricUpdate(postTypeMap[postType]);
-  }, [metrics]);
+    console.log(metrics);
+
+    const updatedPost: Post = {
+      ...post,
+      metrics,
+    };
+
+    callback(updatedPost);
+  };
 
   const likePost = async () => {
-    if (!userNode) return;
+    if (!userNode || !postId) return;
 
     const response = await LikePost(
       {
         postId,
-        postType,
       },
       data?.token
     );
@@ -108,16 +98,19 @@ export const PostInteractionProvider = ({
     }
 
     addToUserLikedPosts(postId);
-    setMetrics((prev) => ({ ...prev, likeCount: prev.likeCount + 1 }));
+    setMetrics((prev) => {
+      const updatedMetrics = { ...prev, likeCount: prev.likeCount + 1 };
+      updatePostObject(updatedMetrics);
+      return updatedMetrics;
+    });
   };
 
   const unlikePost = async () => {
-    if (!userNode) return;
+    if (!userNode || !postId) return;
 
     const response = await UnlikePost(
       {
         postId,
-        postType,
       },
       data?.token
     );
@@ -128,16 +121,65 @@ export const PostInteractionProvider = ({
     }
 
     removeLikedPost(postId);
-    setMetrics((prev) => ({ ...prev, likeCount: prev.likeCount - 1 }));
+    setMetrics((prev) => {
+      const updatedMetrics = { ...prev, likeCount: prev.likeCount - 1 };
+      updatePostObject(updatedMetrics);
+      return updatedMetrics;
+    });
+  };
+
+  const repostPost = async () => {
+    if (!userNode || !postId) return;
+
+    const response = await RepostPost(
+      {
+        postId,
+      },
+      data?.token
+    );
+
+    if (!response) {
+      toast.error("Failed to repost post. Please try again.");
+      return;
+    }
+
+    addToUserRepostedPosts(postId);
+    setMetrics((prev) => {
+      const updatedMetrics = { ...prev, likeCount: prev.repostCount + 1 };
+      updatePostObject(updatedMetrics);
+      return updatedMetrics;
+    });
+  };
+
+  const removeRepost = async () => {
+    if (!userNode || !postId) return;
+
+    const response = await RemoveRepost(
+      {
+        postId,
+      },
+      data?.token
+    );
+
+    if (!response) {
+      toast.error("Failed to remove repost. Please try again.");
+      return;
+    }
+
+    removeRepostedPost(postId);
+    setMetrics((prev) => {
+      const updatedMetrics = { ...prev, likeCount: prev.repostCount - 1 };
+      updatePostObject(updatedMetrics);
+      return updatedMetrics;
+    });
   };
 
   const savePost = async () => {
-    if (!userNode) return;
+    if (!userNode || !postId) return;
 
     const response = await SavePost(
       {
         postId,
-        postType,
       },
       data?.token
     );
@@ -148,16 +190,19 @@ export const PostInteractionProvider = ({
     }
 
     addToUserSavedPosts(postId);
-    setMetrics((prev) => ({ ...prev, saveCount: prev.saveCount + 1 }));
+    setMetrics((prev) => {
+      const updatedMetrics = { ...prev, likeCount: prev.saveCount + 1 };
+      updatePostObject(updatedMetrics);
+      return updatedMetrics;
+    });
   };
 
   const unsavePost = async () => {
-    if (!userNode) return;
+    if (!userNode || !postId) return;
 
     const response = await UnsavePost(
       {
         postId,
-        postType,
       },
       data?.token
     );
@@ -168,69 +213,42 @@ export const PostInteractionProvider = ({
     }
 
     removeSavedPost(postId);
-    setMetrics((prev) => ({ ...prev, saveCount: prev.saveCount - 1 }));
+    setMetrics((prev) => {
+      const updatedMetrics = { ...prev, likeCount: prev.saveCount + 1 };
+      updatePostObject(updatedMetrics);
+      return updatedMetrics;
+    });
   };
 
   const addComment = (count: number) => {
     if (!userNode) return;
 
-    setMetrics((prev) => ({
-      ...prev,
-      commentCount: prev.commentCount + count,
-    }));
+    setMetrics((prev) => {
+      const updatedMetrics = { ...prev, likeCount: prev.commentCount + count };
+      updatePostObject(updatedMetrics);
+      return updatedMetrics;
+    });
   };
 
   const removeComment = (count: number) => {
     if (!userNode) return;
 
-    setMetrics((prev) => ({
-      ...prev,
-      commentCount: prev.commentCount - count,
-    }));
+    setMetrics((prev) => {
+      const updatedMetrics = { ...prev, likeCount: prev.commentCount - count };
+      updatePostObject(updatedMetrics);
+      return updatedMetrics;
+    });
   };
-
-  function updatePostMetric(
-    userPosts: UserPosts,
-    postType: keyof UserPosts
-  ): UserPosts {
-    const posts = userPosts[postType];
-    const postIndex = posts.findIndex((post) => post.id === postId);
-
-    if (postIndex === -1) return userPosts;
-    setUserPosts({
-      ...userPosts,
-      [postType]: [
-        ...userPosts[postType].slice(0, postIndex),
-        { ...posts[postIndex], metrics: metrics },
-        ...userPosts[postType].slice(postIndex + 1),
-      ],
-    });
-
-    return userPosts;
-  }
-
-  function handleProfileViewMetricUpdate(postType: keyof UserPosts) {
-    setFetchedPosts((prev) => {
-      if (!prev) return prev;
-      return updatePostMetric(prev, postType);
-    });
-  }
-
-  function handleUserAccountMetricUpdate(postType: keyof UserPosts) {
-    setUserPosts((prev) => {
-      if (!prev) return prev;
-      return updatePostMetric(prev, postType);
-    });
-  }
 
   return (
     <PostInteractionContext.Provider
       value={{
         metrics,
-        postType,
-        postId,
+        postId: post.id!,
         likePost,
         unlikePost,
+        repostPost,
+        removeRepost,
         savePost,
         unsavePost,
         addComment,

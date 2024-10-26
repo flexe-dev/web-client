@@ -2,31 +2,32 @@
 
 import { ChildNodeProps, PostInteractionLookup } from "@/lib/interface";
 import { cn, isAuthenticated, renderMetric } from "@/lib/util/utils";
-import {
-  BookmarkIcon,
-  ChatBubbleOvalLeftEllipsisIcon,
-  ShareIcon,
-} from "@heroicons/react/24/outline";
+import { ChatBubbleOvalLeftEllipsisIcon } from "@heroicons/react/24/outline";
 
 import { UseLoginModal } from "@/components/context/User/LoginModalProvider";
 import { usePostMetrics } from "@/components/context/User/PostInteractionContext";
 import { useUserInteractions } from "@/components/context/UserInteraction/UserInteractionsProvider";
 import { AnimatePresence, motion } from "framer-motion";
-import { ChevronLeftIcon, HeartIcon } from "lucide-react";
+import {
+  ChevronLeftIcon,
+  ForwardIcon,
+  HeartIcon,
+  MergeIcon,
+} from "lucide-react";
 import { nanoid } from "nanoid";
 import { useSession } from "next-auth/react";
 import { toast } from "sonner";
-import { Button } from "../../button";
+import { Button } from "../../Shared/button";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "../../tooltip";
+} from "../../Shared/tooltip";
 import {
   HoverStylingColours,
   MetricButtonProps,
-} from "../text/TextPostMetricsDisplay";
+} from "../Text/TextPostMetricsDisplay";
 
 interface Props {
   commentOnClick: () => void;
@@ -37,11 +38,11 @@ export const PostDisplayMetrics: React.FC<Props> = ({
   commentOnClick,
   commentPanelOpen,
 }) => {
-  const { likedPosts, savedPosts } = useUserInteractions();
+  const { likedPosts, repostedPosts } = useUserInteractions();
   const { status } = useSession();
-  const { metrics, likePost, unlikePost, postId, savePost, unsavePost } =
+  const { metrics, likePost, unlikePost, postId, repostPost, removeRepost } =
     usePostMetrics();
-  const { likeCount, commentCount, saveCount } = metrics;
+  const { likeCount, commentCount, repostCount } = metrics;
 
   const hasPriorInteraction = (
     interactions: PostInteractionLookup[]
@@ -50,7 +51,7 @@ export const PostDisplayMetrics: React.FC<Props> = ({
   };
 
   const existingLike = hasPriorInteraction(likedPosts);
-  const existingSave = hasPriorInteraction(savedPosts);
+  const existingRepost = hasPriorInteraction(repostedPosts);
 
   return (
     <TooltipProvider>
@@ -81,16 +82,16 @@ export const PostDisplayMetrics: React.FC<Props> = ({
         />
         <MetricButton
           status={status}
-          onClick={existingSave ? unsavePost : savePost}
-          active={existingSave}
+          onClick={existingRepost ? removeRepost : repostPost}
+          active={existingRepost}
           hoverTheme="yellow"
-          tooltipText="Save"
+          tooltipText="Repost"
         >
           <MetricContent
-            value={saveCount}
-            Icon={BookmarkIcon}
+            value={repostCount}
+            Icon={MergeIcon}
             hoverTheme="yellow"
-            active={existingSave}
+            active={existingRepost}
           />
         </MetricButton>
         <MetricButton
@@ -101,7 +102,7 @@ export const PostDisplayMetrics: React.FC<Props> = ({
           hoverTheme="green"
           tooltipText="Share"
         >
-          <MetricContent value={999} Icon={ShareIcon} hoverTheme="green" />
+          <MetricContent value={999} Icon={ForwardIcon} hoverTheme="green" />
         </MetricButton>
       </div>
     </TooltipProvider>
