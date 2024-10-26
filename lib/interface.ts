@@ -1,4 +1,5 @@
 import { PencilIcon } from "@heroicons/react/24/outline";
+import { List } from "lodash";
 import { User } from "next-auth";
 import { CSSProperties } from "react";
 export interface ClassNameProp {
@@ -10,6 +11,11 @@ export interface LinkProps {
   label: string;
   icon?: React.ReactNode;
   restrict?: boolean;
+}
+
+export interface ModalInteractionProps {
+  open: boolean;
+  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export type IconType = typeof PencilIcon;
@@ -156,6 +162,8 @@ export interface PostMetrics {
   commentCount: number;
   viewCount: number;
   saveCount: number;
+  repostCount: number;
+  shareCount: number;
 }
 
 export const postTypeMap: Record<PostType, keyof UserPosts> = {
@@ -262,6 +270,8 @@ const postInteractionValue = [
   "UNSAVE",
   "VIEW",
   "SHARE",
+  "REPOST",
+  "UNREPOST",
 ] as const;
 export type PostInteractionType = (typeof postInteractionValue)[number];
 
@@ -270,7 +280,6 @@ export type UserInteractionType = (typeof userInteractionValue)[number];
 
 export interface PostInteraction {
   postId: string;
-  postType: PostType;
   targetId?: string;
 }
 
@@ -290,6 +299,7 @@ export interface UserNetwork extends UserDetails {
 export interface UserNode extends UserNetwork {
   blockedUsers: UserInteractionRelationship[];
   likedPosts: PostInteractionRelationship[];
+  repostedPosts: PostInteractionRelationship[];
   savedPosts: PostInteractionRelationship[];
 }
 
@@ -345,36 +355,41 @@ export enum RecipientType {
 
 export interface UserFeedKey {
   userId: string;
-  postDate: Date;
   postId: string;
 }
 
 export interface UserFeed {
   key: UserFeedKey;
   readStatus: boolean;
-  postType: PostType;
+  postType: number;
   groupId: string;
 }
 
-export interface PostReferenceKey {
+export interface OriginReferenceKey {
   originatorUserId: string;
   postId: string;
+  postReferenceType: number;
+  userId: string;
 }
 
-export interface PostFeedReference {
-  key: PostReferenceKey;
-  userId: string;
-  postReferenceType: RecipientType;
-  postDate: Date;
+export interface OriginReferenceLookup {
+  key: OriginReferenceKey;
+  isActive: boolean;
+  referenceDate: Date;
 }
 
 export interface FeedDisplayReference {
   userFeed: UserFeed;
-  recipientReferences: Map<RecipientType, PostFeedReference[]>;
+  recipientReferences: OriginReferenceLookup[];
+}
+
+interface FeedUsers {
+  creator: UserDetails;
+  users: List<UserDetails>;
 }
 
 export interface FeedPost extends FeedDisplayReference {
-  type: PostType;
+  postType: PostType;
   post: MediaPost | TextPost;
-  users: Map<String, UserDisplay>;
+  users: FeedUsers;
 }
