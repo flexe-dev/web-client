@@ -1,9 +1,8 @@
-import React from "react";
-import { Button } from "../button";
-import { Avatar, AvatarFallback } from "../avatar";
-import Link from "next/link";
-import { motion } from "framer-motion";
 import { ClockIcon } from "@heroicons/react/24/outline";
+import { motion } from "framer-motion";
+import Link from "next/link";
+import { Avatar, AvatarFallback } from "../Shared/avatar";
+import { Button } from "../Shared/button";
 interface SearchResultsProps {
   searchQuery: string;
 }

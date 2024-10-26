@@ -1,8 +1,8 @@
 import { EyeIcon, HandThumbUpIcon } from "@heroicons/react/24/outline";
 import { User } from "next-auth";
 import Image, { ImageProps } from "next/image";
-import { Avatar, AvatarImage } from "../avatar";
-import { Card, CardFooter } from "../card";
+import { Avatar, AvatarImage } from "../Shared/avatar";
+import { Card, CardFooter } from "../Shared/card";
 
 //todo: replace this with the user post object
 interface GalleryPostProps {

@@ -1,8 +1,8 @@
 import { PostInteractionProvider } from "@/components/context/User/PostInteractionContext";
-import PostComments from "@/components/ui/Posts/Comment/PostComments";
 import { MediaPost } from "@/lib/interface";
 import ErrorPage from "../../../Error";
-import { PostDisplayHeader } from "../Header/PostDisplayHeader";
+import PostComments from "../Shared/Comment/PostComments";
+import { PostDisplayHeader } from "../Shared/Header/PostDisplayHeader";
 import DisplayPost from "./DisplayPost";
 
 interface Props {
@@ -13,21 +13,11 @@ const PostDisplayWrapper = ({ post }: Props) => {
   if (!post.id) return <ErrorPage />;
 
   return (
-    <PostInteractionProvider
-      postId={post.id}
-      postMetrics={post.metrics}
-      postType="MEDIA"
-    >
+    <PostInteractionProvider post={post} key={`post-display-${post.id}`}>
       <>
         <PostComments postId={post.id} type="MEDIA" />
         <div className="relative w-full">
-          <PostDisplayHeader
-            postID={post.id}
-            userID={post.auxData.userID}
-            datePosted={post.auxData.dateCreated}
-            updatedDate={post.auxData.dateUpdated}
-            type="MEDIA"
-          />
+          <PostDisplayHeader post={post} />
           <DisplayPost post={post} />
         </div>
       </>

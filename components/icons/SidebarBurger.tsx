@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/Shared/button";
 import { SidebarButtonProps } from "@/lib/interface";
 import { cn } from "@/lib/util/utils";
 

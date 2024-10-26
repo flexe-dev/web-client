@@ -1,18 +1,16 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import { ChildNodeProps } from "@/lib/interface";
 import {
   motion,
-  useScroll,
-  useTransform,
-  useSpring,
   MotionValue,
+  useScroll,
+  useSpring,
+  useTransform,
 } from "framer-motion";
-import Image, { ImageProps } from "next/image";
-import PlaceholderImage from "@/public/original-2f558c29eac9dc162da8e1ab9efe3d53.png";
+import { ImageProps } from "next/image";
+import React, { useEffect, useState } from "react";
 import { useMediaQuery } from "react-responsive";
-import { Carousel, CarouselContent, CarouselItem } from "../carousel";
-import AutoScroll from "embla-carousel-auto-scroll";
-import { ChildNodeProps } from "@/lib/interface";
+import { Carousel, CarouselContent, CarouselItem } from "../Shared/carousel";
 export interface CreationProps {
   creationImage?: ImageProps;
   creatorImage?: ImageProps;
@@ -75,7 +73,11 @@ export const CreationParallaxWrapper = (props: ChildNodeProps) => {
     springConfig
   );
   const translateY = useSpring(
-    useTransform(scrollYProgress, [0, 0.2], desktopDim ? [-450, -100] : [-350, 0]),
+    useTransform(
+      scrollYProgress,
+      [0, 0.2],
+      desktopDim ? [-450, -100] : [-350, 0]
+    ),
     springConfig
   );
 

@@ -1,7 +1,7 @@
-import React from "react";
 import GallerySidebarWrapper from "@/components/ui/Gallery/GalleryWrapper";
+import { Footer } from "@/components/ui/Shared/Footer";
 import { ChildNodeProps } from "@/lib/interface";
-import { Footer } from "@/components/ui/Footer";
+import React from "react";
 
 const Layout: React.FC<ChildNodeProps> = ({ children }) => {
   return (

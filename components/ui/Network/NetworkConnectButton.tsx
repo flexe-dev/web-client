@@ -6,7 +6,7 @@ import { getNetworkStatus } from "@/lib/util/networkUtils";
 import { isAuthenticated } from "@/lib/util/utils";
 import { useSession } from "next-auth/react";
 import React from "react";
-import { Button } from "../button";
+import { Button } from "../Shared/button";
 
 interface Props {
   user: UserDetails;

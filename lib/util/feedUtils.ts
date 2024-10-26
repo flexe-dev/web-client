@@ -1,22 +1,26 @@
-import { FeedDisplayReference } from "../interface";
+import { FeedDisplayReference, OriginReferenceLookup } from "../interface";
 
-export const sortByReadStatus = (
-  feed: FeedDisplayReference[]
-): FeedDisplayReference[] => {
-  const readPosts = feed
-    .filter((post) => post.userFeed.readStatus)
-    .sort(
-      (a, b) =>
-        new Date(b.userFeed.key.postDate).getTime() -
-        new Date(a.userFeed.key.postDate).getTime()
-    );
-  const unreadPosts = feed
-    .filter((post) => !post.userFeed.readStatus)
-    .sort(
-      (a, b) =>
-        new Date(b.userFeed.key.postDate).getTime() -
-        new Date(a.userFeed.key.postDate).getTime()
-    );
+export const SortUserFeed = (references: FeedDisplayReference[]) => {
+  const unreadPosts = references.filter((ref) => !ref.userFeed.readStatus);
+  const readPosts = references.filter((ref) => ref.userFeed.readStatus);
+  return [
+    ...SortByReferenceDate(unreadPosts),
+    ...SortByReferenceDate(readPosts),
+  ];
+};
 
-  return [...unreadPosts, ...readPosts];
+const SortByReferenceDate = (references: FeedDisplayReference[]) => {
+  return references.sort(
+    (a, b) =>
+      getMostRecentRecipientReferenceDate(b.recipientReferences).getTime() -
+      getMostRecentRecipientReferenceDate(a.recipientReferences).getTime()
+  );
+};
+
+const getMostRecentRecipientReferenceDate = (
+  references: OriginReferenceLookup[]
+): Date => {
+  return new Date(
+    Math.max(...references.map((ref) => new Date(ref.referenceDate).getTime()))
+  );
 };

@@ -2,7 +2,7 @@
 
 import React from "react";
 import { FaGithub, FaGoogle } from "react-icons/fa";
-import { Button } from "../ui/button";
+import { Button } from "../ui/Shared/button";
 
 import { ClassNameProp } from "@/lib/interface";
 import { cn } from "@/lib/util/utils";

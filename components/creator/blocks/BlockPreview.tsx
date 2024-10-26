@@ -1,7 +1,7 @@
 "use client";
 
 import { SortableItem } from "@/components/dnd/Sortable";
-import { Skeleton } from "@/components/ui/skeleton";
+import { Skeleton } from "@/components/ui/Shared/skeleton";
 import { ContentBlockProp } from "@/lib/interface";
 
 const BlockPreview = (props: ContentBlockProp) => {

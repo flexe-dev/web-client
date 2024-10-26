@@ -5,7 +5,7 @@ import { BriefcaseIcon, UsersIcon } from "@heroicons/react/24/outline";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import React from "react";
-import { Avatar, AvatarFallback, AvatarImage } from "../avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "../Shared/avatar";
 import { NetworkConnectButton } from "./NetworkConnectButton";
 import {
   NetworkHiddenInformation,

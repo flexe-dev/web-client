@@ -30,7 +30,7 @@ export const NetworkSidebar = () => {
 };
 
 export const UnauthorizedNetworkSidebar = () => {
-  return <></>;
+  return <>hi this gonna be a funnel to login or something</>;
 };
 
 interface UserNetworkContent {

@@ -15,7 +15,7 @@ import {
 import { AnimatePresence, motion } from "framer-motion";
 import React, { useEffect, useState } from "react";
 import { useDocumentCreator } from "../../context/PostCreation/DocumentCreatorProvider";
-import { Button } from "../../ui/button";
+import { Button } from "../../ui/Shared/button";
 import StylingTab from "./StylingTab";
 import DocumentTab from "./TextTab";
 import ContentTab from "./VisualTab";

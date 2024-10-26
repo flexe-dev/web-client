@@ -10,7 +10,6 @@ import {
   PostInteractionLookup,
   PostInteractionRelationship,
   UserDetails,
-  UserDisplay,
   UserInteractionRelationship,
   UserNode,
 } from "@/lib/interface";
@@ -23,15 +22,18 @@ interface UserInteractionState {
 
   likedPosts: PostInteractionLookup[];
   savedPosts: PostInteractionLookup[];
+  repostedPosts: PostInteractionLookup[];
 
   followingUsers: UserInteractionRelationship[];
   followedByUsers: UserInteractionRelationship[];
 
   likePost: (postId: string) => void;
   savePost: (postId: string) => void;
+  repostPost: (postId: string) => void;
 
   removeLikedPost: (postId: string) => void;
   removeSavedPost: (postId: string) => void;
+  removeRepostedPost: (postId: string) => void;
 
   followUser: (user: UserDetails) => void;
   unfollowUser: (userId: string) => void;
@@ -43,13 +45,19 @@ const initialState: UserInteractionState = {
 
   likedPosts: [],
   savedPosts: [],
+  repostedPosts: [],
+
   followingUsers: [],
   followedByUsers: [],
 
   likePost: () => {},
   savePost: () => {},
+  repostPost: () => {},
+
   removeLikedPost: () => {},
   removeSavedPost: () => {},
+  removeRepostedPost: () => {},
+
   followUser: () => {},
   unfollowUser: () => {},
   removeFollowedUser: () => {},
@@ -65,6 +73,10 @@ export const UserInteractionsProvider: React.FC<ChildNodeProps> = ({
   const [userNode, setUserNode] = useState<UserNode | undefined>();
   const [likedPosts, setLikedPosts] = useState<PostInteractionLookup[]>([]);
   const [savedPosts, setSavedPosts] = useState<PostInteractionLookup[]>([]);
+  const [repostedPosts, setRepostedPosts] = useState<PostInteractionLookup[]>(
+    []
+  );
+
   const [followingUsers, setFollowingUser] = useState<
     UserInteractionRelationship[]
   >([]);
@@ -111,6 +123,12 @@ export const UserInteractionsProvider: React.FC<ChildNodeProps> = ({
     });
   };
 
+  const repostPost = (postId: string) => {
+    setRepostedPosts((prev) => {
+      return [generatePostLookupItemFromId(postId), ...prev];
+    });
+  };
+
   const removeLikedPost = (postId: string) => {
     //Remove Post From Liked Posts
     setLikedPosts((prev) => {
@@ -121,6 +139,12 @@ export const UserInteractionsProvider: React.FC<ChildNodeProps> = ({
   const removeSavedPost = (postId: string) => {
     //Remove Post From Saved Posts
     setSavedPosts((prev) => {
+      return prev.filter((post) => post.postId !== postId);
+    });
+  };
+
+  const removeRepostedPost = (postId: string) => {
+    setRepostedPosts((prev) => {
       return prev.filter((post) => post.postId !== postId);
     });
   };
@@ -175,6 +199,7 @@ export const UserInteractionsProvider: React.FC<ChildNodeProps> = ({
     //Generate Lookups For Post Interactions
     setLikedPosts(generatePostLookupItem(node.likedPosts));
     setSavedPosts(generatePostLookupItem(node.savedPosts));
+    setRepostedPosts(generatePostLookupItem(node.repostedPosts));
 
     //Generate Lookups For User Interactions
     setFollowingUser(node.following);
@@ -191,12 +216,15 @@ export const UserInteractionsProvider: React.FC<ChildNodeProps> = ({
         userNode,
         likedPosts,
         savedPosts,
+        repostedPosts,
         followingUsers,
         followedByUsers,
         savePost,
         likePost,
+        repostPost,
         removeLikedPost,
         removeSavedPost,
+        removeRepostedPost,
         followUser,
         unfollowUser,
         removeFollowedUser,

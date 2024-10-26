@@ -2,7 +2,14 @@ import { defaultPostMetrics } from "@/controllers/PostController";
 import bcrypt from "bcryptjs";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
-import { Authentication, Post, TextContent, TextPost } from "../interface";
+import {
+  Authentication,
+  Post,
+  TextContent,
+  TextPost,
+  UserDetails,
+  UserDisplay,
+} from "../interface";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -54,11 +61,14 @@ export const isAuthenticated = (status: Authentication): boolean => {
   return status === "authenticated";
 };
 
-export const getCookie = (name: string) => {
-  const value = `; ${document.cookie}`;
-  const parts = value.split(`; ${name}=`);
-
-  if (parts.length === 2) return parts.pop()?.split(";").shift();
+export const toUserDetails = (user: UserDisplay): UserDetails => {
+  return {
+    userId: user.user.id,
+    username: user.user.username,
+    name: user.user.name ?? "",
+    image: user.user.image ?? defaultPicture,
+    job: user.profile?.job,
+  };
 };
 
 export const GenerateTextPost = (

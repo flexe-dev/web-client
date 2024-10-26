@@ -1,6 +1,10 @@
 "use client";
 import { ProfileDetailsForm } from "@/components/forms/ProfileDetailsForm";
-import { Dialog, DialogContent, DialogOverlay } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogOverlay,
+} from "@/components/ui/Shared/dialog";
 import { DialogDescription } from "@radix-ui/react-dialog";
 import React, { SetStateAction } from "react";
 

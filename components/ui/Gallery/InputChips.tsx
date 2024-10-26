@@ -1,8 +1,8 @@
 import { cn } from "@/lib/util/utils";
-import { XMarkIcon } from "@heroicons/react/24/outline";
 import { AnimatePresence, motion } from "framer-motion";
 import React, { FormEvent, useEffect, useState } from "react";
-import { ShadCNInputStyling } from "../input";
+import { Chip } from "../Shared/chip";
+import { ShadCNInputStyling } from "../Shared/input";
 
 interface InputChipsProps {
   setContent: React.Dispatch<React.SetStateAction<string[]>>;
@@ -10,13 +10,6 @@ interface InputChipsProps {
   title: string;
   className?: string;
   sectionID: string;
-}
-
-interface ChipComponentProps {
-  chip: string;
-  onDelete: (id: string) => void;
-  sectionID: string;
-  duplicate: boolean;
 }
 
 export const InputChips = (props: InputChipsProps) => {
@@ -71,12 +64,15 @@ export const InputChips = (props: InputChipsProps) => {
           >
             {content.map((chip, index) => (
               <Chip
+                readonly={false}
                 duplicate={chip === duplicateError}
                 sectionID={sectionID}
                 key={`${sectionID}-${index}`}
-                chip={chip}
+                content={chip}
                 onDelete={handleOnRemove}
-              />
+              >
+                {chip}
+              </Chip>
             ))}
           </motion.section>
         )}
@@ -103,25 +99,5 @@ export const InputChips = (props: InputChipsProps) => {
         </h3>
       </AnimatePresence>
     </form>
-  );
-};
-
-const Chip = (props: ChipComponentProps) => {
-  const { chip, onDelete, sectionID, duplicate } = props;
-  return (
-    <motion.div
-      layout
-      key={`${sectionID}-chip-${chip}`}
-      className={cn(
-        "px-1 items-center m-1 min-h-8 h-8 text-sm rounded-md bg-secondary w-fit flex space-x-2",
-        duplicate && "animate-pulse"
-      )}
-    >
-      <h3 className="max-w-48 truncate">{chip}</h3>
-      <XMarkIcon
-        onClick={() => onDelete(chip)}
-        className="cursor-pointer hover:text-primary w-4 transition-colors"
-      />
-    </motion.div>
   );
 };

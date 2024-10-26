@@ -5,9 +5,9 @@ import { signIn } from "next-auth/react";
 import Link from "next/link";
 import React, { useState } from "react";
 import { toast } from "sonner";
-import { Button } from "../ui/button";
-import { Input } from "../ui/input";
-import { Label } from "../ui/label";
+import { Button } from "../ui/Shared/button";
+import { Input } from "../ui/Shared/input";
+import { Label } from "../ui/Shared/label";
 import PasswordValidation from "./PasswordValidation";
 import ThirdParty from "./ThirdPartyAuth";
 function RegisterForm() {

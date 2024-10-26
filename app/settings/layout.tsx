@@ -1,6 +1,5 @@
-import { Footer } from "@/components/ui/Footer";
+import { Footer } from "@/components/ui/Shared/Footer";
 import { ChildNodeProps } from "@/lib/interface";
-import React from "react";
 
 const Layout = ({ children }: Readonly<ChildNodeProps>) => {
   return (

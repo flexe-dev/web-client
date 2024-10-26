@@ -4,29 +4,32 @@ import { useUserInteractions } from "@/components/context/UserInteraction/UserIn
 import { IconType, PostInteractionLookup } from "@/lib/interface";
 import { cn } from "@/lib/util/utils";
 import {
-  BookmarkIcon,
   ChatBubbleLeftEllipsisIcon,
   HeartIcon,
-  ShareIcon,
 } from "@heroicons/react/24/outline";
 import { Tooltip } from "@radix-ui/react-tooltip";
+import { ForwardIcon, MergeIcon } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import React from "react";
 import { toast } from "sonner";
-import { Button } from "../../button";
-import { TooltipContent, TooltipProvider, TooltipTrigger } from "../../tooltip";
+import { Button } from "../../Shared/button";
+import {
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "../../Shared/tooltip";
 
 export const TextPostMetricsDisplay = () => {
   const { status } = useSession();
 
-  const { metrics, likePost, unlikePost, postId, savePost, unsavePost } =
+  const { metrics, likePost, unlikePost, postId, removeRepost, repostPost } =
     usePostMetrics();
 
-  const { likedPosts, savedPosts } = useUserInteractions();
+  const { likedPosts, repostedPosts } = useUserInteractions();
   const router = useRouter();
 
-  const { likeCount, commentCount, saveCount } = metrics;
+  const { likeCount, commentCount, repostCount } = metrics;
 
   const hasPriorInteraction = (
     interactions: PostInteractionLookup[]
@@ -37,7 +40,7 @@ export const TextPostMetricsDisplay = () => {
   };
 
   const existingLike = hasPriorInteraction(likedPosts);
-  const existingSave = hasPriorInteraction(savedPosts);
+  const existingRepost = hasPriorInteraction(repostedPosts);
 
   const InteractionButtons: Omit<MetricButtonProps, "status">[] = [
     {
@@ -59,19 +62,19 @@ export const TextPostMetricsDisplay = () => {
       isComment: true,
     },
     {
-      onClick: existingSave ? unsavePost : savePost,
-      value: saveCount,
-      Icon: BookmarkIcon,
-      tooltipText: "Save",
+      onClick: existingRepost ? removeRepost : repostPost,
+      value: repostCount,
+      Icon: MergeIcon,
+      tooltipText: "Repost",
       hoverTheme: "yellow",
-      active: existingSave,
+      active: existingRepost,
     },
     {
       onClick: () => {
         toast("Not Implemented (Cry about it)");
       },
       value: 0,
-      Icon: ShareIcon,
+      Icon: ForwardIcon,
       tooltipText: "Share",
       hoverTheme: "green",
     },

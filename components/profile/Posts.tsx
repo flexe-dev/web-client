@@ -1,20 +1,26 @@
 "use client";
 
-import PostDisplayModal from "@/components/ui/Posts/media/PostDisplayModal";
 import { ChildNodeProps, ClassNameProp, MediaPost } from "@/lib/interface";
 import { cn, sortPostsByDate } from "@/lib/util/utils";
-import { ArrowUpTrayIcon, PlusCircleIcon } from "@heroicons/react/24/outline";
+import {
+  ArrowUpTrayIcon,
+  CameraIcon,
+  PlusCircleIcon,
+} from "@heroicons/react/24/outline";
+import { User } from "next-auth";
+import { useSession } from "next-auth/react";
 import Image from "next/image";
-import React, { Dispatch, SetStateAction, useState } from "react";
+import React, { FC, forwardRef, SetStateAction, useState } from "react";
 import { useProfilePostViewer } from "../context/UserInteraction/ProfileViewPostProvider";
 import { useProfileUserViewer } from "../context/UserInteraction/ProfileViewUserProvider";
 import PostCreateDialog from "../creator/PostCreateDialog";
-import { Button } from "../ui/button";
-import { Dialog, DialogTrigger } from "../ui/dialog";
+import PostDisplayModal from "../ui/Posts/Media/PostDisplayModal";
+import { Button } from "../ui/Shared/button";
+import { Dialog, DialogTrigger } from "../ui/Shared/dialog";
 
 const Posts = () => {
+  const { data } = useSession();
   const [openDialog, setOpenDialog] = useState<boolean>(false);
-  const [selectedPost, setSelectedPost] = useState<MediaPost | undefined>();
 
   const { fetchedPosts } = useProfilePostViewer();
   const { fetchedUser, loading } = useProfileUserViewer();
@@ -23,11 +29,6 @@ const Posts = () => {
 
   const { user } = fetchedUser;
   const { mediaPosts: posts } = fetchedPosts;
-
-  const closePostModal = () => {
-    setSelectedPost(undefined);
-    window.history.pushState(null, "", `/${user.username}/posts`);
-  };
 
   return (
     <>
@@ -45,35 +46,85 @@ const Posts = () => {
               </Button>
             </DialogTrigger>
           )}
-
-          {posts.length === 0 ? (
-            <EmptyPostTemplate dispatch={setOpenDialog} />
-          ) : (
-            <UserPosts posts={posts} onSelect={setSelectedPost} />
-          )}
         </div>
+        {/* Ternary Seperated as Component needs to be within Dialog bound, User posts use their own dialogs*/}
+        {posts.length === 0 && (
+          <EmptyPostTemplate
+            dispatch={setOpenDialog}
+            isOwnProfile={fetchedUser?.user.id === data?.user.id}
+          />
+        )}
         <PostCreateDialog dispatch={setOpenDialog} />
       </Dialog>
-      <PostDisplayModal selectedPost={selectedPost} callback={closePostModal} />
+
+      {posts.length > 0 && <UserPosts user={user} posts={posts} />}
     </>
   );
 };
 
 interface TileProps extends ChildNodeProps, ClassNameProp {}
-const PostTile = ({ children, className }: TileProps) => {
+const PostTile = forwardRef<HTMLDivElement, TileProps>(
+  ({ children, className }, ref) => {
+    return (
+      <div
+        ref={ref}
+        className={cn(
+          "aspect-[4/3] w-full mx-auto my-2 min-w-[18rem] cursor-pointer rounded-lg overflow-hidden border border-border/50 dark:border-2 shadow-md shadow-tertiary dark:shadow-none hover:brightness-50 transition-all",
+          className
+        )}
+      >
+        {children}
+      </div>
+    );
+  }
+);
+
+PostTile.displayName = "PostTile"; // Add this line to avoid display name issues
+
+interface UserPostPreviewProps {
+  post: MediaPost;
+  user: User;
+}
+
+const UserPostPreview: FC<UserPostPreviewProps> = ({ post, user }) => {
+  const [open, setOpen] = useState<boolean>(false);
+
+  const openPost = (post: MediaPost) => {
+    setOpen(true);
+    window.history.pushState(null, "", `/post/media/${post.id}`);
+  };
+
+  const closePostModal = () => {
+    window.history.pushState(null, "", `/${user.username}/posts`);
+  };
+
   return (
-    <div
-      className={cn(
-        "aspect-[4/3] w-full mx-auto my-2 min-w-[18rem] rounded-lg overflow-hidden border border-border/50 dark:border-2  shadow-md shadow-tertiary dark:shadow-none hover:brightness-50 transition-all",
-        className
-      )}
+    <PostDisplayModal
+      key={`user-post-${post.id}`}
+      post={post}
+      interaction={{ open, setOpen }}
+      modalCloseCallback={closePostModal}
     >
-      {children}
-    </div>
+      <PostTile>
+        <div className="w-full h-full" onClick={() => openPost(post)}>
+          <div className="relative w-full h-full">
+            <Image
+              src={
+                post.document.thumbnail ??
+                process.env.NEXT_PUBLIC_FALLBACK_PHOTO
+              }
+              fill
+              alt={`Post ${post.document.title} cover image`}
+              objectFit="cover"
+            />
+          </div>
+        </div>
+      </PostTile>
+    </PostDisplayModal>
   );
 };
 
-const opacityTransition = [
+export const opacityTransition = [
   "bg-inverted/15 dark:bg-inverted-foreground/15",
   "bg-inverted/10 dark:bg-inverted-foreground/[12.5%]",
   "bg-inverted/[7.5%] dark:bg-inverted-foreground/10",
@@ -82,37 +133,18 @@ const opacityTransition = [
 ];
 
 interface UserPostProps {
-  onSelect: Dispatch<SetStateAction<MediaPost | undefined>>;
   posts: MediaPost[];
+  user: User;
 }
 
-const UserPosts = ({ onSelect, posts }: UserPostProps) => {
-  const openPost = (post: MediaPost) => {
-    onSelect(post);
-    window.history.pushState(null, "", `/post/media/${post.id}`);
-  };
-
+const UserPosts: FC<UserPostProps> = ({ posts, user }) => {
   return (
     <>
       <div className="grid p-8 md:p-2 grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-x-2 justify-center relative my-4 w-full ">
         {sortPostsByDate(
           posts.filter((post) => post.document.postStatus === "PUBLISHED")
         ).map((post) => (
-          <PostTile key={post.id}>
-            <div className="w-full h-full" onClick={() => openPost(post)}>
-              <div className="relative w-full h-full">
-                <Image
-                  src={
-                    post.document.thumbnail ??
-                    process.env.NEXT_PUBLIC_DEFAULT_IMAGE
-                  }
-                  fill
-                  alt={`Post ${post.document.title} cover image`}
-                  objectFit="cover"
-                />
-              </div>
-            </div>
-          </PostTile>
+          <UserPostPreview key={post.id} post={post} user={user} />
         ))}
       </div>
     </>
@@ -120,9 +152,20 @@ const UserPosts = ({ onSelect, posts }: UserPostProps) => {
 };
 interface Props {
   dispatch: React.Dispatch<SetStateAction<boolean>>;
+  isOwnProfile: boolean;
 }
 
-const EmptyPostTemplate = ({ dispatch }: Props) => {
+const EmptyPostTemplate = ({ dispatch, isOwnProfile }: Props) => {
+  return isOwnProfile ? (
+    <EmptyPostUserTemplate dispatch={dispatch} />
+  ) : (
+    <EmptyProfileTemplate />
+  );
+};
+
+const EmptyPostUserTemplate: React.FC<Pick<Props, "dispatch">> = ({
+  dispatch,
+}) => {
   return (
     <div className="flex flex-wrap justify-center relative my-4 w-full">
       <div className="border-2 border-secondary border-dashed flex flex-col justify-center items-center aspect-[4/3] md:basis-1/3 lg:basis-1/4 mx-2 my-2 flex-grow flex-shrink min-w-[18rem] max-w-[27rem] w-full rounded-sm">
@@ -155,6 +198,15 @@ const EmptyPostTemplate = ({ dispatch }: Props) => {
           <></>
         </div>
       ))}
+    </div>
+  );
+};
+
+const EmptyProfileTemplate = () => {
+  return (
+    <div className="flex flex-col items-center pt-8">
+      <CameraIcon className="w-16 h-16" />
+      <h2 className="text-lg font-semibold mt-4 capitalize">No posts yet </h2>
     </div>
   );
 };

@@ -13,9 +13,9 @@ import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { AppLogo } from "./logo";
 import { ModeToggle } from "./theme/theme-toggle";
-import AuthProfile from "./ui/AuthProfile";
-import MobileView from "./ui/MobileNav";
 import { NavSearch } from "./ui/Search/NavSearch";
+import AuthProfile from "./ui/Shared/AuthProfile";
+import MobileView from "./ui/Shared/MobileNav";
 
 //Styling for the Navbar main logo
 

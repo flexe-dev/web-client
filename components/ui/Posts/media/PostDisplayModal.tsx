@@ -1,45 +1,68 @@
-import { useAccountPost } from "@/components/context/User/AccountPostProvider";
 import { PostInteractionProvider } from "@/components/context/User/PostInteractionContext";
-import { PostToolsProvider } from "@/components/context/User/PostOptionToolProvider";
-import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
-import { MediaPost } from "@/lib/interface";
+import {
+  ModalToolCallback,
+  PostToolsProvider,
+} from "@/components/context/User/PostOptionToolProvider";
+import { Button } from "@/components/ui/Shared/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogTrigger,
+} from "@/components/ui/Shared/dialog";
+import {
+  ChildNodeProps,
+  MediaPost,
+  ModalInteractionProps,
+} from "@/lib/interface";
 import { EllipsisHorizontalIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
-import { useEffect } from "react";
+import { FC } from "react";
 import DisplayPost from "./DisplayPost";
 import { PostPreviewDisplayMetrics } from "./PostPreviewDisplayMetrics";
 
-interface Props {
-  callback: () => void;
-  selectedPost?: MediaPost;
+interface Props extends ChildNodeProps {
+  post: MediaPost;
+  interaction: ModalInteractionProps;
+  triggerChild?: boolean;
+  modalCloseCallback?: () => void;
 }
 
-const PostDisplayModal = (props: Props) => {
-  const { selectedPost, callback } = props;
-  const { userPosts } = useAccountPost();
+const PostDisplayModal: FC<Props> = ({
+  modalCloseCallback,
+  post,
+  triggerChild,
+  children,
+  interaction: { open, setOpen },
+}) => {
+  if (!post?.id) return null;
 
-  useEffect(() => {
-    //If the selected post is not in the user's posts, close the modal (ie. Post has been deleted)
-    if (
-      !userPosts?.mediaPosts.map((post) => post.id).includes(selectedPost?.id)
-    ) {
-      callback();
-    }
-  }, [userPosts]);
+  const handleModalVisibility = (visibility: boolean) => {
+    if (modalCloseCallback) modalCloseCallback();
+    setOpen(visibility);
+  };
 
-  if (!selectedPost || !selectedPost.id) return null;
+  const toolCallbacks: ModalToolCallback = {
+    delete: () => handleModalVisibility(false),
+    archive: () => handleModalVisibility(false),
+  };
+
   return (
-    <PostInteractionProvider
-      postId={selectedPost.id}
-      postMetrics={selectedPost.metrics}
-      postType="MEDIA"
-    >
-      <Dialog open={!!selectedPost} onOpenChange={callback}>
+    <PostInteractionProvider post={post} key={`post-media-${post.id}`}>
+      <Dialog open={open} onOpenChange={handleModalVisibility}>
+        {triggerChild ? (
+          <DialogTrigger asChild>{children}</DialogTrigger>
+        ) : (
+          <>{children}</>
+        )}
+
         <DialogContent className="px-4 py-1 min-w-[90%] max-w-[90%] lg:min-w-[80%] lg:max-w-[80%] xl:max-w-[70%] h-[80dvh] flex flex-col overscroll-none">
           <PostPreviewDisplayMetrics />
-          <div className="w-full flex justify-center items-center z-[80] min-h-[3rem] max-h-[3rem] bg-background border-b-2">
-            <PostToolsProvider postId={selectedPost.id} postType="MEDIA">
+          <div className="w-full flex relative justify-center items-center z-[80] min-h-[3rem] max-h-[3rem] bg-background border-b-2">
+            <PostToolsProvider
+              key={`post-modal-tool-${post.id}`}
+              callbacks={toolCallbacks}
+              post={post}
+            >
               <Button
                 size={"icon"}
                 variant={"ghost"}
@@ -48,16 +71,15 @@ const PostDisplayModal = (props: Props) => {
                 <EllipsisHorizontalIcon className="w-6 h-6" />
               </Button>
             </PostToolsProvider>
-            <Link href={`/post/media/${selectedPost.id}`}>
-              <h2 className="w-[15rem] truncate text-xl font-bold hover:underline">
-                {selectedPost.document.title}{" "}
+            <Link href={`/post/media/${post.id}`}>
+              <h2 className="w-96 truncate text-lg font-bold hover:underline">
+                {post.document.title}{" "}
               </h2>
             </Link>
-
             <Button
               size={"icon"}
               className="h-8 absolute right-2"
-              onClick={callback}
+              onClick={() => handleModalVisibility(false)}
               variant={"ghost"}
             >
               <XMarkIcon className="h-6" />
@@ -65,7 +87,7 @@ const PostDisplayModal = (props: Props) => {
           </div>
 
           <div className="flex flex-col overflow-x-hidden overflow-y-auto -mt-4 relative">
-            <DisplayPost post={selectedPost} />
+            <DisplayPost post={post} />
           </div>
         </DialogContent>
       </Dialog>

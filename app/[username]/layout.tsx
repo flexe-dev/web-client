@@ -1,9 +1,9 @@
 "use client";
 
-import { ProfileViewerUserProvider } from "@/components/context/UserInteraction/ProfileViewUserProvider";
 import { ProfileViewerPostProvider } from "@/components/context/UserInteraction/ProfileViewPostProvider";
+import { ProfileViewerUserProvider } from "@/components/context/UserInteraction/ProfileViewUserProvider";
 import ProfileContent from "@/components/profile/ProfileContent";
-import { Footer } from "@/components/ui/Footer";
+import { Footer } from "@/components/ui/Shared/Footer";
 import { ChildNodeProps } from "@/lib/interface";
 import React from "react";
 import ProfileHeader from "../../components/profile/ProfileHeader";

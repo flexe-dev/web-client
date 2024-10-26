@@ -12,7 +12,7 @@ import { signOut } from "next-auth/react";
 import Link from "next/link";
 import { useState } from "react";
 import { LogoutIcon } from "../../icons/LogoutIcon";
-import { Dialog, DialogTrigger } from "../dialog";
+import { Dialog, DialogTrigger } from "../Shared/dialog";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -20,7 +20,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "../dropdown-menu";
+} from "../Shared/dropdown-menu";
 interface UserDropdownProps extends ChildNodeProps {
   user?: User;
 }

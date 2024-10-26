@@ -9,10 +9,10 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "./ui/dialog";
+} from "./ui/Shared/dialog";
 
 import { ModalProps } from "@/lib/interface";
-import { Button } from "./ui/button";
+import { Button } from "./ui/Shared/button";
 
 interface Props extends ModalProps {
   path: string;

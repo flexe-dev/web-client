@@ -1,68 +1,69 @@
 "use client";
 
+import { PostInteractionProvider } from "@/components/context/User/PostInteractionContext";
 import { PostToolsProvider } from "@/components/context/User/PostOptionToolProvider";
-import { Avatar, AvatarImage } from "@/components/ui/avatar";
-import { Card } from "@/components/ui/card";
-import { TextPost } from "@/lib/interface";
+import { Card } from "@/components/ui/Shared/card";
+import { Post, TextPost, UserDetails } from "@/lib/interface";
 import { EllipsisHorizontalIcon } from "@heroicons/react/24/outline";
-import { User } from "next-auth";
-import Link from "next/link";
-import { timeAgo } from "../../../../lib/util/dateutils";
-import { Button } from "../../button";
+import { useRouter } from "next/navigation";
+import { FC } from "react";
+import { Button } from "../../Shared/button";
+import { PostPreviewUserDetails } from "../Shared/PostUserDetails";
 import { TextPostMetricsDisplay } from "./TextPostMetricsDisplay";
 
 interface TextPostPreviewProps {
-  user: User;
+  user: UserDetails;
+  callback: (post: TextPost) => void;
   post: TextPost;
+  origin: string;
 }
 
-//todo: Incorporate Post Media Into Display
-
-const TextPostPreview = (props: TextPostPreviewProps) => {
-  const { post, user } = props;
+const TextPostPreview: FC<TextPostPreviewProps> = ({
+  user,
+  post,
+  callback,
+}) => {
+  const router = useRouter();
 
   if (!post.id || !user) return null;
+  const handlePostObjectUpdate = (updatedPost: Post) => {
+    callback({
+      ...post,
+      ...updatedPost,
+    });
+  };
 
   return (
-    <Card className="relative w-full my-4 hover:bg-secondary/30 transition-colors overflow-hidden">
-      <Link href={`/post/status/${post.id}`}>
-        <main className="p-4 pb-0">
-          <section className="flex space-x-1 items-center p-2 justify-between">
-            <div className="flex">
-              <Avatar className="w-10 h-10 mr-2">
-                <AvatarImage
-                  className="object-cover"
-                  src={user.image ?? process.env.NEXT_PUBLIC_FALLBACK_PHOTO}
-                />
-              </Avatar>
-              <div className="flex items-center space-x-2">
-                <div>{user.username}</div>
-              </div>
-              <div className="flex items-center ml-2 space-x-2">
-                <div className="text-secondary-header">
-                  {timeAgo(post.auxData.dateCreated)}
-                </div>
-              </div>
-            </div>
-          </section>
-
-          <section className="ml-14 mb-8">{post.textContent.content}</section>
-        </main>
-      </Link>
-      <div className="w-full overflow-hidden">
-        <TextPostMetricsDisplay />
-      </div>
-      <PostToolsProvider postId={post.id} postType="TEXT">
-        <Button
-          size={"icon"}
-          variant={"ghost"}
-          onClick={(e) => e.stopPropagation()}
-          className="hover:border-primary absolute right-4 top-4  hover:border-2 h-7"
+    <PostInteractionProvider
+      key={`feed-text-${post.id}`}
+      post={post}
+      callback={handlePostObjectUpdate}
+    >
+      <Card className="relative w-full my-4 hover:bg-secondary/30 transition-colors overflow-hidden cursor-pointer">
+        <div onClick={() => router.push(`/post/status/${post.id}`)}>
+          <main className="pt-4 px-5">
+            <PostPreviewUserDetails post={post} user={user} />
+            <section className="ml-14 mb-8">{post.textContent.content}</section>
+          </main>
+        </div>
+        <div className="w-full overflow-hidden">
+          <TextPostMetricsDisplay />
+        </div>
+        <PostToolsProvider
+          post={post}
+          key={`text-post-preview-tools-${post.id}`}
         >
-          <EllipsisHorizontalIcon className="w-6 h-6" />
-        </Button>
-      </PostToolsProvider>
-    </Card>
+          <Button
+            size={"icon"}
+            variant={"ghost"}
+            onClick={(e) => e.stopPropagation()}
+            className="hover:border-primary absolute right-4 top-4  hover:border-2 h-7"
+          >
+            <EllipsisHorizontalIcon className="w-6 h-6" />
+          </Button>
+        </PostToolsProvider>
+      </Card>
+    </PostInteractionProvider>
   );
 };
 

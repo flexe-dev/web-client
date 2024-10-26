@@ -42,20 +42,13 @@ export const ProfileViewerPostProvider: React.FC<ChildNodeProps> = ({
   useEffect(() => {
     if (!fetchedUser) return;
 
-    if (isOwnProfile) {
-      setFetchedPosts(userPosts);
+    if (isOwnProfile && userPosts) {
+      setFetchedPosts((prev) => (prev !== userPosts ? userPosts : prev)); // Avoid unnecessary state updates
       setLoading(false);
-      return;
+    } else {
+      fetchProfilePosts(fetchedUser.user.id);
     }
-
-    fetchProfilePosts(fetchedUser.user.id);
-  }, [fetchedUser]);
-
-  useEffect(() => {
-    if (!isOwnProfile) return;
-
-    setFetchedPosts(userPosts);
-  }, [userPosts]);
+  }, [fetchedUser, isOwnProfile, userPosts]); // Combine dependencies to reduce unnecessary re-renders
 
   return (
     <ProfileViewerPostContext.Provider

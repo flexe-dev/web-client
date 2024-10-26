@@ -1,6 +1,7 @@
 import { useDocumentCreator } from "@/components/context/PostCreation/DocumentCreatorProvider";
-import { Button } from "@/components/ui/button";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import { Button } from "@/components/ui/Shared/button";
+import { ScrollArea } from "@/components/ui/Shared/scroll-area";
+import { PostContentType, PostUserMediaThumbnail } from "@/lib/interface";
 import { ArrowLeftIcon } from "lucide-react";
 import { useState } from "react";
 import ImageBlock from "../blocks/ImageBlock";
@@ -8,7 +9,6 @@ import UserImageBlock from "../blocks/UserImageBlock";
 import UserMediaBlock from "../blocks/UserMediaBlock";
 import UserVideoBlock from "../blocks/UserVideoBlock";
 import VideoBlock from "../blocks/VideoBlock";
-import { PostContentType, PostUserMediaThumbnail } from "@/lib/interface";
 
 interface ThumbnailProps {
   thumbnailObject: PostUserMediaThumbnail[];

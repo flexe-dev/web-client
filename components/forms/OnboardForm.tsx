@@ -18,7 +18,7 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 import { useAccountUser } from "../context/User/AccountUserProvider";
-import { Button } from "../ui/button";
+import { Button } from "../ui/Shared/button";
 import {
   Form,
   FormControl,
@@ -27,9 +27,9 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "../ui/form";
-import { Input } from "../ui/input";
-import { Label } from "../ui/label";
+} from "../ui/Shared/form";
+import { Input } from "../ui/Shared/input";
+import { Label } from "../ui/Shared/label";
 
 interface Props {
   onSuccess: React.Dispatch<React.SetStateAction<boolean>>;

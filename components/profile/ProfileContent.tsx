@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/Shared/button";
 import { ChildNodeProps } from "@/lib/interface";
 import Link from "next/link";
 import { useParams } from "next/navigation";

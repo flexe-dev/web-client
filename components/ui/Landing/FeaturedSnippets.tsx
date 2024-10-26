@@ -1,19 +1,19 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import Autoplay from "embla-carousel-autoplay";
 import {
   Carousel,
+  CarouselApi,
   CarouselContent,
   CarouselItem,
-  CarouselPrevious,
   CarouselNext,
-  CarouselApi,
-} from "@/components/ui/carousel";
-import { StyledWordLink } from "../StyledWorkLink";
+  CarouselPrevious,
+} from "@/components/ui/Shared/carousel";
 import { images } from "@/lib/placeholder";
+import Autoplay from "embla-carousel-autoplay";
 import Image from "next/image";
 import Link from "next/link";
+import { useEffect, useState } from "react";
+import { StyledWordLink } from "../Shared/StyledWorkLink";
 
 function FeaturedSnippets() {
   const [api, setAPI] = useState<CarouselApi>();
