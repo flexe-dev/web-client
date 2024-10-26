@@ -25,6 +25,8 @@ export const defaultPostMetrics: PostMetrics = {
   commentCount: 0,
   viewCount: 0,
   saveCount: 0,
+  repostCount: 0,
+  shareCount: 0,
 };
 
 export const saveTextPost = async (
@@ -177,7 +179,7 @@ export const getPostById = async (
       return;
     }
 
-    return response.json();
+    return await response.json();
   } catch (e) {
     console.error(e);
     return;

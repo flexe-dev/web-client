@@ -67,6 +67,9 @@ const FindUserDisplayByUsername = async (
         },
       }
     );
+
+    if (response.status === 404) return;
+
     return response.json();
   } catch (err) {
     console.error("Fetch error:", err);
