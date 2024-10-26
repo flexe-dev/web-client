@@ -5,10 +5,11 @@ import { AccountPostProvider } from "@/components/context/User/AccountPostProvid
 import { AccountUserProvider } from "@/components/context/User/AccountUserProvider";
 import { LoginModalProvider } from "@/components/context/User/LoginModalProvider";
 import SessionProvider from "@/components/context/User/SessionProvider";
+import { UserFeedProvider } from "@/components/context/User/UserFeedProvider";
 import { UserInteractionsProvider } from "@/components/context/UserInteraction/UserInteractionsProvider";
 import { Navbar } from "@/components/navbar";
 import { ThemeProvider } from "@/components/theme/theme-provider";
-import { Toaster } from "@/components/ui/sonner";
+import { Toaster } from "@/components/ui/Shared/sonner";
 import { baseAuthOptions } from "@/lib/auth/authOptions";
 import { ChildNodeProps } from "@/lib/interface";
 import { cn } from "@/lib/util/utils";
@@ -41,25 +42,27 @@ export default async function RootLayout({
       >
         <SessionProvider session={session}>
           <UserInteractionsProvider>
-            <AccountUserProvider>
-              <AccountPostProvider>
-                <DndContext>
-                  <LoginModalProvider>
-                    <ThemeProvider
-                      attribute="class"
-                      defaultTheme="system"
-                      enableSystem
-                      disableTransitionOnChange
-                    >
-                      <Navbar />
-                      <main className="w-[100dvw]">{children}</main>
-                      <Toaster />
-                      <OnboardModal />
-                    </ThemeProvider>
-                  </LoginModalProvider>
-                </DndContext>
-              </AccountPostProvider>
-            </AccountUserProvider>
+            <UserFeedProvider>
+              <AccountUserProvider>
+                <AccountPostProvider>
+                  <DndContext>
+                    <LoginModalProvider>
+                      <ThemeProvider
+                        attribute="class"
+                        defaultTheme="system"
+                        enableSystem
+                        disableTransitionOnChange
+                      >
+                        <Navbar />
+                        <main className="w-[100dvw]">{children}</main>
+                        <Toaster />
+                        <OnboardModal />
+                      </ThemeProvider>
+                    </LoginModalProvider>
+                  </DndContext>
+                </AccountPostProvider>
+              </AccountUserProvider>
+            </UserFeedProvider>
           </UserInteractionsProvider>
         </SessionProvider>
       </body>

@@ -7,9 +7,10 @@ import { getServerSession } from "next-auth";
 
 const Home = async () => {
   const session = await getServerSession(baseAuthOptions);
+
   if (!session || !session.user) return <HomePageLanding />;
 
-  return <UserFeed session={session} />;
+  return <UserFeed />;
 };
 
 export default Home;

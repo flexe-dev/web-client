@@ -1,4 +1,4 @@
-import { Footer } from "@/components/ui/Footer";
+import { Footer } from "@/components/ui/Shared/Footer";
 import { ChildNodeProps } from "@/lib/interface";
 
 export default function Layout({ children }: Readonly<ChildNodeProps>) {

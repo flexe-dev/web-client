@@ -1,9 +1,9 @@
 "use server";
 
 import ErrorPage from "@/components/Error";
-import { PostDisplayHeader } from "@/components/ui/Posts/Header/PostDisplayHeader";
-import { TextPostDisplay } from "@/components/ui/Posts/text/TextPostDisplay";
-import { Skeleton } from "@/components/ui/skeleton";
+import { PostDisplayHeader } from "@/components/ui/Posts/Shared/Header/PostDisplayHeader";
+import { TextPostDisplay } from "@/components/ui/Posts/Text/TextPostDisplay";
+import { Skeleton } from "@/components/ui/Shared/skeleton";
 import { getPostById } from "@/controllers/PostController";
 import { TextPost } from "@/lib/interface";
 import { Suspense } from "react";
@@ -22,13 +22,7 @@ const page = async ({ params }: Props) => {
 
   return (
     <div className="relative flex flex-col items-center mx-auto w-full md:w-3/4 lg:w-1/2 h-full">
-      <PostDisplayHeader
-        datePosted={post.createdAt}
-        updatedDate={post.updatedAt}
-        userID={post.userID}
-        postID={post.id!}
-        type="TEXT"
-      />
+      <PostDisplayHeader post={post} />
       <Suspense fallback={<Skeleton className="mt-4 h-[10rem]" />}>
         <TextPostDisplay post={post} />
       </Suspense>
