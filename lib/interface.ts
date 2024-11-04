@@ -291,16 +291,24 @@ export interface UserDetails {
   job?: string;
 }
 
-export interface UserNetwork extends UserDetails {
-  following: UserInteractionRelationship[];
-  followers: UserInteractionRelationship[];
+export interface UserNode {
+  blockedUsers: InteractionRelationship<UserDetails>[];
+  likedPosts: InteractionRelationship<PostNode>[];
+  repostedPosts: InteractionRelationship<PostNode>[];
+  savedPosts: InteractionRelationship<PostNode>[];
+  following: InteractionRelationship<UserDetails>[];
+  followers: InteractionRelationship<UserDetails>[];
 }
 
-export interface UserNode extends UserNetwork {
-  blockedUsers: UserInteractionRelationship[];
-  likedPosts: PostInteractionRelationship[];
-  repostedPosts: PostInteractionRelationship[];
-  savedPosts: PostInteractionRelationship[];
+export interface UserConnection extends InteractionRelationship<UserDetails> {
+  relationshipType: "FOLLOWER" | "FOLLOWING";
+  mutual: UserDetails[];
+}
+
+export interface UserNetwork {
+  user: UserDetails;
+  following: UserConnection[];
+  followers: UserConnection[];
 }
 
 export interface PostNode {
@@ -313,20 +321,20 @@ export interface PostNode {
   keywords: string[];
 }
 
-export interface PostInteractionRelationship {
+export interface InteractionRelationship<T> {
   timestamp: Date;
-  post: PostNode;
+  root: T;
 }
 
-export interface PostShareRelationship {
-  timestamp: Date;
-  post: PostNode;
-  receiver: UserNode;
+export interface CreationRelationship<T> {
+  createdAt: Date;
+  root: T;
 }
 
-export interface UserInteractionRelationship {
+export interface ShareRelationship<T> {
   timestamp: Date;
-  user: UserDetails;
+  root: T;
+  target: UserNode;
 }
 
 export interface PostInteractionLookup {
