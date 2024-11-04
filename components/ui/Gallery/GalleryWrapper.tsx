@@ -5,7 +5,7 @@ import {
   menuVars,
   mobileHeaderVars,
   mobileLinkVars,
-} from "@/app/gallery/animationValues";
+} from "@/app/explore/animationValues";
 import { ChildNodeProps, ClassNameProp } from "@/lib/interface";
 import { cn } from "@/lib/util/utils";
 import { Bars3CenterLeftIcon } from "@heroicons/react/24/outline";
@@ -18,20 +18,9 @@ import { ScrollArea } from "../Shared/scroll-area";
 import { InputChips } from "./InputChips";
 interface AnimatedContainerProps extends ChildNodeProps, ClassNameProp {}
 
-const contentPreference = [
-  "Web Components",
-  "Page Designs",
-  "CSS Animations",
-  "Landing Pages",
-  "Software Mockups",
-  "Mobile Designs",
-  "Linux Homescreens",
-];
-
 const GallerySidebarWrapper = ({ children }: ChildNodeProps) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [contentSearchTags, setContentSearchTags] = useState<string[]>([]);
-  const [techStackTags, setTechStackTags] = useState<string[]>([]);
   const desktop = useMediaQuery({ query: "(min-width: 1024px)" });
 
   useEffect(() => {
@@ -41,6 +30,18 @@ const GallerySidebarWrapper = ({ children }: ChildNodeProps) => {
   const handleUpdateFilters = () => {
     //todo: Update Content Displayed Based on Submitted Filters
   };
+
+  interface TrendingSearch {
+    term: string;
+    frequency: number;
+  }
+
+  const trendingSearchs: TrendingSearch[] = [
+    { term: "search 1", frequency: 10 },
+    { term: "search 2", frequency: 20 },
+    { term: "search 3", frequency: 30 },
+    { term: "search 4", frequency: 40 },
+  ];
 
   return (
     <motion.main className="relative flex">
@@ -62,22 +63,27 @@ const GallerySidebarWrapper = ({ children }: ChildNodeProps) => {
           <AnimatedSidebar key={"gallery-sidebar"}>
             <>
               <AnimatedSection>
-                <SidebarSubHeader>Find Inspiration through</SidebarSubHeader>
+                <SidebarSubHeader>Trending Searches</SidebarSubHeader>
                 <SidebarContentWrapper>
-                  {contentPreference.map((item, index) => (
+                  {trendingSearchs.map((item, index) => (
                     <motion.h3
                       variants={mobileLinkVars}
                       key={`content-preference-${index}`}
-                      className="text-lg w-fit transition-colors font-semibold cursor-pointer group-hover:text-tertiary group-hover:hover:text-primary"
+                      className="text-lg w-fit pointer-events-auto transition-colors py-1 font-semibold cursor-pointer group-hover:text-tertiary group-hover:hover:text-primary group/search"
                     >
-                      - {item}
+                      <div className="font-semibold text-primary group-hover:text-tertiary group-hover:hover:text-primary group-hover:group-hover/search:text-primary transition-colors">
+                        {item.term}
+                      </div>
+                      <div className="ml-2 text-xs">
+                        {item.frequency} searches in the past 7 days
+                      </div>
                     </motion.h3>
                   ))}
                 </SidebarContentWrapper>
               </AnimatedSection>
               <AnimatedSection className="flex flex-col">
                 <SidebarSubHeader>Fiter by</SidebarSubHeader>
-                <SidebarContentWrapper>
+                <SidebarContentWrapper className="pointer-events-auto">
                   <InputChips
                     sectionID={"content-search-tags"}
                     className="mb-4"
@@ -86,13 +92,7 @@ const GallerySidebarWrapper = ({ children }: ChildNodeProps) => {
                     key={"content-search-tags"}
                     title="Tags"
                   />
-                  <InputChips
-                    sectionID={"tech-stack-tags"}
-                    content={techStackTags}
-                    setContent={setTechStackTags}
-                    key={"tech-stack-tags"}
-                    title="Tech Stack"
-                  />
+
                   <motion.div layout key={"filter-submit"}>
                     <BgTransitionButton className="w-full my-4">
                       Apply Filters
@@ -175,7 +175,7 @@ const SidebarContentWrapper = ({
     <motion.div
       variants={mobileLinkVars}
       className={cn(
-        "mx-6 my-2 flex flex-col space-y-2 text-muted-foreground group",
+        "mx-6 my-2 flex flex-col text-muted-foreground group pointer-events-none",
         className
       )}
     >

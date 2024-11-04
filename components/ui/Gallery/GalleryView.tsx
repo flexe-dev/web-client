@@ -35,7 +35,7 @@ const GalleryView = () => {
             key={`gallery-tile-${index}`}
             creator={account.user}
             title="Placeholder Title"
-            link="/inspiration"
+            link="/explore"
             image={images[index % images.length]}
           />
         ))}

@@ -124,7 +124,7 @@ const LinkSection = (props: DropdownProps) => {
         onClick={(e) => {
           e.stopPropagation();
         }}
-        className={`fixed lg:hidden origin-bottom bottom-0 left-0 w-full h-[25rem] bg-background border-t-2 transition-colors z-[99] `}
+        className={`pointer-events-none fixed lg:hidden origin-bottom bottom-0 left-0 w-full h-[25rem] bg-background border-t-2 transition-colors z-[99] `}
         variants={menuVars}
         initial="initial"
         animate="animate"
@@ -144,7 +144,7 @@ const LinkSection = (props: DropdownProps) => {
           initial="initial"
           animate="open"
           exit="initial"
-          className="flex flex-col h-full px-12 gap-4 group "
+          className="flex flex-col h-full px-12 group "
         >
           <MobileNavLink
             key={`mobile-link-search`}
@@ -181,10 +181,10 @@ const MobileNavLink = (props: LinkProps) => {
   return (
     <motion.div
       variants={mobileLinkVars}
-      className="text-2xl font-semibold uppercase text-secondary-header group-hover:text-tertiary hover:group-hover:text-secondary-foreground"
+      className="pointer-events-auto text-2xl font-semibold uppercase text-secondary-header group-hover:text-tertiary hover:group-hover:text-secondary-foreground"
     >
       <Link href={href}>
-        <div className="flex space-x-3 w-fit items-center transition-colors">
+        <div className="flex space-x-3 w-fit py-2 items-center transition-colors">
           <div className="w-8 h-8">{icon}</div>
           <span>{label}</span>
         </div>

@@ -16,7 +16,7 @@ export const UserFeedList = () => {
   }
 
   return (
-    <div className="w-full mx-6 mt-4">
+    <div className="w-full ml-4 md:mt-4 mr-8 xl:m-4">
       <InfiniteScroll
         className="w-full"
         dataLength={feedPosts.length}

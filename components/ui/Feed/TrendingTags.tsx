@@ -1,3 +1,5 @@
+import { FeedSideContainer } from "./FeedSideContainer";
+
 export const TrendingPostTags = () => {
-  return <div>Trending</div>;
+  return <FeedSideContainer className="h-48">Trending Tags</FeedSideContainer>;
 };

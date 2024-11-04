@@ -42,7 +42,7 @@ export const Navbar = () => {
       icon: <BriefcaseIcon />,
     },
     {
-      href: "/gallery",
+      href: "/explore",
       label: "Inspiration",
       icon: <CodeBracketIcon />,
     },

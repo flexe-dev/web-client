@@ -46,7 +46,7 @@ export const TextView = (props: ContentBlockProp) => {
   return (
     <Linkify>
       <div
-        className="min-h-[50px] border-none bg-transparent py-2 px-4 overflow-hidden resize-none"
+        className="min-h-[50px] break-all !h-fit border-none bg-transparent py-2 px-4 overflow-hidden resize-none"
         style={style}
       >
         {value?.contentValue as String}

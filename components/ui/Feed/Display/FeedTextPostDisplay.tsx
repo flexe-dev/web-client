@@ -26,13 +26,11 @@ export const FeedTextPostDisplay: FC<Props> = ({ feedPost }) => {
   };
 
   return (
-    <div className="w-full">
-      <TextPostPreview
-        origin="feed"
-        post={post}
-        callback={onPostValueChange}
-        user={feedPost.users.creator}
-      />
-    </div>
+    <TextPostPreview
+      origin="feed"
+      post={post}
+      callback={onPostValueChange}
+      user={feedPost.users.creator}
+    />
   );
 };

@@ -13,6 +13,7 @@ import {
   ChildNodeProps,
   MediaPost,
   ModalInteractionProps,
+  Post,
 } from "@/lib/interface";
 import { EllipsisHorizontalIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
@@ -22,6 +23,7 @@ import { PostPreviewDisplayMetrics } from "./PostPreviewDisplayMetrics";
 
 interface Props extends ChildNodeProps {
   post: MediaPost;
+  onPostUpdate: (post: Post) => void;
   interaction: ModalInteractionProps;
   triggerChild?: boolean;
   modalCloseCallback?: () => void;
@@ -30,6 +32,7 @@ interface Props extends ChildNodeProps {
 const PostDisplayModal: FC<Props> = ({
   modalCloseCallback,
   post,
+  onPostUpdate,
   triggerChild,
   children,
   interaction: { open, setOpen },
@@ -47,7 +50,11 @@ const PostDisplayModal: FC<Props> = ({
   };
 
   return (
-    <PostInteractionProvider post={post} key={`post-media-${post.id}`}>
+    <PostInteractionProvider
+      callback={onPostUpdate}
+      post={post}
+      key={`post-media-${post.id}`}
+    >
       <Dialog open={open} onOpenChange={handleModalVisibility}>
         {triggerChild ? (
           <DialogTrigger asChild>{children}</DialogTrigger>
@@ -87,7 +94,7 @@ const PostDisplayModal: FC<Props> = ({
           </div>
 
           <div className="flex flex-col overflow-x-hidden overflow-y-auto -mt-4 relative">
-            <DisplayPost post={post} />
+            <DisplayPost className="px-4 md:px-16" post={post} />
           </div>
         </DialogContent>
       </Dialog>

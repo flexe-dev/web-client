@@ -27,23 +27,29 @@ export const UserFeed = async () => {
 
   //Load Initial Set of Posts
   const sortedFeed = SortUserFeed(feed);
-  const posts = await GetFeedPosts(sortedFeed.slice(0, POST_LIMIT), token.value);
-  
+  const posts = await GetFeedPosts(
+    sortedFeed.slice(0, POST_LIMIT),
+    token.value
+  );
+
   if (!posts) {
     return <ErrorPage />;
   }
 
   return (
-    <main className="flex justify-center">
-      <aside className="w-1/4">
+    <main className="flex flex-col md:flex-row justify-center">
+      <aside className="h-fit w-full md:w-1/3 md:min-w-[33%] xl:min-w-[25%] xl:w-1/4">
         <SuggestedConnections />
+        <div className="hidden md:block xl:hidden">
+          <TrendingPostTags />
+        </div>
       </aside>
-      <section className="flex flex-grow h-full">
+      <section className="flex w-auto flex-grow h-full">
         <Suspense fallback={<FeedLoading />}>
           <UserFeedDisplay feed={sortedFeed} posts={posts} />
         </Suspense>
       </section>
-      <aside className="w-1/4">
+      <aside className="hidden xl:block min-w-[25%] w-1/4">
         <TrendingPostTags />
       </aside>
     </main>

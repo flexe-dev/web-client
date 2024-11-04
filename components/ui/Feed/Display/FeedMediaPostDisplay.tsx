@@ -25,10 +25,10 @@ interface Props {
 }
 
 export const FeedMediaPostDisplay: FC<Props> = ({ feedPost }) => {
-  const { setFeedPosts } = useUserFeed();
   const post = feedPost.post as MediaPost;
   const { creator, users } = feedPost.users;
   const [displayPostModal, setDisplayPostMode] = useState<boolean>(false);
+  const { onPostUpdate } = useUserFeed();
 
   const previewPost = () => {
     setDisplayPostMode(true);
@@ -51,12 +51,13 @@ export const FeedMediaPostDisplay: FC<Props> = ({ feedPost }) => {
 
   return (
     <PostDisplayModal
+      onPostUpdate={onPostUpdate}
       key={`feed-post-display-${post.id}`}
       post={post}
       interaction={{ open: displayPostModal, setOpen: setDisplayPostMode }}
       modalCloseCallback={closePostModal}
     >
-      <Card className="relative overflow-hidden my-4">
+      <Card className="relative overflow-hidden flex-grow my-4">
         <CardHeader className="pb-2">
           <PostPreviewUserDetails post={post} user={creator} />
         </CardHeader>
@@ -64,13 +65,13 @@ export const FeedMediaPostDisplay: FC<Props> = ({ feedPost }) => {
         <CardContent className="mt-4 mb-2">
           <h2
             onClick={previewPost}
-            className="text-lg font-bold pointer-events-auto hover:underline transition-all"
+            className="text-lg font-bold pointer-events-auto cursor-pointer hover:underline transition-all"
           >
             {post.document.title}
           </h2>
           <main
             onClick={previewPost}
-            className="relative flex pointer-events-auto h-[35rem] my-4 group/post overflow-hidden shadow-md shadow-neutral-500 dark:shadow-none dark:border rounded-md hover/post:brightness-50 transition-all"
+            className="relative cursor-pointer flex pointer-events-auto h-[25rem] lg:h-[30rem] xl:h-[35rem] my-4 group/post overflow-hidden shadow-md shadow-neutral-500 dark:shadow-none dark:border rounded-md hover/post:brightness-50 transition-all"
           >
             <section className="w-full h-full relative ">
               <Image

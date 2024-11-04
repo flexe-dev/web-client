@@ -11,6 +11,7 @@ import { User } from "next-auth";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import React, { FC, forwardRef, SetStateAction, useState } from "react";
+import { useAccountPost } from "../context/User/AccountPostProvider";
 import { useProfilePostViewer } from "../context/UserInteraction/ProfileViewPostProvider";
 import { useProfileUserViewer } from "../context/UserInteraction/ProfileViewUserProvider";
 import PostCreateDialog from "../creator/PostCreateDialog";
@@ -47,7 +48,6 @@ const Posts = () => {
             </DialogTrigger>
           )}
         </div>
-        {/* Ternary Seperated as Component needs to be within Dialog bound, User posts use their own dialogs*/}
         {posts.length === 0 && (
           <EmptyPostTemplate
             dispatch={setOpenDialog}
@@ -88,6 +88,10 @@ interface UserPostPreviewProps {
 
 const UserPostPreview: FC<UserPostPreviewProps> = ({ post, user }) => {
   const [open, setOpen] = useState<boolean>(false);
+  const { onPostUpdate } = useAccountPost();
+  const { onPostUpdate: onProfilePostUpdate } = useProfilePostViewer();
+  const { data } = useSession();
+  const isOwnProfile: boolean = user.id === data?.user.id;
 
   const openPost = (post: MediaPost) => {
     setOpen(true);
@@ -100,6 +104,7 @@ const UserPostPreview: FC<UserPostPreviewProps> = ({ post, user }) => {
 
   return (
     <PostDisplayModal
+      onPostUpdate={isOwnProfile ? onPostUpdate : onProfilePostUpdate}
       key={`user-post-${post.id}`}
       post={post}
       interaction={{ open, setOpen }}

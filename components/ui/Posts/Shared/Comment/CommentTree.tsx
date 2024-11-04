@@ -14,11 +14,16 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/Shared/tooltip";
-import { UserHoverCard } from "@/components/ui/Shared/UserHoverCard";
+import { UserHoverCard } from "@/components/ui/User/UserHoverCard";
 import { CommentNode, CommentReactType } from "@/lib/interface";
 import { getTotalChildren } from "@/lib/util/commentUtils";
 import { timeAgo } from "@/lib/util/dateutils";
-import { cn, GetNameInitials, isAuthenticated } from "@/lib/util/utils";
+import {
+  cn,
+  GetNameInitials,
+  isAuthenticated,
+  toUserDetails,
+} from "@/lib/util/utils";
 import {
   ArrowDownIcon,
   ArrowRightCircleIcon,
@@ -311,7 +316,7 @@ const CommentHeader = (props: CommentProps) => {
 
   return (
     <div className="flex items-center">
-      <UserHoverCard account={account}>
+      <UserHoverCard user={toUserDetails(account)}>
         <Avatar className="hover:brightness-75 transition-all">
           <AvatarImage
             src={user?.image ?? process.env.NEXT_PUBLIC_DEFAULT_PHOTO}
@@ -320,7 +325,7 @@ const CommentHeader = (props: CommentProps) => {
         </Avatar>
       </UserHoverCard>
       <div className="ml-2">
-        <UserHoverCard account={account}>
+        <UserHoverCard user={toUserDetails(account)}>
           <div className="font-semibold hover:underline">{user.name}</div>
         </UserHoverCard>
         <div className="flex ">

@@ -18,7 +18,7 @@ const PostDisplayWrapper = ({ post }: Props) => {
         <PostComments postId={post.id} type="MEDIA" />
         <div className="relative w-full">
           <PostDisplayHeader post={post} />
-          <DisplayPost post={post} />
+          <DisplayPost post={post} className="md:pl-32 md:pr-16  xl:px-16" />
         </div>
       </>
     </PostInteractionProvider>
