@@ -1,7 +1,8 @@
 "use client";
 
 import { GetUserPosts } from "@/controllers/PostController";
-import { ChildNodeProps, UserPosts } from "@/lib/interface";
+import { ChildNodeProps, Post, UserPosts } from "@/lib/interface";
+import { onPostObjectUpdate } from "@/lib/util/utils";
 import { useSession } from "next-auth/react";
 import React, {
   createContext,
@@ -14,11 +15,13 @@ import React, {
 interface AccountProviderState {
   userPosts?: UserPosts;
   setUserPosts: Dispatch<SetStateAction<UserPosts | undefined>>;
+  onPostUpdate: (post: Post) => void;
 }
 
 const initialState: AccountProviderState = {
   userPosts: undefined,
   setUserPosts: () => {},
+  onPostUpdate: () => {},
 };
 
 export const AccountContext = createContext<AccountProviderState>(initialState);
@@ -48,6 +51,7 @@ export const AccountPostProvider = ({ children }: ChildNodeProps) => {
       value={{
         userPosts,
         setUserPosts,
+        onPostUpdate: onPostObjectUpdate(setUserPosts, userPosts),
       }}
     >
       {children}

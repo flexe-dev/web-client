@@ -5,6 +5,7 @@ import {
   ChildNodeProps,
   FeedDisplayReference,
   FeedPost,
+  Post,
 } from "@/lib/interface";
 import { useSession } from "next-auth/react";
 import React, {
@@ -19,6 +20,7 @@ import { toast } from "sonner";
 interface FeedProviderState {
   feedReferences: FeedDisplayReference[];
   feedPosts: FeedPost[];
+  onPostUpdate: (post: Post) => void;
   setFeedPosts: Dispatch<SetStateAction<FeedPost[]>>;
   setFeedReferences: Dispatch<SetStateAction<FeedDisplayReference[]>>;
   loadMorePosts: () => void;
@@ -34,6 +36,7 @@ const initialState: FeedProviderState = {
   setFeedPosts: () => {},
   loadMorePosts: () => {},
   setLoading: () => {},
+  onPostUpdate: () => {},
 };
 
 export const UserFeedContext = createContext<FeedProviderState>(initialState);
@@ -72,6 +75,27 @@ export const UserFeedProvider: React.FC<ChildNodeProps> = ({ children }) => {
     setPostOffset((prev) => prev + 1);
   };
 
+  const onPostUpdate = (updatedPost: Post) => {
+    const existingPostIndex = feedPosts.findIndex(
+      (feedPost) => feedPost.post.id === updatedPost.id
+    );
+    if (existingPostIndex === -1) return;
+
+    setFeedPosts((prev) => {
+      return [
+        ...prev.slice(0, existingPostIndex),
+        {
+          ...prev[existingPostIndex],
+          post: {
+            ...prev[existingPostIndex].post,
+            ...updatedPost,
+          },
+        },
+        ...prev.slice(existingPostIndex + 1),
+      ];
+    });
+  };
+
   return (
     <UserFeedContext.Provider
       value={{
@@ -82,6 +106,7 @@ export const UserFeedProvider: React.FC<ChildNodeProps> = ({ children }) => {
         setFeedReferences,
         loadMorePosts,
         setLoading,
+        onPostUpdate,
       }}
     >
       {children}

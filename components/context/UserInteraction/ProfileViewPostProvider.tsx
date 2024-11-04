@@ -1,7 +1,8 @@
 "use client";
 
 import { GetUserPosts } from "@/controllers/PostController";
-import { ChildNodeProps, UserPosts } from "@/lib/interface";
+import { ChildNodeProps, Post, UserPosts } from "@/lib/interface";
+import { onPostObjectUpdate } from "@/lib/util/utils";
 import React, { createContext, useEffect, useState } from "react";
 import { useAccountPost } from "../User/AccountPostProvider";
 import { useProfileUserViewer } from "./ProfileViewUserProvider";
@@ -10,12 +11,14 @@ interface ProfileViewerProviderState {
   fetchedPosts?: UserPosts;
   loading: boolean;
   setFetchedPosts: React.Dispatch<React.SetStateAction<UserPosts | undefined>>;
+  onPostUpdate: (post: Post) => void;
 }
 
 const initialState: ProfileViewerProviderState = {
   fetchedPosts: undefined,
   loading: true,
   setFetchedPosts: () => {},
+  onPostUpdate: () => {},
 };
 
 export const ProfileViewerPostContext =
@@ -56,6 +59,7 @@ export const ProfileViewerPostProvider: React.FC<ChildNodeProps> = ({
         loading,
         fetchedPosts,
         setFetchedPosts,
+        onPostUpdate: onPostObjectUpdate(setFetchedPosts, fetchedPosts),
       }}
     >
       {children}

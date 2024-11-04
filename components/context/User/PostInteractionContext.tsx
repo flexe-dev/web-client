@@ -54,7 +54,6 @@ export const PostInteractionProvider = ({
   post,
   callback,
 }: ContextProps) => {
-  const [metrics, setMetrics] = useState<PostMetrics>(post.metrics);
   const {
     userNode,
     likePost: addToUserLikedPosts,
@@ -65,25 +64,31 @@ export const PostInteractionProvider = ({
     removeSavedPost,
   } = useUserInteractions();
 
-  const { id: postId, postType } = post;
+  const { id: postId, metrics } = post;
 
+  // Use for Isolated Server Side Components
+  const [postMetrics, setMetrics] = useState<PostMetrics>(post.metrics);
   const { data } = useSession();
 
-  const updatePostObject = (updatedMetrics: PostMetrics) => {
-    if (!callback) return;
+  const updatePostObject = (key: keyof PostMetrics, adjustment: number) => {
+    if (!post) return;
 
-    console.log(metrics);
+    if (!callback) {
+      setMetrics((prev) => ({ ...prev, [key]: prev[key] + adjustment }));
+      return;
+    }
 
-    const updatedPost: Post = {
-      ...post,
-      metrics,
+    const updatedMetrics: PostMetrics = {
+      ...metrics,
+      [key]: metrics[key] + adjustment,
     };
-
-    callback(updatedPost);
+    callback({ ...post, metrics: updatedMetrics });
   };
 
   const likePost = async () => {
     if (!userNode || !postId) return;
+    addToUserLikedPosts(postId);
+    updatePostObject("likeCount", 1);
 
     const response = await LikePost(
       {
@@ -93,20 +98,18 @@ export const PostInteractionProvider = ({
     );
 
     if (!response) {
+      // Revert Changes
+      removeLikedPost(postId);
+      updatePostObject("likeCount", -1);
       toast.error("Failed to like post. Please try again.");
       return;
     }
-
-    addToUserLikedPosts(postId);
-    setMetrics((prev) => {
-      const updatedMetrics = { ...prev, likeCount: prev.likeCount + 1 };
-      updatePostObject(updatedMetrics);
-      return updatedMetrics;
-    });
   };
 
   const unlikePost = async () => {
     if (!userNode || !postId) return;
+    removeLikedPost(postId);
+    updatePostObject("likeCount", -1);
 
     const response = await UnlikePost(
       {
@@ -116,21 +119,21 @@ export const PostInteractionProvider = ({
     );
 
     if (!response) {
+      // Revert Changes
+      addToUserLikedPosts(postId);
+      updatePostObject("likeCount", 1);
       toast.error("Failed to unlike post. Please try again.");
       return;
     }
-
-    removeLikedPost(postId);
-    setMetrics((prev) => {
-      const updatedMetrics = { ...prev, likeCount: prev.likeCount - 1 };
-      updatePostObject(updatedMetrics);
-      return updatedMetrics;
-    });
   };
 
   const repostPost = async () => {
     if (!userNode || !postId) return;
 
+    addToUserRepostedPosts(postId);
+    updatePostObject("repostCount", 1);
+
+    //Contact Server
     const response = await RepostPost(
       {
         postId,
@@ -139,20 +142,18 @@ export const PostInteractionProvider = ({
     );
 
     if (!response) {
+      // Revert Changes
+      removeRepostedPost(postId);
+      updatePostObject("repostCount", -1);
       toast.error("Failed to repost post. Please try again.");
       return;
     }
-
-    addToUserRepostedPosts(postId);
-    setMetrics((prev) => {
-      const updatedMetrics = { ...prev, likeCount: prev.repostCount + 1 };
-      updatePostObject(updatedMetrics);
-      return updatedMetrics;
-    });
   };
 
   const removeRepost = async () => {
     if (!userNode || !postId) return;
+    removeRepostedPost(postId);
+    updatePostObject("repostCount", -1);
 
     const response = await RemoveRepost(
       {
@@ -162,20 +163,18 @@ export const PostInteractionProvider = ({
     );
 
     if (!response) {
+      addToUserRepostedPosts(postId);
+      updatePostObject("repostCount", 1);
       toast.error("Failed to remove repost. Please try again.");
       return;
     }
-
-    removeRepostedPost(postId);
-    setMetrics((prev) => {
-      const updatedMetrics = { ...prev, likeCount: prev.repostCount - 1 };
-      updatePostObject(updatedMetrics);
-      return updatedMetrics;
-    });
   };
 
   const savePost = async () => {
     if (!userNode || !postId) return;
+
+    addToUserSavedPosts(postId);
+    updatePostObject("saveCount", 1);
 
     const response = await SavePost(
       {
@@ -185,20 +184,19 @@ export const PostInteractionProvider = ({
     );
 
     if (!response) {
+      // Revert Changes
+      removeSavedPost(postId);
+      updatePostObject("saveCount", -1);
       toast.error("Failed to save post. Please try again.");
       return;
     }
-
-    addToUserSavedPosts(postId);
-    setMetrics((prev) => {
-      const updatedMetrics = { ...prev, likeCount: prev.saveCount + 1 };
-      updatePostObject(updatedMetrics);
-      return updatedMetrics;
-    });
   };
 
   const unsavePost = async () => {
     if (!userNode || !postId) return;
+
+    removeSavedPost(postId);
+    updatePostObject("saveCount", -1);
 
     const response = await UnsavePost(
       {
@@ -208,36 +206,22 @@ export const PostInteractionProvider = ({
     );
 
     if (!response) {
+      // Revert Changes
+      addToUserSavedPosts(postId);
+      updatePostObject("saveCount", 1);
       toast.error("Failed to unsave post. Please try again.");
       return;
     }
-
-    removeSavedPost(postId);
-    setMetrics((prev) => {
-      const updatedMetrics = { ...prev, likeCount: prev.saveCount + 1 };
-      updatePostObject(updatedMetrics);
-      return updatedMetrics;
-    });
   };
 
   const addComment = (count: number) => {
     if (!userNode) return;
-
-    setMetrics((prev) => {
-      const updatedMetrics = { ...prev, likeCount: prev.commentCount + count };
-      updatePostObject(updatedMetrics);
-      return updatedMetrics;
-    });
+    updatePostObject("commentCount", count);
   };
 
   const removeComment = (count: number) => {
     if (!userNode) return;
-
-    setMetrics((prev) => {
-      const updatedMetrics = { ...prev, likeCount: prev.commentCount - count };
-      updatePostObject(updatedMetrics);
-      return updatedMetrics;
-    });
+    updatePostObject("commentCount", -count);
   };
 
   return (
