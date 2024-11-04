@@ -74,7 +74,7 @@ const handlePostInteraction = async (
 ): Promise<boolean> => {
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}post/${actionRouteMap[interaction]}/${postID}`,
+      `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}interaction/${actionRouteMap[interaction]}/${postID}`,
       {
         method: `POST`,
         headers: {

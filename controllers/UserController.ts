@@ -214,11 +214,12 @@ const UserInteractionRequest = async (
 };
 
 const GetUserNetwork = async (
-  username: string
+  username: string,
+  userId: string | null = null
 ): Promise<UserNetwork | undefined> => {
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}node/p/network/${username}`,
+      `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}node/p/network/${username}?userId=${userId}`,
       {
         method: "GET",
         cache: "no-cache",
