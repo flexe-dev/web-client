@@ -115,17 +115,12 @@ export const UserNetworkContent = () => {
             <h2
               className={cn(
                 "font-semibold text-secondary-header group-hover:text-inherit transition-all mr-6",
-                content.tab === tab && isUser && "text-primary font-bold"
+                content.tab === tab && isUser && "text-primary"
               )}
             >
               {content.title}
             </h2>
-            <div
-              className={cn(
-                "absolute right-2 transition-all",
-                content.tab === tab && isUser && "font-bold "
-              )}
-            >
+            <div className={cn("absolute right-2 transition-all")}>
               {content.value}
             </div>
           </Link>
