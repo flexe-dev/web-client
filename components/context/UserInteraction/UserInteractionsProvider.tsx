@@ -7,10 +7,10 @@ import {
 } from "@/controllers/UserController";
 import {
   ChildNodeProps,
+  InteractionRelationship,
   PostInteractionLookup,
-  PostInteractionRelationship,
+  PostNode,
   UserDetails,
-  UserInteractionRelationship,
   UserNode,
 } from "@/lib/interface";
 import { useSession } from "next-auth/react";
@@ -24,8 +24,8 @@ interface UserInteractionState {
   savedPosts: PostInteractionLookup[];
   repostedPosts: PostInteractionLookup[];
 
-  followingUsers: UserInteractionRelationship[];
-  followedByUsers: UserInteractionRelationship[];
+  followingUsers: InteractionRelationship<UserDetails>[];
+  followedByUsers: InteractionRelationship<UserDetails>[];
 
   likePost: (postId: string) => void;
   savePost: (postId: string) => void;
@@ -78,18 +78,18 @@ export const UserInteractionsProvider: React.FC<ChildNodeProps> = ({
   );
 
   const [followingUsers, setFollowingUser] = useState<
-    UserInteractionRelationship[]
+    InteractionRelationship<UserDetails>[]
   >([]);
   const [followedByUsers, setFollowedBy] = useState<
-    UserInteractionRelationship[]
+    InteractionRelationship<UserDetails>[]
   >([]);
 
   const generatePostLookupItem = (
-    interactions: PostInteractionRelationship[]
-  ) => {
+    interactions: InteractionRelationship<PostNode>[]
+  ): PostInteractionLookup[] => {
     return interactions.map((interaction) => {
       return {
-        postId: interaction.post.postId,
+        postId: interaction.root.postId,
         timeStamp: interaction.timestamp,
       };
     });
@@ -103,12 +103,13 @@ export const UserInteractionsProvider: React.FC<ChildNodeProps> = ({
 
   const generateUserLookup = (
     userInfo: UserDetails
-  ): UserInteractionRelationship => {
+  ): InteractionRelationship<UserDetails> => {
     return {
       timestamp: new Date(),
-      user: userInfo,
+      root: userInfo,
     };
   };
+  
 
   const likePost = (postId: string) => {
     //Add Post To Liked Posts
@@ -176,7 +177,7 @@ export const UserInteractionsProvider: React.FC<ChildNodeProps> = ({
 
     //Remove User From Followed Users
     setFollowingUser((prev) => {
-      return prev.filter((user) => user.user.userId !== userId);
+      return prev.filter((user) => user.root.userId !== userId);
     });
   };
   const removeFollowedUser = (userId: string) => {
@@ -186,7 +187,7 @@ export const UserInteractionsProvider: React.FC<ChildNodeProps> = ({
 
     //Remove User From Following Users
     setFollowedBy((prev) => {
-      return prev.filter((user) => user.user.userId !== userId);
+      return prev.filter((user) => user.root.userId !== userId);
     });
   };
 
