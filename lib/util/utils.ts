@@ -1,14 +1,17 @@
 import { defaultPostMetrics } from "@/controllers/PostController";
 import bcrypt from "bcryptjs";
 import { clsx, type ClassValue } from "clsx";
+import { Dispatch, SetStateAction } from "react";
 import { twMerge } from "tailwind-merge";
 import {
   Authentication,
   Post,
+  postTypeMap,
   TextContent,
   TextPost,
   UserDetails,
   UserDisplay,
+  UserPosts,
 } from "../interface";
 
 export function cn(...inputs: ClassValue[]) {
@@ -115,6 +118,41 @@ export async function resizeImage(
     };
   });
 }
+
+export const onPostObjectUpdate = (
+  setPosts: Dispatch<SetStateAction<UserPosts | undefined>>,
+  posts?: UserPosts
+) => {
+  return (alteredPost: Post) => {
+    if (!posts || !alteredPost) return;
+
+    const existingPostIndex = posts[
+      postTypeMap[alteredPost.postType]
+    ].findIndex((post) => post.id === alteredPost.id);
+    if (existingPostIndex === -1) return;
+
+    setPosts((prev) => {
+      if (!prev) return;
+
+      return {
+        ...prev,
+        [postTypeMap[alteredPost.postType]]: [
+          ...prev[postTypeMap[alteredPost.postType]].slice(
+            0,
+            existingPostIndex
+          ),
+          {
+            ...prev[postTypeMap[alteredPost.postType]][existingPostIndex],
+            ...alteredPost,
+          },
+          ...prev[postTypeMap[alteredPost.postType]].slice(
+            existingPostIndex + 1
+          ),
+        ],
+      };
+    });
+  };
+};
 
 export const generateMongoID = async (): Promise<string | undefined> => {
   /*
