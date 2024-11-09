@@ -1,7 +1,9 @@
 "use client";
 
-import { ChildNodeProps, ClassNameProp, MediaPost } from "@/lib/interface";
-import { cn, sortPostsByDate } from "@/lib/util/utils";
+import { ChildNodeProps, ClassNameProp } from "@/lib/interfaces/componentTypes";
+import { MediaPost } from "@/lib/interfaces/postTypes";
+import { sortPostsByDate } from "@/lib/util/postUtils";
+import { cn } from "@/lib/util/utils";
 import {
   ArrowUpTrayIcon,
   CameraIcon,

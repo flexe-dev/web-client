@@ -4,7 +4,7 @@ import {
   defaultPostMetrics,
   saveMediaPost,
 } from "@/controllers/PostController";
-import { MediaPost, PostStatus } from "@/lib/interface";
+import { MediaPost, PostStatus } from "@/lib/interfaces/postTypes";
 import { cn } from "@/lib/util/utils";
 import { useMotionValueEvent, useScroll } from "framer-motion";
 import { useSession } from "next-auth/react";

@@ -2,7 +2,7 @@
 
 import DocumentCreator from "@/components/creator/PostCreator";
 import UploadUserImages from "@/components/upload/UserUploadImage";
-import { PostUserMedia } from "@/lib/interface";
+import { PostUserMedia } from "@/lib/interfaces/documentTypes";
 import React from "react";
 
 const page = () => {

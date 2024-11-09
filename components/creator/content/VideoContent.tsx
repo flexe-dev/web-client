@@ -2,13 +2,14 @@
 
 import { SortableItem } from "@/components/dnd/Sortable";
 import { Skeleton } from "@/components/ui/Shared/skeleton";
-import { ContentBlockProp, PostUserMedia } from "@/lib/interface";
-import { cn, getVideoThumbnail } from "@/lib/util/utils";
 import { VideoCameraIcon } from "@heroicons/react/24/outline";
 import { omit } from "lodash";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import ContentWrapper from "./ContentWrapper";
+import { ContentBlockProp, PostUserMedia } from "@/lib/interfaces/documentTypes";
+import { getVideoThumbnail } from "@/lib/util/postUtils";
+import { cn } from "@/lib/util/utils";
 
 //Editable Component
 export const VideoContent = (props: ContentBlockProp) => {

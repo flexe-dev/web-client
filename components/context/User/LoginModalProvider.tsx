@@ -1,6 +1,6 @@
 "use client";
 
-import { ChildNodeProps } from "@/lib/interface";
+import { ChildNodeProps } from "@/lib/interfaces/componentTypes";
 import { createContext, useContext, useState } from "react";
 import { LoginModal } from "../../auth/LoginModal";
 

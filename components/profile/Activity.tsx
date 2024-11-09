@@ -1,6 +1,9 @@
 import TextPostPreview from "@/components/ui/Posts/Text/textPostPreview";
-import { TextPost, UserDisplay, UserPosts } from "@/lib/interface";
-import { cn, sortPostsByDate, toUserDetails } from "@/lib/util/utils";
+import { TextPost } from "@/lib/interfaces/postTypes";
+import { UserDisplay, UserPosts } from "@/lib/interfaces/userTypes";
+import { sortPostsByDate } from "@/lib/util/postUtils";
+import { toUserDetails } from "@/lib/util/userUtils";
+import { cn } from "@/lib/util/utils";
 import { ChatBubbleLeftEllipsisIcon } from "@heroicons/react/24/outline";
 import { useSession } from "next-auth/react";
 import { FC, useState } from "react";

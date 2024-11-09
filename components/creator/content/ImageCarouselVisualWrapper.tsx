@@ -1,4 +1,4 @@
-import { ChildNodeProps } from "@/lib/interface";
+import { ChildNodeProps } from "@/lib/interfaces/componentTypes";
 import { cn } from "@/lib/util/utils";
 import { useDroppable } from "@dnd-kit/core";
 import { useEffect, useState } from "react";

@@ -1,6 +1,6 @@
 "use client";
 
-import { LinkProps } from "@/lib/interface";
+import { LinkProps } from "@/lib/interfaces/componentTypes";
 import {
   BellIcon,
   BriefcaseIcon,

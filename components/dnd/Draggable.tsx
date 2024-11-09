@@ -1,8 +1,6 @@
-import React from "react";
+import { ChildNodeProps } from "@/lib/interfaces/componentTypes";
 import { useDraggable } from "@dnd-kit/core";
-import { ChildNodeProps } from "@/lib/interface";
 import { CSSProperties } from "react";
-import { CSS } from "@dnd-kit/utilities";
 interface Props extends ChildNodeProps {
   id: string;
 }

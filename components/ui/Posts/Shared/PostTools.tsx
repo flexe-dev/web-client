@@ -9,7 +9,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/Shared/dropdown-menu";
-import { ChildNodeProps, IconType, Post, PostType } from "@/lib/interface";
+import { ChildNodeProps, IconType } from "@/lib/interfaces/componentTypes";
+import { Post, PostType } from "@/lib/interfaces/postTypes";
 import { copyToClipboard } from "@/lib/util/utils";
 import {
   ArrowUpTrayIcon,

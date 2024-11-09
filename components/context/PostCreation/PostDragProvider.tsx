@@ -1,6 +1,10 @@
 "use client";
 
-import { ContentBlockProp, Document, PostUserMedia } from "@/lib/interface";
+import {
+  ContentBlockProp,
+  Document,
+  PostUserMedia,
+} from "@/lib/interfaces/documentTypes";
 import {
   Active,
   DndContext,

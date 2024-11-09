@@ -1,12 +1,9 @@
 "use client";
 
 import { GetFeedPosts } from "@/controllers/FeedController";
-import {
-  ChildNodeProps,
-  FeedDisplayReference,
-  FeedPost,
-  Post,
-} from "@/lib/interface";
+import { ChildNodeProps } from "@/lib/interfaces/componentTypes";
+import { FeedDisplayReference, FeedPost } from "@/lib/interfaces/feedTypes";
+import { Post } from "@/lib/interfaces/postTypes";
 import { useSession } from "next-auth/react";
 import React, {
   createContext,

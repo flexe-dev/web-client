@@ -1,8 +1,10 @@
 "use client";
 
 import { PostToolsProvider } from "@/components/context/User/PostOptionToolProvider";
-import { Post, UserDisplay } from "@/lib/interface";
-import { cn, toUserDetails } from "@/lib/util/utils";
+import { Post } from "@/lib/interfaces/postTypes";
+import { UserDisplay } from "@/lib/interfaces/userTypes";
+import { toUserDetails } from "@/lib/util/userUtils";
+import { cn } from "@/lib/util/utils";
 import {
   ArrowLeftIcon,
   EllipsisHorizontalIcon,

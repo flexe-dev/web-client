@@ -2,7 +2,8 @@
 
 import { SortableItem } from "@/components/dnd/Sortable";
 import { Skeleton } from "@/components/ui/Shared/skeleton";
-import { ContentBlockProp } from "@/lib/interface";
+import { ContentBlockProp } from "@/lib/interfaces/documentTypes";
+
 
 const BlockPreview = (props: ContentBlockProp) => {
   return (

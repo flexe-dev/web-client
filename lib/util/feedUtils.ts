@@ -1,4 +1,4 @@
-import { FeedDisplayReference, OriginReferenceLookup } from "../interface";
+import { FeedDisplayReference, OriginReferenceLookup } from "../interfaces/feedTypes";
 
 export const SortUserFeed = (references: FeedDisplayReference[]) => {
   const unreadPosts = references.filter((ref) => !ref.userFeed.readStatus);

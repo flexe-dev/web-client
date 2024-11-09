@@ -1,11 +1,5 @@
 //Comment Logic
 
-import {
-  Comment,
-  CommentNode,
-  CommentReactType,
-  PostType,
-} from "@/lib/interface";
 
 export const GetPostComments = async (
   postID: string

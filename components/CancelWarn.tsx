@@ -11,7 +11,7 @@ import {
   DialogTrigger,
 } from "./ui/Shared/dialog";
 
-import { ModalProps } from "@/lib/interface";
+import { ModalProps } from "@/lib/interfaces/componentTypes";
 import { Button } from "./ui/Shared/button";
 
 interface Props extends ModalProps {

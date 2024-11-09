@@ -4,9 +4,9 @@ import React from "react";
 import { FaGithub, FaGoogle } from "react-icons/fa";
 import { Button } from "../ui/Shared/button";
 
-import { ClassNameProp } from "@/lib/interface";
 import { cn } from "@/lib/util/utils";
 import { signIn } from "next-auth/react";
+import { ClassNameProp } from "@/lib/interfaces/componentTypes";
 
 interface ThirdPartyProps extends ClassNameProp {
   iconClass?: string;

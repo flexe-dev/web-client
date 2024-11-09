@@ -21,7 +21,7 @@ import {
   ContentBlockOptions,
   ContentBlockProp,
   PostUserMedia,
-} from "@/lib/interface";
+} from "@/lib/interfaces/documentTypes";
 import Autoplay from "embla-carousel-autoplay";
 import { omit } from "lodash";
 import Image from "next/image";

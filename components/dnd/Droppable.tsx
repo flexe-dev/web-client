@@ -1,6 +1,5 @@
-import { ChildNodeProps, ClassNameProp } from "@/lib/interface";
+import { ChildNodeProps, ClassNameProp } from "@/lib/interfaces/componentTypes";
 import { useDroppable } from "@dnd-kit/core";
-import React from "react";
 
 interface Props extends ChildNodeProps, ClassNameProp {
   id: string;

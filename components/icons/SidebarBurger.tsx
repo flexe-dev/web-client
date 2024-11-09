@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/Shared/button";
-import { SidebarButtonProps } from "@/lib/interface";
+import { SidebarButtonProps } from "@/lib/interfaces/componentTypes";
 import { cn } from "@/lib/util/utils";
 
 export const SidebarBurger = (props: SidebarButtonProps) => {

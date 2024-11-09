@@ -5,7 +5,7 @@ import {
   FindUserByUsername,
   OnboardUser,
 } from "@/controllers/UserController";
-import { UserProfile } from "@/lib/interface";
+import { UserProfile } from "@/lib/interfaces/userTypes";
 import { supabase } from "@/lib/supabase";
 import { cn } from "@/lib/util/utils";
 import { zodResolver } from "@hookform/resolvers/zod";

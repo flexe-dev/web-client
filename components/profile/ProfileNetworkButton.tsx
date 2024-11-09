@@ -1,6 +1,6 @@
 "use client";
 
-import { NetworkStatus, UserDetails } from "@/lib/interface";
+import { NetworkStatus, UserDetails } from "@/lib/interfaces/userTypes";
 import {
   generateUserDetailNode,
   getNetworkStatus,

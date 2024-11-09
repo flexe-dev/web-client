@@ -1,12 +1,12 @@
 "use client";
 
 import { SortableItem } from "@/components/dnd/Sortable";
-import { ContentBlockProp, PostUserMedia } from "@/lib/interface";
 import { PhotoIcon } from "@heroicons/react/24/outline";
 import { omit } from "lodash";
 import Image from "next/image";
 import ContentWrapper from "./ContentWrapper";
 import { ImageCarouselVisualEffect } from "./ImageCarouselVisualWrapper";
+import { ContentBlockProp, PostUserMedia } from "@/lib/interfaces/documentTypes";
 
 //Editable Component
 export const ImageContent = (props: ContentBlockProp) => {

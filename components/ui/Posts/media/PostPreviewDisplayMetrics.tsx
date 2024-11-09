@@ -2,16 +2,16 @@
 
 import { usePostMetrics } from "@/components/context/User/PostInteractionContext";
 import { useUserInteractions } from "@/components/context/UserInteraction/UserInteractionsProvider";
-import { PostInteractionLookup } from "@/lib/interface";
 import { cn } from "@/lib/util/utils";
 import { ChatBubbleLeftEllipsisIcon } from "@heroicons/react/24/outline";
-import { TooltipProvider } from "@radix-ui/react-tooltip";
 import { ForwardIcon, HeartIcon, MergeIcon } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { MetricButtonProps } from "../Text/TextPostMetricsDisplay";
 import { MetricButton, MetricContent } from "./PostDisplayMetrics";
+import { PostInteractionLookup } from "@/lib/interfaces/interactionTypes";
+import { TooltipProvider } from "../../Shared/tooltip";
 
 export const PostPreviewDisplayMetrics = () => {
   const { likedPosts, repostedPosts } = useUserInteractions();

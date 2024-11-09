@@ -1,7 +1,8 @@
 "use client";
 
 import { FindUserDisplayByUserId } from "@/controllers/UserController";
-import { ChildNodeProps, UserDisplay } from "@/lib/interface";
+import { ChildNodeProps } from "@/lib/interfaces/componentTypes";
+import { UserDisplay } from "@/lib/interfaces/userTypes";
 import { useSession } from "next-auth/react";
 import React, {
   createContext,

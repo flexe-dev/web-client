@@ -1,12 +1,12 @@
 "use client";
 
+import { ChildNodeProps } from "@/lib/interfaces/componentTypes";
 import {
-  ChildNodeProps,
   MediaDocument,
   MediaPost,
   PostAuxilliaryData,
   PostStatus,
-} from "@/lib/interface";
+} from "@/lib/interfaces/postTypes";
 import {
   createContext,
   Dispatch,

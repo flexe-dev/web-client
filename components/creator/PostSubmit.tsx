@@ -1,4 +1,4 @@
-import { ModalProps } from "@/lib/interface";
+import { ModalProps } from "@/lib/interfaces/componentTypes";
 import { nullIfEmpty } from "@/lib/util/utils";
 import { motion } from "framer-motion";
 import { useState } from "react";

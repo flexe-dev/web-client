@@ -1,8 +1,10 @@
 "use client";
 
 import { GetUserPosts } from "@/controllers/PostController";
-import { ChildNodeProps, Post, UserPosts } from "@/lib/interface";
-import { onPostObjectUpdate } from "@/lib/util/utils";
+import { ChildNodeProps } from "@/lib/interfaces/componentTypes";
+import { Post } from "@/lib/interfaces/postTypes";
+import { UserPosts } from "@/lib/interfaces/userTypes";
+import { onPostObjectUpdate } from "@/lib/util/postUtils";
 import { useSession } from "next-auth/react";
 import React, {
   createContext,

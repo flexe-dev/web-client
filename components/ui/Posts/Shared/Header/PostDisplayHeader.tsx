@@ -1,7 +1,7 @@
 "use server";
 
 import { FindUserDisplayByUserId } from "@/controllers/UserController";
-import { Post } from "@/lib/interface";
+import { Post } from "@/lib/interfaces/postTypes";
 import { FC, Suspense } from "react";
 import { HeaderContent } from "./HeaderContent";
 import { HeaderSkeleton } from "./HeaderSkeleton";

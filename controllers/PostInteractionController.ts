@@ -1,4 +1,4 @@
-import { PostInteraction, PostInteractionType } from "@/lib/interface";
+import { PostInteraction, PostInteractionType } from "@/lib/interfaces/interactionTypes";
 
 export const LikePost = async (
   interaction: PostInteraction,

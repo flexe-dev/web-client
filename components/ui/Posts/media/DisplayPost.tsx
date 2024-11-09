@@ -3,7 +3,12 @@ import { CarouselView } from "@/components/creator/content/CarouselContent";
 import { ImageView } from "@/components/creator/content/ImageContent";
 import { TextView } from "@/components/creator/content/TextContent";
 import { VideoView } from "@/components/creator/content/VideoContent";
-import { ClassNameProp, ContentBlockType, ContentComponent, MediaPost } from "@/lib/interface";
+import { ClassNameProp } from "@/lib/interfaces/componentTypes";
+import {
+  ContentBlockType,
+  ContentComponent,
+} from "@/lib/interfaces/documentTypes";
+import { MediaPost } from "@/lib/interfaces/postTypes";
 import { cn } from "@/lib/util/utils";
 import { FC } from "react";
 
@@ -22,7 +27,7 @@ export const RenderContentComponent: Record<
   PREVIEW: PreviewView,
 };
 
-const DisplayPost: FC<Props> = ({post, className}) => {
+const DisplayPost: FC<Props> = ({ post, className }) => {
   const { document } = post;
   return (
     <div className={cn("flex flex-col py-4 px-8 ", className)}>

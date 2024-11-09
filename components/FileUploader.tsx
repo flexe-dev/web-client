@@ -1,7 +1,8 @@
-import { ChildNodeProps } from "@/lib/interface";
+
 import { cn } from "@/lib/util/utils";
 import React, { useState } from "react";
 import { Input } from "./ui/Shared/input";
+import { ChildNodeProps } from "@/lib/interfaces/componentTypes";
 
 interface Props extends ChildNodeProps {
   fileSizeLimit?: number;

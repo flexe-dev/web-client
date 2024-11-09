@@ -10,17 +10,6 @@ import {
   RemoveCommentReaction,
 } from "@/controllers/CommentController";
 import { CommentSortAlgorithm } from "@/lib/util/commentUtils";
-import {
-  ChildNodeProps,
-  Comment,
-  CommentNode,
-  CommentReactType,
-  NodeMetric,
-  PostType,
-  Reply,
-  SortCriteria,
-  UserPostReactions,
-} from "@/lib/interface";
 import { useSession } from "next-auth/react";
 import {
   createContext,
@@ -32,6 +21,10 @@ import {
 } from "react";
 import { toast } from "sonner";
 import { usePostMetrics } from "./PostInteractionContext";
+import { CommentNode, SortCriteria } from "@/lib/interfaces/commentTypes";
+import { ChildNodeProps } from "@/lib/interfaces/componentTypes";
+import { NodeMetric } from "@/lib/interfaces/interactionTypes";
+import { PostType } from "@/lib/interfaces/postTypes";
 
 interface PostCommentState {
   comments: CommentNode[];

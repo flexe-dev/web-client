@@ -9,17 +9,13 @@ import {
   DialogContent,
   DialogTrigger,
 } from "@/components/ui/Shared/dialog";
-import {
-  ChildNodeProps,
-  MediaPost,
-  ModalInteractionProps,
-  Post,
-} from "@/lib/interface";
 import { EllipsisHorizontalIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import { FC } from "react";
 import DisplayPost from "./DisplayPost";
 import { PostPreviewDisplayMetrics } from "./PostPreviewDisplayMetrics";
+import { ChildNodeProps, ModalInteractionProps } from "@/lib/interfaces/componentTypes";
+import { MediaPost, Post } from "@/lib/interfaces/postTypes";
 
 interface Props extends ChildNodeProps {
   post: MediaPost;

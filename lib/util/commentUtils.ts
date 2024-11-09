@@ -1,4 +1,5 @@
-import { CommentNode, SortCriteria, UserAccount, UserDisplay } from "../interface";
+import { CommentNode, SortCriteria } from "../interfaces/commentTypes";
+import { UserDisplay } from "../interfaces/userTypes";
 
 export const GenerateCommentObject = (
   postID: string,

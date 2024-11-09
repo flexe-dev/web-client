@@ -1,4 +1,5 @@
-import { ChildNodeProps, UserDetails } from "@/lib/interface";
+import { ChildNodeProps } from "@/lib/interfaces/componentTypes";
+import { UserDetails } from "@/lib/interfaces/userTypes";
 import Link from "next/link";
 import {
   HoverCard,

@@ -4,8 +4,8 @@ import ErrorPage from "@/components/Error";
 import { PostDisplayHeader } from "@/components/ui/Posts/Shared/Header/PostDisplayHeader";
 import { TextPostDisplay } from "@/components/ui/Posts/Text/TextPostDisplay";
 import { Skeleton } from "@/components/ui/Shared/skeleton";
-import { getPostById } from "@/controllers/PostController";
-import { TextPost } from "@/lib/interface";
+import { getTextPostById } from "@/controllers/PostController";
+import { TextPost } from "@/lib/interfaces/postTypes";
 import { Suspense } from "react";
 
 interface Props {
@@ -16,7 +16,7 @@ interface Props {
 
 const page = async ({ params }: Props) => {
   const { postID } = params;
-  const post = (await getPostById(postID, "TEXT")) as TextPost | undefined;
+  const post: TextPost | undefined = await getTextPostById(postID);
 
   if (!post || !post.id) return <ErrorPage />;
 

@@ -8,7 +8,8 @@ import ReportPostModal from "@/components/ui/Posts/Shared/Modals/ReportPostModal
 import SharePostModal from "@/components/ui/Posts/Shared/Modals/SharePostModal";
 import { PostTools } from "@/components/ui/Posts/Shared/PostTools";
 import { Dialog } from "@/components/ui/Shared/dialog";
-import { ChildNodeProps, Post, PostType } from "@/lib/interface";
+import { ChildNodeProps } from "@/lib/interfaces/componentTypes";
+import { Post, PostType } from "@/lib/interfaces/postTypes";
 import { useSession } from "next-auth/react";
 import React, {
   JSX,

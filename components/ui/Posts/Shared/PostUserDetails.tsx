@@ -3,11 +3,12 @@ import {
   AvatarFallback,
   AvatarImage,
 } from "@/components/ui/Shared/avatar";
-import { Post, UserDetails } from "@/lib/interface";
 import { timeAgo } from "@/lib/util/dateutils";
-import { GetNameInitials } from "@/lib/util/utils";
 import { FC } from "react";
 import { UserHoverCard } from "../../User/UserHoverCard";
+import { Post } from "@/lib/interfaces/postTypes";
+import { UserDetails } from "@/lib/interfaces/userTypes";
+import { GetNameInitials } from "@/lib/util/userUtils";
 
 interface Props {
   post: Post;

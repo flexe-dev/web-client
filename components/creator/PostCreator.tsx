@@ -1,6 +1,6 @@
 "use client";
 
-import { PostUserMedia } from "@/lib/interface";
+import { PostUserMedia } from "@/lib/interfaces/documentTypes";
 import { DocumentCreatorProvider } from "../context/PostCreation/DocumentCreatorProvider";
 import { PostCreatorAuxProvider } from "../context/PostCreation/MediaPostMetaDataProvider";
 import { PostDragProvider } from "../context/PostCreation/PostDragProvider";

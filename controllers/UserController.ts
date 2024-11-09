@@ -1,11 +1,11 @@
+import { UserInteractionType } from "@/lib/interfaces/interactionTypes";
 import {
   ProfileExternalLinks,
   UserDisplay,
-  UserInteractionType,
   UserNetwork,
   UserNode,
   UserProfile,
-} from "@/lib/interface";
+} from "@/lib/interfaces/userTypes";
 import { User } from "next-auth";
 
 const FindUserByUsername = async (

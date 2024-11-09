@@ -1,11 +1,12 @@
 "use client";
 
 import { FindUserDisplayByUsername } from "@/controllers/UserController";
-import { ChildNodeProps, UserDisplay } from "@/lib/interface";
 import { useParams } from "next/navigation";
 import React, { createContext, useEffect, useState } from "react";
 import ErrorPage from "../../Error";
 import { useAccountUser } from "../User/AccountUserProvider";
+import { ChildNodeProps } from "@/lib/interfaces/componentTypes";
+import { UserDisplay } from "@/lib/interfaces/userTypes";
 
 interface ProfileViewerProviderState {
   isOwnProfile: boolean;

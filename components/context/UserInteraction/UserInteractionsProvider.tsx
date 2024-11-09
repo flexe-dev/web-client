@@ -5,14 +5,13 @@ import {
   FollowUser,
   UnfollowUser,
 } from "@/controllers/UserController";
+import { ChildNodeProps } from "@/lib/interfaces/componentTypes";
 import {
-  ChildNodeProps,
   InteractionRelationship,
   PostInteractionLookup,
-  PostNode,
-  UserDetails,
-  UserNode,
-} from "@/lib/interface";
+} from "@/lib/interfaces/interactionTypes";
+import { PostNode } from "@/lib/interfaces/postTypes";
+import { UserDetails, UserNode } from "@/lib/interfaces/userTypes";
 import { useSession } from "next-auth/react";
 import { createContext, useContext, useEffect, useState } from "react";
 import { toast } from "sonner";
@@ -109,7 +108,6 @@ export const UserInteractionsProvider: React.FC<ChildNodeProps> = ({
       root: userInfo,
     };
   };
-  
 
   const likePost = (postId: string) => {
     //Add Post To Liked Posts

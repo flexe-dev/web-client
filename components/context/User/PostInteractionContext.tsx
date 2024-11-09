@@ -9,7 +9,8 @@ import {
   UnlikePost,
   UnsavePost,
 } from "@/controllers/PostInteractionController";
-import { ChildNodeProps, Post, PostMetrics } from "@/lib/interface";
+import { ChildNodeProps } from "@/lib/interfaces/componentTypes";
+import { Post, PostMetrics } from "@/lib/interfaces/postTypes";
 import { useSession } from "next-auth/react";
 import { createContext, useContext, useState } from "react";
 import { toast } from "sonner";

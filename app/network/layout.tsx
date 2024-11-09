@@ -1,5 +1,5 @@
 import { NetworkSidebar } from "@/components/ui/Network/UserNetworkSidebar";
-import { ChildNodeProps } from "@/lib/interface";
+import { ChildNodeProps } from "@/lib/interfaces/componentTypes";
 import React from "react";
 
 const layout: React.FC<ChildNodeProps> = ({ children }) => {

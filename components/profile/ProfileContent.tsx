@@ -1,12 +1,12 @@
 "use client";
 
 import { Button } from "@/components/ui/Shared/button";
-import { ChildNodeProps } from "@/lib/interface";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import ErrorPage from "../Error";
 import { useProfileUserViewer } from "../context/UserInteraction/ProfileViewUserProvider";
+import { ChildNodeProps } from "@/lib/interfaces/componentTypes";
 
 export const profileTabs = ["readme", "posts", "activity"] as const;
 export type Tabs = (typeof profileTabs)[number];

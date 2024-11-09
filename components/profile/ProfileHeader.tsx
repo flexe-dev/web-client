@@ -1,7 +1,6 @@
 "use client";
 
 import { Button } from "@/components/ui/Shared/button";
-import { defaultPicture } from "@/lib/util/utils";
 import Image from "next/image";
 import { useState } from "react";
 import { useProfileUserViewer } from "../context/UserInteraction/ProfileViewUserProvider";
@@ -10,6 +9,7 @@ import { EditProfileModal } from "./EditProfileModal";
 import ProfileDetails from "./ProfileDetails";
 import ProfileFollowers from "./ProfileFollowers";
 import { ProfileNetworkButton } from "./ProfileNetworkButton";
+import { defaultPicture } from "@/lib/util/userUtils";
 
 function ProfileHeader() {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);

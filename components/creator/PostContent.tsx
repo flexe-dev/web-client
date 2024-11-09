@@ -1,5 +1,9 @@
 "use client";
-import { ContentBlockType, ContentComponent } from "@/lib/interface";
+
+import {
+  ContentBlockType,
+  ContentComponent,
+} from "@/lib/interfaces/documentTypes";
 import { DragOverlay } from "@dnd-kit/core";
 import {
   SortableContext,

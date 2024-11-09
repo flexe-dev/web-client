@@ -1,10 +1,17 @@
 "use client";
 
 import { updateUser } from "@/controllers/UserController";
+import { UserProfile } from "@/lib/interfaces/userTypes";
+import { supabase } from "@/lib/supabase";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { User } from "next-auth";
+import { useSession } from "next-auth/react";
+import Image from "next/image";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { z } from "zod";
+import { useAccountUser } from "../context/User/AccountUserProvider";
 import { Button } from "../ui/Shared/button";
 import {
   Form,
@@ -16,14 +23,6 @@ import {
 } from "../ui/Shared/form";
 import { Input } from "../ui/Shared/input";
 import { Label } from "../ui/Shared/label";
-
-import { UserProfile } from "@/lib/interface";
-import { supabase } from "@/lib/supabase";
-import { User } from "next-auth";
-import { useSession } from "next-auth/react";
-import Image from "next/image";
-import { toast } from "sonner";
-import { useAccountUser } from "../context/User/AccountUserProvider";
 import { Textarea } from "../ui/Shared/textarea";
 
 interface Props {

@@ -1,20 +1,10 @@
-import {
-  Document,
-  MediaPost,
-  PostMetrics,
-  PostType,
-  PostUserMedia,
-  TextPost,
-  UserPosts,
-} from "@/lib/interface";
+import { PostUserMedia, Document } from "@/lib/interfaces/documentTypes";
+import { PostMetrics, TextPost, MediaPost, PostType } from "@/lib/interfaces/postTypes";
+import { UserPosts } from "@/lib/interfaces/userTypes";
 import { supabase } from "@/lib/supabase";
-import {
-  convertImageSourceToFile,
-  generateMongoID,
-  getVideoThumbnail,
-  nullIfEmpty,
-  resizeImage,
-} from "@/lib/util/utils";
+import { convertImageSourceToFile, resizeImage, getVideoThumbnail } from "@/lib/util/postUtils";
+import { generateMongoID, nullIfEmpty } from "@/lib/util/utils";
+
 
 /*
   Post Uploading/Manipulation
@@ -160,15 +150,39 @@ export const GetUserPosts = async (
   }
 };
 
-export const getPostById = async (
+export const getTextPostById = async (
   postID: string,
-  type: PostType
-): Promise<MediaPost | TextPost | undefined> => {
+): Promise< TextPost | undefined> => {
   try {
     const response = await fetch(
       `${
         process.env.NEXT_PUBLIC_API_GATEWAY_URL
-      }${type.toLowerCase()}/p/find/${postID}`,
+      }text/p/find/${postID}`,
+      {
+        method: "GET",
+        cache: "no-cache",
+      }
+    );
+
+    if (response.status === 404) {
+      return;
+    }
+
+    return await response.json();
+  } catch (e) {
+    console.error(e);
+    return;
+  }
+};
+
+export const getMediaPostById = async (
+  postID: string,
+): Promise<MediaPost | undefined> => {
+  try {
+    const response = await fetch(
+      `${
+        process.env.NEXT_PUBLIC_API_GATEWAY_URL
+      }media/p/find/${postID}`,
       {
         method: "GET",
         cache: "no-cache",

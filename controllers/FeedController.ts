@@ -1,4 +1,4 @@
-import { FeedDisplayReference, FeedPost } from "@/lib/interface";
+import { FeedDisplayReference, FeedPost } from "@/lib/interfaces/feedTypes";
 
 export const GetUserFeed = async (
   token: string

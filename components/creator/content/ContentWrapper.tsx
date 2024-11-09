@@ -8,7 +8,8 @@ import {
 } from "@/components/ui/Shared/alert-dialog";
 import { Button } from "@/components/ui/Shared/button";
 import { Switch } from "@/components/ui/Shared/switch";
-import { ChildNodeProps, ClassNameProp, ContentType } from "@/lib/interface";
+import { ChildNodeProps, ClassNameProp } from "@/lib/interfaces/componentTypes";
+import { ContentType } from "@/lib/interfaces/documentTypes";
 import { cn } from "@/lib/util/utils";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import React from "react";

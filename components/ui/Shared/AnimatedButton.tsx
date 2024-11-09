@@ -1,4 +1,4 @@
-import { ChildNodeProps, ClassNameProp } from "@/lib/interface";
+import { ChildNodeProps, ClassNameProp } from "@/lib/interfaces/componentTypes";
 import { cn } from "@/lib/util/utils";
 import { Button } from "./button";
 interface ButtonWrapperProps extends ClassNameProp, ChildNodeProps {}

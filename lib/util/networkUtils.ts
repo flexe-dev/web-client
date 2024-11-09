@@ -1,10 +1,10 @@
+import { InteractionRelationship } from "../interfaces/interactionTypes";
 import {
-  InteractionRelationship,
   NetworkStatus,
   UserConnection,
   UserDetails,
   UserDisplay,
-} from "../interface";
+} from "../interfaces/userTypes";
 
 export const getNetworkStatus = (
   targetID: string,

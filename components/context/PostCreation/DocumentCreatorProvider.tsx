@@ -1,16 +1,16 @@
 "use client";
 
+import { ChildNodeProps } from "@/lib/interfaces/componentTypes";
 import {
-  ChildNodeProps,
   ContentStyling,
   ContentValue,
   Document,
-  OptionKeyValues,
   OptionKeys,
+  OptionKeyValues,
   PostUserMedia,
-} from "@/lib/interface";
+} from "@/lib/interfaces/documentTypes";
 import { nanoid } from "nanoid";
-import React, { CSSProperties, createContext, useState } from "react";
+import React, { createContext, CSSProperties, useState } from "react";
 import { DefaultTitle } from "../../creator/content/DefaultStyling";
 
 interface DocumentCreatorProviderState {

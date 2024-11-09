@@ -1,4 +1,4 @@
-import { ClassNameProp } from "@/lib/interface";
+import { ClassNameProp } from "@/lib/interfaces/componentTypes";
 import { cn } from "@/lib/util/utils";
 
 export const LogoutIcon = (props: ClassNameProp) => {
