@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import { useAccountUser } from "../context/User/AccountUserProvider";
+import { useAccountUser } from "../context/User/AccountProvider/AccountUserProvider";
 import { OnboardForm } from "../forms/OnboardForm";
 import {
   AlertDialog,

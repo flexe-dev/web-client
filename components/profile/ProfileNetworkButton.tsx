@@ -7,7 +7,7 @@ import {
 } from "@/lib/util/networkUtils";
 import { ChevronDownIcon } from "@heroicons/react/24/outline";
 import { useSession } from "next-auth/react";
-import { UseLoginModal } from "../context/User/LoginModalProvider";
+import { UseLoginModal } from "../context/User/LoginModalHandler/LoginModalProvider";
 import { useProfileUserViewer } from "../context/UserInteraction/ProfileViewUserProvider";
 import { useUserInteractions } from "../context/UserInteraction/UserInteractionsProvider";
 import { Button } from "../ui/Shared/button";
@@ -108,7 +108,7 @@ export const ProfileNetworkButton = () => {
 };
 
 const UnauthorizedProfileNetworkButton = () => {
-  const { setOpen } = UseLoginModal();
+const { setOpen } = UseLoginModal();
   return (
     <Button onClick={() => setOpen(true)} variant={"outline"}>
       Follow

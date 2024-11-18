@@ -1,6 +1,6 @@
 "use client";
 
-import { usePostComments } from "@/components/context/User/PostCommentContext";
+import { usePostComments } from "@/components/context/User/PostComments/PostCommentContext";
 import { Button } from "@/components/ui/Shared/button";
 import {
   DropdownMenu,
@@ -9,7 +9,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "@/components/ui/Shared/dropdown-menu";
-import { SortCriteria, sortTypes } from "@/lib/interface";
+import { SortCriteria, sortTypes } from "@/lib/interfaces/commentTypes";
 import { toTitleCase } from "@/lib/util/utils";
 import {
   ArrowDownIcon,

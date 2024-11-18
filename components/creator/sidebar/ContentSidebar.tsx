@@ -14,7 +14,7 @@ import {
 } from "@heroicons/react/24/outline";
 import { AnimatePresence, motion } from "framer-motion";
 import React, { useEffect, useState } from "react";
-import { useDocumentCreator } from "../../context/PostCreation/DocumentCreatorProvider";
+import { useDocumentCreator } from "../../context/PostCreation/DocumentCreator/DocumentCreatorProvider";
 import { Button } from "../../ui/Shared/button";
 import StylingTab from "./StylingTab";
 import DocumentTab from "./TextTab";

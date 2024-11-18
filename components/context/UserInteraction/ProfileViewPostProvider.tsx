@@ -6,7 +6,7 @@ import { Post } from "@/lib/interfaces/postTypes";
 import { UserPosts } from "@/lib/interfaces/userTypes";
 import { onPostObjectUpdate } from "@/lib/util/postUtils";
 import React, { createContext, useEffect, useState } from "react";
-import { useAccountPost } from "../User/AccountPostProvider";
+import { useAccountPost } from "../User/AccountProvider/AccountPostProvider";
 import { useProfileUserViewer } from "./ProfileViewUserProvider";
 
 interface ProfileViewerProviderState {

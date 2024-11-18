@@ -7,6 +7,7 @@ import {
 } from "@/lib/interfaces/documentTypes";
 import {
   Active,
+  closestCenter,
   DndContext,
   DragEndEvent,
   DragOverEvent,
@@ -16,7 +17,6 @@ import {
   Over,
   PointerSensor,
   UniqueIdentifier,
-  closestCenter,
   useSensor,
   useSensors,
 } from "@dnd-kit/core";
@@ -24,31 +24,20 @@ import { arrayMove, sortableKeyboardCoordinates } from "@dnd-kit/sortable";
 import { nanoid } from "nanoid";
 import React, { createContext, useState } from "react";
 import { useMediaQuery } from "react-responsive";
-import { BlockID } from "../../creator/blocks/Blocks";
+import { BlockID } from "../../../creator/blocks/Blocks";
 import {
   DefaultMedia,
   DefaultSubtitle,
   DefaultText,
   DefaultTitle,
-} from "../../creator/content/DefaultStyling";
-import { useDocumentCreator } from "./DocumentCreatorProvider";
-
-interface PostDragProviderState {
-  activeDragID: UniqueIdentifier | null;
-  setActiveDragID: React.Dispatch<
-    React.SetStateAction<UniqueIdentifier | null>
-  >;
-}
-
-const initialState: PostDragProviderState = {
-  activeDragID: null,
-  setActiveDragID: () => {},
-};
+} from "../../../creator/content/DefaultStyling";
+import { useDocumentCreator } from "../DocumentCreator/DocumentCreatorProvider";
+import { postDragInitialState, PostDragProviderState } from "./PostDragState";
 
 export const carouselRelatedValues = ["image", "carousel"];
 
 export const PostDragContext =
-  createContext<PostDragProviderState>(initialState);
+  createContext<PostDragProviderState>(postDragInitialState);
 
 export const checkContentThreshold = (active: Active, over: Over): boolean => {
   if (!over || !active.rect.current.translated) return false;

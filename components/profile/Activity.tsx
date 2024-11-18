@@ -7,7 +7,7 @@ import { cn } from "@/lib/util/utils";
 import { ChatBubbleLeftEllipsisIcon } from "@heroicons/react/24/outline";
 import { useSession } from "next-auth/react";
 import { FC, useState } from "react";
-import { useAccountPost } from "../context/User/AccountPostProvider";
+import { useAccountPost } from "../context/User/AccountProvider/AccountPostProvider";
 import { useProfilePostViewer } from "../context/UserInteraction/ProfileViewPostProvider";
 import { useProfileUserViewer } from "../context/UserInteraction/ProfileViewUserProvider";
 import PostCreateDialog from "../creator/PostCreateDialog";

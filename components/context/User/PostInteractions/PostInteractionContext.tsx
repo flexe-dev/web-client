@@ -1,6 +1,5 @@
 "use client";
 
-import { defaultPostMetrics } from "@/controllers/PostController";
 import {
   LikePost,
   RemoveRepost,
@@ -9,52 +8,25 @@ import {
   UnlikePost,
   UnsavePost,
 } from "@/controllers/PostInteractionController";
-import { ChildNodeProps } from "@/lib/interfaces/componentTypes";
-import { Post, PostMetrics } from "@/lib/interfaces/postTypes";
+import { PostMetrics } from "@/lib/interfaces/postTypes";
 import { useSession } from "next-auth/react";
 import { createContext, useContext, useState } from "react";
 import { toast } from "sonner";
-import { useUserInteractions } from "../UserInteraction/UserInteractionsProvider";
-
-interface PostInteractionState {
-  metrics: PostMetrics;
-  postId: string;
-  likePost: () => void;
-  unlikePost: () => void;
-  repostPost: () => void;
-  removeRepost: () => void;
-  savePost: () => void;
-  unsavePost: () => void;
-  addComment: (count: number) => void;
-  removeComment: (count: number) => void;
-}
-
-interface ContextProps extends ChildNodeProps {
-  post: Post;
-  callback?: (post: Post) => void;
-}
-
-const initialState: PostInteractionState = {
-  metrics: defaultPostMetrics,
-  postId: "",
-  addComment: () => {},
-  removeComment: () => {},
-  likePost: () => {},
-  unlikePost: () => {},
-  repostPost: () => {},
-  removeRepost: () => {},
-  savePost: () => {},
-  unsavePost: () => {},
-};
-
-const PostInteractionContext =
-  createContext<PostInteractionState>(initialState);
+import { useUserInteractions } from "../../UserInteraction/UserInteractionsProvider";
+import {
+  PostInteractionContextProps,
+  postInteractionInitialState,
+  PostInteractionState,
+} from "./PostInteractionState";
+const PostInteractionContext = createContext<PostInteractionState>(
+  postInteractionInitialState
+);
 
 export const PostInteractionProvider = ({
   children,
   post,
   callback,
-}: ContextProps) => {
+}: PostInteractionContextProps) => {
   const {
     userNode,
     likePost: addToUserLikedPosts,

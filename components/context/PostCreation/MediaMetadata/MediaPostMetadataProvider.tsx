@@ -1,48 +1,16 @@
 "use client";
 
 import { ChildNodeProps } from "@/lib/interfaces/componentTypes";
+import { MediaPost, PostStatus } from "@/lib/interfaces/postTypes";
+import { createContext, useContext, useState } from "react";
 import {
-  MediaDocument,
-  MediaPost,
-  PostAuxilliaryData,
-  PostStatus,
-} from "@/lib/interfaces/postTypes";
-import {
-  createContext,
-  Dispatch,
-  SetStateAction,
-  useContext,
-  useState,
-} from "react";
+  mediaMetadataInitialState,
+  MediaMetadataProviderState,
+} from "./MedaMetadataState";
 
-interface PostCreatorAuxProviderState
-  extends Pick<MediaDocument, "thumbnail" | "title" | "postStatus">,
-    Pick<PostAuxilliaryData, "tags"> {
-  id: string | undefined;
-  onTagDelete: (tag: string) => void;
-  setThumbnail: Dispatch<SetStateAction<string>>;
-  setTitle: Dispatch<SetStateAction<string>>;
-  setTags: Dispatch<SetStateAction<string[]>>;
-  setID: Dispatch<SetStateAction<string | undefined>>;
-  setDocumentMetadata: (post: MediaPost) => void;
-}
-
-const initialState: PostCreatorAuxProviderState = {
-  id: undefined,
-  tags: [],
-  thumbnail: "",
-  title: "",
-  postStatus: "DRAFT",
-  onTagDelete: () => {},
-  setID: () => {},
-  setThumbnail: () => {},
-  setTitle: () => {},
-  setTags: () => {},
-  setDocumentMetadata: () => {},
-};
-
-export const PostCreatorAuxContext =
-  createContext<PostCreatorAuxProviderState>(initialState);
+export const PostCreatorAuxContext = createContext<MediaMetadataProviderState>(
+  mediaMetadataInitialState
+);
 
 interface Props extends ChildNodeProps {
   post?: MediaPost;
@@ -50,14 +18,18 @@ interface Props extends ChildNodeProps {
 
 export const PostCreatorAuxProvider = ({ children, post }: Props) => {
   const [id, setID] = useState<string | undefined>(post?.id);
-  const [title, setTitle] = useState<string>(post?.document.title ?? "");
-  const [tags, setTags] = useState<string[]>(post?.auxData?.tags ?? []);
+  const [title, setTitle] = useState<string>(
+    post?.document.title ?? mediaMetadataInitialState.title
+  );
+  const [tags, setTags] = useState<string[]>(
+    post?.auxData?.tags ?? mediaMetadataInitialState.tags
+  );
   const [postStatus, setPostStatus] = useState<PostStatus>(
-    post?.document.postStatus ?? "DRAFT"
+    post?.document.postStatus ?? mediaMetadataInitialState.postStatus
   );
 
   const [thumbnail, setThumbnail] = useState<string>(
-    post?.document?.thumbnail ?? ""
+    post?.document?.thumbnail ?? mediaMetadataInitialState.thumbnail
   );
 
   const onTagDelete = (deleteNode: string) => {

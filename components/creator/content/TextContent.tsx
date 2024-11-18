@@ -1,12 +1,12 @@
 "use client";
 
-import { useDocumentCreator } from "@/components/context/PostCreation/DocumentCreatorProvider";
+import { useDocumentCreator } from "@/components/context/PostCreation/DocumentCreator/DocumentCreatorProvider";
 import { SortableItem } from "@/components/dnd/Sortable";
 import { Textarea } from "@/components/ui/Shared/textarea";
+import { ContentBlockProp } from "@/lib/interfaces/documentTypes";
 import React from "react";
 import Linkify from "react-linkify";
 import ContentWrapper from "./ContentWrapper";
-import { ContentBlockProp } from "@/lib/interfaces/documentTypes";
 
 //Editable Component
 export const TextContent = (props: ContentBlockProp) => {

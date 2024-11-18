@@ -1,4 +1,4 @@
-import { useUserFeed } from "@/components/context/User/UserFeedProvider";
+import { useUserFeed } from "@/components/context/User/UserFeedProvider/UserFeedProvider";
 import { NewspaperIcon } from "lucide-react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { FeedPostDisplay } from "./Display/FeedPostDisplay";

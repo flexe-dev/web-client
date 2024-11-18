@@ -8,10 +8,12 @@ import {
 } from "../Shared/hover-card";
 
 interface Props extends ChildNodeProps {
-  user: UserDetails;
+  user?: UserDetails;
 }
 
 export const UserHoverCard = ({ children, user }: Props) => {
+  if (!user) return <>{children}</>;
+
   return (
     <HoverCard>
       <HoverCardTrigger asChild>

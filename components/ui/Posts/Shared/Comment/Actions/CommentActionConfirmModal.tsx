@@ -1,4 +1,4 @@
-import { usePostComments } from "@/components/context/User/PostCommentContext";
+import { usePostComments } from "@/components/context/User/PostComments/PostCommentContext";
 import { Button } from "@/components/ui/Shared/button";
 import {
   DialogContent,
@@ -9,18 +9,23 @@ import {
 } from "@/components/ui/Shared/dialog";
 import { toTitleCase } from "@/lib/util/utils";
 import { DialogDescription } from "@radix-ui/react-dialog";
-import { CommentAction, NodeTraversalProps } from "./CommentActions";
+import { FC } from "react";
+import { LinkedCommentProps } from "../Comment";
+import { CommentAction } from "./CommentActions";
 
-interface Props extends NodeTraversalProps {
+interface Props extends LinkedCommentProps {
   type?: CommentAction;
   callback: () => void;
 }
 
-export const CommentActionConfirmModal = (props: Props) => {
-  const { type, callback, node, root } = props;
+export const CommentActionConfirmModal: FC<Props> = ({
+  type,
+  callback,
+  comment,
+}) => {
   const { deleteComment } = usePostComments();
   const confirmAction: Record<CommentAction, () => void> = {
-    delete: () => deleteComment(node, root),
+    delete: () => deleteComment(comment),
     report: () => console.log("Report Comment"),
     pin: () => console.log("Pin Comment"),
   };

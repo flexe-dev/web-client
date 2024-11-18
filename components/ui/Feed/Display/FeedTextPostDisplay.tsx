@@ -1,5 +1,6 @@
-import { useUserFeed } from "@/components/context/User/UserFeedProvider";
-import { FeedPost, TextPost } from "@/lib/interface";
+import { useUserFeed } from "@/components/context/User/UserFeedProvider/UserFeedProvider";
+import { FeedPost } from "@/lib/interfaces/feedTypes";
+import { TextPost } from "@/lib/interfaces/postTypes";
 import { FC } from "react";
 import TextPostPreview from "../../Posts/Text/textPostPreview";
 

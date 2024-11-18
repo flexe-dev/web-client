@@ -1,7 +1,7 @@
 "use client";
 
 import PostCreateDialog from "@/components/creator/PostCreateDialog";
-import { ChildNodeProps, LinkProps } from "@/lib/interface";
+import { ChildNodeProps, LinkProps } from "@/lib/interfaces/componentTypes";
 import {
   CogIcon,
   PlusCircleIcon,

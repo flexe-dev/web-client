@@ -1,7 +1,8 @@
-import { UseLoginModal } from "@/components/context/User/LoginModalProvider";
-import { usePostMetrics } from "@/components/context/User/PostInteractionContext";
 import { useUserInteractions } from "@/components/context/UserInteraction/UserInteractionsProvider";
-import { IconType, PostInteractionLookup } from "@/lib/interface";
+
+import { UseLoginModal } from "@/components/context/User/LoginModalHandler/LoginModalProvider";
+import { usePostMetrics } from "@/components/context/User/PostInteractions/PostInteractionContext";
+import { PostInteractionLookup } from "@/lib/interfaces/interactionTypes";
 import { cn } from "@/lib/util/utils";
 import {
   ChatBubbleLeftEllipsisIcon,
@@ -12,6 +13,7 @@ import { ForwardIcon, MergeIcon } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import React from "react";
+
 import { toast } from "sonner";
 import { Button } from "../../Shared/button";
 import {
@@ -19,6 +21,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "../../Shared/tooltip";
+import { IconType } from "@/lib/interfaces/componentTypes";
 
 export const TextPostMetricsDisplay = () => {
   const { status } = useSession();

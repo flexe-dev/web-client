@@ -12,10 +12,10 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
 import CancelWarn from "../CancelWarn";
-import { useDocumentCreator } from "../context/PostCreation/DocumentCreatorProvider";
-import { usePostAuxData } from "../context/PostCreation/MediaPostMetaDataProvider";
-import { useAccountPost } from "../context/User/AccountPostProvider";
-import { useAccountUser } from "../context/User/AccountUserProvider";
+import { useDocumentCreator } from "../context/PostCreation/DocumentCreator/DocumentCreatorProvider";
+import { usePostAuxData } from "../context/PostCreation/MediaMetadata/MediaPostMetadataProvider";
+import { useAccountPost } from "../context/User/AccountProvider/AccountPostProvider";
+import { useAccountUser } from "../context/User/AccountProvider/AccountUserProvider";
 import { Button } from "../ui/Shared/button";
 import PostSubmit from "./PostSubmit";
 

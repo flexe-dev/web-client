@@ -1,15 +1,13 @@
 "use client";
 
-import { ChildNodeProps } from "@/lib/interface";
+import { ChildNodeProps } from "@/lib/interfaces/componentTypes";
 import { cn } from "@/lib/util/utils";
 import { AnimatePresence, motion } from "framer-motion";
 import { useSearchParams } from "next/navigation";
-import { useState } from "react";
+import { FC, useState } from "react";
 import { PostDisplayMetrics } from "../../Media/PostDisplayMetrics";
 
-interface Props extends ChildNodeProps {}
-
-const CommentPanel = ({ children }: Props) => {
+const CommentPanel: FC<ChildNodeProps> = ({ children }) => {
   const searchParams = useSearchParams();
   const commentPanelState = searchParams.get("c");
   const [panelOpen, setPanelOpen] = useState(

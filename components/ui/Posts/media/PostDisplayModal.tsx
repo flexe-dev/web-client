@@ -1,21 +1,22 @@
-import { PostInteractionProvider } from "@/components/context/User/PostInteractionContext";
-import {
-  ModalToolCallback,
-  PostToolsProvider,
-} from "@/components/context/User/PostOptionToolProvider";
+import { PostInteractionProvider } from "@/components/context/User/PostInteractions/PostInteractionContext";
+import { PostToolsProvider } from "@/components/context/User/PostTools/PostOptionToolProvider";
+import { ModalToolCallback } from "@/components/context/User/PostTools/PostToolsInitialState";
 import { Button } from "@/components/ui/Shared/button";
 import {
   Dialog,
   DialogContent,
   DialogTrigger,
 } from "@/components/ui/Shared/dialog";
+import {
+  ChildNodeProps,
+  ModalInteractionProps,
+} from "@/lib/interfaces/componentTypes";
+import { MediaPost, Post } from "@/lib/interfaces/postTypes";
 import { EllipsisHorizontalIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import { FC } from "react";
 import DisplayPost from "./DisplayPost";
 import { PostPreviewDisplayMetrics } from "./PostPreviewDisplayMetrics";
-import { ChildNodeProps, ModalInteractionProps } from "@/lib/interfaces/componentTypes";
-import { MediaPost, Post } from "@/lib/interfaces/postTypes";
 
 interface Props extends ChildNodeProps {
   post: MediaPost;

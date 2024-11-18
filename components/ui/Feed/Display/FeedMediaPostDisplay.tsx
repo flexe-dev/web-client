@@ -1,12 +1,10 @@
-import { PostToolsProvider } from "@/components/context/User/PostOptionToolProvider";
-import { useUserFeed } from "@/components/context/User/UserFeedProvider";
-import {
-  ChildNodeProps,
-  ClassNameProp,
-  ContentBlockType,
-  FeedPost,
-  MediaPost,
-} from "@/lib/interface";
+import { PostToolsProvider } from "@/components/context/User/PostTools/PostOptionToolProvider";
+
+import { useUserFeed } from "@/components/context/User/UserFeedProvider/UserFeedProvider";
+import { ChildNodeProps, ClassNameProp } from "@/lib/interfaces/componentTypes";
+import { ContentBlockType } from "@/lib/interfaces/documentTypes";
+import { FeedPost } from "@/lib/interfaces/feedTypes";
+import { MediaPost } from "@/lib/interfaces/postTypes";
 import { cn } from "@/lib/util/utils";
 import { EllipsisHorizontalIcon } from "@heroicons/react/24/outline";
 import { ExpandIcon, ImageIcon } from "lucide-react";

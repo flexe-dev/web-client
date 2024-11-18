@@ -1,4 +1,4 @@
-import { useDocumentCreator } from "@/components/context/PostCreation/DocumentCreatorProvider";
+import { useDocumentCreator } from "@/components/context/PostCreation/DocumentCreator/DocumentCreatorProvider";
 import { DragHandle } from "@/components/dnd/Sortable";
 import {
   AlertDialog,

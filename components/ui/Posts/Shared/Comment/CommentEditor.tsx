@@ -1,15 +1,14 @@
-import { usePostComments } from "@/components/context/User/PostCommentContext";
+import { usePostComments } from "@/components/context/User/PostComments/PostCommentContext";
 import { Button } from "@/components/ui/Shared/button";
 import { Textarea } from "@/components/ui/Shared/textarea";
-import { CommentNode } from "@/lib/interface";
-import { useState } from "react";
-import { CommentProps } from "./CommentTree";
+import { LinkedComment } from "@/lib/interfaces/commentTypes";
+import { FC, useState } from "react";
+import { LinkedCommentProps } from "./Comment";
 
-export const CommentEditor = (props: CommentProps) => {
-  const { commentNode, root } = props;
+export const CommentEditor: FC<LinkedCommentProps> = ({ comment }) => {
   const { editComment, setEditTarget } = usePostComments();
   const [commentContent, setCommentContent] = useState<string>(
-    commentNode.comment.content
+    comment.root.content
   );
 
   const onCancel = () => {
@@ -17,15 +16,15 @@ export const CommentEditor = (props: CommentProps) => {
   };
 
   const onSave = () => {
-    const updatedNode: CommentNode = {
-      ...commentNode,
-      comment: {
-        ...commentNode.comment,
+    const updatedNode: LinkedComment = {
+      ...comment,
+      root: {
+        ...comment.root,
         content: commentContent,
         dateUpdated: new Date(),
       },
     };
-    editComment(updatedNode, root);
+    editComment(updatedNode);
     setEditTarget(undefined);
   };
 

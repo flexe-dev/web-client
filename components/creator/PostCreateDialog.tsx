@@ -7,8 +7,8 @@ import { useSession } from "next-auth/react";
 import Link from "next/link";
 import React, { SetStateAction, useState } from "react";
 import { toast } from "sonner";
-import { useAccountPost } from "../context/User/AccountPostProvider";
-import { useAccountUser } from "../context/User/AccountUserProvider";
+import { useAccountPost } from "../context/User/AccountProvider/AccountPostProvider";
+import { useAccountUser } from "../context/User/AccountProvider/AccountUserProvider";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/Shared/avatar";
 import { Button } from "../ui/Shared/button";
 import {

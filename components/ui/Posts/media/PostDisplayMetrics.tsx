@@ -1,14 +1,14 @@
 "use client";
 
-import { ChatBubbleOvalLeftEllipsisIcon } from "@heroicons/react/24/outline";
-import { UseLoginModal } from "@/components/context/User/LoginModalProvider";
-import { usePostMetrics } from "@/components/context/User/PostInteractionContext";
+import { UseLoginModal } from "@/components/context/User/LoginModalHandler/LoginModalProvider";
+import { usePostMetrics } from "@/components/context/User/PostInteractions/PostInteractionContext";
 import { useUserInteractions } from "@/components/context/UserInteraction/UserInteractionsProvider";
 import { ChildNodeProps } from "@/lib/interfaces/componentTypes";
 import { PostInteractionLookup } from "@/lib/interfaces/interactionTypes";
 import { renderMetric } from "@/lib/util/postUtils";
 import { isAuthenticated } from "@/lib/util/userUtils";
 import { cn } from "@/lib/util/utils";
+import { ChatBubbleOvalLeftEllipsisIcon } from "@heroicons/react/24/outline";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   ChevronLeftIcon,

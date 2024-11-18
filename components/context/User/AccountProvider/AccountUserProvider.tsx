@@ -4,26 +4,16 @@ import { FindUserDisplayByUserId } from "@/controllers/UserController";
 import { ChildNodeProps } from "@/lib/interfaces/componentTypes";
 import { UserDisplay } from "@/lib/interfaces/userTypes";
 import { useSession } from "next-auth/react";
-import React, {
-  createContext,
-  Dispatch,
-  SetStateAction,
-  useEffect,
-  useState,
-} from "react";
-import { useUserInteractions } from "../UserInteraction/UserInteractionsProvider";
+import React, { createContext, useEffect, useState } from "react";
+import { useUserInteractions } from "../../UserInteraction/UserInteractionsProvider";
+import {
+  accountUserInitialState,
+  AccountUserProviderState,
+} from "./AccountProviderState";
 
-interface AccountProviderState {
-  account?: UserDisplay;
-  setAccount: Dispatch<SetStateAction<UserDisplay | undefined>>;
-}
-
-const initialState: AccountProviderState = {
-  account: undefined,
-  setAccount: () => {},
-};
-
-export const AccountContext = createContext<AccountProviderState>(initialState);
+export const AccountContext = createContext<AccountUserProviderState>(
+  accountUserInitialState
+);
 
 export const AccountUserProvider = ({ children }: ChildNodeProps) => {
   const session = useSession();

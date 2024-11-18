@@ -1,9 +1,11 @@
 "use client";
 
-import { PostInteractionProvider } from "@/components/context/User/PostInteractionContext";
-import { PostToolsProvider } from "@/components/context/User/PostOptionToolProvider";
+import { PostToolsProvider } from "@/components/context/User/PostTools/PostOptionToolProvider";
 import { Card } from "@/components/ui/Shared/card";
-import { Post, TextPost, UserDetails } from "@/lib/interface";
+
+import { PostInteractionProvider } from "@/components/context/User/PostInteractions/PostInteractionContext";
+import { Post, TextPost } from "@/lib/interfaces/postTypes";
+import { UserDetails } from "@/lib/interfaces/userTypes";
 import { EllipsisHorizontalIcon } from "@heroicons/react/24/outline";
 import { useRouter } from "next/navigation";
 import { FC } from "react";

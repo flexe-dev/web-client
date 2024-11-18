@@ -1,6 +1,6 @@
 "use client";
 
-import { PostToolsProvider } from "@/components/context/User/PostOptionToolProvider";
+import { PostToolsProvider } from "@/components/context/User/PostTools/PostOptionToolProvider";
 import { Post } from "@/lib/interfaces/postTypes";
 import { UserDisplay } from "@/lib/interfaces/userTypes";
 import { toUserDetails } from "@/lib/util/userUtils";

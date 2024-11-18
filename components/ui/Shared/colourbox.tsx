@@ -22,7 +22,7 @@ import { omit } from "lodash";
 import { ChevronsUpDown } from "lucide-react";
 import { useTheme } from "next-themes";
 import React, { useEffect, useState } from "react";
-import { useDocumentCreator } from "../../context/PostCreation/DocumentCreatorProvider";
+import { useDocumentCreator } from "../../context/PostCreation/DocumentCreator/DocumentCreatorProvider";
 import { ScrollArea } from "./scroll-area";
 import { Separator } from "./separator";
 import {

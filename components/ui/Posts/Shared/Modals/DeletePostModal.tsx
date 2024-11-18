@@ -1,7 +1,8 @@
 "use client";
 
-import { useAccountPost } from "@/components/context/User/AccountPostProvider";
-import { ToolModalProp } from "@/components/context/User/PostOptionToolProvider";
+import { useAccountPost } from "@/components/context/User/AccountProvider/AccountPostProvider";
+import { ToolModalProp } from "@/components/context/User/PostTools/PostToolsInitialState";
+
 import { Button } from "@/components/ui/Shared/button";
 import {
   DialogContent,
@@ -11,7 +12,7 @@ import {
   DialogPortal,
 } from "@/components/ui/Shared/dialog";
 import { DeletePost } from "@/controllers/PostController";
-import { postTypeMap } from "@/lib/interface";
+import { postTypeMap } from "@/lib/interfaces/postTypes";
 import { DialogDescription } from "@radix-ui/react-dialog";
 import { toast } from "sonner";
 

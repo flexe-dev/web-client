@@ -1,12 +1,32 @@
-import { defaultPostMetrics } from "@/controllers/PostController";
 import { Dispatch, SetStateAction } from "react";
 import {
   Post,
+  PostMetrics,
   postTypeMap,
   TextContent,
   TextPost,
 } from "../interfaces/postTypes";
 import { UserPosts } from "../interfaces/userTypes";
+
+export const defaultPostMetrics: PostMetrics = {
+  likeCount: 0,
+  commentCount: 0,
+  viewCount: 0,
+  saveCount: 0,
+  repostCount: 0,
+  shareCount: 0,
+};
+
+export const DefaultPostObject: Post = {
+  id: "",
+  auxData: {
+    userID: "",
+    dateCreated: new Date(),
+    tags: [],
+  },
+  metrics: defaultPostMetrics,
+  postType: "TEXT",
+};
 
 export const GenerateTextPost = (
   content: TextContent,

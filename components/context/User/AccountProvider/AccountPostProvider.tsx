@@ -2,31 +2,18 @@
 
 import { GetUserPosts } from "@/controllers/PostController";
 import { ChildNodeProps } from "@/lib/interfaces/componentTypes";
-import { Post } from "@/lib/interfaces/postTypes";
 import { UserPosts } from "@/lib/interfaces/userTypes";
 import { onPostObjectUpdate } from "@/lib/util/postUtils";
 import { useSession } from "next-auth/react";
-import React, {
-  createContext,
-  Dispatch,
-  SetStateAction,
-  useEffect,
-  useState,
-} from "react";
+import React, { createContext, useEffect, useState } from "react";
+import {
+  accountPostInitialState,
+  AccountPostProviderState,
+} from "./AccountProviderState";
 
-interface AccountProviderState {
-  userPosts?: UserPosts;
-  setUserPosts: Dispatch<SetStateAction<UserPosts | undefined>>;
-  onPostUpdate: (post: Post) => void;
-}
-
-const initialState: AccountProviderState = {
-  userPosts: undefined,
-  setUserPosts: () => {},
-  onPostUpdate: () => {},
-};
-
-export const AccountContext = createContext<AccountProviderState>(initialState);
+export const AccountContext = createContext<AccountPostProviderState>(
+  accountPostInitialState
+);
 
 export const AccountPostProvider = ({ children }: ChildNodeProps) => {
   const session = useSession();

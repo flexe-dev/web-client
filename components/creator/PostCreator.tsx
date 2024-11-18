@@ -1,9 +1,9 @@
 "use client";
 
 import { PostUserMedia } from "@/lib/interfaces/documentTypes";
-import { DocumentCreatorProvider } from "../context/PostCreation/DocumentCreatorProvider";
-import { PostCreatorAuxProvider } from "../context/PostCreation/MediaPostMetaDataProvider";
-import { PostDragProvider } from "../context/PostCreation/PostDragProvider";
+import { DocumentCreatorProvider } from "../context/PostCreation/DocumentCreator/DocumentCreatorProvider";
+import { PostCreatorAuxProvider } from "../context/PostCreation/MediaMetadata/MediaPostMetadataProvider";
+import { PostDragProvider } from "../context/PostCreation/PostDrag/PostDragProvider";
 import PostContent from "./PostContent";
 
 interface Props {

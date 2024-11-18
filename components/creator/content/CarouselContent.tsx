@@ -8,7 +8,7 @@ todo:
   - Fix Resizing Issue from Image to Carousel On Mac 
 */
 
-import { useDocumentCreator } from "@/components/context/PostCreation/DocumentCreatorProvider";
+import { useDocumentCreator } from "@/components/context/PostCreation/DocumentCreator/DocumentCreatorProvider";
 import { SortableItem } from "@/components/dnd/Sortable";
 import { Button } from "@/components/ui/Shared/button";
 import {
@@ -48,7 +48,7 @@ export const GalleryContent = (props: ContentBlockProp) => {
   const [api, setAPI] = useState<CarouselApi>();
   const [current, setCurrent] = useState(0);
   const [startIndex, setStartIndex] = useState<boolean>(false);
-  const { onValueChange, onOptionsChange } = useDocumentCreator();
+const { onValueChange, onOptionsChange } = useDocumentCreator();
 
   useEffect(() => {
     if (!api) {

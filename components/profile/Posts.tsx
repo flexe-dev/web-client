@@ -13,7 +13,7 @@ import { User } from "next-auth";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import React, { FC, forwardRef, SetStateAction, useState } from "react";
-import { useAccountPost } from "../context/User/AccountPostProvider";
+import { useAccountPost } from "../context/User/AccountProvider/AccountPostProvider";
 import { useProfilePostViewer } from "../context/UserInteraction/ProfileViewPostProvider";
 import { useProfileUserViewer } from "../context/UserInteraction/ProfileViewUserProvider";
 import PostCreateDialog from "../creator/PostCreateDialog";

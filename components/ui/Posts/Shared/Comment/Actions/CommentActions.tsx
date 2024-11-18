@@ -1,6 +1,6 @@
-import { useAccountPost } from "@/components/context/User/AccountPostProvider";
-import { useAccountUser } from "@/components/context/User/AccountUserProvider";
-import { usePostComments } from "@/components/context/User/PostCommentContext";
+import { useAccountPost } from "@/components/context/User/AccountProvider/AccountPostProvider";
+import { useAccountUser } from "@/components/context/User/AccountProvider/AccountUserProvider";
+import { usePostComments } from "@/components/context/User/PostComments/PostCommentContext";
 import { Button } from "@/components/ui/Shared/button";
 import { Dialog } from "@/components/ui/Shared/dialog";
 import {
@@ -9,7 +9,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/Shared/dropdown-menu";
-import { CommentNode, IconType } from "@/lib/interface";
+import { IconType } from "@/lib/interfaces/componentTypes";
 import {
   EllipsisHorizontalIcon,
   FlagIcon,
@@ -17,7 +17,9 @@ import {
   PencilIcon,
   TrashIcon,
 } from "@heroicons/react/24/outline";
-import React, { useEffect, useState } from "react";
+import { EyeOffIcon } from "lucide-react";
+import React, { FC, useEffect, useState } from "react";
+import { LinkedCommentProps } from "../Comment";
 import { CommentActionConfirmModal } from "./CommentActionConfirmModal";
 
 type CommentActionAccess = "viewer" | "creator" | "poster";
@@ -30,17 +32,12 @@ interface CommentPostAction {
   component?: React.ReactNode;
 }
 
-export interface NodeTraversalProps {
-  node: CommentNode;
-  root: CommentNode;
-}
-
 export type CommentAction = "delete" | "report" | "pin";
 
-export const CommentActions = (props: NodeTraversalProps) => {
+export const CommentActions: FC<LinkedCommentProps> = ({ comment }) => {
   const { account } = useAccountUser();
   const { userPosts } = useAccountPost();
-  const { setEditTarget } = usePostComments();
+  const { setEditTarget, post } = usePostComments();
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [action, setAction] = useState<CommentAction | undefined>();
 
@@ -52,21 +49,25 @@ export const CommentActions = (props: NodeTraversalProps) => {
   if (!account || !userPosts) return null;
 
   const { user } = account;
-  const { textPosts, mediaPosts } = userPosts;
-  const { node, root } = props;
 
   const actionOptions: CommentPostAction[] = [
     {
       name: "Edit",
       icon: PencilIcon,
       access: ["creator"],
-      action: () => setEditTarget({ node, root }),
+      action: () => setEditTarget(comment),
     },
     {
       name: "Delete",
       icon: TrashIcon,
       access: ["creator", "poster"],
       action: () => setAction("delete"),
+    },
+    {
+      name: "Hide",
+      icon: EyeOffIcon,
+      access: ["creator"],
+      action: () => console.log("yuh"),
     },
     {
       name: "Report",
@@ -83,14 +84,11 @@ export const CommentActions = (props: NodeTraversalProps) => {
   ];
 
   const generateCommentActionPermission = (): CommentActionAccess => {
-    if (user.id === node.comment.userId) return "creator";
-    if (
-      mediaPosts
-        .map((post) => post.id)
-        .concat(textPosts.map((post) => post.id))
-        .includes(node.comment.postId)
-    )
-      return "poster";
+    // If the user is the creator of the comment
+
+    if (user.id === comment.root.userId) return "creator";
+    // If the user is the poster of the post
+    if (user.id === post.auxData.userID) return "poster";
 
     return "viewer";
   };
@@ -131,7 +129,7 @@ export const CommentActions = (props: NodeTraversalProps) => {
         </DropdownMenuContent>
       </DropdownMenu>
       <CommentActionConfirmModal
-        {...props}
+        comment={comment}
         callback={handleModalClose}
         type={action}
       />

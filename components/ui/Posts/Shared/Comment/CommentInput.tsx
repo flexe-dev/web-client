@@ -1,10 +1,12 @@
 "use client";
 
-import { useAccountUser } from "@/components/context/User/AccountUserProvider";
-import { usePostComments } from "@/components/context/User/PostCommentContext";
+import { useAccountUser } from "@/components/context/User/AccountProvider/AccountUserProvider";
+import { usePostComments } from "@/components/context/User/PostComments/PostCommentContext";
 import { Button } from "@/components/ui/Shared/button";
 import { Textarea } from "@/components/ui/Shared/textarea";
-import { GenerateCommentObject } from "@/lib/util/commentUtils";
+import { UserDetails } from "@/lib/interfaces/userTypes";
+import { CreateCommentObject } from "@/lib/util/commentUtils";
+import { toUserDetails } from "@/lib/util/userUtils";
 import { cn, nullIfEmpty } from "@/lib/util/utils";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import { KeyboardEvent, useEffect, useRef, useState } from "react";
@@ -12,7 +14,7 @@ import { toast } from "sonner";
 
 const CommentInput = () => {
   const { account } = useAccountUser();
-  const { addComment, postID, replyTarget, setReplyTarget, type } =
+  const { addComment, replyToComment, post, replyTarget, setReplyTarget } =
     usePostComments();
   const [comment, setComment] = useState<string>("");
   const inputRef = useRef<HTMLTextAreaElement>(null);
@@ -22,8 +24,11 @@ const CommentInput = () => {
   useEffect(() => {
     if (!replyTarget) return;
 
+    // Automatically focus on the input when replying to a comment
     inputRef.current?.focus();
-    type === "TEXT" &&
+
+    // On Horizontal views (ie. Text posts, Scroll back up to the input box when replying to a comment)
+    post.postType === "TEXT" &&
       inputRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
   }, [replyTarget]);
 
@@ -34,22 +39,24 @@ const CommentInput = () => {
   };
 
   const onSubmit = () => {
+    const user: UserDetails = toUserDetails(account);
+
     if (!nullIfEmpty(comment)) {
       toast.error("Your comment cannot be empty");
       return;
     }
 
-    const newNode = GenerateCommentObject(
-      postID,
-      account,
-      comment,
-      replyTarget?.comment?.id
-    );
-    addComment(newNode, replyTarget?.root);
+    const newComment = CreateCommentObject(comment, user, post.id!);
+
+    replyTarget
+      ? replyToComment(newComment, user, replyTarget)
+      : addComment(newComment, user);
+
+    // Clear metadata
+    setReplyTarget(undefined);
     setComment("");
     setDisplayCommentActions(false);
     inputRef.current?.blur();
-    //Idk Probably Scroll to the new comment
   };
 
   const handleKeyDown = (event: KeyboardEvent<HTMLTextAreaElement>) => {
@@ -75,7 +82,7 @@ const CommentInput = () => {
       {replyTarget && (
         <div className="relative h-[2.5rem] border-b w-full flex items-center py-2">
           <span className="ml-3 text-sm">
-            Replying To: {replyTarget.user.user.name}
+            Replying To: {replyTarget.root.user?.root.name}
           </span>
           <Button
             onClick={cancelReplyTarget}

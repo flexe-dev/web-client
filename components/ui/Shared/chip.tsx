@@ -1,4 +1,4 @@
-import { ChildNodeProps, ClassNameProp } from "@/lib/interface";
+import { ChildNodeProps, ClassNameProp } from "@/lib/interfaces/componentTypes";
 import { cn } from "@/lib/util/utils";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import { cva, VariantProps } from "class-variance-authority";

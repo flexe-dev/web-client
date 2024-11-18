@@ -5,38 +5,15 @@ import { ChildNodeProps } from "@/lib/interfaces/componentTypes";
 import { FeedDisplayReference, FeedPost } from "@/lib/interfaces/feedTypes";
 import { Post } from "@/lib/interfaces/postTypes";
 import { useSession } from "next-auth/react";
-import React, {
-  createContext,
-  Dispatch,
-  SetStateAction,
-  useContext,
-  useState,
-} from "react";
+import React, { createContext, useContext, useState } from "react";
 import { toast } from "sonner";
+import {
+  FeedProviderState,
+  userFeedInitialState,
+} from "./UserFeedInitialState";
 
-interface FeedProviderState {
-  feedReferences: FeedDisplayReference[];
-  feedPosts: FeedPost[];
-  onPostUpdate: (post: Post) => void;
-  setFeedPosts: Dispatch<SetStateAction<FeedPost[]>>;
-  setFeedReferences: Dispatch<SetStateAction<FeedDisplayReference[]>>;
-  loadMorePosts: () => void;
-  loading: boolean;
-  setLoading: Dispatch<SetStateAction<boolean>>;
-}
-
-const initialState: FeedProviderState = {
-  feedReferences: [],
-  feedPosts: [],
-  loading: true,
-  setFeedReferences: () => {},
-  setFeedPosts: () => {},
-  loadMorePosts: () => {},
-  setLoading: () => {},
-  onPostUpdate: () => {},
-};
-
-export const UserFeedContext = createContext<FeedProviderState>(initialState);
+export const UserFeedContext =
+  createContext<FeedProviderState>(userFeedInitialState);
 
 export const UserFeedProvider: React.FC<ChildNodeProps> = ({ children }) => {
   const { data } = useSession();
